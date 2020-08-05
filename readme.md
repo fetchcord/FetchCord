@@ -4,7 +4,7 @@ Fetchcord grabs information about your Distro and displays it as Discord Rich Pr
 
 ## Examples
 
-![ubunt_example.png](/home/amir/Documents/code/fetchcord/Examples/ubunt_example.png)
+![ubunt_example.png](Examples/ubunt_example.png)
 
 ## What works
 
