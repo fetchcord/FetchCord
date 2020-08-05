@@ -127,6 +127,13 @@ def iAwesome():
 def iMate():
 	global desktopid, desktopver
 	desktopid = "mate"
+def iUnity():
+	#this is to check wether the user is actually using unity or using unity as an xdg value to fix issues with electron apps
+	if wm.lower() == "compiz":
+		global desktopid
+		desktopid = "unity"
+	else:
+		desktopid = wm
 # cpuids
 def Amd():
         global cpuid
@@ -161,6 +168,7 @@ distros = {
 windowmanagers = {
     "dwm": iDwm,
     "i3": Ii3,
+    "awesome": iAwesome,
 }
 #desktops
 desktops = {
@@ -170,6 +178,8 @@ desktops = {
 	"gnome": iGnome,
 	"deepin": iDeepin,
 	"cinnamon": iCinnamon,
+	"mate": iMate,
+	"unity": iUnity
 }
 try:
 	distros[ldistro]()
