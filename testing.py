@@ -22,41 +22,33 @@ def iUbuntu():
 	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
 
 def iVoid():
-	global appid
-	global packages
+	global appid, packages
 	appid='740156532137787433'
 	packages = os.popen("xbps-query -l | wc -l").read()
 def iOpenSuseLeap():
-	global appid
-	global packages
+	global appid, packages
 	appid='740156532137787433'
 	packages = os.popen("rpm -qa --last | wc -l").read()
 
 def iCentos():
-	global appid
-	global packages
+	global appid, packages
 	appid='740156532137787433'
 	packages = os.popen("rpm -qa --last | wc -l").read()
 
 def iArch():
-	global appid
-	global packages
+	global appid, packages
 	appid='740156532137787433'
 	packages = os.popen("pacman -Qq --color never").read()
 
 def iFedora():
-	global appid
-	global packages
+	global appid, packages
 	appid='740156532137787433'
 	packages = os.popen("rpm -qa --last | wc -l").read()
 
 def iGentoo():
-	global appid
-	global packages
+	global appid, packages
 	appid='740156532137787433'
 	#packages = os.popen("rpm -qa --last | wc -l").read()
-#package number
-#packtext = 'Packages: ' + packages
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
