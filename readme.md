@@ -32,9 +32,9 @@ To run the scrip simply run `python3  run-rpc.py`, python 3.8 should have the `d
 
 ![void](Examples/void.png) 
 
-![suse-example.png](Examples/suse_example.png) ![suse2](Examples/Suse2.png)
+![arch example](Examples/Arch.png) ![suse2](Examples/Suse2.png)
 
-![arch example](Examples/Arch.png) ![debian example](Examples/debian.png)
+![suse-example.png](Examples/suse_example.png) ![debian example](Examples/debian.png)
 
 
 ## If your distro or de/wm isn't supported, make an issue
