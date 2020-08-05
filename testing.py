@@ -36,6 +36,10 @@ def iOpenSuseLeap():
 	global appid, packages
 	appid='740156532137787433'
 	packages = os.popen("rpm -qa --last | wc -l").read()
+def iOpenSuseTumble():
+	global appid, packages
+	appid='740156532137787433'
+	packages = os.popen("rpm -qa --last | wc -l").read()
 
 def iCentos():
 	global appid, packages
@@ -109,7 +113,8 @@ distros = {
 "void": iVoid,
 "gentoo": iGentoo,
 "centos": iCentos,
-"debian": iDebian
+"debian": iDebian,
+"opensuse-tumbleweed": iOpenSuseTumble
 }
 #desktops
 desktops = {
