@@ -121,6 +121,14 @@ def iAwesome():
 def iMate():
 	global desktopid, desktopver
 	desktopid = "mate"
+def iUnity():
+	#this is to check wether the user is actually using unity or using unity as an xdg value to fix issues with electron apps
+	if wm.lower() == "compiz":
+		global desktopid
+		desktopid = "unity"
+	else:
+		desktopid = wm
+
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
@@ -151,7 +159,8 @@ desktops = {
 	"i3": Ii3,
 	"dwm": iDwm,
 	"awesome": iAwesome,
-	"mate": iMate
+	"mate": iMate,
+	"unity": iUnity
 }
 try:
 	distros[ldistro]()
