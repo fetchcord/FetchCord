@@ -24,7 +24,7 @@ while True:
                 "start": start_time
             },
             "assets": {
-                "small_text": "KDE Plasma", #static atm, will show de/wm name and version
+                "small_text": desktopid, #static atm, will show de/wm name and version
                 "small_image": desktopid, #static atm, will show de/wm logo
                 "large_text": prettyname, #shows distro version and name on hover (refence to pretty name in /etc/os-release)
                 "large_image": "big" #this will be the discord logo

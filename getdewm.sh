@@ -27,5 +27,7 @@ type -p xprop &>/dev/null && {
             wm=${wm/\"}
             wm=${wm/\"*}
         }
-            echo $de
-            echo $wm
+            if [ ! -z $de ];then
+                echo $de
+            fi
+                echo $wm

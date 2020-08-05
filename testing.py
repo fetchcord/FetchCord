@@ -94,6 +94,9 @@ def iDeepin():
 	global desktopid, desktopver
 	desktopid = "deepin"
 	#desktopver = os.popen("").read()
+def iDwm():
+	global desktopid, desktopver
+	desktopid = "dwm"
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
@@ -117,6 +120,7 @@ desktops = {
 	"deepin": iDeepin,
 	"cinnamon": iCinnamon,
 	"i3": Ii3,
+	"dwm": iDwm
 }
 try:
 	distros[ldistro]()
