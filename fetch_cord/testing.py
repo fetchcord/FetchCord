@@ -1,7 +1,7 @@
 import distro
 import os
 info = distro.linux_distribution(full_distribution_name=False)
-ldistro= info[0]
+ldistro = info[0]
 ver = info[1]
 print(ldistro)
 print (ver)
@@ -17,10 +17,20 @@ text = 'Kernel: ' + info
 uptime = os.popen("cat /proc/stat | grep btime | awk '{print $2}'").read()
 #set appid and packages for each distro 
 getdesk = os.popen("bash getdewm.sh").read()
+getcpu = os.popen("cat /proc/cpuinfo | awk '/^vendor/{print $3}' | uniq").read()
+cpusplit = getcpu.splitlines()
+
+if cpusplit[0] == "AuthenticAMD":
+    cpu = "amd"
+else:
+    cpu = "intel"
+
 desplit = getdesk.split()
-de = desplit[0]
-wm = desplit[1]
+for i in range(len(desplit)):
+    de = desplit[i]
+    wm = desplit[i]
 desktopid = "none"
+cpuid = "none"
 #desktopver = "none"
 #distros set id and package number
 def iUbuntu():
@@ -40,7 +50,6 @@ def iOpenSuseTumble():
 	global appid, packages
 	appid='740156532137787433'
 	packages = os.popen("rpm -qa --last | wc -l").read()
-
 def iCentos():
 	global appid, packages
 	appid='740483295388631071'
@@ -50,7 +59,6 @@ def iArch():
 	global appid, packages
 	appid='740476198437650473'
 	packages = os.popen("pacman -Qq --color never | wc -l").read()
-
 def iFedora():
 	global appid, packages
 	appid='740485660703719464'
@@ -76,8 +84,6 @@ def iPop():
 	global appid, packages
 	appid='740660055925587978'
 	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
-
-
 #def desktops and defind id
 def iKde():
 	global desktopid, desktopver
@@ -121,14 +127,26 @@ def iAwesome():
 def iMate():
 	global desktopid, desktopver
 	desktopid = "mate"
+# cpuids
+def Amd():
+        global cpuid
+        cpuid = "amd"
+def Intel():
+        global cpuid
+        cpuid = "intel"
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
 #list of distros to comopre
+cpus = {
+"amd": Amd,
+"intel": Intel,
+}
 distros = {
 "ubuntu": iUbuntu, 
 "opensuse-leap": iOpenSuseLeap,
-"arch": iArch,
+"arch": iArch, 
+"artix": iArch,
 "fedora": iFedora,
 "void": iVoid,
 "gentoo": iGentoo,
@@ -138,7 +156,11 @@ distros = {
 "manjaro": iManjaro,
 "linuxmint": iLinuxMint,
 "pop": iPop,
-"artix": iArch
+}
+# window managers
+windowmanagers = {
+    "dwm": iDwm,
+    "i3": Ii3,
 }
 #desktops
 desktops = {
@@ -148,21 +170,31 @@ desktops = {
 	"gnome": iGnome,
 	"deepin": iDeepin,
 	"cinnamon": iCinnamon,
-	"i3": Ii3,
-	"dwm": iDwm,
-	"awesome": iAwesome,
-	"mate": iMate
 }
 try:
 	distros[ldistro]()
 except KeyError:
 	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
 try: 
-	desktops[de.lower()]()
+    if de in desktops:
+        desktops[de.lower()]()
+    else:
+        pass
 except KeyError:
-	print("Unsupported De/Wm contact me on github to resolve this.(Keyerror)")
-
+	print("Unsupported De contact me on github to resolve this.(Keyerror)")
+pass
+try:
+        windowmanagers[wm.lower()]()
+except KeyError:
+        print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
+try:
+        cpus[cpu.lower()]()
+except KeyError:
+        print("ERROR: unknown CPU")
 
 #package number
 packtext = 'Packages: ' + packages
-print (de.lower())
+if de in desktops:
+    print (de.lower())
+print(wm.lower())
+print(cpuid)

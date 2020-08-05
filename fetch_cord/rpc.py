@@ -110,7 +110,7 @@ class DiscordIpcClient(metaclass=ABCMeta):
         return self.recv()
 
     def send(self, data, op=OP_FRAME):
-        logger.debug("sending %s", data)
+        print("sending %s", data)
         data_str = json.dumps(data, separators=(',', ':'))
         data_bytes = data_str.encode('utf-8')
         header = struct.pack("<II", op, len(data_bytes))
@@ -133,7 +133,7 @@ class DiscordIpcClient(metaclass=ABCMeta):
         data = {
             'cmd': 'SET_ACTIVITY',
             'args': {'pid': os.getpid(),
-                     'activity': act},
+                 'activity': act},
             'nonce': str(uuid.uuid4())
         }
         self.send(data)
