@@ -68,6 +68,10 @@ def iManjaro():
 	global appid, packages
 	appid='740614258177605642'
 	packages = os.popen("pacman -Qq --color never | wc -l").read()
+def iLinuxMint():
+	global appid, packages
+	appid='740633577481568317'
+	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
 
 #def desktops and defind id
 def iKde():
@@ -120,7 +124,8 @@ distros = {
 "centos": iCentos,
 "debian": iDebian,
 "opensuse-tumbleweed": iOpenSuseTumble,
-"manjaro": iManjaro
+"manjaro": iManjaro.
+"linuxmint": iLinuxMint
 }
 #desktops
 desktops = {
