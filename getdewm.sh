@@ -2,9 +2,13 @@ if [[ $DESKTOP_SESSION == regolith ]]; then
                 de=Regolith
 
             elif [[ $XDG_CURRENT_DESKTOP ]]; then
-                de=${XDG_CURRENT_DESKTOP/X\-}
-                de=${de/Budgie:GNOME/Budgie}
-                de=${de/:Unity7:ubuntu}
+                # If $XDG_CURRENT_DESKTOP is not "Unity" (this is an old value used by canonical Unity)
+                # Actually return a DE, as the value is with 90% certainty used to workaround some appindicator issues with the users WM
+                if [[ $XDG_CURRENT_DESKTOP != "Unity" ]]; then
+                    de=${XDG_CURRENT_DESKTOP/X\-}
+                    de=${de/Budgie:GNOME/Budgie}
+                    de=${de/:Unity7:ubuntu}
+                fi
 
             elif [[ $DESKTOP_SESSION ]]; then
                 de=${DESKTOP_SESSION##*/}
