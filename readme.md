@@ -4,9 +4,10 @@ Fetchcord grabs information about your Distro and displays it as Discord Rich Pr
 
 ## Examples
 
-![ubunt_example.png](Examples/ubunt_example.png)
+![ubunt_example.png](Examples/ubunt_example.png) ![void](Examples/void.png)
 
-![suse-example.png](Examples/suse_example.png)
+![suse-example.png](Examples/suse_example.png) ![suse2](Examples/Suse2.png)
+
 
 ## What works
 
