@@ -34,7 +34,7 @@ To run the scrip simply run `python3  run-rpc.py`, python 3.8 should have the `d
 
 ![arch example](Examples/Arch.png) ![suse2](Examples/Suse2.png)
 
-![suse-example.png](Examples/suse_example.png) ![debian example](Examples/debian.png)
+![suse-example.png](Examples/suse_example.png) ![debian example](Examples/debian.png) ![pop](Examples/pop.png)
 
 
 ## If your distro or de/wm isn't supported, make an issue
