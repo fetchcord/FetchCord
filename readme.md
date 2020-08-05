@@ -27,7 +27,7 @@ Fetchcord grabs information about your Distro and displays it as Discord Rich Pr
 ## Running
 
 To run the scrip simply run `python3  run-rpc.py`, python 3.8 should have the `distro` module but if you get an error install it via pip, `pip3 install distro`
-
+## If your distro or de/wm isn't supported, make an issue
 ##  Other Examples
 
 ![void](Examples/void.png) 
