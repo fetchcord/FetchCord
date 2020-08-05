@@ -124,7 +124,7 @@ distros = {
 "centos": iCentos,
 "debian": iDebian,
 "opensuse-tumbleweed": iOpenSuseTumble,
-"manjaro": iManjaro.
+"manjaro": iManjaro,
 "linuxmint": iLinuxMint
 }
 #desktops
