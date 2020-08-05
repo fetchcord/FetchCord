@@ -49,6 +49,11 @@ def iGentoo():
 	global appid, packages
 	appid='740484380652208140'
 	#packages = os.popen("rpm -qa --last | wc -l").read()
+def iDebian():
+	global appid, packages
+	appid='740490017218232392'
+	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
+
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
@@ -61,7 +66,7 @@ distros = {
 "void": iVoid,
 "gentoo": iGentoo,
 "centos": iCentos,
-
+"debian": iDebian
 }
 try:
 	distros[ldistro]()
