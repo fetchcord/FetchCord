@@ -118,6 +118,9 @@ def iDwm():
 def iAwesome():
 	global desktopid, desktopver
 	desktopid = "awesome"
+def iMate():
+	global desktopid, desktopver
+	desktopid = "mate"
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
@@ -134,7 +137,8 @@ distros = {
 "opensuse-tumbleweed": iOpenSuseTumble,
 "manjaro": iManjaro,
 "linuxmint": iLinuxMint,
-"pop": iPop
+"pop": iPop,
+"artix": iArch
 }
 #desktops
 desktops = {
@@ -146,7 +150,8 @@ desktops = {
 	"cinnamon": iCinnamon,
 	"i3": Ii3,
 	"dwm": iDwm,
-	"awesome": iAwesome
+	"awesome": iAwesome,
+	"mate": iMate
 }
 try:
 	distros[ldistro]()
