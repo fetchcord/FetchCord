@@ -72,7 +72,7 @@ def iLinuxMint():
 	global appid, packages
 	appid='740633577481568317'
 	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
-
+	
 #def desktops and defind id
 def iKde():
 	global desktopid, desktopver
