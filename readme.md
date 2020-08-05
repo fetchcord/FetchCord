@@ -30,11 +30,11 @@ To run the scrip simply run `python3  run-rpc.py`, python 3.8 should have the `d
 
 ##  Other Examples
 
-![void](Examples/void.png) [debian example](Examples/debian.png)
+![void](Examples/void.png) 
 
 ![suse-example.png](Examples/suse_example.png) ![suse2](Examples/Suse2.png)
 
-![arch example](Examples/Arch.png) 
+![arch example](Examples/Arch.png) ![debian example](Examples/debian.png)
 
 
 ## If your distro or de/wm isn't supported, make an issue
