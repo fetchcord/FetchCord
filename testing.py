@@ -23,7 +23,7 @@ def iUbuntu():
 
 def iVoid():
 	global appid, packages
-	appid='740156532137787433'
+	appid='740484961353597039'
 	packages = os.popen("xbps-query -l | wc -l").read()
 def iOpenSuseLeap():
 	global appid, packages
@@ -32,7 +32,7 @@ def iOpenSuseLeap():
 
 def iCentos():
 	global appid, packages
-	appid='740156532137787433'
+	appid='740483295388631071'
 	packages = os.popen("rpm -qa --last | wc -l").read()
 
 def iArch():
@@ -42,12 +42,12 @@ def iArch():
 
 def iFedora():
 	global appid, packages
-	appid='740156532137787433'
+	appid='740485660703719464'
 	packages = os.popen("rpm -qa --last | wc -l").read()
 
 def iGentoo():
 	global appid, packages
-	appid='740156532137787433'
+	appid='740484380652208140'
 	#packages = os.popen("rpm -qa --last | wc -l").read()
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
