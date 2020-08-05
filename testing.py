@@ -72,7 +72,12 @@ def iLinuxMint():
 	global appid, packages
 	appid='740633577481568317'
 	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
-	
+def iPop():
+	global appid, packages
+	appid='740660055925587978'
+	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
+
+
 #def desktops and defind id
 def iKde():
 	global desktopid, desktopver
@@ -110,6 +115,9 @@ def iDeepin():
 def iDwm():
 	global desktopid, desktopver
 	desktopid = "dwm"
+def iAwesome():
+	global desktopid, desktopver
+	desktopid = "awesome"
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
@@ -125,7 +133,8 @@ distros = {
 "debian": iDebian,
 "opensuse-tumbleweed": iOpenSuseTumble,
 "manjaro": iManjaro,
-"linuxmint": iLinuxMint
+"linuxmint": iLinuxMint,
+"pop": iPop
 }
 #desktops
 desktops = {
@@ -136,7 +145,8 @@ desktops = {
 	"deepin": iDeepin,
 	"cinnamon": iCinnamon,
 	"i3": Ii3,
-	"dwm": iDwm
+	"dwm": iDwm,
+	"awesome": iAwesome
 }
 try:
 	distros[ldistro]()
