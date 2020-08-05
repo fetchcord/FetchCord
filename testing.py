@@ -49,7 +49,7 @@ def iCentos():
 def iArch():
 	global appid, packages
 	appid='740476198437650473'
-	packages = os.popen("pacman -Qq --color never").read()
+	packages = os.popen("pacman -Qq --color never | wc -l").read()
 
 def iFedora():
 	global appid, packages
