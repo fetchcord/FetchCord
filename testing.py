@@ -16,6 +16,13 @@ text = 'Kernel: ' + info
 #find out uptime for epoch time
 uptime = os.popen("cat /proc/stat | grep btime | awk '{print $2}'").read()
 #set appid and packages for each distro 
+getdesk = os.popen("bash getdewm.sh").read()
+desplit = getdesk.split()
+de = desplit[0]
+wm = desplit[1]
+desktopid = "none"
+#desktopver = "none"
+#distros set id and package number
 def iUbuntu():
 	global appid, packages
 	appid='740434138036699178'
@@ -53,11 +60,44 @@ def iDebian():
 	global appid, packages
 	appid='740490017218232392'
 	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
+#def desktops and defind id
+def iKde():
+	global desktopid, desktopver
+	desktopid = "kde"
+	#desktopver = os.popen("plasmashell --version").read()
+def iGnome():
+	global desktopid, desktopver
+	desktopid = "gnome"
+	#desktopver = os.popen("").read()
 
+def iXfce():
+	global desktopid, desktopver
+	desktopid = "xfce"
+	#desktopver = os.popen("").read()
+
+def Ii3():
+	global desktopid, desktopver
+	desktopid = "i3"
+	#desktopver = os.popen("").read()
+
+def iCinnamon():
+	global desktopid, desktopver
+	desktopid = "cinnamon"
+	#desktopver = os.popen("").read()
+
+def iBudgie():
+	global desktopid, desktopver
+	desktopid = "budgie"
+	#desktopver = os.popen("").read()
+
+def iDeepin():
+	global desktopid, desktopver
+	desktopid = "deepin"
+	#desktopver = os.popen("").read()
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
-
+#list of distros to comopre
 distros = {
 "ubuntu": iUbuntu, 
 "opensuse-leap": iOpenSuseLeap,
@@ -68,9 +108,26 @@ distros = {
 "centos": iCentos,
 "debian": iDebian
 }
+#desktops
+desktops = {
+	"kde": iKde,
+	"xfce": iXfce,
+	"budgie": iBudgie,
+	"gnome": iGnome,
+	"deepin": iDeepin,
+	"cinnamon": iCinnamon,
+	"i3": Ii3,
+}
 try:
 	distros[ldistro]()
 except KeyError:
 	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
+try: 
+	desktops[de.lower()]()
+except KeyError:
+	print("Unsupported De/Wm contact me on github to resolve this.(Keyerror)")
+
+
 #package number
 packtext = 'Packages: ' + packages
+print (de.lower())
