@@ -1,3 +1,4 @@
+#!/bin/bash
 if [[ $DESKTOP_SESSION == regolith ]]; then
                 de=Regolith
 
