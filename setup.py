@@ -14,7 +14,6 @@ setup(
     author_email='bobpotatolol17@gmail.com',
     license='MIT',
     packages=['fetch_cord'],
-    package_data={'fetch_cord': ['*.sh']},
     keywords=['distro', 'info', 'discord', 'fetch'],
     classifiers=[
         'License :: OSI Approved :: MIT License',

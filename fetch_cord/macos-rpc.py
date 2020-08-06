@@ -1,7 +1,7 @@
-import rpc
+from . import rpc
 import time
 import os
-from mactesting import uptime, product, appsp, kernel, ver, devicetype, bigicon
+from .mactesting import uptime, product, appsp, kernel, ver, devicetype, bigicon
 print("Conecting")
 client_id = '740822755376758944' #macos appid for discord rpc
 rpc_obj = rpc.DiscordIpcClient.for_platform(client_id) #Send the client ID to the rpc module
