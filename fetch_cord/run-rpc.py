@@ -16,10 +16,12 @@ print("RPC connection successful.")
 #rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
 time.sleep(5)
 start_time = float(uptime) #discord uses unix time to interpret time for rich presnse, this is uptime in unix time
-client_id = appid
-rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
-client_id2 = appid
-rpc_obj2 = rpc.DiscordIpcClient.for_platform(client_id2)
+def set_id():
+    global rpc_obj, rpc_obj2 
+    client_id = appid
+    rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
+    client_id2 = cpuappid
+    rpc_obj2 = rpc.DiscordIpcClient.for_platform(client_id2)
 # cycle
 def cycle0():
     while True:
@@ -44,7 +46,7 @@ def cycle0():
 def cycle1():
     while True:
         print("cycle 1")
-        activity1 = {
+        activity = {
             "state": cpumodel,
             "details": gpu,
             "timestamps": {
@@ -57,7 +59,9 @@ def cycle1():
                 "large_image": "big" #this will be the distro logo
             }
         }
-        rpc_obj2.set_activity(activity1)
+        # reset id to make discord happy
+        set_id()
+        rpc_obj2.set_activity(activity)
         time.sleep(30)
         cycle0()
 cycle1()
