@@ -3,7 +3,7 @@
 Fetchcord grabs information about your Distro and displays it as Discord Rich Presence
 
 ## Examples
-adding new examples(github caches things wierdly)
+![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
 ## What works
 
 - [x] Distro detection
@@ -34,5 +34,9 @@ run `python3 macos-rpc.py` and it will work!
 
 ##  Other Examples
 
-adding new examples
+![Arch with awesome](Examples/arch_example.png) ![Debian with Cinnamon](Examples/debian_example.png) ![Fedora with xfce](Examples/fedora_example.png)
+
+![manjaro with i3](Examples/manjaro%20example.png) ![mint with mate](Examples/mint_example.png) ![popos with kde](Examples/pop_example.png)
+
+![void with dwm](Examples/void_example.png) ![endeabour with deepinde](Examples/end_example.png) ![centos with unity](Examples/centos_example.png)
 
