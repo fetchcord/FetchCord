@@ -30,18 +30,19 @@ cpuid = "none"
 # get gpu
 check_provider = os.popen("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'").read()
 if check_provider == "NVIDIA-G0\n":
-    gpu = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL renderer string:\" | awk '{print $4,$5,$6}' | sed 's/\/.*//'").read().splitlines()
+    gpu = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL renderer string: \" | sed 's/OpenGL renderer string: //;s/Mesa //'").read().splitlines()
     gpuvendor = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
 else:
-    gpu = os.popen("glxinfo | grep \"OpenGL renderer string:\" | awk '{print $4,$5,$6}' | sed 's/\/.*//;s/(.*//'").read().splitlines()
+    gpu = os.popen("glxinfo | grep \"OpenGL renderer string:\" | sed 's/OpenGL renderer string: //;s/Mesa //'").read().splitlines()
     gpuvendor = os.popen("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
 # get gpu info
 gpu = "GPU: " + gpu[0]
+gpuinfo = gpu[0]
 print(check_provider)
 print(gpu)
 for i in range(len(getdesk)):
-    de = getdesk[i]
-    wm = getdesk[i]
+    de = getdesk[0]
+    wm = getdesk[1]
 
 desktopid = "none"
 #distros set id and package number
@@ -226,10 +227,7 @@ try:
 except KeyError:
 	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
 try: 
-    if de in desktops:
         desktops[de.lower()]()
-    else:
-        pass
 except KeyError:
 	print("Unsupported De contact me on github to resolve this.(Keyerror)")
 pass
@@ -252,7 +250,7 @@ except KeyError:
 
 #package number
 packtext = 'Packages: ' + packages
-if de in desktops:
-    print (de.lower())
+#if de in desktops:
+print (de.lower())
 print(wm.lower())
 print(cpuid)
