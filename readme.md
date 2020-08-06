@@ -3,7 +3,7 @@
 Fetchcord grabs information about your Distro and displays it as Discord Rich Presence
 
 ## Examples
-![ubunt_example.png](Examples/ubunt_example.png) ![fedora example](Examples/fedora.png) ![macos](Examples/mac.gif)
+ ![fedora example](Examples/fedora.png) ![macos](Examples/mac.gif)
 ## What works
 
 - [x] Distro detection
