@@ -16,17 +16,17 @@ text = 'Kernel: ' + info
 #find out uptime for epoch time
 uptime = os.popen("cat /proc/stat | grep btime | awk '{print $2}'").read()
 #set appid and packages for each distro 
-getdesk = os.popen("bash getdewm.sh").read()
+getdesk = os.popen("/usr/local/bin/getdewm").read().split()
 # get cpu info
-getcpufam = os.popen("lscpu | awk '/^CPU family/{print $3}'").read()
-getcpuvendor = os.popen("lscpu | awk '/^Vendor ID:/{print $3}'").read()
-cpuvendor = getcpuvendor.split()
-getcpumodel = os.popen("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq").read()
-cpumodel = getcpumodel.splitlines()
-cpufam = getcpufam.split()
-cpu = cpufam[0]
-cpumodel = "CPU: " + cpumodel[0]
+getcpufam = os.popen("lscpu | awk '/^CPU family/{print $3}'").read().split()
+cpuvendor = os.popen("lscpu | awk '/^Vendor ID:/{print $3}'").read().split()
+getcpumodel = os.popen("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq").read().splitlines()
+cpu = getcpufam[0]
+cpumodel = "CPU: " + getcpumodel[0]
 cpufam = getcpufam
+# set cpuid
+cpuid = "none"
+# get gpu
 check_provider = os.popen("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'").read().splitlines()
 if check_provider[0] == "NVIDIA-G0":
     gpu = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL renderer string:\" | awk '{print $4,$5,$6}' | sed 's/\/.*//'").read().splitlines()
@@ -36,17 +36,11 @@ else:
 gpu = "GPU: " + gpu[0]
 print(check_provider[0])
 print(gpu)
-desplit = getdesk.split()
-for i in range(len(desplit)):
-    de = desplit[i]
-    wm = desplit[i]
-cpuid = "none"
+for i in range(len(getdesk)):
+    de = getdesk[i]
+    wm = getdesk[i]
+
 desktopid = "none"
-#desktopver = "none"
-#def gpu():
-#    global appid, gpu
-#    appid='740752899054895105'
-#    gpu = 
 #distros set id and package number
 def iUbuntu():
 	global appid, packages
@@ -54,9 +48,10 @@ def iUbuntu():
 	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
 
 def iVoid():
-	global appid, packages
-	appid='740484961353597039'
-	packages = os.popen("xbps-query -l | wc -l").read()
+        global appid, packages, appid2
+        appid='740484961353597039'
+        appid2='740156532137787433'
+        packages = os.popen("xbps-query -l | wc -l").read()
 def iOpenSuseLeap():
 	global appid, packages
 	appid='740156532137787433'
@@ -69,7 +64,6 @@ def iCentos():
 	global appid, packages
 	appid='740483295388631071'
 	packages = os.popen("rpm -qa --last | wc -l").read()
-
 def iArch():
 	global appid, packages
 	appid='740476198437650473'
@@ -78,7 +72,6 @@ def iFedora():
 	global appid, packages
 	appid='740485660703719464'
 	packages = os.popen("rpm -qa --last | wc -l").read()
-
 def iGentoo():
 	global appid, packages
 	appid='740484380652208140'
@@ -92,9 +85,9 @@ def iManjaro():
 	appid='740614258177605642'
 	packages = os.popen("pacman -Qq --color never | wc -l").read()
 def iLinuxMint():
-	global appid, packages
-	appid='740633577481568317'
-	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
+        global appid, packages
+        appid='740633577481568317'
+        packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
 def iPop():
 	global appid, packages
 	appid='740660055925587978'
@@ -108,27 +101,22 @@ def iGnome():
 	global desktopid, desktopver
 	desktopid = "gnome"
 	#desktopver = os.popen("").read()
-
 def iXfce():
 	global desktopid, desktopver
 	desktopid = "xfce"
 	#desktopver = os.popen("").read()
-
 def Ii3():
 	global desktopid, desktopver
 	desktopid = "i3"
 	#desktopver = os.popen("").read()
-
 def iCinnamon():
 	global desktopid, desktopver
 	desktopid = "cinnamon"
 	#desktopver = os.popen("").read()
-
 def iBudgie():
 	global desktopid, desktopver
 	desktopid = "budgie"
 	#desktopver = os.popen("").read()
-
 def iDeepin():
 	global desktopid, desktopver
 	desktopid = "deepin"
@@ -151,18 +139,19 @@ def iUnity():
 		desktopid = wm
 # cpuids
 def Amdcpu():
-        global cpuid, appid
+        global cpuid, cpuappid
         cpuid = {
         "23": "Ryzen",
         "22": "Jaguar",
         }[cpu]
+        cpuappid='740752899054895105'
         return cpuid
 def Intelcpu():
         global cpuid
         cpuid = {
         "7": "Intel TEST",
         }[cpu]
-        return "CPU:" + cpuid
+        return cpuid
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)

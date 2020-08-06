@@ -1,8 +1,8 @@
 #import rpc file, made by https://github.com/niveshbirangal/discord-rpc, planning to make my own rpc soon
-import rpc
+from . import rpc
 import time
 #import info about system
-from testing import appid, cpuid, text, packtext, uptime, prettyname, desktopid, cpumodel, gpu
+from .testing import appid, appid2, cpuid, text, packtext, uptime, prettyname, desktopid, cpumodel, gpu, cpuappid
 #printing info(this will be removed soon)
 print (uptime)
 print (text)
@@ -11,20 +11,20 @@ print (appid)
 print (cpumodel)
 print("Connecting")
 #client id of discord rpc app
-client_id = appid 
-rpc_obj = rpc.DiscordIpcClient.for_platform(client_id) #Send the client ID to the rpc module
-print (desktopid)
-print (cpuid)
 print("RPC connection successful.")
+#client_id = appid
+#rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
 time.sleep(5)
 start_time = float(uptime) #discord uses unix time to interpret time for rich presnse, this is uptime in unix time
-# main loop
-    # sub loops
+client_id = appid
+rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
+client_id2 = appid2
+rpc_obj2 = rpc.DiscordIpcClient.for_platform(client_id2)
+# cycle
 def cycle0():
     while True:
         print("cycle 0")
         activity = {
-#            "test": cpu,
             "state": packtext,
             "details": text,
             "timestamps": {
@@ -40,11 +40,11 @@ def cycle0():
         rpc_obj.set_activity(activity)
         time.sleep(30)
         break
-    # cycle
+# cycle
 def cycle1():
     while True:
         print("cycle 1")
-        activity = {
+        activity1 = {
             "state": cpumodel,
             "details": gpu,
             "timestamps": {
@@ -57,7 +57,7 @@ def cycle1():
                 "large_image": "big" #this will be the distro logo
             }
         }
-        rpc_obj.set_activity(activity)
+        rpc_obj2.set_activity(activity1)
         time.sleep(30)
         cycle0()
 cycle1()

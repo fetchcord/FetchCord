@@ -13,7 +13,7 @@ setup(
     author='MrPotatoBobx',
     author_email='',
     license='MIT',
-    packages=find_packages(),
+    packages=['fetch_cord'],
     package_data={'fetch_cord': ['*.sh']},
     keywords=['distro', 'info', 'discord', 'fetch'],
     classifiers=[

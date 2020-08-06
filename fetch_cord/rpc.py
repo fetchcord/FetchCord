@@ -13,7 +13,6 @@ import socket
 import sys
 import struct
 import uuid
-from testing import appid
 
 
 OP_HANDSHAKE = 0
@@ -110,6 +109,7 @@ class DiscordIpcClient(metaclass=ABCMeta):
         return self.recv()
 
     def send(self, data, op=OP_FRAME):
+        # nice debugging
         print("sending %s", data)
         data_str = json.dumps(data, separators=(',', ':'))
         data_bytes = data_str.encode('utf-8')
