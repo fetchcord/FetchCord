@@ -13,8 +13,6 @@ import socket
 import sys
 import struct
 import uuid
-from testing import appid
-
 
 OP_HANDSHAKE = 0
 OP_FRAME = 1
