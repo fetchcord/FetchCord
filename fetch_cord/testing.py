@@ -16,7 +16,8 @@ text = 'Kernel: ' + info
 #find out uptime for epoch time
 uptime = os.popen("cat /proc/stat | grep btime | awk '{print $2}'").read()
 #set appid and packages for each distro 
-getdesk = os.popen("/usr/local/bin/getdewm").read().split()
+getde = os.popen("/usr/local/bin/getde").read().split()
+getwm = os.popen("/usr/local/bin/getwm").read().split()
 # get cpu info
 getcpufam = os.popen("lscpu | awk '/^CPU family/{print $3}'").read().split()
 cpuvendor = os.popen("lscpu | awk '/^Vendor ID:/{print $3}'").read().split()
@@ -40,10 +41,8 @@ gpu = "GPU: " + gpu[0]
 gpuinfo = gpu[0]
 print(check_provider)
 print(gpu)
-for i in range(len(getdesk)):
-    de = getdesk[0]
-    wm = getdesk[1]
-
+de = getde[0]
+wm = getwm[0]
 desktopid = "none"
 #distros set id and package number
 def iUbuntu():
