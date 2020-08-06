@@ -76,8 +76,10 @@ def iPop():
 	global appid, packages
 	appid='740660055925587978'
 	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
-
-
+def iEnde():
+	global appid, packages
+	appid='740809641545564170'
+	packages = os.popen("pacman -Qq --color never | wc -l").read()
 #def desktops and defind id
 def iKde():
 	global desktopid, desktopver
@@ -146,7 +148,8 @@ distros = {
 "manjaro": iManjaro,
 "linuxmint": iLinuxMint,
 "pop": iPop,
-"artix": iArch
+"artix": iArch,
+"endeavouros": iEnde
 }
 #desktops
 desktops = {
