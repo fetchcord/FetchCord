@@ -50,7 +50,6 @@ def iUbuntu():
 def iVoid():
         global appid, packages, appid2
         appid='740484961353597039'
-        appid2='740156532137787433'
         packages = os.popen("xbps-query -l | wc -l").read()
 def iOpenSuseLeap():
 	global appid, packages
@@ -75,7 +74,7 @@ def iFedora():
 def iGentoo():
 	global appid, packages
 	appid='740484380652208140'
-	#packages = os.popen("rpm -qa --last | wc -l").read()
+	packages = os.popen("eix-installed -a | wc -l").read()
 def iDebian():
 	global appid, packages
 	appid='740490017218232392'
@@ -92,6 +91,10 @@ def iPop():
 	global appid, packages
 	appid='740660055925587978'
 	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
+def iEnde():
+	global appid, packages
+	appid='740809641545564170'
+	packages = os.popen("pacman -Qq --color never | wc -l").read()
 #def desktops and defind id
 def iKde():
 	global desktopid, desktopver
@@ -178,6 +181,7 @@ distros = {
 "manjaro": iManjaro,
 "linuxmint": iLinuxMint,
 "pop": iPop,
+"endeavouros": iEnde
 }
 # window managers
 windowmanagers = {

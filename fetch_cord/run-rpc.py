@@ -2,7 +2,7 @@
 from . import rpc
 import time
 #import info about system
-from .testing import appid, appid2, cpuid, text, packtext, uptime, prettyname, desktopid, cpumodel, gpu, cpuappid
+from .testing import appid, cpuid, text, packtext, uptime, prettyname, desktopid, cpumodel, gpu, cpuappid
 #printing info(this will be removed soon)
 print (uptime)
 print (text)
@@ -18,7 +18,7 @@ time.sleep(5)
 start_time = float(uptime) #discord uses unix time to interpret time for rich presnse, this is uptime in unix time
 client_id = appid
 rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
-client_id2 = appid2
+client_id2 = appid
 rpc_obj2 = rpc.DiscordIpcClient.for_platform(client_id2)
 # cycle
 def cycle0():

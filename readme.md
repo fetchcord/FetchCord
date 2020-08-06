@@ -3,7 +3,7 @@
 Fetchcord grabs information about your Distro and displays it as Discord Rich Presence
 
 ## Examples
-![ubunt_example.png](Examples/ubunt_example.png) ![fedora example](Examples/fedora.png) ![manjaro example](Examples/manjaro.png)
+![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
 ## What works
 
 - [x] Distro detection
@@ -24,17 +24,20 @@ Fetchcord grabs information about your Distro and displays it as Discord Rich Pr
 - [ ] Detect wm/de version
 
 
-## Running
+## Running on linux
 
 To run the scrip simply run `python3  run-rpc.py`, python 3.8 should have the `distro` module but if you get an error install it via pip, `pip3 install distro`
 ## If your distro or de/wm isn't supported, make an issue
+## Snap and Flatpak versions of Discord will not work
+
+## running on macos
+run `python3 macos-rpc.py` and it will work!
+
 ##  Other Examples
 
-![void](Examples/void.png) 
+![Arch with awesome](Examples/arch_example.png) ![Debian with Cinnamon](Examples/debian_example.png) ![Fedora with xfce](Examples/fedora_example.png)
 
-![arch example](Examples/Arch.png) ![suse2](Examples/Suse2.png)
+![manjaro with i3](Examples/manjaro%20example.png) ![mint with mate](Examples/mint_example.png) ![popos with kde](Examples/pop_example.png)
 
-![suse-example.png](Examples/suse_example.png) ![debian example](Examples/debian.png) ![pop](Examples/pop.png)
+![void with dwm](Examples/void_example.png) ![endeabour with deepinde](Examples/end_example.png) ![centos with unity](Examples/centos_example.png)
 
-
-## If your distro or de/wm isn't supported, make an issue
