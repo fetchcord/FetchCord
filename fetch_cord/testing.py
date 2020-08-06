@@ -23,18 +23,21 @@ cpuvendor = os.popen("lscpu | awk '/^Vendor ID:/{print $3}'").read().split()
 getcpumodel = os.popen("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq").read().splitlines()
 cpu = getcpufam[0]
 cpumodel = "CPU: " + getcpumodel[0]
+cpuinfo = getcpumodel[0]
 cpufam = getcpufam
 # set cpuid
 cpuid = "none"
 # get gpu
-check_provider = os.popen("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'").read().splitlines()
-if check_provider[0] == "NVIDIA-G0":
+check_provider = os.popen("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'").read()
+if check_provider == "NVIDIA-G0\n":
     gpu = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL renderer string:\" | awk '{print $4,$5,$6}' | sed 's/\/.*//'").read().splitlines()
+    gpuvendor = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
 else:
     gpu = os.popen("glxinfo | grep \"OpenGL renderer string:\" | awk '{print $4,$5,$6}' | sed 's/\/.*//;s/(.*//'").read().splitlines()
+    gpuvendor = os.popen("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
 # get gpu info
 gpu = "GPU: " + gpu[0]
-print(check_provider[0])
+print(check_provider)
 print(gpu)
 for i in range(len(getdesk)):
     de = getdesk[i]
@@ -144,27 +147,45 @@ def iUnity():
 def Amdcpu():
         global cpuid, cpuappid
         cpuid = {
-        "23": "Ryzen",
         "22": "Jaguar",
         }[cpu]
         cpuappid='740752899054895105'
         return cpuid
+def Ryzen():
+        global cpuid, cpuappid
+        cpuid = "Ryzen"
+        cpuappid='740752899054895105'
 def Intelcpu():
         global cpuid
         cpuid = {
         "7": "Intel TEST",
         }[cpu]
         return cpuid
+# gpuids
+def Nvidiagpu():
+        global gpuid
+        gpuid = "nvidia"
+def Amdgpu():
+        global gpuid
+        gpuid = "amd"
+def Intelgpu():
+        global gpuid
+        gpuid = "intel"
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
 #list of distros to comopre
 amdcpus = {
-    "23": Amdcpu,
+    "23": Ryzen,
     "22": Amdcpu,
 }
 intelcpus = {
     "7": Intelcpu,
+}
+gpus = {
+    "intel": Intelgpu,
+    "nvidia": Nvidiagpu,
+    "x.org": Amdgpu,
 }
 print(cpu)
 distros = {
@@ -223,6 +244,11 @@ try:
             intelcpus[cpu.lower()]()
 except KeyError:
         print("unknown CPU, contact me on github to resolve this.(Keyerror)")
+
+try:
+        gpus[gpuvendor[0].lower()]()
+except KeyError:
+        print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
 
 #package number
 packtext = 'Packages: ' + packages
