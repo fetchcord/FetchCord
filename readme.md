@@ -30,7 +30,7 @@ To run the scrip simply run `python3  run-rpc.py`, python 3.8 should have the `d
 ## If your distro or de/wm isn't supported, make an issue
 
 ## running on macos
-run `python3 mac-rpc.py` and it will work!
+run `python3 macos-rpc.py` and it will work!
 
 ##  Other Examples
 
