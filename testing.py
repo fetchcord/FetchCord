@@ -59,7 +59,7 @@ def iFedora():
 def iGentoo():
 	global appid, packages
 	appid='740484380652208140'
-	#packages = os.popen("rpm -qa --last | wc -l").read()
+	packages = os.popen("eix-installed -a | wc -l").read()
 def iDebian():
 	global appid, packages
 	appid='740490017218232392'
