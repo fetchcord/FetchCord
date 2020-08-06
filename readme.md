@@ -26,7 +26,9 @@ Fetchcord grabs information about your Distro and displays it as Discord Rich Pr
 
 ## Running on linux
 
-To run the scrip simply run `python3  run-rpc.py`, python 3.8 should have the `distro` module but if you get an error install it via pip, `pip3 install distro`
+To install the script, run `sudo python3 setup.py install --root="/"` and also copy getdewm.sh to /usr/local/bin `sudo cp fetch_cord/getdewm.sh /usr/local/bin/getdewm` 
+
+To run the scrip simply run `python3 -u -m  fetch_cord.run-rpc.py`, python 3.8 should have the `distro` module but if you get an error install it via pip, `pip3 install distro`
 ## If your distro or de/wm isn't supported, make an issue
 ## Snap and Flatpak versions of Discord will not work
 
