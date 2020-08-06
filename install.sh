@@ -5,5 +5,6 @@ if [ $EUID -ne 0 ]; then
   exit
 else
   cp fetch_cord/getdewm.sh /usr/local/bin/getdewm
+  chmod 755 /usr/local/bin/getdewm
   python3 setup.py install --root="/"
 fi
