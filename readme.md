@@ -34,7 +34,7 @@ To run the script simply run `python3 -u -m  fetch_cord.run-rpc.py`, python 3.8 
 ## Snap and Flatpak versions of Discord will not work
 
 ## running on macos
-To isntall the script, run `sudo ./install.sh`
+To install the script, run `sudo ./macinstall.sh`
 
 run `python3 -u -m macos-rpc.py` and it will work!
 

@@ -2,12 +2,26 @@
 from . import rpc
 import time
 #import info about system
-from .testing import appid, cpuid, text, packtext, uptime, prettyname, desktopid, cpumodel, gpu, cpuappid
+from . import testing 
+# define testing functions
+uptime = testing.uptime
+text = testing.text
+packtext = testing.packtext
+appid = testing.appid
+gpuid = testing.gpuid
+cpumodel = testing.cpumodel
+desktopid = testing.desktopid
+prettyname = testing.prettyname
+gpu = testing.gpu
+cpuinfo = testing.cpuinfo
+gpuid = testing.gpuid
+cpuappid = testing.cpuappid
 #printing info(this will be removed soon)
 print (uptime)
 print (text)
 print (packtext)
 print (appid)
+print (gpuid)
 print (cpumodel)
 print("Connecting")
 #client id of discord rpc app
@@ -53,9 +67,9 @@ def cycle1():
                 "start": start_time
             },
             "assets": {
-                "small_text": desktopid, #this will show de/wm name and de/wm version
-                "small_image": desktopid, #this shows the de/wm logo
-                "large_text": prettyname, #shows distro version and name on hover (refence to pretty name in /etc/os-release)
+                "small_text": gpu, #this will show de/wm name and de/wm version
+                "small_image": gpuid, #this shows the de/wm logo
+                "large_text": cpuinfo, #shows distro version and name on hover (refence to pretty name in /etc/os-release)
                 "large_image": "big" #this will be the distro logo
             }
         }
