@@ -17,21 +17,36 @@ text = 'Kernel: ' + info
 uptime = os.popen("cat /proc/stat | grep btime | awk '{print $2}'").read()
 #set appid and packages for each distro 
 getdesk = os.popen("bash getdewm.sh").read()
-getcpu = os.popen("cat /proc/cpuinfo | awk '/^vendor/{print $3}' | uniq").read()
-cpusplit = getcpu.splitlines()
-
-if cpusplit[0] == "AuthenticAMD":
-    cpu = "amd"
+# get cpu info
+getcpufam = os.popen("lscpu | awk '/^CPU family/{print $3}'").read()
+getcpuvendor = os.popen("lscpu | awk '/^Vendor ID:/{print $3}'").read()
+cpuvendor = getcpuvendor.split()
+getcpumodel = os.popen("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq").read()
+cpumodel = getcpumodel.splitlines()
+cpufam = getcpufam.split()
+cpu = cpufam[0]
+cpumodel = "CPU: " + cpumodel[0]
+cpufam = getcpufam
+check_provider = os.popen("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'").read().splitlines()
+if check_provider[0] == "NVIDIA-G0":
+    gpu = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL renderer string:\" | awk '{print $4,$5,$6}' | sed 's/\/.*//'").read().splitlines()
 else:
-    cpu = "intel"
-
+    gpu = os.popen("glxinfo | grep \"OpenGL renderer string:\" | awk '{print $4,$5,$6}' | sed 's/\/.*//;s/(.*//'").read().splitlines()
+# get gpu info
+gpu = "GPU: " + gpu[0]
+print(check_provider[0])
+print(gpu)
 desplit = getdesk.split()
 for i in range(len(desplit)):
     de = desplit[i]
     wm = desplit[i]
-desktopid = "none"
 cpuid = "none"
+desktopid = "none"
 #desktopver = "none"
+#def gpu():
+#    global appid, gpu
+#    appid='740752899054895105'
+#    gpu = 
 #distros set id and package number
 def iUbuntu():
 	global appid, packages
@@ -135,20 +150,31 @@ def iUnity():
 	else:
 		desktopid = wm
 # cpuids
-def Amd():
+def Amdcpu():
+        global cpuid, appid
+        cpuid = {
+        "23": "Ryzen",
+        "22": "Jaguar",
+        }[cpu]
+        return cpuid
+def Intelcpu():
         global cpuid
-        cpuid = "amd"
-def Intel():
-        global cpuid
-        cpuid = "intel"
+        cpuid = {
+        "7": "Intel TEST",
+        }[cpu]
+        return "CPU:" + cpuid
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
 #list of distros to comopre
-cpus = {
-"amd": Amd,
-"intel": Intel,
+amdcpus = {
+    "23": Amdcpu,
+    "22": Amdcpu,
 }
+intelcpus = {
+    "7": Intelcpu,
+}
+print(cpu)
 distros = {
 "ubuntu": iUbuntu, 
 "opensuse-leap": iOpenSuseLeap,
@@ -198,9 +224,12 @@ try:
 except KeyError:
         print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
 try:
-        cpus[cpu.lower()]()
+        if cpuvendor[0] == "AuthenticAMD":
+            amdcpus[cpu.lower()]()
+        else:
+            intelcpus[cpu.lower()]()
 except KeyError:
-        print("ERROR: unknown CPU")
+        print("unknown CPU, contact me on github to resolve this.(Keyerror)")
 
 #package number
 packtext = 'Packages: ' + packages

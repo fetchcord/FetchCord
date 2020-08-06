@@ -14,11 +14,6 @@ setup(
     author_email='',
     license='MIT',
     packages=find_packages(),
-    entry_points={
-            'console_scripts': [
-                'fetchcord=fetch_cord.run-rpc.py:main'
-        ],
-    },
     package_data={'fetch_cord': ['*.sh']},
     keywords=['distro', 'info', 'discord', 'fetch'],
     classifiers=[

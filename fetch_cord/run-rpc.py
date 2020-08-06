@@ -2,12 +2,13 @@
 import rpc
 import time
 #import info about system
-from testing import appid, cpuid, text, packtext, uptime, prettyname, desktopid
+from testing import appid, cpuid, text, packtext, uptime, prettyname, desktopid, cpumodel, gpu
 #printing info(this will be removed soon)
 print (uptime)
 print (text)
 print (packtext)
 print (appid)
+print (cpumodel)
 print("Connecting")
 #client id of discord rpc app
 client_id = appid 
@@ -42,11 +43,10 @@ def cycle0():
     # cycle
 def cycle1():
     while True:
-        print("cycle 0")
+        print("cycle 1")
         activity = {
-#            "test": cpu,
-            "state": packtext,
-            "details": cpuid,
+            "state": cpumodel,
+            "details": gpu,
             "timestamps": {
                 "start": start_time
             },
