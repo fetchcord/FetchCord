@@ -27,8 +27,9 @@ amdcpu = getcpufam
 getcpu = exec_bash("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'")
 cpu = getcpu
 print(cpu.lower())
-cpumodel = "CPU: " + getcpumodel
-cpuinfo = getcpumodel
+cpumodelsplit = getcpumodel.split()
+cpumodel = "CPU: " + cpumodelsplit[1] + ' ' + cpumodelsplit[2]
+cpuinfo = cpumodelsplit[1] + ' ' + cpumodelsplit[2]
 cpufam = getcpufam
 # set cpuid
 cpuid = "none"
@@ -42,6 +43,8 @@ if check_provider == "NVIDIA-G0":
 else:
     gpu = exec_bash("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'")
     gpuvendor = exec_bash("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'")
+if gpuvendor != "NVIDIA":
+    gpu = exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/\/.*//;s/(..//;s/OpenGL renderer string: //;s/(.*//;s/Mesa //'")
 # get gpu info
 getgpuout = gpu
 gpuout = "GPU: " + getgpuout
