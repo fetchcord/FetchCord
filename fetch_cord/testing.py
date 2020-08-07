@@ -17,7 +17,7 @@ text = 'Kernel: ' + info
 uptime = os.popen("cat /proc/stat | grep btime | awk '{print $2}'").read()
 #set appid and packages for each distro 
 getde = os.popen("/usr/local/bin/getde").read()
-getwm = os.popen("/usr/local/bin/getwm").read().split()
+getwm = os.popen("/usr/local/bin/getwm").read()
 # get cpu info
 getcpufam = os.popen("lscpu | awk '/^CPU family/{print $3}'").read().split()
 cpuvendor = os.popen("lscpu | awk '/^Vendor ID:/{print $3}'").read().split()
@@ -44,7 +44,7 @@ gpuinfo = gpu
 print(check_provider)
 print(gpuout)
 de = getde
-wm = getwm[0]
+wm = getwm
 desktopid = "none"
 #distros set id and package number
 def iUbuntu():
@@ -157,9 +157,9 @@ def Ryzen():
         global cpuid, cpuappid
         cpuid = "Ryzen"
         cpuappid='740752899054895105'
-def Intelcore4():
+def Intelcore():
         global cpuid, cpuappid
-        cpuid = "Intel Core(R) 4th Gen Series"
+        cpuid = "Intel Core(TM)"
         cpuappid='741044208512532570'
 # gpuids
 def Nvidiagpu():
@@ -180,7 +180,7 @@ amdcpus = {
     "22": Amdcpu,
 }
 intelcpus = {
-    "6": Intelcore4,
+    "6": Intelcore,
 }
 gpus = {
     "intel": Intelgpu,
@@ -206,26 +206,27 @@ distros = {
 }
 # window managers
 windowmanagers = {
-    "dwm": iDwm,
-    "i3": Ii3,
-    "awesome": iAwesome,
+    "dwm\n": iDwm,
+    "i3\n": Ii3,
+    "awesome\n": iAwesome,
 }
 #desktops
 desktops = {
-	"kde": iKde,
-	"xfce": iXfce,
-	"budgie": iBudgie,
-	"gnome": iGnome,
-	"deepin": iDeepin,
-	"cinnamon": iCinnamon,
-	"mate": iMate,
-	"unity": iUnity
+	"kde\n": iKde,
+	"xfce\n": iXfce,
+	"budgie\n": iBudgie,
+	"gnome\n": iGnome,
+	"deepin\n": iDeepin,
+	"cinnamon\n": iCinnamon,
+	"mate\n": iMate,
+	"unity\n": iUnity
 }
 try:
 	distros[ldistro]()
 except KeyError:
 	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
-try: 
+try:
+    if de != "\n":
         desktops[de.lower()]()
 except KeyError:
 	print("Unsupported De contact me on github to resolve this.(Keyerror)")
