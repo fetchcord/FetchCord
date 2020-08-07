@@ -22,7 +22,10 @@ getwm = os.popen("/usr/local/bin/getwm").read()
 getcpufam = os.popen("lscpu | awk '/^CPU family/{print $3}'").read().split()
 cpuvendor = os.popen("lscpu | awk '/^Vendor ID:/{print $3}'").read().split()
 getcpumodel = os.popen("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq").read().splitlines()
-cpu = getcpufam[0]
+amdcpu = getcpufam[0]
+getintelcpu = os.popen("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'").read().split()
+intelcpu = getintelcpu[1] + ' ' + getintelcpu[2]
+print(intelcpu)
 cpumodel = "CPU: " + getcpumodel[0]
 cpuinfo = getcpumodel[0]
 cpufam = getcpufam
@@ -157,10 +160,22 @@ def Ryzen():
         global cpuid, cpuappid
         cpuid = "Ryzen"
         cpuappid='740752899054895105'
-def Intelcore():
+def Intelcorei3():
         global cpuid, cpuappid
-        cpuid = "Intel Core(TM)"
+        cpuid = "Intel(R) Core(TM) i3"
         cpuappid='741044208512532570'
+def Intelcorei5():
+        global cpuid, cpuappid
+        cpuid = "Intel(R) Core(TM) i5"
+        cpuappid='741099939198926920'
+def Intelcorei7():
+        global cpuid, cpuappid
+        cpuid = "Intel(R) Core(TM) i7"
+        cpuappid='741100300219187335'
+def Intelcorei9():
+        global cpuid, cpuappid
+        cpuid = "Intel(R) Core(TM) i9"
+        cpuappid='741100622040006719'
 # gpuids
 def Nvidiagpu():
         global gpuid
@@ -180,14 +195,17 @@ amdcpus = {
     "22": Amdcpu,
 }
 intelcpus = {
-    "6": Intelcore,
+    "core(tm) i3": Intelcorei3,
+    "core(tm) i5": Intelcorei5,
+    "core(tm) i7": Intelcorei7,
+    "core(tm) i9": Intelcorei9,
 }
 gpus = {
     "intel": Intelgpu,
     "nvidia": Nvidiagpu,
     "x.org": Amdgpu,
 }
-print(cpu)
+print(amdcpu)
 distros = {
 "ubuntu": iUbuntu, 
 "opensuse-leap": iOpenSuseLeap,
@@ -237,9 +255,9 @@ except KeyError:
         print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
 try:
         if cpuvendor[0] == "AuthenticAMD":
-            amdcpus[cpu.lower()]()
+            amdcpus[amdcpu.lower()]()
         else:
-            intelcpus[cpu.lower()]()
+            intelcpus[intelcpu.lower()]()
 except KeyError:
         print("unknown CPU, contact me on github to resolve this.(Keyerror)")
 
