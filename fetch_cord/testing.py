@@ -27,9 +27,8 @@ amdcpu = getcpufam
 getcpu = exec_bash("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'")
 cpu = getcpu
 print(cpu.lower())
-cpumodelsplit = getcpumodel.split()
-cpumodel = "CPU: " + cpumodelsplit[1] + ' ' + cpumodelsplit[2]
-cpuinfo = cpumodelsplit[1] + ' ' + cpumodelsplit[2]
+cpumodel = "CPU: " + getcpumodel
+cpuinfo = getcpumodel
 cpufam = getcpufam
 # set cpuid
 cpuid = "none"
@@ -38,7 +37,7 @@ gpuid = "none"
 # get gpu
 check_provider = exec_bash("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'")
 if check_provider == "NVIDIA-G0":
-    gpu = exec_bash("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'")
+    gpu = exec_bash("lspci | egrep \"VGA.*NVIDIA\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'")
     gpuvendor = exec_bash("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'")
 else:
     gpu = exec_bash("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'")
@@ -182,6 +181,10 @@ def Intelcorei9():
         global cpuid, cpuappid
         cpuid = "Intel(R) Core(TM) i9"
         cpuappid='741100622040006719'
+def Intelpentium():
+        global cpuid, cpuappid
+        cpuid = "Intel(R) Pentium(R)"
+        cpuappid='741203845706940467'
 def Ryzen3():
         global cpuid, cpuappid
         cpuid = "AMD Ryzen 3"
@@ -223,6 +226,7 @@ intelcpus = {
     "core(tm) i5": Intelcorei5,
     "core(tm) i7": Intelcorei7,
     "core(tm) i9": Intelcorei9,
+    "pentium(r) cpu": Intelpentium,
 }
 gpus = {
     "intel": Intelgpu,

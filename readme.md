@@ -17,18 +17,28 @@ Fetchcord grabs information about your Distro and displays it as Discord Rich Pr
 - [x] Distro version
 - [x] Detect wm/de
 
+- [x] Intel Core series CPU detection
+
+- [x] AMD Ryzen series CPU detection
+
 ## To-Do(What doesn't work)
 
 - [ ] Add more distros
 
 - [ ] Detect wm/de version
 
+- [ ] Add support for desktop icon use
+
+- [ ] More CPUs, ex. Pentium, Older AMD CPUs
+
+- [ ] More GPUs?
+
 
 ## Running on linux
 
 To install the script, run `sudo ./install.sh` 
 
-To run the script simply run `python3 -u -m  fetch_cord.run-rpc.py`, python 3.8 should have the `distro` module but if you get an error install it via pip, `pip3 install distro`
+To run the script simply run `fetchcord` or start /usr/local/bin/discord, python 3.8 should have the `distro` module but if you get an error install it via pip, `pip3 install distro`
 
 ## If your distro or de/wm isn't supported, make an issue
 ## Snap and Flatpak versions of Discord will not work
