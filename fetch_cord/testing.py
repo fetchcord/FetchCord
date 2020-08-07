@@ -44,7 +44,7 @@ else:
     gpu = exec_bash("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'")
     gpuvendor = exec_bash("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'")
 if gpuvendor != "NVIDIA":
-    gpu = exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/\/.*//;s/(..//;s/OpenGL renderer string: //;s/(.*//;s/Mesa //'")
+    gpu = exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
 # get gpu info
 getgpuout = gpu
 gpuout = "GPU: " + getgpuout
