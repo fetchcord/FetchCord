@@ -16,6 +16,8 @@ gpu = testing.gpu
 cpuinfo = testing.cpuinfo
 gpuid = testing.gpuid
 cpuappid = testing.cpuappid
+gpuout = testing.gpuout
+gpuinfo = testing.gpuinfo
 #printing info(this will be removed soon)
 print (uptime)
 print (text)
@@ -62,12 +64,12 @@ def cycle1():
         print("cycle 1")
         activity = {
             "state": cpumodel,
-            "details": gpu,
+            "details": gpuout,
             "timestamps": {
                 "start": start_time
             },
             "assets": {
-                "small_text": gpu, #this will show de/wm name and de/wm version
+                "small_text": gpuinfo, #this will show de/wm name and de/wm version
                 "small_image": gpuid, #this shows the de/wm logo
                 "large_text": cpuinfo, #shows distro version and name on hover (refence to pretty name in /etc/os-release)
                 "large_image": "big" #this will be the distro logo

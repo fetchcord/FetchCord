@@ -16,7 +16,7 @@ text = 'Kernel: ' + info
 #find out uptime for epoch time
 uptime = os.popen("cat /proc/stat | grep btime | awk '{print $2}'").read()
 #set appid and packages for each distro 
-getde = os.popen("/usr/local/bin/getde").read().split()
+getde = os.popen("/usr/local/bin/getde").read()
 getwm = os.popen("/usr/local/bin/getwm").read().split()
 # get cpu info
 getcpufam = os.popen("lscpu | awk '/^CPU family/{print $3}'").read().split()
@@ -31,17 +31,18 @@ cpuid = "none"
 # get gpu
 check_provider = os.popen("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'").read()
 if check_provider == "NVIDIA-G0\n":
-    gpu = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL renderer string: \" | sed 's/OpenGL renderer string: //;s/Mesa //'").read().splitlines()
+    gpu = os.popen(" lspci | egrep \"VGA.*\" | grep -o \"\[.*.*\].*\" | sed 's/^\[//;s/]//;s/(rev ..)//'").read()
     gpuvendor = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
 else:
-    gpu = os.popen("glxinfo | grep \"OpenGL renderer string:\" | sed 's/OpenGL renderer string: //;s/Mesa //'").read().splitlines()
+    gpu = os.popen("glxinfo | grep \"OpenGL renderer string:\" | sed 's/OpenGL renderer string: //;s/Mesa //'").read()
     gpuvendor = os.popen("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
 # get gpu info
-gpu = "GPU: " + gpu[0]
-gpuinfo = gpu[0]
+getgpuout = gpu.splitlines()
+gpuout = "GPU: " + getgpuout[0]
+gpuinfo = gpu
 print(check_provider)
-print(gpu)
-de = getde[0]
+print(gpuout)
+de = getde
 wm = getwm[0]
 desktopid = "none"
 #distros set id and package number
