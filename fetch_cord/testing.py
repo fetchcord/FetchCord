@@ -44,6 +44,7 @@ termappid = "none"
 try:
     check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-G0\"")
 except BashError:
+    check_provider = ""
     pass
 if check_provider == "NVIDIA-G0":
     nvprimestring = "__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia "
