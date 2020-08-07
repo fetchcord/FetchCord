@@ -2,7 +2,7 @@
 
 if [ $EUID -ne 0 ]; then
   echo "This script needs to be run as root."
-  exit
+  exit 1
 else
   cp fetch_cord/getde.sh  /usr/local/bin/getde
   cp fetch_cord/getwm.sh /usr/local/bin/getwm
