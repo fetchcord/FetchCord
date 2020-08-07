@@ -2,9 +2,13 @@
 # manual install
 if [ -d /opt/Discord ]; then
   /opt/Discord/Discord &
-else
+elif [ -e /usr/bin/discord ]; then
 # package install
   /usr/bin/discord &
+else
+  echo "ERROR: Discord is either not installed or you are using the flatpak or"
+  echo "snap version, please install the discord package or tarball."
+  exit 1
 fi
 # give slowcord time to start
 sleep 10
