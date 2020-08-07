@@ -17,6 +17,11 @@ cpuinfo = testing.cpuinfo
 cpuappid = testing.cpuappid
 gpuout = testing.gpuout
 gpuinfo = testing.gpuinfo
+shellinfo = testing.shellinfo
+terminfo= testing.terminfo
+shell = testing.shell
+term = testing.term
+termappid = testing.termappid
 #printing info(this will be removed soon)
 print (uptime)
 print (text)
@@ -31,11 +36,13 @@ time.sleep(5)
 start_time = float(uptime) #discord uses unix time to interpret time for rich presnse, this is uptime in unix time
 def set_id():
     # I hate discord
-    global rpc_obj, rpc_obj2 
+    global rpc_obj, rpc_obj2, rpc_obj3
     client_id = appid
     rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
     client_id2 = cpuappid
     rpc_obj2 = rpc.DiscordIpcClient.for_platform(client_id2)
+    client_id3 = termappid
+    rpc_obj3 = rpc.DiscordIpcClient.for_platform(client_id3)
 # cycle
 def cycle0():
     while True:
@@ -53,9 +60,10 @@ def cycle0():
                 "large_image": "big" #this will be the distro logo
             }
         }
+        set_id()
         rpc_obj.set_activity(activity)
         time.sleep(30)
-        break
+        cycle1()
 # cycle
 def cycle1():
     while True:
@@ -77,5 +85,27 @@ def cycle1():
         set_id()
         rpc_obj2.set_activity(activity)
         time.sleep(30)
+        cycle2()
+# cycle
+def cycle2():
+    while True:
+        print("cycle 2")
+        activity = {
+            "state": shellinfo,
+            "details": shellinfo,
+            "timestamps": {
+                "start": start_time
+            },
+            "assets": {
+                "small_text": shell, #this will show shell
+                "small_image": shell, #this shows the shell logo
+                "large_text": term, #shows terminal name on hover
+                "large_image": "big" #this will be the terminal logo
+            }
+        }
+        # reset id to make discord happy
+        set_id()
+        rpc_obj3.set_activity(activity)
+        time.sleep(30)
         cycle0()
-cycle1()
+cycle0()

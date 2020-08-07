@@ -15,8 +15,10 @@ packages = "none"
 #text for kernel info
 text = 'Kernel: ' + info
 # get terminal
-term = exec_bash("echo $TERM")
-shell = exec_bash("echo $SHELL")
+term = exec_bash("echo $TERM | sed 's/-/ /g;s/ .*//'")
+shell = exec_bash("echo $SHELL | sed 's/\// /g;s/.*bin //'")
+shellinfo = "SHELL: " + shell
+terminfo = "TERM: " + term
 print(term)
 print(shell)
 #find out uptime for epoch time
@@ -33,12 +35,16 @@ print(cpu.lower())
 cpumodelsplit = getcpumodel.split()
 cpumodel = "CPU: " + getcpumodel
 cpuinfo = getcpumodel
-# set cpuid
+# predefine ids
 cpuid = "none"
 cpuappid = "none"
 gpuid = "none"
+termappid = "none"
 # get gpu
-check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-G0\"")
+try:
+    check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-G0\"")
+except BashError:
+    pass
 if check_provider == "NVIDIA-G0":
     nvprimestring = "__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia "
     gpu = exec_bash("lspci | egrep -o \"VGA.*NVIDIA.*\" | sed 's/^.*: //;s/A.*\[/A /;s/\].*//'")
@@ -218,6 +224,32 @@ def Amdgpu():
 def Intelgpu():
         global gpuid
         gpuid = "intel"
+# terminals
+def St():
+        global termappid
+        termappid='741280043220861030'
+def Kitty():
+        global termappid
+        termappid='741285676250824725'
+def Alacritty():
+        global termappid
+        termappid='741291339945345045'
+def Xterm():
+        global termappid
+        termappid='741287143187546125'
+def Konsole():
+        global termappid
+        termappid='741286819676553258'
+# shells
+def Fish():
+        global shell
+        shell = "fish"
+def Zsh():
+        global shell
+        shell = "zsh"
+def Bash():
+        global shell
+        shell = "bash"
 #pretty name, this will be shown when hovering over the big icon, it will show the version
 prettyname = ldistro + ' ' + ver
 print (prettyname)
@@ -273,6 +305,18 @@ desktops = {
 	"mate": iMate,
 	"unity": iUnity
 }
+terms = {
+    "st": St,
+    "kitty": Kitty,
+    "alacritty": Alacritty,
+    "xterm": Xterm,
+    "konsole": Konsole,
+}
+shells = {
+    "fish": Fish,
+    "zsh": Zsh,
+    "bash": Bash,
+}
 try:
 	distros[ldistro]()
 except KeyError:
@@ -299,6 +343,14 @@ try:
         gpus[gpuvendor.lower()]()
 except KeyError:
         print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
+try:
+        terms[term.lower()]()
+except KeyError:
+        print("Unsupported Terminal. contact me on github to resolve this.(Keyerror)")
+try:
+        shells[shell.lower()]()
+except KeyError:
+        print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
 
 #package number
 packtext = 'Packages: ' + packages
