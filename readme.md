@@ -3,7 +3,7 @@
 Fetchcord grabs information about your Distro and displays it as Discord Rich Presence
 
 ## Examples
-![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
+![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png) ![AMD Ryzen CPU/NVIDIA GPU](Examples/ryzen_example.png)
 ## What works
 
 - [x] Distro detection

@@ -20,28 +20,25 @@ uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
 getde = exec_bash("/usr/local/bin/getde")
 getwm = exec_bash("/usr/local/bin/getwm")
 # get cpu info
-getcpufam = exec_bash("lscpu | awk '/^CPU family/{print $3}'")
 cpuvendor = exec_bash("lscpu | awk '/^Vendor ID:/{print $3}'")
 getcpumodel = exec_bash("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq")
-amdcpu = getcpufam
 getcpu = exec_bash("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'").split()
 cpu = getcpu[1] + ' ' + getcpu[2]
 print(cpu.lower())
 cpumodelsplit = getcpumodel.split()
 cpumodel = "CPU: " + getcpumodel
 cpuinfo = getcpumodel
-cpufam = getcpufam
 # set cpuid
 cpuid = "none"
 cpuappid = "none"
 gpuid = "none"
 # get gpu
-check_provider = exec_bash("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'")
+check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-G0\"")
 if check_provider == "NVIDIA-G0":
-    gpu = exec_bash("lspci | egrep \"VGA.*NVIDIA\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'")
-    gpuvendor = exec_bash("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'")
+    nvprimestring = "__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia "
+    gpu = exec_bash("lspci | egrep -o \"VGA.*NVIDIA.*\" | sed 's/^.*: //;s/A.*\[/A /;s/\].*//'")
+    gpuvendor = exec_bash("%s glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'" % nvprimestring)
 else:
-    gpu = exec_bash("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'")
     gpuvendor = exec_bash("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'")
 if gpuvendor != "NVIDIA":
     gpu = exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
@@ -52,6 +49,7 @@ gpuinfo = gpu
 print(check_provider)
 print(gpuout)
 print (gpuinfo)
+print (gpuvendor)
 de = getde
 wm = getwm
 desktopid = "none"
@@ -234,7 +232,6 @@ gpus = {
     "nvidia": Nvidiagpu,
     "x.org": Amdgpu,
 }
-print(amdcpu)
 distros = {
 "ubuntu": iUbuntu, 
 "opensuse-leap": iOpenSuseLeap,
