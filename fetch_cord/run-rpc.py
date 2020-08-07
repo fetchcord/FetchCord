@@ -92,7 +92,7 @@ def cycle2():
         print("cycle 2")
         activity = {
             "state": shellinfo,
-            "details": shellinfo,
+            "details": terminfo,
             "timestamps": {
                 "start": start_time
             },

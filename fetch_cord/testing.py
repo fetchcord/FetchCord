@@ -17,8 +17,8 @@ text = 'Kernel: ' + info
 # get terminal
 term = exec_bash("ps -o comm= -p \"$(($(ps -o ppid= -p \"$(($(ps -o sid= -p \"$$\")))\")))\"  | sed 's/-$//'")
 shell = exec_bash("echo $SHELL | sed 's/\// /g;s/.*bin //'")
-shellinfo = "SHELL: " + shell
-terminfo = "TERM: " + term
+shellinfo = "Shell: " + shell
+terminfo = "Term: " + term
 print(term)
 print(shell)
 #find out uptime for epoch time
@@ -315,6 +315,7 @@ terms = {
     "alacritty": Alacritty,
     "xterm": Xterm,
     "konsole": Konsole,
+    "dolphin": Konsole,
     "gnome-terminal": Gnometerminal,
 }
 shells = {
