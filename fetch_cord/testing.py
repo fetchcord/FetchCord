@@ -24,8 +24,8 @@ getcpufam = exec_bash("lscpu | awk '/^CPU family/{print $3}'")
 cpuvendor = exec_bash("lscpu | awk '/^Vendor ID:/{print $3}'")
 getcpumodel = exec_bash("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq")
 amdcpu = getcpufam
-getcpu = exec_bash("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'")
-cpu = getcpu
+getcpu = exec_bash("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'").split()
+cpu = getcpu[1] + ' ' + getcpu[2]
 print(cpu.lower())
 cpumodel = "CPU: " + getcpumodel
 cpuinfo = getcpumodel
@@ -50,7 +50,9 @@ print(check_provider)
 print(gpuout)
 print (gpuinfo)
 de = getde
-wm = getwm
+wm = ""
+if de == "":
+    wm = getwm
 desktopid = "none"
 #distros set id and package number
 def iUbuntu():
@@ -210,10 +212,10 @@ prettyname = ldistro + ' ' + ver
 print (prettyname)
 #list of distros to comopre
 amdcpus = {
-    "amd ryzen 3": Ryzen3,
-    "amd ryzen 5": Ryzen5,
-    "amd ryzen 7": Ryzen7,
-    "amd ryzen 9": Ryzen9,
+    "ryzen 3": Ryzen3,
+    "ryzen 5": Ryzen5,
+    "ryzen 7": Ryzen7,
+    "ryzen 9": Ryzen9,
 }
 intelcpus = {
     "core(tm) i3": Intelcorei3,
