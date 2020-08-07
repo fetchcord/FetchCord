@@ -24,9 +24,9 @@ getcpufam = exec_bash("lscpu | awk '/^CPU family/{print $3}'")
 cpuvendor = exec_bash("lscpu | awk '/^Vendor ID:/{print $3}'")
 getcpumodel = exec_bash("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq")
 amdcpu = getcpufam
-getintelcpu = exec_bash("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'")
-intelcpu = getintelcpu
-print(intelcpu)
+getcpu = exec_bash("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'")
+cpu = getcpu
+print(cpu.lower())
 cpumodel = "CPU: " + getcpumodel
 cpuinfo = getcpumodel
 cpufam = getcpufam
@@ -179,6 +179,22 @@ def Intelcorei9():
         global cpuid, cpuappid
         cpuid = "Intel(R) Core(TM) i9"
         cpuappid='741100622040006719'
+def Ryzen3():
+        global cpuid, cpuappid
+        cpuid = "AMD Ryzen 3"
+        cpuappid='741153175779803146'
+def Ryzen5():
+        global cpuid, cpuappid
+        cpuid = "AMD Ryzen 5"
+        cpuappid='741152732756312125'
+def Ryzen7():
+        global cpuid, cpuappid
+        cpuid = "AMD Ryzen 7"
+        cpuappid='740752899054895105'
+def Ryzen9():
+        global cpuid, cpuappid
+        cpuid = "AMD Ryzen 9"
+        cpuappid='741152930899427364'
 # gpuids
 def Nvidiagpu():
         global gpuid
@@ -194,8 +210,10 @@ prettyname = ldistro + ' ' + ver
 print (prettyname)
 #list of distros to comopre
 amdcpus = {
-    "23": Ryzen,
-    "22": Amdcpu,
+    "amd ryzen 3": Ryzen3,
+    "amd ryzen 5": Ryzen5,
+    "amd ryzen 7": Ryzen7,
+    "amd ryzen 9": Ryzen9,
 }
 intelcpus = {
     "core(tm) i3": Intelcorei3,
@@ -258,9 +276,9 @@ except KeyError:
         print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
 try:
         if cpuvendor == "AuthenticAMD":
-            amdcpus[amdcpu.lower()]()
+            amdcpus[cpu.lower()]()
         else:
-            intelcpus[intelcpu.lower()]()
+            intelcpus[cpu.lower()]()
 except KeyError:
         print("unknown CPU, contact me on github to resolve this.(Keyerror)")
 
