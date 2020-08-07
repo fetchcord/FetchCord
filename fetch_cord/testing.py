@@ -15,7 +15,7 @@ packages = "none"
 #text for kernel info
 text = 'Kernel: ' + info
 # get terminal
-term = exec_bash("echo $TERM | sed 's/-/ /g;s/ .*//'")
+term = exec_bash("ps -o comm= -p \"$(($(ps -o ppid= -p \"$(($(ps -o sid= -p \"$$\")))\")))\"  | sed 's/-$//'")
 shell = exec_bash("echo $SHELL | sed 's/\// /g;s/.*bin //'")
 shellinfo = "SHELL: " + shell
 terminfo = "TERM: " + term
@@ -241,6 +241,9 @@ def Xterm():
 def Konsole():
         global termappid
         termappid='741286819676553258'
+def Gnometerminal():
+        global termappid
+        termappid='741328861115056160'
 # shells
 def Fish():
         global shell
@@ -312,6 +315,7 @@ terms = {
     "alacritty": Alacritty,
     "xterm": Xterm,
     "konsole": Konsole,
+    "gnome-terminal": Gnometerminal,
 }
 shells = {
     "fish": Fish,
