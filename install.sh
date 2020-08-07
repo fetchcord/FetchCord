@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $EUID -ne 0 ]; then
-  echo "This script needs to be run as root."
+  echo "This script must to be run as root."
   exit 1
 else
   cp fetch_cord/getde.sh  /usr/local/bin/getde
