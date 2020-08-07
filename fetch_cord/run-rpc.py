@@ -27,11 +27,10 @@ print (cpumodel)
 print("Connecting")
 #client id of discord rpc app
 print("RPC connection successful.")
-#client_id = appid
-#rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
 time.sleep(5)
 start_time = float(uptime) #discord uses unix time to interpret time for rich presnse, this is uptime in unix time
 def set_id():
+    # I hate discord
     global rpc_obj, rpc_obj2 
     client_id = appid
     rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
@@ -68,10 +67,10 @@ def cycle1():
                 "start": start_time
             },
             "assets": {
-                "small_text": gpuinfo, #this will show de/wm name and de/wm version
-                "small_image": gpuid, #this shows the de/wm logo
-                "large_text": cpuinfo, #shows distro version and name on hover (refence to pretty name in /etc/os-release)
-                "large_image": "big" #this will be the distro logo
+                "small_text": gpuinfo, #this will show gpu(s)
+                "small_image": gpuid, #this shows the GPU logo
+                "large_text": cpuinfo, #shows CPU info and name on hover
+                "large_image": "big" #this will be the CPU logo
             }
         }
         # reset id to make discord happy

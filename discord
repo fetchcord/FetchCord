@@ -1,0 +1,11 @@
+#!/bin/bash
+# manual install
+if [ -d /opt/Discord ]; then
+  /opt/Discord/Discord &
+else
+# package install
+  /usr/bin/discord &
+fi
+# give slowcord time to start
+sleep 10
+python3 -u -m fetch_cord.run-rpc
