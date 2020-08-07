@@ -11,7 +11,7 @@ setup(
         join(dirname(__file__), 'readme.md')).read(),
     url='https://github.com/MrPotatoBobx/FetchCord',
     author='MrPotatoBobx',
-    author_email='bobpotatolol17@gmail.com',
+    author_email='junkahole23@protonmail.com',
     license='MIT',
     packages=['fetch_cord'],
     keywords=['distro', 'info', 'discord', 'fetch'],
