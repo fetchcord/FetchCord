@@ -16,6 +16,7 @@ Fetchcord grabs information about your Distro and displays it as Discord Rich Pr
 
 - [x] Distro version
 - [x] Detect wm/de
+- [x] detect gpu/cpu and display it in  a cycle (thanks to hyper-kvm)
 
 - [x] Intel Core series CPU detection
 

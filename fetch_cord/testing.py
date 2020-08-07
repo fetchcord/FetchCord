@@ -51,7 +51,9 @@ print(gpuout)
 print (gpuinfo)
 print (gpuvendor)
 de = getde
-wm = getwm
+wm = ""
+if de == "":
+    wm = getwm
 desktopid = "none"
 #distros set id and package number
 def iUbuntu():
