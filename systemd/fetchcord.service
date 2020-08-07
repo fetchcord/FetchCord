@@ -1,0 +1,9 @@
+[Unit]
+Description=System info Discord Rich Presence Daemon
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -u -m fetch_cord.run-rpc
+
+[Install]
+WantedBy=multi-user.target
