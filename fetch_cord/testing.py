@@ -28,6 +28,7 @@ cpuinfo = getcpumodel[0]
 cpufam = getcpufam
 # set cpuid
 cpuid = "none"
+cpuappid = "none"
 # get gpu
 check_provider = os.popen("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'").read()
 if check_provider == "NVIDIA-G0\n":
@@ -156,12 +157,10 @@ def Ryzen():
         global cpuid, cpuappid
         cpuid = "Ryzen"
         cpuappid='740752899054895105'
-def Intelcpu():
-        global cpuid
-        cpuid = {
-        "7": "Intel TEST",
-        }[cpu]
-        return cpuid
+def Intelcore4():
+        global cpuid, cpuappid
+        cpuid = "Intel Core(R) 4th Gen Series"
+        cpuappid='741044208512532570'
 # gpuids
 def Nvidiagpu():
         global gpuid
@@ -181,7 +180,7 @@ amdcpus = {
     "22": Amdcpu,
 }
 intelcpus = {
-    "7": Intelcpu,
+    "6": Intelcore4,
 }
 gpus = {
     "intel": Intelgpu,
