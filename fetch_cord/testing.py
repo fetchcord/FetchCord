@@ -35,10 +35,10 @@ cpuappid = "none"
 # get gpu
 check_provider = os.popen("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'").read()
 if check_provider == "NVIDIA-G0\n":
-    gpu = os.popen(" lspci | egrep \"VGA.*\" | grep -o \"\[.*.*\].*\" | sed 's/^\[//;s/]//;s/(rev ..)//'").read()
+    gpu = os.popen("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'").read()
     gpuvendor = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
 else:
-    gpu = os.popen("glxinfo | grep \"OpenGL renderer string:\" | sed 's/OpenGL renderer string: //;s/Mesa //'").read()
+    gpu = os.popen("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'").read()
     gpuvendor = os.popen("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
 # get gpu info
 getgpuout = gpu.splitlines()
@@ -46,6 +46,7 @@ gpuout = "GPU: " + getgpuout[0]
 gpuinfo = gpu
 print(check_provider)
 print(gpuout)
+print (gpuinfo)
 de = getde
 wm = getwm
 desktopid = "none"
