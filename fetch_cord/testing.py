@@ -14,6 +14,11 @@ info = exec_bash("uname -r")
 packages = "none"
 #text for kernel info
 text = 'Kernel: ' + info
+# get terminal
+term = exec_bash("echo $TERM")
+shell = exec_bash("echo $SHELL")
+print(term)
+print(shell)
 #find out uptime for epoch time
 uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
 #set appid and packages for each distro 
@@ -40,6 +45,7 @@ if check_provider == "NVIDIA-G0":
     gpuvendor = exec_bash("%s glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'" % nvprimestring)
 else:
     gpuvendor = exec_bash("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'")
+    gpu = exec_bash("lspci | egrep -o \"VGA.*NVIDIA.*\" | sed 's/^.*: //;s/A.*\[/A /;s/\].*//'")
 if gpuvendor != "NVIDIA":
     gpu = exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
 # get gpu info
