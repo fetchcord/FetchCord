@@ -14,7 +14,6 @@ desktopid = testing.desktopid
 prettyname = testing.prettyname
 gpu = testing.gpu
 cpuinfo = testing.cpuinfo
-gpuid = testing.gpuid
 cpuappid = testing.cpuappid
 gpuout = testing.gpuout
 gpuinfo = testing.gpuinfo

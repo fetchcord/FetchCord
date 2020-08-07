@@ -1,5 +1,6 @@
 import distro
 import os
+from .bash import exec_bash, BashError
 info = distro.linux_distribution(full_distribution_name=False)
 ldistro = info[0]
 ver = info[1]
@@ -8,41 +9,42 @@ print (ver)
 #appid for discord app
 appid = "none"
 #find kernel
-info = os.popen("uname -r").read()
+info = exec_bash("uname -r")
 #number of packages
 packages = "none"
 #text for kernel info
 text = 'Kernel: ' + info
 #find out uptime for epoch time
-uptime = os.popen("cat /proc/stat | grep btime | awk '{print $2}'").read()
+uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
 #set appid and packages for each distro 
-getde = os.popen("/usr/local/bin/getde").read()
-getwm = os.popen("/usr/local/bin/getwm").read()
+getde = exec_bash("/usr/local/bin/getde")
+getwm = exec_bash("/usr/local/bin/getwm")
 # get cpu info
-getcpufam = os.popen("lscpu | awk '/^CPU family/{print $3}'").read().split()
-cpuvendor = os.popen("lscpu | awk '/^Vendor ID:/{print $3}'").read().split()
-getcpumodel = os.popen("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq").read().splitlines()
-amdcpu = getcpufam[0]
-getintelcpu = os.popen("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'").read().split()
-intelcpu = getintelcpu[1] + ' ' + getintelcpu[2]
+getcpufam = exec_bash("lscpu | awk '/^CPU family/{print $3}'")
+cpuvendor = exec_bash("lscpu | awk '/^Vendor ID:/{print $3}'")
+getcpumodel = exec_bash("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq")
+amdcpu = getcpufam
+getintelcpu = exec_bash("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'")
+intelcpu = getintelcpu
 print(intelcpu)
-cpumodel = "CPU: " + getcpumodel[0]
-cpuinfo = getcpumodel[0]
+cpumodel = "CPU: " + getcpumodel
+cpuinfo = getcpumodel
 cpufam = getcpufam
 # set cpuid
 cpuid = "none"
 cpuappid = "none"
+gpuid = "none"
 # get gpu
-check_provider = os.popen("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'").read()
-if check_provider == "NVIDIA-G0\n":
-    gpu = os.popen("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'").read()
-    gpuvendor = os.popen("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
+check_provider = exec_bash("xrandr --listproviders | egrep -io \"name:.*NVIDIA-G0.*\" | sed 's/name://'")
+if check_provider == "NVIDIA-G0":
+    gpu = exec_bash("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'")
+    gpuvendor = exec_bash("__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'")
 else:
-    gpu = os.popen("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'").read()
-    gpuvendor = os.popen("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'").read().split()
+    gpu = exec_bash("lspci | egrep \"VGA.*\" | sed 's/\[//;s/]//;s/(rev ..)//;s/..:..\.0 VGA compatible controller: //;s/Corporation //;s/NVIDIA ....../NVIDIA/;s/Advanced Micro Devices, Inc. //'")
+    gpuvendor = exec_bash("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'")
 # get gpu info
-getgpuout = gpu.splitlines()
-gpuout = "GPU: " + getgpuout[0]
+getgpuout = gpu
+gpuout = "GPU: " + getgpuout
 gpuinfo = gpu
 print(check_provider)
 print(gpuout)
@@ -54,85 +56,85 @@ desktopid = "none"
 def iUbuntu():
 	global appid, packages
 	appid='740434138036699178'
-	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
+	packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
 
 def iVoid():
         global appid, packages, appid2
         appid='740484961353597039'
-        packages = os.popen("xbps-query -l | wc -l").read()
+        packages = exec_bash("xbps-query -l | wc -l")
 def iOpenSuseLeap():
 	global appid, packages
 	appid='740156532137787433'
-	packages = os.popen("rpm -qa --last | wc -l").read()
+	packages = exec_bash("rpm -qa --last | wc -l")
 def iOpenSuseTumble():
 	global appid, packages
 	appid='740156532137787433'
-	packages = os.popen("rpm -qa --last | wc -l").read()
+	packages = exec_bash("rpm -qa --last | wc -l")
 def iCentos():
 	global appid, packages
 	appid='740483295388631071'
-	packages = os.popen("rpm -qa --last | wc -l").read()
+	packages = exec_bash("rpm -qa --last | wc -l")
 def iArch():
 	global appid, packages
 	appid='740476198437650473'
-	packages = os.popen("pacman -Qq --color never | wc -l").read()
+	packages = exec_bash("pacman -Qq --color never | wc -l")
 def iFedora():
 	global appid, packages
 	appid='740485660703719464'
-	packages = os.popen("rpm -qa --last | wc -l").read()
+	packages = exec_bash("rpm -qa --last | wc -l")
 def iGentoo():
 	global appid, packages
 	appid='740484380652208140'
-	packages = os.popen("eix-installed -a | wc -l").read()
+	packages = exec_bash("eix-installed -a | wc -l")
 def iDebian():
 	global appid, packages
 	appid='740490017218232392'
-	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
+	packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
 def iManjaro():
 	global appid, packages
 	appid='740614258177605642'
-	packages = os.popen("pacman -Qq --color never | wc -l").read()
+	packages = exec_bash("pacman -Qq --color never | wc -l")
 def iLinuxMint():
         global appid, packages
         appid='740633577481568317'
-        packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
+        packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
 def iPop():
 	global appid, packages
 	appid='740660055925587978'
-	packages = os.popen("dpkg-query -f '.\n' -W | wc -l").read()
+	packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
 def iEnde():
 	global appid, packages
 	appid='740809641545564170'
-	packages = os.popen("pacman -Qq --color never | wc -l").read()
+	packages = exec_bash("pacman -Qq --color never | wc -l")
 #def desktops and defind id
 def iKde():
 	global desktopid, desktopver
 	desktopid = "kde"
-	#desktopver = os.popen("plasmashell --version").read()
+	#desktopver = exec_bash("plasmashell --version")
 def iGnome():
 	global desktopid, desktopver
 	desktopid = "gnome"
-	#desktopver = os.popen("").read()
+	#desktopver = exec_bash("")
 def iXfce():
 	global desktopid, desktopver
 	desktopid = "xfce"
-	#desktopver = os.popen("").read()
+	#desktopver = exec_bash("")
 def Ii3():
 	global desktopid, desktopver
 	desktopid = "i3"
-	#desktopver = os.popen("").read()
+	#desktopver = exec_bash("")
 def iCinnamon():
 	global desktopid, desktopver
 	desktopid = "cinnamon"
-	#desktopver = os.popen("").read()
+	#desktopver = exec_bash("")
 def iBudgie():
 	global desktopid, desktopver
 	desktopid = "budgie"
-	#desktopver = os.popen("").read()
+	#desktopver = exec_bash("")
 def iDeepin():
 	global desktopid, desktopver
 	desktopid = "deepin"
-	#desktopver = os.popen("").read()
+	#desktopver = exec_bash("")
 def iDwm():
 	global desktopid, desktopver
 	desktopid = "dwm"
@@ -225,27 +227,27 @@ distros = {
 }
 # window managers
 windowmanagers = {
-    "dwm\n": iDwm,
-    "i3\n": Ii3,
-    "awesome\n": iAwesome,
+    "dwm": iDwm,
+    "i3": Ii3,
+    "awesome": iAwesome,
 }
 #desktops
 desktops = {
-	"kde\n": iKde,
-	"xfce\n": iXfce,
-	"budgie\n": iBudgie,
-	"gnome\n": iGnome,
-	"deepin\n": iDeepin,
-	"cinnamon\n": iCinnamon,
-	"mate\n": iMate,
-	"unity\n": iUnity
+	"kde": iKde,
+	"xfce": iXfce,
+	"budgie": iBudgie,
+	"gnome": iGnome,
+	"deepin": iDeepin,
+	"cinnamon": iCinnamon,
+	"mate": iMate,
+	"unity": iUnity
 }
 try:
 	distros[ldistro]()
 except KeyError:
 	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
 try:
-    if de != "\n":
+    if de != "":
         desktops[de.lower()]()
 except KeyError:
 	print("Unsupported De contact me on github to resolve this.(Keyerror)")
@@ -255,7 +257,7 @@ try:
 except KeyError:
         print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
 try:
-        if cpuvendor[0] == "AuthenticAMD":
+        if cpuvendor == "AuthenticAMD":
             amdcpus[amdcpu.lower()]()
         else:
             intelcpus[intelcpu.lower()]()
@@ -263,7 +265,7 @@ except KeyError:
         print("unknown CPU, contact me on github to resolve this.(Keyerror)")
 
 try:
-        gpus[gpuvendor[0].lower()]()
+        gpus[gpuvendor.lower()]()
 except KeyError:
         print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
 
