@@ -1,6 +1,6 @@
 from .bash import exec_bash, BashError
 import subprocess
-baseinfo = exec_bash("neofetch --stdout")
+baseinfo = exec_bash("neofetch --stdout --config none")
 #make lists
 cpu = "CPU:"
 cpuline = []
@@ -89,7 +89,7 @@ else:
         print(intelgpuline)
 cpuvendor = cpuline[0].split()[1]
 if cpuvendor == "Intel":
-    cpumodel = cpuline[0].replace('-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]#] + ' ' + cpuline[0].split()[3]
+    cpumodel = cpuline[0].replace('-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 cpuinfo = cpuline[0].join(cpuline)[5:]
@@ -116,4 +116,5 @@ print(packagesline[0])
 print(cpuline[0])
 print(termline[0])
 print(osid)
+print(osline[0])
 print(wmline[0])

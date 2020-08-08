@@ -1,7 +1,7 @@
 import distro
 import os
 from .bash import exec_bash, BashError
-from .out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor
+from .out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, osid
 info = distro.linux_distribution(full_distribution_name=False)
 ldistro = info[0]
 ver = info[1]
@@ -64,6 +64,9 @@ def iLinuxMint():
         global appid, packages
         appid='740633577481568317'
         packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
+def iLMDE():
+        global appid
+        appid='741726946588622988'
 def iPop():
 	global appid, packages
 	appid='740660055925587978'
@@ -194,6 +197,9 @@ def Konsole():
 def Gnometerminal():
         global termappid
         termappid='741328861115056160'
+def Coolretroterm():
+        global termappid
+        termappid='741731097498353794'
 # shells
 def Fish():
         global shell
@@ -239,6 +245,7 @@ distros = {
 "opensuse-tumbleweed": iOpenSuseTumble,
 "manjaro": iManjaro,
 "linuxmint": iLinuxMint,
+"lmde": iLMDE,
 "pop": iPop,
 "endeavouros": iEnde
 }
@@ -268,6 +275,7 @@ terms = {
     "konsole": Konsole,
     "dolphin": Konsole,
     "gnome-terminal": Gnometerminal,
+    "cool-retro-term": Coolretroterm,
 }
 shells = {
     "fish": Fish,
@@ -275,7 +283,7 @@ shells = {
     "bash": Bash,
 }
 try:
-	distros[ldistro]()
+	distros[osid.lower()]()
 except KeyError:
 	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
 try:
