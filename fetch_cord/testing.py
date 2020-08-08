@@ -225,7 +225,7 @@ intelcpus = {
     "intel i5": Intelcorei5,
     "intel i7": Intelcorei7,
     "intel i9": Intelcorei9,
-    "pentium(r) cpu": Intelpentium,
+    "intel pentium": Intelpentium,
 }
 gpus = {
     "intel": Intelgpu,
