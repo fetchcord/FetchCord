@@ -3,7 +3,7 @@ from . import rpc
 import time
 #import info about system
 from . import testing 
-from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, cpuinfo, shell_line, termfontline, osline
+from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, cpuinfo, shell_line, termfontline, sysosline
 # define testing functions
 uptime = testing.uptime
 gpuid = testing.gpuid
@@ -44,7 +44,7 @@ def cycle0():
             "assets": {
                 "small_text": desktopid, #this will show de/wm name and de/wm version
                 "small_image": desktopid, #this shows the de/wm logo
-                "large_text": osline[0], #shows distro version and name on hover (refence to pretty name in /etc/os-release)
+                "large_text": sysosline[0], #shows distro version and name on hover (refence to pretty name in /etc/os-release)
                 "large_image": "big" #this will be the distro logo
             }
         }

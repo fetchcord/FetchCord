@@ -3,7 +3,9 @@
 Fetchcord grabs information about your distribution and displays it as Discord Rich Presence.
 
 ## Examples
-![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png) ![AMD Ryzen 7 CPU/NVIDIA GPU](Examples/ryzen7_example.png)
+![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
+
+![amd with nvidia](Examples/amd_example.png)
 
 ## What works
 
@@ -21,7 +23,7 @@ Fetchcord grabs information about your distribution and displays it as Discord R
 
 - [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
 
-## To-Do(What doesn't work)
+## To-Do
 - [ ] Add more distributions (If your distro is not supported open an issue)
 
 - [ ] Detect Window Manager/Desktop Environment version
@@ -46,7 +48,7 @@ python3.8 needs the `distro` module. If you get an error, install it via pip: `p
 ## Running on MacOS
 To install the script, run `sudo ./macinstall.sh`.
 
-Run `python3 -u -m macos-rpc.py`.
+Run `python3 -u -m fetch_cord.macos-rpc.py`.
 
 ## Other Examples
 
