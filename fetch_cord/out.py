@@ -98,7 +98,6 @@ if cpuvendor == "Intel":
     cpumodel = cpuline[0].replace('-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
-cpuinfo = cpuline[0].join(cpuline)[5:]
 wmid = wmline[0].split()[1]
 termid = termline[0].split()[1]
 shellid = shell_line[0].split()[1]
@@ -117,7 +116,6 @@ print(wmid)
 print(termid)
 print(cpuvendor)
 print(cpumodel)
-print(cpuinfo)
 print(packagesline[0])
 print(cpuline[0])
 print(termline[0])

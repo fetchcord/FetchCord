@@ -3,7 +3,7 @@ from . import rpc
 import time
 #import info about system
 from . import testing 
-from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, cpuinfo, shell_line, termfontline, sysosline
+from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, sysosline
 # define testing functions
 uptime = testing.uptime
 gpuid = testing.gpuid
@@ -65,7 +65,7 @@ def cycle1():
             "assets": {
                 "small_text": gpuinfo, #this will show gpu(s)
                 "small_image": gpuid, #this shows the GPU logo
-                "large_text": cpuinfo, #shows CPU info and name on hover
+                "large_text": cpuline[0], #shows CPU info and name on hover
                 "large_image": "big" #this will be the CPU logo
             }
         }
