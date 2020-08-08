@@ -11,11 +11,6 @@ desktopid = testing.desktopid
 appid = testing.appid
 cpuappid = testing.cpuappid
 termappid = testing.termappid
-# MacOS functions
-devicetype = testing.devicetype
-product = testing.product
-bigicon = testing.bigicon
-ver = testing.ver
 #printing info(this will be removed soon)
 print (uptime)
 print (packagesline[0])
@@ -37,6 +32,10 @@ def set_id():
     rpc_obj3 = rpc.DiscordIpcClient.for_platform(client_id3)
 
 if sysosid == "macos":
+    devicetype = testing.devicetype
+    product = testing.product
+    bigicon = testing.bigicon
+    ver = testing.ver
     client_id = '740822755376758944' #macos appid for discord rpc
     print("RPC connection successful.")
     time.sleep(5)
