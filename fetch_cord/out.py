@@ -74,6 +74,9 @@ termid = termline[0].split()[1]
 shellid = shell_line[0].split()[1]
 kernelid = kernelline[0].split()[1]
 osid = osline[0].split()[1]
+if not termfontline:
+    termfontline = "none"
+    print(termfontline)
 if deline:
     deid = deline[0].split()[1]
 else:
