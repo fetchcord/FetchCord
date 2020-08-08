@@ -33,7 +33,6 @@ def set_id():
     rpc_obj3 = rpc.DiscordIpcClient.for_platform(client_id3)
 # cycle
 def cycle0():
-    while True:
         print("cycle 0")
         activity = {
             "state": packagesline[0],
@@ -51,10 +50,8 @@ def cycle0():
         set_id()
         rpc_obj.set_activity(activity)
         time.sleep(30)
-        break
 # cycle
 def cycle1():
-    while True:
         print("cycle 1")
         activity = {
             "state": cpuline[0],
@@ -73,10 +70,8 @@ def cycle1():
         set_id()
         rpc_obj2.set_activity(activity)
         time.sleep(30)
-        break
 # cycle
 def cycle2():
-    while True:
         print("cycle 2")
         activity = {
             "state": shell_line[0],
@@ -95,7 +90,6 @@ def cycle2():
         set_id()
         rpc_obj3.set_activity(activity)
         time.sleep(30)
-        break
 while True:
     cycle0()
     cycle1()
