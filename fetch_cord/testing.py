@@ -1,6 +1,7 @@
 import distro
 import os
 from .bash import exec_bash, BashError
+from .out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor
 info = distro.linux_distribution(full_distribution_name=False)
 ldistro = info[0]
 ver = info[1]
@@ -8,65 +9,15 @@ print(ldistro)
 print (ver)
 #appid for discord app
 appid = "none"
-#find kernel
-info = exec_bash("uname -r")
 #number of packages
 packages = "none"
-#text for kernel info
-text = 'Kernel: ' + info
-# get terminal
-term = exec_bash("ps -o comm= -p \"$(($(ps -o ppid= -p \"$(($(ps -o sid= -p \"$$\")))\")))\"  | sed 's/-$//'")
-shell = exec_bash("echo $SHELL | sed 's/\// /g;s/.*bin //'")
-shellinfo = "Shell: " + shell
-terminfo = "Term: " + term
-print(term)
-print(shell)
 #find out uptime for epoch time
 uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
-#set appid and packages for each distro 
-getde = exec_bash("/usr/local/bin/getde")
-getwm = exec_bash("/usr/local/bin/getwm")
-# get cpu info
-cpuvendor = exec_bash("lscpu | awk '/^Vendor ID:/{print $3}'")
-getcpumodel = exec_bash("cat /proc/cpuinfo | awk '/^model name/{print $4,$5,$6,$7}' | uniq")
-getcpu = exec_bash("lscpu | grep \"Model name:\" | awk '{print $3,$4,$5}' | sed 's/-/ /g'").split()
-cpu = getcpu[1] + ' ' + getcpu[2]
-print(cpu.lower())
-cpumodelsplit = getcpumodel.split()
-cpumodel = "CPU: " + getcpumodel
-cpuinfo = getcpumodel
 # predefine ids
 cpuid = "none"
 cpuappid = "none"
 gpuid = "none"
 termappid = "none"
-# get gpu
-try:
-    check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-G0\"")
-except BashError:
-    check_provider = ""
-    pass
-if check_provider == "NVIDIA-G0":
-    nvprimestring = "__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia "
-    gpu = exec_bash("lspci | egrep -o \"VGA.*NVIDIA.*\" | sed 's/^.*: //;s/A.*\[/A /;s/\].*//'")
-    gpuvendor = exec_bash("%s glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'" % nvprimestring)
-else:
-    gpuvendor = exec_bash("glxinfo | grep \"OpenGL vendor string:\" | awk '{print $4}'")
-    gpu = exec_bash("lspci | egrep -o \"VGA.*NVIDIA.*\" | sed 's/^.*: //;s/A.*\[/A /;s/\].*//'")
-if gpuvendor != "NVIDIA":
-    gpu = exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
-# get gpu info
-getgpuout = gpu
-gpuout = "GPU: " + getgpuout
-gpuinfo = gpu
-print(check_provider)
-print(gpuout)
-print (gpuinfo)
-print (gpuvendor)
-de = getde
-wm = ""
-if de == "":
-    wm = getwm
 desktopid = "none"
 #distros set id and package number
 def iUbuntu():
@@ -75,9 +26,8 @@ def iUbuntu():
 	packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
 
 def iVoid():
-        global appid, packages, appid2
+        global appid, packages
         appid='740484961353597039'
-        packages = exec_bash("xbps-query -l | wc -l")
 def iOpenSuseLeap():
 	global appid, packages
 	appid='740156532137787433'
@@ -274,7 +224,7 @@ intelcpus = {
 gpus = {
     "intel": Intelgpu,
     "nvidia": Nvidiagpu,
-    "x.org": Amdgpu,
+    "amd": Amdgpu,
 }
 distros = {
 "ubuntu": iUbuntu, 
@@ -328,20 +278,20 @@ try:
 except KeyError:
 	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
 try:
-    if de != "":
-        desktops[de.lower()]()
+    if deid != "none":
+        desktops[deid.lower()]()
 except KeyError:
 	print("Unsupported De contact me on github to resolve this.(Keyerror)")
 pass
 try:
-        windowmanagers[wm.lower()]()
+        windowmanagers[wmid.lower()]()
 except KeyError:
         print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
 try:
-        if cpuvendor == "AuthenticAMD":
-            amdcpus[cpu.lower()]()
-        else:
-            intelcpus[cpu.lower()]()
+        if cpuvendor == "AMD":
+            amdcpus[cpumodel.lower()]()
+        elif cpuvendor == "Intel":
+            intelcpus[cpumodel.lower()]()
 except KeyError:
         print("unknown CPU, contact me on github to resolve this.(Keyerror)")
 
@@ -350,17 +300,15 @@ try:
 except KeyError:
         print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
 try:
-        terms[term.lower()]()
+        terms[termid.lower()]()
 except KeyError:
         print("Unsupported Terminal. contact me on github to resolve this.(Keyerror)")
 try:
-        shells[shell.lower()]()
+        shells[shellid.lower()]()
 except KeyError:
         print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
 
 #package number
 packtext = 'Packages: ' + packages
 #if de in desktops:
-print (de.lower())
-print(wm.lower())
 print(cpuid)

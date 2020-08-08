@@ -3,32 +3,20 @@ from . import rpc
 import time
 #import info about system
 from . import testing 
+from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, cpuinfo, shell_line, termfontline, osline
 # define testing functions
 uptime = testing.uptime
-text = testing.text
-packtext = testing.packtext
-appid = testing.appid
 gpuid = testing.gpuid
-cpumodel = testing.cpumodel
 desktopid = testing.desktopid
+appid = testing.appid
 prettyname = testing.prettyname
-gpu = testing.gpu
-cpuinfo = testing.cpuinfo
 cpuappid = testing.cpuappid
-gpuout = testing.gpuout
-gpuinfo = testing.gpuinfo
-shellinfo = testing.shellinfo
-terminfo= testing.terminfo
-shell = testing.shell
-term = testing.term
 termappid = testing.termappid
 #printing info(this will be removed soon)
 print (uptime)
-print (text)
-print (packtext)
+print (packagesline[0])
 print (appid)
 print (gpuid)
-print (cpumodel)
 print("Connecting")
 #client id of discord rpc app
 print("RPC connection successful.")
@@ -48,15 +36,15 @@ def cycle0():
     while True:
         print("cycle 0")
         activity = {
-            "state": packtext,
-            "details": text,
+            "state": packagesline[0],
+            "details": kernelline[0],
             "timestamps": {
                 "start": start_time
             },
             "assets": {
                 "small_text": desktopid, #this will show de/wm name and de/wm version
                 "small_image": desktopid, #this shows the de/wm logo
-                "large_text": prettyname, #shows distro version and name on hover (refence to pretty name in /etc/os-release)
+                "large_text": osline[0], #shows distro version and name on hover (refence to pretty name in /etc/os-release)
                 "large_image": "big" #this will be the distro logo
             }
         }
@@ -69,8 +57,8 @@ def cycle1():
     while True:
         print("cycle 1")
         activity = {
-            "state": cpumodel,
-            "details": gpuout,
+            "state": cpuline[0],
+            "details": gpuinfo,
             "timestamps": {
                 "start": start_time
             },
@@ -91,15 +79,15 @@ def cycle2():
     while True:
         print("cycle 2")
         activity = {
-            "state": shellinfo,
-            "details": terminfo,
+            "state": shell_line[0],
+            "details": termfontline[0],
             "timestamps": {
                 "start": start_time
             },
             "assets": {
-                "small_text": shell, #this will show shell
-                "small_image": shell, #this shows the shell logo
-                "large_text": term, #shows terminal name on hover
+                "small_text": shellid, #this will show shell
+                "small_image": shellid, #this shows the shell logo
+                "large_text": termid, #shows terminal name on hover
                 "large_image": "big" #this will be the terminal logo
             }
         }
