@@ -62,6 +62,7 @@ try:
 except FileNotFoundError:
     pass
 gpuvendor = "none"
+sysosid = sysosline[0].split()[1]
 if sysosid.lower() != "macos":
     try:
         check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA.*\"")
@@ -105,7 +106,6 @@ wmid = wmline[0].split()[1]
 termid = termline[0].split()[1]
 shellid = shell_line[0].split()[1]
 kernelid = kernelline[0].split()[1]
-sysosid = sysosline[0].split()[1]
 if not termfontline:
     termfontline = []
     termfontline.append("Terminal font: N/A")
