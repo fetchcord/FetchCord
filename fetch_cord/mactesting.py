@@ -1,6 +1,12 @@
 import os
-packages = os.popen("ls -l /Applications | wc -l").read()
-appsp = "Applications: " + packages
+brew = os.popen("find /usr/local/bin/brew").read()
+
+if brew == "/usr/local/bin/brew\n":
+	packages = "Packages: " + os.popen("brew list | wc -l").read()
+else:
+    packages = "Applications: " + os.popen("ls -l /Applications | wc -l").read()
+
+appsp = packages
 ver = os.popen("sw_vers -productVersion").read()
 uptime = os.popen("sysctl -n kern.boottime").read()
 product = os.popen("sysctl -n hw.model").read()
