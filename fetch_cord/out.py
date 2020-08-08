@@ -61,9 +61,9 @@ except BashError:
     pass
     check_provider = ""
     print(check_provider)
-if check_provider == "":
+if check_provider == "" and not intelgpuline:
     try:
-        if amdgpuline and not nvidiagpuline:
+        if amdgpuline:
         # amd GPUs
             gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
             gpuvendor = gpuline.split()[1]
@@ -112,8 +112,6 @@ print(termid)
 print(cpuvendor)
 print(cpumodel)
 print(cpuinfo)
-print(gpuinfo)
-print(gpuvendor)
 print(packagesline[0])
 print(cpuline[0])
 print(termline[0])
