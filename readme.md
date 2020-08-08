@@ -46,7 +46,7 @@ python3.8 needs the `distro` module. If you get an error, install it via pip: `p
 ## Running on MacOS
 To install the script, run `sudo ./macinstall.sh`.
 
-Run `python3 -u -m macos-rpc.py`.
+Run `python3 -u -m fetch_cord.macos-rpc.py`.
 
 ## Other Examples
 
