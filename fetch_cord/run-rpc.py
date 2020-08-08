@@ -51,7 +51,7 @@ def cycle0():
         set_id()
         rpc_obj.set_activity(activity)
         time.sleep(30)
-        cycle1()
+        break
 # cycle
 def cycle1():
     while True:
@@ -73,7 +73,7 @@ def cycle1():
         set_id()
         rpc_obj2.set_activity(activity)
         time.sleep(30)
-        cycle2()
+        break
 # cycle
 def cycle2():
     while True:
@@ -95,5 +95,8 @@ def cycle2():
         set_id()
         rpc_obj3.set_activity(activity)
         time.sleep(30)
-        cycle0()
-cycle0()
+        break
+while True:
+    cycle0()
+    cycle1()
+    cycle2()
