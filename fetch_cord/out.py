@@ -51,7 +51,8 @@ try:
     check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA.*\"")
 except BashError:
     pass
-if not check_provider:
+    check_provider = ""
+if check_provider == "":
     try:
         # amd GPUs
         gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
@@ -66,8 +67,14 @@ if not check_provider:
         print("ERROR: Could not run glxinfo [%s]" % str(e))
         sys.exit(1)
 else:
-    gpuvendor = gpuline[0].split()[1]
-    gpuinfo = gpuline[0]
+    try:
+        # Optimus Configuration
+        gpuvendor = gpuline[1].split()[1]
+        gpuinfo = gpuline[1]
+    except IndexError:
+        pass
+        gpuvendor = gpuline[0].split()[1]
+        gpuinfo = gpuline[0]
     print(gpuinfo)
     print(gpuvendor)
     print(gpuline)
