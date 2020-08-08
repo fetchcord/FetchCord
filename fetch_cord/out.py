@@ -4,8 +4,12 @@ baseinfo = exec_bash("neofetch --stdout")
 #make lists
 cpu = "CPU:"
 cpuline = []
-gpu = "GPU"
-gpuline = []
+nvidiagpu = "GPU: NVIDIA"
+nvidiagpuline = []
+amdgpu = "GPU: AMD"
+amdgpuline = []
+intelgpu = "GPU: Intel"
+intelgpuline = []
 term = "Terminal:"
 termline = []
 termfont = "Terminal Font:"
@@ -29,8 +33,12 @@ with open(filepath, "rt") as f:
     for line in f:
         if line.find(cpu) != -1:
             cpuline.append(line.rstrip('\n'))
-        if line.find(gpu) != -1:
-            gpuline.append(line.rstrip('\n'))
+        if line.find(nvidiagpu) != -1:
+            nvidiagpuline.append(line.rstrip('\n'))
+        if line.find(amdgpu) != -1:
+            amdgpuline.append(line.rstrip('\n'))
+        if line.find(intelgpu) != -1:
+            intelgpuline.append(line.rstrip('\n'))
         if line.find(term) != -1:
             termline.append(line.rstrip('\n'))
         if line.find(termfont) != -1:
@@ -52,32 +60,33 @@ try:
 except BashError:
     pass
     check_provider = ""
+    print(check_provider)
 if check_provider == "":
     try:
+        if amdgpuline and not nvidiagpuline:
         # amd GPUs
-        gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
-        gpuvendor = gpuline.split()[1]
-        if gpuvendor == "Intel":
-            gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/Mesa //'")
-        gpuinfo = gpuline
-        gpuid = gpuline
-        print(gpuid)
-        print(gpuline)
+            gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
+            gpuvendor = gpuline.split()[1]
+            gpuinfo = gpuline
+            gpuid = gpuline
+            print(gpuid)
+            print(gpuline)
     except BashError as e:
         print("ERROR: Could not run glxinfo [%s]" % str(e))
         sys.exit(1)
 else:
-    try:
-        # Optimus Configuration
-        gpuvendor = gpuline[1].split()[1]
-        gpuinfo = gpuline[1]
-    except IndexError:
-        pass
-        gpuvendor = gpuline[0].split()[1]
-        gpuinfo = gpuline[0]
-    print(gpuinfo)
-    print(gpuvendor)
-    print(gpuline)
+    if nvidiagpuline:
+        gpuvendor = nvidiagpuline[0].split()[1]
+        gpuinfo = nvidiagpuline[0]
+        print(gpuinfo)
+        print(gpuvendor)
+        print(nvidiagpuline)
+    if intelgpuline and not nvidiagpuline:
+        gpuvendor = intelgpuline[0].split()[1]
+        gpuinfo = intelgpuline[0]
+        print(gpuinfo)
+        print(gpuvendor)
+        print(intelgpuline)
 cpuvendor = cpuline[0].split()[1]
 if cpuvendor == "Intel":
     cpumodel = cpuline[0].replace('-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]#] + ' ' + cpuline[0].split()[3]
