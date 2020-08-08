@@ -3,7 +3,7 @@ from . import rpc
 import time
 #import info about system
 from . import testing 
-from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, cpuinfo, shell_line, termfontline, osline
+from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, cpuinfo, shell_line, termfontline, sysosline
 # define testing functions
 uptime = testing.uptime
 gpuid = testing.gpuid

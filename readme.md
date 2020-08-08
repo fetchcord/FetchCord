@@ -21,7 +21,7 @@ Fetchcord grabs information about your distribution and displays it as Discord R
 
 - [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
 
-## To-Do(What doesn't work)
+## To-Do
 - [ ] Add more distributions (If your distro is not supported open an issue)
 
 - [ ] Detect Window Manager/Desktop Environment version

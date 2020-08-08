@@ -1,5 +1,6 @@
 from .bash import exec_bash, BashError
 import subprocess
+import os
 baseinfo = exec_bash("neofetch --stdout --config none")
 #make lists
 cpu = "CPU:"
@@ -22,11 +23,11 @@ shell = "Shell:"
 shell_line = []
 kernel = "Kernel:"
 kernelline = []
-os = "OS:"
-osline = []
+sysos = "OS:"
+sysosline = []
 packages = "Packages:"
 packagesline = []
-filepath = "out"
+filepath="/tmp/out.txt"
 with open(filepath, 'w') as f:
     print(baseinfo, file=f)
 with open(filepath, "rt") as f:
@@ -53,8 +54,13 @@ with open(filepath, "rt") as f:
             packagesline.append(line.rstrip('\n'))
         if line.find(kernel) != -1:
             kernelline.append(line.rstrip('\n'))
-        if line.find(os) != -1:
-            osline.append(line.rstrip('\n'))
+        if line.find(sysos) != -1:
+            sysosline.append(line.rstrip('\n'))
+try:
+    if os.path.isfile(filepath):
+        os.remove(filepath)
+except FileNotFoundError:
+    pass
 try:
     check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA.*\"")
 except BashError:
@@ -97,7 +103,7 @@ wmid = wmline[0].split()[1]
 termid = termline[0].split()[1]
 shellid = shell_line[0].split()[1]
 kernelid = kernelline[0].split()[1]
-osid = osline[0].split()[1]
+sysosid = sysosline[0].split()[1]
 if not termfontline:
     termfontline = []
     termfontline.append("Terminal font: N/A")
@@ -115,6 +121,6 @@ print(cpuinfo)
 print(packagesline[0])
 print(cpuline[0])
 print(termline[0])
-print(osid)
-print(osline[0])
+print(sysosid)
+print(sysosline[0])
 print(wmline[0])

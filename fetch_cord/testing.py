@@ -1,7 +1,7 @@
 import distro
 import os
 from .bash import exec_bash, BashError
-from .out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, osid
+from .out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
 info = distro.linux_distribution(full_distribution_name=False)
 ldistro = info[0]
 ver = info[1]
@@ -231,6 +231,7 @@ gpus = {
     "intel": Intelgpu,
     "nvidia": Nvidiagpu,
     "amd": Amdgpu,
+    "radeon": Amdgpu,
 }
 distros = {
 "ubuntu": iUbuntu, 
@@ -283,7 +284,7 @@ shells = {
     "bash": Bash,
 }
 try:
-	distros[osid.lower()]()
+	distros[sysosid.lower()]()
 except KeyError:
 	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
 try:
