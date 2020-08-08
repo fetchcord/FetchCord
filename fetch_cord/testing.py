@@ -215,10 +215,10 @@ amdcpus = {
     "ryzen 9": Ryzen9,
 }
 intelcpus = {
-    "core(tm) i3": Intelcorei3,
-    "core(tm) i5": Intelcorei5,
-    "core(tm) i7": Intelcorei7,
-    "core(tm) i9": Intelcorei9,
+    "intel i3": Intelcorei3,
+    "intel i5": Intelcorei5,
+    "intel i7": Intelcorei7,
+    "intel i9": Intelcorei9,
     "pentium(r) cpu": Intelpentium,
 }
 gpus = {
@@ -251,6 +251,7 @@ windowmanagers = {
 #desktops
 desktops = {
 	"kde": iKde,
+        "plasma": iKde,
 	"xfce": iXfce,
 	"budgie": iBudgie,
 	"gnome": iGnome,
@@ -284,6 +285,7 @@ except KeyError:
 	print("Unsupported De contact me on github to resolve this.(Keyerror)")
 pass
 try:
+    if deid == "none":
         windowmanagers[wmid.lower()]()
 except KeyError:
         print("Unsupported Wm contact me on github to resolve this.(Keyerror)")

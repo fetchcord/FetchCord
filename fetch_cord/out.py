@@ -67,7 +67,10 @@ else:
     gpuvendor = gpuline[1].split()[1]
     gpuinfo = gpuline[1]
 cpuvendor = cpuline[0].split()[1]
-cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
+if cpuvendor == "Intel":
+    cpumodel = cpuline[0].replace('-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]#] + ' ' + cpuline[0].split()[3]
+elif cpuvendor == "AMD":
+    cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 cpuinfo = cpuline[0].join(cpuline)[5:]
 wmid = wmline[0].split()[1]
 termid = termline[0].split()[1]
@@ -75,10 +78,12 @@ shellid = shell_line[0].split()[1]
 kernelid = kernelline[0].split()[1]
 osid = osline[0].split()[1]
 if not termfontline:
-    termfontline = "none"
-    print(termfontline)
+    termfontline = []
+    termfontline.append("Terminal font: N/A")
+    print(termfontline[0])
 if deline:
     deid = deline[0].split()[1]
+    print(deid)
 else:
     deid = "none"
 print(wmid)
@@ -91,6 +96,5 @@ print(gpuvendor)
 print(packagesline[0])
 print(cpuline[0])
 print(termline[0])
-print(termfontline[0])
 print(osid)
 print(wmline[0])
