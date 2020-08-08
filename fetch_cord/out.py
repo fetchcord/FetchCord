@@ -48,14 +48,16 @@ with open(filepath, "rt") as f:
         if line.find(os) != -1:
             osline.append(line.rstrip('\n'))
 try:
-    check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-G0\"")
+    check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA.*\"")
 except BashError:
-    check_provider = ""
     pass
-if check_provider != "NVIDIA-G0":
+if not check_provider:
     try:
+        # amd GPUs
         gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
         gpuvendor = gpuline.split()[1]
+        if gpuvendor == "Intel":
+            gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/Mesa //'")
         gpuinfo = gpuline
         gpuid = gpuline
         print(gpuid)
@@ -64,8 +66,11 @@ if check_provider != "NVIDIA-G0":
         print("ERROR: Could not run glxinfo [%s]" % str(e))
         sys.exit(1)
 else:
-    gpuvendor = gpuline[1].split()[1]
-    gpuinfo = gpuline[1]
+    gpuvendor = gpuline[0].split()[1]
+    gpuinfo = gpuline[0]
+    print(gpuinfo)
+    print(gpuvendor)
+    print(gpuline)
 cpuvendor = cpuline[0].split()[1]
 if cpuvendor == "Intel":
     cpumodel = cpuline[0].replace('-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]#] + ' ' + cpuline[0].split()[3]
