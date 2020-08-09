@@ -49,7 +49,7 @@ Fetchcord grabs information about your distribution and displays it as Discord R
 
 ## Running on (GNU/)Linux
 
-To install the script, run `sudo -u $USER ./install.sh`.
+To install the script, run `sudo ./install.sh`.
 
 To run the script simply run `fetchcord`, python 3.8 should have the `distro` module but if you get an error install it via pip, `pip3 install distro`
 
