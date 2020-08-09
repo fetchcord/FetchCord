@@ -84,11 +84,11 @@ gpuinfo = ""
 if nvidiagpuline:
     for n in range(len(nvidiagpuline)):
         gpuinfo = nvidiagpuline[n]
-        gpuvendor = nvidiagpuline[0].split()[1]
+    gpuvendor = nvidiagpuline[0].split()[1]
 if amdgpuline:
     for a in range(len(amdgpurenderlist)):
         gpuinfo += amdgpurenderlist[a]
-        gpuvendor += amdgpuvendor
+    gpuvendor += amdgpuvendor
 if intelgpuline:
     gpuinfo += intelgpuline[0]
     gpuvendor += intelgpuline[0].split()[1]
