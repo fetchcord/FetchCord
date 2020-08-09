@@ -64,7 +64,7 @@ except FileNotFoundError:
     pass
 gpuvendor = "none"
 sysosid = sysosline[0].split()[1]
-if amdgpuline and sysosid.lower != "macos":
+if amdgpuline and sysosid.lower() != "macos" and sysosid.lower() != "windows":
     try:
         # amd GPUs
         for i in range(len(amdgpuline)):
@@ -84,7 +84,6 @@ if amdgpuline and sysosid.lower != "macos":
         sys.exit(1)
 gpuvendor = ""
 gpuinfo = ""
-nvidiagpuline = [' GPU: NVIDIA RTX 2070', ' GPU: NVIDIA RTX 2070 ', ' GPU: NVIDIA RTX 2080 Ti ']
 if nvidiagpuline:
     for n in range(len(nvidiagpuline)):
         gpuinfo += nvidiagpuline[n]
