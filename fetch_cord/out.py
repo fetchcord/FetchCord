@@ -61,23 +61,17 @@ try:
         os.remove(filepath)
 except FileNotFoundError:
     pass
-try:
-    check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA.*\"")
-except BashError:
-    pass
-    check_provider = ""
-    print(check_provider)
-if check_provider == "" and not intelgpuline:
+if amdgpuline:
     try:
         # amd GPUs
-            gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'")
+            amdgpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'")
             amdgpurender = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'")
             gpuvendor = amdgpuline.split()[1]
             amdgpuvendor = amdgpurender.split()[1]
-            gpuinfo = gpuline
-            gpuid = gpuline
+            gpuinfo = amdgpurender
+            gpuid = amdgpurender
             print(gpuid)
-            print(gpuline)
+            print(amdgpuline)
     except BashError as e:
         print("ERROR: Could not run glxinfo [%s]" % str(e))
         sys.exit(1)
@@ -126,7 +120,7 @@ try:
             print(gpuinfo)
             print(gpuvendor)
     if nvidiagpuline[1] and intelgpuline:
-        gpuinfo = nvidiagpuline[0] + ' ' + nvidiagpuline[1] + ' ' intelgpuline[0]
+        gpuinfo = nvidiagpuline[0] + ' ' + nvidiagpuline[1] + ' ' + intelgpuline[0]
 
     if amdgpuline[1]:
         if amdgpuline[0] == amdgpuline[1] and not intelgpuline:
@@ -137,7 +131,7 @@ try:
             gpuinfo = amdgpuline[0] + ' ' + amdgpuline[1]
             print(gpuinfo)
         if amdgpuline[1] and intelgpuline:
-            gpuinfo = amdgpuline[0] + ' ' + amdgpuline[1] + ' ' intelgpuline[0]
+            gpuinfo = amdgpuline[0] + ' ' + amdgpuline[1] + ' ' + intelgpuline[0]
             print(gpuinfo)
 except IndexError:
     pass

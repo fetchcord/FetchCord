@@ -169,6 +169,9 @@ def Ryzen9():
         cpuid = "AMD Ryzen 9"
         cpuappid='741152930899427364'
 # gpuids
+def Intelgpu():
+        global gpuid
+        gpuid = "intel"
 def Nvidiagpu():
         global gpuid
         gpuid = "nvidia"
@@ -184,7 +187,6 @@ def Amdgpu():
 def Amd_intelgpu():
         global gpuid
         gpuid = "amd-intel"
-def Amd
 def Nvidia_amd_intelgpu():
     # again, why
         global gpuid
