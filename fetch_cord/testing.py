@@ -188,6 +188,10 @@ def Ryzen9():
         global cpuid, cpuappid
         cpuid = "AMD Ryzen 9"
         cpuappid='741152930899427364'
+def Ryzenth():
+        global cpuid, cpuappid
+        cpuid = "AMD Ryzen Threadripper"
+        cpuappid='742075019257184338'
 # gpuids
 def Intelgpu():
         global gpuid
@@ -248,6 +252,7 @@ amdcpus = {
     "ryzen 5": Ryzen5,
     "ryzen 7": Ryzen7,
     "ryzen 9": Ryzen9,
+    "ryzen threadripper": Ryzenth,
 }
 intelcpus = {
     "intel i3": Intelcorei3,
@@ -281,7 +286,7 @@ distros = {
 "manjaro": iManjaro,
 "linuxmint": iLinuxMint,
 "lmde": iLMDE,
-"pop": iPop,
+"pop!_os": iPop,
 "endeavouros": iEnde,
 "artix": iArtix,
 "windows10": iWindows10,
