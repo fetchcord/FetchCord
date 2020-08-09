@@ -1,7 +1,9 @@
 #import rpc file, made by https://github.com/niveshbirangal/discord-rpc, planning to make my own rpc soon
 from . import rpc
 import time
+import argparse
 #import info about system
+from .args import parse_args
 from . import testing 
 from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, sysosline
 # define testing functions
@@ -46,7 +48,8 @@ def cycle0():
                 "large_image": "big" #this will be the distro logo
             }
         }
-        set_id()
+        if not args.distro:
+            set_id()
         rpc_obj.set_activity(activity)
         time.sleep(30)
 # cycle
@@ -66,7 +69,8 @@ def cycle1():
             }
         }
         # reset id to make discord happy
-        set_id()
+        if not args.hardware:
+            set_id()
         rpc_obj2.set_activity(activity)
         time.sleep(30)
 # cycle
@@ -86,10 +90,28 @@ def cycle2():
             }
         }
         # reset id to make discord happy
-        set_id()
+        if not args.shell:
+            set_id()
         rpc_obj3.set_activity(activity)
         time.sleep(30)
-while True:
-    cycle0()
-    cycle1()
-    cycle2()
+args = parse_args()
+if args.distro:
+    client_id = appid
+    rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
+    while True:
+        cycle0()
+if args.hardware:
+    client_id2 = cpuappid
+    rpc_obj2 = rpc.DiscordIpcClient.for_platform(client_id2)
+    while True:
+        cycle1()
+if args.shell:
+    client_id3 = termappid
+    rpc_obj3 = rpc.DiscordIpcClient.for_platform(client_id3)
+    while True:
+        cycle2()
+if not args.distro:
+    while True:
+        cycle0()
+        cycle1()
+        cycle2()
