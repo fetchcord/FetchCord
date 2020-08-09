@@ -9,7 +9,6 @@ uptime = testing.uptime
 gpuid = testing.gpuid
 desktopid = testing.desktopid
 appid = testing.appid
-prettyname = testing.prettyname
 cpuappid = testing.cpuappid
 termappid = testing.termappid
 #printing info(this will be removed soon)

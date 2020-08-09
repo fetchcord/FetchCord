@@ -2,11 +2,6 @@ import distro
 import os
 from .bash import exec_bash, BashError
 from .out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
-info = distro.linux_distribution(full_distribution_name=False)
-ldistro = info[0]
-ver = info[1]
-print(ldistro)
-print (ver)
 #appid for discord app
 appid = "none"
 #number of packages
@@ -44,6 +39,9 @@ def iArch():
 	global appid, packages
 	appid='740476198437650473'
 	packages = exec_bash("pacman -Qq --color never | wc -l")
+def iArtix():
+        global appid
+        appid='741918141248045107'
 def iFedora():
 	global appid, packages
 	appid='740485660703719464'
@@ -210,9 +208,6 @@ def Zsh():
 def Bash():
         global shell
         shell = "bash"
-#pretty name, this will be shown when hovering over the big icon, it will show the version
-prettyname = ldistro + ' ' + ver
-print (prettyname)
 #list of distros to comopre
 amdcpus = {
     "ryzen 3": Ryzen3,
@@ -248,7 +243,8 @@ distros = {
 "linuxmint": iLinuxMint,
 "lmde": iLMDE,
 "pop": iPop,
-"endeavouros": iEnde
+"endeavouros": iEnde,
+"artix": iArtix,
 }
 # window managers
 windowmanagers = {
@@ -318,8 +314,3 @@ try:
         shells[shellid.lower()]()
 except KeyError:
         print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
-
-#package number
-packtext = 'Packages: ' + packages
-#if de in desktops:
-print(cpuid)
