@@ -100,38 +100,25 @@ if sysosid.lower() == "macos":
     laorp()
 #def desktops and defind id
 def iKde():
-	global desktopid, desktopver
+	global desktopid
 	desktopid = "kde"
 def iGnome():
-	global desktopid, desktopver
+	global desktopid
 	desktopid = "gnome"
 def iXfce():
-	global desktopid, desktopver
+	global desktopid
 	desktopid = "xfce"
-def Ii3():
-	global desktopid, desktopver
-	desktopid = "i3"
 def iCinnamon():
-	global desktopid, desktopver
+	global desktopid
 	desktopid = "cinnamon"
 def iBudgie():
-	global desktopid, desktopver
+	global desktopid
 	desktopid = "budgie"
 def iDeepin():
-	global desktopid, desktopver
+	global desktopid
 	desktopid = "deepin"
-def iAero():
-        global desktopid
-        desktopid = "aero"
-#window managers
-def iDwm():
-	global desktopid, desktopver
-	desktopid = "dwm"
-def iAwesome():
-	global desktopid, desktopver
-	desktopid = "awesome"
 def iMate():
-	global desktopid, desktopver
+	global desktopid
 	desktopid = "mate"
 def iUnity():
 	#this is to check wether the user is actually using unity or using unity as an xdg value to fix issues with electron apps
@@ -140,6 +127,28 @@ def iUnity():
 		desktopid = "unity"
 	else:
 		desktopid = wmid
+def iAero():
+        global desktopid
+        desktopid = "aero"
+#window managers
+def iDwm():
+	global desktopid
+	desktopid = "dwm"
+def iAwesome():
+	global desktopid
+	desktopid = "awesome"
+def Ii3():
+	global desktopid
+	desktopid = "i3"
+def iEnlightenment():
+	global desktopid
+	desktopid = "enlightenment"
+def iXmonad():
+        global desktopid
+        desktopid = "xmonad"
+def iBspwm():
+        global desktopid
+        desktopid = "bspwm"
 # cpuids
 def Amdcpu():
         global cpuid, cpuappid
@@ -237,6 +246,9 @@ def Gnometerminal():
 def Coolretroterm():
         global termappid
         termappid='741731097498353794'
+def Fetchcord():
+        global termappid
+        termappid='742096605502767235'
 # shells
 def Fish():
         global shell
@@ -304,6 +316,9 @@ windowmanagers = {
     "dwm": iDwm,
     "i3": Ii3,
     "awesome": iAwesome,
+    "enlightenment": iEnlightenment,
+    "bspwm": iBspwm,
+    "xmonad": iXmonad,
 }
 #desktops
 desktops = {
@@ -327,6 +342,7 @@ terms = {
     "dolphin": Konsole,
     "gnome-terminal": Gnometerminal,
     "cool-retro-term": Coolretroterm,
+    "fetchcord": Fetchcord,
 }
 shells = {
     "fish": Fish,
