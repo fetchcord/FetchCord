@@ -246,10 +246,10 @@ gpus = {
     "amd": Amdgpu,
     "radeon": Amdgpu,
     # multi GPUs
-    "nvidia intel": Nvidia_intelgpu,
-    "nvidia amd": Nvidia_amdgpu,
-    "amd intel": Amd_intelgpu,
-    "nvidia amd intel": Nvidia_amd_intelgpu,
+    "nvidiaintel": Nvidia_intelgpu,
+    "nvidiaamd": Nvidia_amdgpu,
+    "amdintel": Amd_intelgpu,
+    "nvidiaamdintel": Nvidia_amd_intelgpu,
 }
 distros = {
 "ubuntu": iUbuntu, 
