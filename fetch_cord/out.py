@@ -117,7 +117,7 @@ termid = termline[0].split()[1]
 shellid = shell_line[0].split()[1]
 kernelid = kernelline[0].split()[1]
 sysosid = sysosline[0].split()[1]
-if sysosid.lower() == "windows":
+if sysosid.lower() == "windows" or sysosid.lower() == "linux":
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
 if not termfontline:
     termfontline = []
