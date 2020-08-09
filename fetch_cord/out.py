@@ -84,10 +84,11 @@ if amdgpuline:
         sys.exit(1)
 gpuvendor = ""
 gpuinfo = ""
+nvidiagpuline = [' GPU: NVIDIA RTX 2070', ' GPU: NVIDIA RTX 2070 ', ' GPU: NVIDIA RTX 2080 Ti ']
 if nvidiagpuline:
     for n in range(len(nvidiagpuline)):
-        gpuinfo = nvidiagpuline[n]
-    gpuvendor = nvidiagpuline[0].split()[1]
+        gpuinfo += nvidiagpuline[n]
+    gpuvendor += nvidiagpuline[0].split()[1]
 if amdgpuline:
     for a in range(len(amdgpurenderlist)):
         gpuinfo += amdgpurenderlist[a]
