@@ -64,12 +64,11 @@ except FileNotFoundError:
 if amdgpuline:
     try:
         # amd GPUs
-            amdgpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'")
-            amdgpurender = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'")
-            gpuvendor = amdgpuline.split()[1]
-            amdgpuvendor = amdgpurender.split()[1]
-            gpuinfo = amdgpurender
-            gpuid = amdgpurender
+            amdgpuline1 = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'")
+            gpuvendor = amdgpuline1.split()[1]
+            amdgpuvendor = amdgpuline1.split()[1]
+            gpuinfo = amdgpuline1
+            gpuid = amdgpuline1
             print(gpuid)
             print(amdgpuline)
     except BashError as e:
@@ -91,8 +90,8 @@ if intelgpuline and not nvidiagpuline and not amdgpuline:
     print(intelgpuline)
 
 if nvidiagpuline and amdgpuline and not intelgpuline:
-    gpuvendor = nvidiagpuline[0].split()[1] + ' ' + amdgpuvendor
-    gpuinfo = nvidiagpuline[0] + ' ' + amdgpurender
+    gpuvendor = nvidiagpuline[0].split()[1] + ' ' + amdgpuline1.split()[1]
+    gpuinfo = nvidiagpuline[0] + ' ' + amdgpuline1
     print(gpuinfo)
     print(gpuvendor)
 
@@ -104,7 +103,7 @@ if nvidiagpuline and intelgpuline and not amdgpuline:
 
 if amdgpuline and intelgpuline and not nvidiagpuline:
     gpuvendor = amdgpuvendor + ' ' + intelgpuline[0].split()[1]
-    gpuinfo = amdgpurender + ' ' + intelgpuline[0]
+    gpuinfo = amdgpuline + ' ' + intelgpuline[0]
     print(gpuinfo)
     print(gpuvendor)
     
@@ -123,15 +122,19 @@ try:
         gpuinfo = nvidiagpuline[0] + ' ' + nvidiagpuline[1] + ' ' + intelgpuline[0]
 
     if amdgpuline[1]:
-        if amdgpuline[0] == amdgpuline[1] and not intelgpuline:
+        try:
+            amdgpuline2 = "GPU: " + exec_bash("env DRI_PRIME=1 glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'")
+        except BashError:
+            # assume would run if the first command above does
+            pass
+        if amdgpuline1 == amdgpuline2 and not intelgpuline:
             gpuinfo = amdgpurender + "x2"
             print(gpuinfo)
-        # can't show 2 different AMD GPUs using glxinfo
-        elif amdgpuline[0] != amdgpuline[1] and not intelgpuline:
-            gpuinfo = amdgpuline[0] + ' ' + amdgpuline[1]
+        elif amdgpuline1 != amdgpuline2 and not intelgpuline:
+            gpuinfo = amdgpuline + ' ' + amdgpuline2
             print(gpuinfo)
-        if amdgpuline[1] and intelgpuline:
-            gpuinfo = amdgpuline[0] + ' ' + amdgpuline[1] + ' ' + intelgpuline[0]
+        if amdgpuline2 and intelgpuline:
+            gpuinfo = amdgpuline1 + ' ' + amdgpuline2 + ' ' + intelgpuline[0]
             print(gpuinfo)
 except IndexError:
     pass
@@ -139,7 +142,7 @@ except IndexError:
 if nvidiagpuline and intelgpuline and amdgpuline:
     # why...
     gpuvendor = nvidiagpuline[0].split()[1] + ' ' + amdgpuvendor + ' ' + intelgpuline[0].split()[1]
-    gpuinfo = nvidiagpuline[0] + ' ' + amdgpurender + ' ' + intelgpuline[0]
+    gpuinfo = nvidiagpuline[0] + ' ' + amdgpuline1 + ' ' + intelgpuline[0]
 
 
 cpuvendor = cpuline[0].split()[1] 
