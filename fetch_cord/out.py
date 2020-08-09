@@ -64,7 +64,7 @@ except FileNotFoundError:
     pass
 gpuvendor = "none"
 sysosid = sysosline[0].split()[1]
-if amdgpuline:
+if amdgpuline and sysosid.lower != "macos":
     try:
         # amd GPUs
         for i in range(len(amdgpuline)):
