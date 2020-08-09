@@ -13,6 +13,7 @@ desktopid = testing.desktopid
 appid = testing.appid
 cpuappid = testing.cpuappid
 termappid = testing.termappid
+args = parse_args()
 #printing info(this will be removed soon)
 print (uptime)
 print (packagesline[0])
@@ -121,7 +122,7 @@ def cycle2():
             set_id()
         rpc_obj3.set_activity(activity)
         time.sleep(30)
-args = parse_args()
+
 if args.distro:
     client_id = appid
     rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)

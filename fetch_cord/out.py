@@ -1,6 +1,14 @@
 from .bash import exec_bash, BashError
 import subprocess
 import os
+import argparse
+from .args import parse_args
+args = parse_args()
+try:
+    if args.help:
+        sys.exit(0)
+except AttributeError:
+    pass
 # use default neofetch output, ignoring user config
 baseinfo = exec_bash("neofetch --stdout --config none")
 #make lists
