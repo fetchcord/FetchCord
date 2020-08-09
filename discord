@@ -12,4 +12,4 @@ else
 fi
 # give slowcord time to start
 sleep 10
-python3 -u -m fetch_cord.run-rpc
+/usr/local/bin/fetchcord $@

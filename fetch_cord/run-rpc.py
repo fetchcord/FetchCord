@@ -1,11 +1,12 @@
+#!/usr/bin/env python3
 #import rpc file, made by https://github.com/niveshbirangal/discord-rpc, planning to make my own rpc soon
-from . import rpc
+import rpc
 import time
 import argparse
 #import info about system
-from .args import parse_args
-from . import testing 
-from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, sysosline, sysosid
+from args import parse_args
+import testing 
+from out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, sysosline, sysosid
 # define testing functions
 uptime = testing.uptime
 gpuid = testing.gpuid

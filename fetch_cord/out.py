@@ -1,8 +1,8 @@
-from .bash import exec_bash, BashError
+from bash import exec_bash, BashError
 import subprocess
 import os
 import argparse
-from .args import parse_args
+from args import parse_args
 args = parse_args()
 try:
     if args.help:

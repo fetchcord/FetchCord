@@ -1,7 +1,7 @@
 import distro
 import os
-from .bash import exec_bash, BashError
-from .out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
+from bash import exec_bash, BashError
+from out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
 #appid for discord app
 appid = "none"
 #number of packages
