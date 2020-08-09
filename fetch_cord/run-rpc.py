@@ -110,8 +110,7 @@ if args.shell:
     rpc_obj3 = rpc.DiscordIpcClient.for_platform(client_id3)
     while True:
         cycle2()
-if not args.distro:
-    while True:
-        cycle0()
-        cycle1()
-        cycle2()
+while True:
+    cycle0()
+    cycle1()
+    cycle2()

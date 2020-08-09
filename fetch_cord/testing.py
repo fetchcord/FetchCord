@@ -73,6 +73,18 @@ def iEnde():
 	global appid, packages
 	appid='740809641545564170'
 	packages = exec_bash("pacman -Qq --color never | wc -l")
+def iWindows10():
+        global appid
+        appid='741949889465942099'
+def iWindows8_1():
+        global appid
+        appid='741952065294827520'
+def iWindows8():
+        global appid
+        appid='741952179488948324'
+def iWindows7():
+        global appid
+        appid='741952383512346696'
 #def desktops and defind id
 def iKde():
 	global desktopid, desktopver
@@ -102,6 +114,10 @@ def iDeepin():
 	global desktopid, desktopver
 	desktopid = "deepin"
 	#desktopver = exec_bash("")
+def iAero():
+        global desktopid
+        desktopid = "aero"
+#window managers
 def iDwm():
 	global desktopid, desktopver
 	desktopid = "dwm"
@@ -245,6 +261,10 @@ distros = {
 "pop": iPop,
 "endeavouros": iEnde,
 "artix": iArtix,
+"windows10": iWindows10,
+"windows7": iWindows7,
+"windows8": iWindows8,
+"windows8.1": iWindows8_1,
 }
 # window managers
 windowmanagers = {
@@ -262,7 +282,8 @@ desktops = {
 	"deepin": iDeepin,
 	"cinnamon": iCinnamon,
 	"mate": iMate,
-	"unity": iUnity
+	"unity": iUnity,
+        "aero": iAero,
 }
 terms = {
     "st": St,
