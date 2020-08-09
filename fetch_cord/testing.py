@@ -286,7 +286,7 @@ gpus = {
 }
 distros = {
 "ubuntu": iUbuntu, 
-"opensuse-leap": iOpenSuseLeap,
+"opensuseleap": iOpenSuseLeap,
 "arch": iArch, 
 "artix": iArch,
 "fedora": iFedora,
@@ -294,7 +294,7 @@ distros = {
 "gentoo": iGentoo,
 "centos": iCentos,
 "debian": iDebian,
-"opensuse-tumbleweed": iOpenSuseTumble,
+"opensusetumbleweed": iOpenSuseTumble,
 "manjaro": iManjaro,
 "linuxmint": iLinuxMint,
 "lmde": iLMDE,
