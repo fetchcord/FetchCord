@@ -61,38 +61,41 @@ try:
         os.remove(filepath)
 except FileNotFoundError:
     pass
-try:
-    check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA.*\"")
-except BashError:
-    pass
-    check_provider = ""
-    print(check_provider)
-if check_provider == "" and not intelgpuline:
+gpuvendor = "none"
+sysosid = sysosline[0].split()[1]
+if sysosid.lower() != "macos":
     try:
-        if amdgpuline:
-        # amd GPUs
-            gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
-            gpuvendor = gpuline.split()[1]
-            gpuinfo = gpuline
-            gpuid = gpuline
-            print(gpuid)
-            print(gpuline)
-    except BashError as e:
-        print("ERROR: Could not run glxinfo [%s]" % str(e))
-        sys.exit(1)
-else:
-    if nvidiagpuline:
-        gpuvendor = nvidiagpuline[0].split()[1]
-        gpuinfo = nvidiagpuline[0]
-        print(gpuinfo)
-        print(gpuvendor)
-        print(nvidiagpuline)
-    if intelgpuline and not nvidiagpuline:
-        gpuvendor = intelgpuline[0].split()[1]
-        gpuinfo = intelgpuline[0]
-        print(gpuinfo)
-        print(gpuvendor)
-        print(intelgpuline)
+        check_provider = exec_bash("xrandr --listproviders | grep -o \"NVIDIA.*\"")
+    except BashError:
+        pass
+        check_provider = ""
+        print(check_provider)
+    if check_provider == "" and not intelgpuline:
+        try:
+            if amdgpuline:
+            # amd GPUs
+                gpuline = "GPU: " + exec_bash("glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//;s/Mesa //'")
+                gpuvendor = gpuline.split()[1]
+                gpuinfo = gpuline
+                gpuid = gpuline
+                print(gpuid)
+                print(gpuline)
+        except BashError as e:
+            print("ERROR: Could not run glxinfo [%s]" % str(e))
+            sys.exit(1)
+    else:
+        if nvidiagpuline:
+            gpuvendor = nvidiagpuline[0].split()[1]
+            gpuinfo = nvidiagpuline[0]
+            print(gpuinfo)
+            print(gpuvendor)
+            print(nvidiagpuline)
+        if intelgpuline and not nvidiagpuline:
+            gpuvendor = intelgpuline[0].split()[1]
+            gpuinfo = intelgpuline[0]
+            print(gpuinfo)
+            print(gpuvendor)
+            print(intelgpuline)
 cpuvendor = cpuline[0].split()[1]
 if cpuvendor == "Intel":
     cpumodel = cpuline[0].replace('-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
