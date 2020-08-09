@@ -172,12 +172,23 @@ def Ryzen9():
 def Nvidiagpu():
         global gpuid
         gpuid = "nvidia"
+def Nvidia_intelgpu():
+        global gpuid
+        gpuid = "nvidia-intel"
+def Nvidia_amdgpu():
+        global gpuid
+        gpuid = "nvidia-amd"
 def Amdgpu():
         global gpuid
         gpuid = "amd"
-def Intelgpu():
+def Amd_intelgpu():
         global gpuid
-        gpuid = "intel"
+        gpuid = "amd-intel"
+def Amd
+def Nvidia_amd_intelgpu():
+    # again, why
+        global gpuid
+        gpuid = "nvidia-amd-intel"
 # terminals
 def St():
         global termappid
@@ -232,6 +243,11 @@ gpus = {
     "nvidia": Nvidiagpu,
     "amd": Amdgpu,
     "radeon": Amdgpu,
+    # multi GPUs
+    "nvidia intel": Nvidia_intelgpu,
+    "nvidia amd": Nvidia_amdgpu,
+    "amd intel": Amd_intelgpu,
+    "nvidia amd intel": Nvidia_amd_intelgpu,
 }
 distros = {
 "ubuntu": iUbuntu, 
