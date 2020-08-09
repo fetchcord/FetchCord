@@ -3,13 +3,12 @@ from . import rpc
 import time
 #import info about system
 from . import testing 
-from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, cpuinfo, shell_line, termfontline, sysosline
+from .out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, cpuinfo, shell_line, termfontline, sysosline, sysosid
 # define testing functions
 uptime = testing.uptime
 gpuid = testing.gpuid
 desktopid = testing.desktopid
 appid = testing.appid
-prettyname = testing.prettyname
 cpuappid = testing.cpuappid
 termappid = testing.termappid
 #printing info(this will be removed soon)
@@ -31,6 +30,33 @@ def set_id():
     rpc_obj2 = rpc.DiscordIpcClient.for_platform(client_id2)
     client_id3 = termappid
     rpc_obj3 = rpc.DiscordIpcClient.for_platform(client_id3)
+
+if sysosid == "macos":
+    devicetype = testing.devicetype
+    product = testing.product
+    bigicon = testing.bigicon
+    ver = testing.ver
+    client_id = '740822755376758944' #macos appid for discord rpc
+    print("RPC connection successful.")
+    time.sleep(5)
+    start_time = float(uptime[:-1])
+    while True:
+        activity = {
+                "state": packagesline[0],
+                "details": kernelline[0],
+                "timestamps": {
+                    "start": start_time
+                },
+                "assets": {
+                    "small_text": product,
+                    "small_image": devicetype,
+                    "large_text": sysosline[0],
+                    "large_image": bigicon
+                }
+            }
+        rpc_obj.set_activity(activity)
+        time.sleep(30)
+
 # cycle
 def cycle0():
     while True:

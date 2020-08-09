@@ -12,7 +12,9 @@ appid = "none"
 #number of packages
 packages = "none"
 #find out uptime for epoch time
-uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
+if not sysosid.lower() == "macos":
+    uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
+    print(uptime)
 # predefine ids
 cpuid = "none"
 cpuappid = "none"
@@ -23,58 +25,69 @@ desktopid = "none"
 def iUbuntu():
 	global appid, packages
 	appid='740434138036699178'
-	packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
-
 def iVoid():
         global appid, packages
         appid='740484961353597039'
 def iOpenSuseLeap():
 	global appid, packages
 	appid='740156532137787433'
-	packages = exec_bash("rpm -qa --last | wc -l")
 def iOpenSuseTumble():
 	global appid, packages
 	appid='740156532137787433'
-	packages = exec_bash("rpm -qa --last | wc -l")
 def iCentos():
 	global appid, packages
 	appid='740483295388631071'
-	packages = exec_bash("rpm -qa --last | wc -l")
 def iArch():
 	global appid, packages
 	appid='740476198437650473'
-	packages = exec_bash("pacman -Qq --color never | wc -l")
 def iFedora():
 	global appid, packages
 	appid='740485660703719464'
-	packages = exec_bash("rpm -qa --last | wc -l")
 def iGentoo():
 	global appid, packages
 	appid='740484380652208140'
-	packages = exec_bash("eix-installed -a | wc -l")
 def iDebian():
 	global appid, packages
 	appid='740490017218232392'
-	packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
 def iManjaro():
 	global appid, packages
 	appid='740614258177605642'
-	packages = exec_bash("pacman -Qq --color never | wc -l")
 def iLinuxMint():
         global appid, packages
         appid='740633577481568317'
-        packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
 def iLMDE():
         global appid
         appid='741726946588622988'
 def iPop():
 	global appid, packages
 	appid='740660055925587978'
-	packages = exec_bash("dpkg-query -f '.\n' -W | wc -l")
 def iEnde():
 	global appid, packages
 	appid='740809641545564170'
-	packages = exec_bash("pacman -Qq --color never | wc -l")
+# MacOS versions
+def iHsiera():
+        global bigicon
+        bigicon = "hsierria"
+def iMojave():
+        global bigicon
+        bigicon = "mojave"
+def iCatilina():
+        global bigicon
+        bigicon = "catilina"
+# macOS hardwawre
+def laporp():
+        global devicetype
+        if product[0:7] == "MacBook":
+                devicetype = "laptop"
+        else:
+                devicetype = "desktop"
+if sysosid.lower() == "macos":
+    devicetype = "none"
+    bigicon = "none"
+    ver = os.popen("sw_vers -productVersion").read()
+    uptime = os.popen("sysctl -n kern.boottime").read().split()[3]
+    product = os.popen("sysctl -n hw.model").read()
+    laorp()
 #def desktops and defind id
 def iKde():
 	global desktopid, desktopver
@@ -210,9 +223,6 @@ def Zsh():
 def Bash():
         global shell
         shell = "bash"
-#pretty name, this will be shown when hovering over the big icon, it will show the version
-prettyname = ldistro + ' ' + ver
-print (prettyname)
 #list of distros to comopre
 amdcpus = {
     "ryzen 3": Ryzen3,
@@ -249,6 +259,11 @@ distros = {
 "lmde": iLMDE,
 "pop": iPop,
 "endeavouros": iEnde
+}
+versions = {
+"10.13": iHsiera,
+"10.14": iMojave,
+"10.15": iCatilina
 }
 # window managers
 windowmanagers = {
@@ -287,6 +302,15 @@ try:
 	distros[sysosid.lower()]()
 except KeyError:
 	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
+
+if sysosid == "macos":
+    try:
+        versions[ver[0:5]]()
+    except IndexError:
+        bigicon = "bigslurp"
+    except KeyError:
+        print("Unsupported MacOS version")
+
 try:
     if deid != "none":
         desktops[deid.lower()]()

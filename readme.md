@@ -3,7 +3,9 @@
 Fetchcord grabs information about your distribution and displays it as Discord Rich Presence.
 
 ## Examples
-![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png) ![AMD Ryzen 7 CPU/NVIDIA GPU](Examples/ryzen7_example.png)
+![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
+
+![amd with nvidia](Examples/amd_example.png)
 
 ## What works
 
