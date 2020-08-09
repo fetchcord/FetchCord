@@ -1,6 +1,7 @@
 from .bash import exec_bash, BashError
 import subprocess
 import os
+# use default neofetch output, ignoring user config
 baseinfo = exec_bash("neofetch --stdout --config none")
 #make lists
 cpu = "CPU:"
