@@ -224,7 +224,7 @@ def Zsh():
 def Bash():
         global shell
         shell = "bash"
-#list of distros to comopre
+#list of distros to compare
 amdcpus = {
     "ryzen 3": Ryzen3,
     "ryzen 5": Ryzen5,
@@ -300,6 +300,7 @@ shells = {
     "zsh": Zsh,
     "bash": Bash,
 }
+#bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
 try:
 	distros[sysosid.lower()]()
 except KeyError:
