@@ -37,6 +37,16 @@ Fetchcord grabs information about your distribution and displays it as Discord R
 - [ ] More GPUs?
 
 
+## Arguments
+
+--distro, shows only distro and kernel version and package count.
+
+--hardware, shows only CPU and GPU info.
+
+--shell, shows only terminal and shell info.
+ 
+ -h or --help, shows this information above.
+
 ## Running on (GNU/)Linux
 
 To install the script, run `sudo ./install.sh`.
