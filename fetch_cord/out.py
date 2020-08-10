@@ -2,10 +2,15 @@ from bash import exec_bash, BashError
 import subprocess
 import os
 import argparse
+import sys
 from args import parse_args
 args = parse_args()
 if args.time:
-    print("setting custom time %s" % args.time)
+    if int(args.time) < 15:
+        print("ERROR: Invalid time set, must be > 15 seconds, cannot continue.")
+        sys.exit(1)
+    else:
+        print("setting custom time %s" % args.time)
 try:
     if args.help:
         sys.exit(0)
