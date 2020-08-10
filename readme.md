@@ -48,7 +48,7 @@ _Fetchcord grabs information about your distribution and displays it as Discord 
 
 > `$` the command should be ran as user
 
-#####Install
+##### Install
 _From download/cloned directory_
 
 
