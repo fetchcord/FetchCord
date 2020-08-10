@@ -22,7 +22,7 @@
 - [To-Do](#to-do)
 - [Install on (gnu/)linux](#installing-on-gnulinux)
     - [Running on (gnu/)linux](#run)
-- [Intall on MacOS](#installing-on-macos)
+- [Install on MacOS](#installing-on-macos)
     - [Running on MacOs](#run-1)
 - [Examples](#examples)
 
