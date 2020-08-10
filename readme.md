@@ -18,13 +18,13 @@
 </p>
 
 # Table of content
-- [Features](#features)
-- [To-Do](#to-do)
-- [Install on (gnu/)linux](#installing-on-gnulinux)
+- [**Features**](#features)
+- [**To-Do**](#to-do)
+- [**Install on (gnu/)linux**](#installing-on-gnulinux)
     - [Running on (gnu/)linux](#run)
-- [Install on MacOS](#installing-on-macos)
+- [**Install on MacOS**](#installing-on-macos)
     - [Running on MacOs](#run-1)
-- [Examples](#examples)
+- [**Examples**](#examples)
 
 ### Features
 
