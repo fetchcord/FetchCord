@@ -1,6 +1,17 @@
 # FetchCord
-![Compatible](https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen)
-![version](https://img.shields.io/badge/Python-version%3A%203.8-red)
+<p align="center">
+    <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
+       <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux-brightgreen?style=for-the-badge&logo=linux&logoColor=white">
+    </a>
+  <a href="https://www.python.org/downloads/">
+       <img src="https://img.shields.io/badge/Python-version%3A%203.8-red?style=for-the-badge&logo=python&logoColor=white"">
+    </a>
+   <a href="https://discord.gg/P4h9kdV">
+       <img src="https://img.shields.io/discord/742068289278312549?style=for-the-badge&logo=discord&logoColor=white"">
+    </a>
+  
+  </a>
+</p>
 
 _Fetchcord grabs information about your distribution and displays it as Discord Rich Presence._
 
@@ -8,8 +19,6 @@ _Fetchcord grabs information about your distribution and displays it as Discord 
 ![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
 
 ![amd with nvidia](Examples/amd_example.png)
-
-[Find us on Discord](https://discord.gg/P4h9kdV) 
 
 ***
 + What works
