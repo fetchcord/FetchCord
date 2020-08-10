@@ -9,7 +9,6 @@ packages = "none"
 #find out uptime for epoch time
 if not sysosid.lower() == "macos":
     uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
-    print(uptime)
 # predefine ids
 cpuid = "none"
 cpuappid = "none"

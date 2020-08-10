@@ -90,16 +90,13 @@ if amdgpuline and sysosid.lower() != "macos" and sysosid.lower() != "windows":
         # amd GPUs
         for i in range(len(amdgpuline)):
             env_prime = "env DRI_PRIME=%s" % i
-            print(env_prime)
             amdgpurender = "GPU: " + exec_bash("%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'" % env_prime)
             amdgpurenderlist = []
             if i != -1:
                 amdgpurenderlist.append(amdgpurender)
-            print(amdgpurenderlist)
             gpuvendor = amdgpurender.split()[1]
             amdgpuvendor = amdgpurender.split()[1]
             gpuid = amdgpurender
-            print(amdgpurender)
     except BashError as e:
         print("ERROR: Could not run glxinfo [%s]" % str(e))
         sys.exit(1)
@@ -116,9 +113,6 @@ if amdgpuline:
 if intelgpuline:
     gpuinfo += intelgpuline[0]
     gpuvendor += intelgpuline[0].split()[1]
-print(gpuinfo)
-print(gpuvendor)
-print(nvidiagpuline)
 
 cpuvendor = cpuline[0].split()[1] 
 if cpuvendor == "Intel":
@@ -130,25 +124,35 @@ termid = termline[0].split()[1]
 shellid = shell_line[0].split()[1]
 kernelid = kernelline[0].split()[1]
 sysosid = sysosline[0].split()[1]
-print(sysosline)
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
 if not termfontline:
     termfontline = []
     termfontline.append("Terminal font: N/A")
-    print(termfontline[0])
 if deline:
     deid = deline[0].split()[1]
-    print(deid)
 else:
     deid = "none"
-print(wmid)
-print(termid)
-print(cpuvendor)
-print(cpumodel)
-print(packagesline[0])
-print(cpuline[0])
-print(termline[0])
-print(sysosid)
-print(sysosline[0])
-print(wmline[0])
+if args.debug:
+    print("out")
+    try:
+        print(deid)
+        print(termfontline[0])
+    except IndexError:
+        pass
+    print(sysosline)
+    print(amdgpurenderlist)
+    print(amdgpurender)
+    print(gpuinfo)
+    print(gpuvendor)
+    print(nvidiagpuline)
+    print(wmid)
+    print(termid)
+    print(cpuvendor)
+    print(cpumodel)
+    print(packagesline[0])
+    print(cpuline[0])
+    print(termline[0])
+    print(sysosid)
+    print(sysosline[0])
+    print(wmline[0])

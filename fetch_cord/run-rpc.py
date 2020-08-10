@@ -15,13 +15,14 @@ appid = testing.appid
 cpuappid = testing.cpuappid
 termappid = testing.termappid
 args = parse_args()
-#printing info(this will be removed soon)
-print (uptime)
-print (packagesline[0])
-print (appid)
-print (gpuid)
+#printing info with debug switch
+if args.debug:
+    print("run-rpc")
+    print (uptime)
+    print (packagesline[0])
+    print (appid)
+    print (gpuid)
 print("Connecting")
-#client id of discord rpc app
 print("RPC connection successful.")
 time.sleep(5)
 start_time = float(uptime) #discord uses unix time to interpret time for rich presnse, this is uptime in unix time
@@ -38,14 +39,12 @@ def custom_time():
     ctime = int(args.time)
     time.sleep(ctime)
     
-
 if sysosid == "macos":
     devicetype = testing.devicetype
     product = testing.product
     bigicon = testing.bigicon
     ver = testing.ver
     client_id = '740822755376758944' #macos appid for discord rpc
-    print("RPC connection successful.")
     time.sleep(5)
     start_time = float(uptime[:-1])
     while True:
@@ -67,7 +66,8 @@ if sysosid == "macos":
 
 # cycle
 def cycle0():
-        print("cycle 0")
+        if args.debug:
+            print("cycle 0")
         activity = {
             "state": packagesline[0],
             "details": kernelline[0],
@@ -89,7 +89,8 @@ def cycle0():
             time.sleep(30)
 # cycle
 def cycle1():
-        print("cycle 1")
+        if args.debug:
+            print("cycle 1")
         activity = {
             "state": cpuline[0],
             "details": gpuinfo,
@@ -112,7 +113,8 @@ def cycle1():
             time.sleep(30)
 # cycle
 def cycle2():
-        print("cycle 2")
+        if args.debug:
+            print("cycle 2")
         activity = {
             "state": shell_line[0],
             "details": termfontline[0],
