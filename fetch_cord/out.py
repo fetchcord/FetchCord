@@ -103,12 +103,12 @@ if amdgpuline and sysosid.lower() != "macos" and sysosid.lower() != "windows":
 gpuvendor = ""
 gpuinfo = ""
 try:
-    primeoffload = ""
-    laptop = ""
     # only show the GPU in use with optimus, show both if prime render offload
-    primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
     laptop = os.path.isdir("/sys/module/battery")
+    if laptop:
+        primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
 except BashError:
+    primeoffload = ""
     pass
 if nvidiagpuline:
     for n in range(len(nvidiagpuline)):
@@ -116,7 +116,7 @@ if nvidiagpuline:
     gpuvendor += nvidiagpuline[0].split()[1]
 if amdgpuline:
     try:
-        if not primeoffload and not laptop:
+        if primeoffload == "":
             for a in range(len(amdgpurenderlist)):
                 gpuinfo += amdgpurenderlist[a]
             gpuvendor += amdgpuvendor
@@ -125,7 +125,7 @@ if amdgpuline:
 
 if intelgpuline:
     try:
-        if not primeoffload and not laptop:
+        if primeoffload == "":
             gpuinfo += intelgpuline[0]
             gpuvendor += intelgpuline[0].split()[1]
     except NameError:
