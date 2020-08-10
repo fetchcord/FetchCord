@@ -74,3 +74,6 @@ Run `python3 run-rpc.py`.
 
 ![void with dwm](Examples/void_example.png) ![endeabour with deepinde](Examples/end_example.png) ![centos with unity](Examples/centos_example.png)
 
+## Join us on Discord!
+
+ [Discord](https://discord.gg/5wP2RjF)
