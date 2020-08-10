@@ -9,6 +9,7 @@ _Fetchcord grabs information about your distribution and displays it as Discord 
 
 ![amd with nvidia](Examples/amd_example.png)
 
+[Find us on Discord](https://discord.gg/P4h9kdV) 
 
 ***
 + What works
