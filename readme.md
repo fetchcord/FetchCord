@@ -27,36 +27,35 @@
 - [Examples](#examples)
 
 ### Features
-***
-  - [✓] Distribution detection
 
-  - [✓] Distribution Version
+- [x] Distribution detection
+ 
+- [x] Distribution Version
 
-  - [✓] Package detection
+- [x] Package detection
 
-  - [✓] Kernel Detection
+- [x] Kernel Detection
 
-  - [✓] Uptime
+- [x] Uptime
 
-  - [✓] Detecting Window Manager/Desktop Environment
+- [x] Detecting Window Manager/Desktop Environment
 
-  - [✓] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
+- [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
 
 ### To-Do
-***
-  - [✗] Add more distributions (If your distro is not supported open an issue)
 
-  - [✗] Detect Window Manager/Desktop Environment version
+- [ ] Add more distributions (If your distro is not supported open an issue)
 
-  - [✗] Add Flatpak/Snap support
+- [ ] Detect Window Manager/Desktop Environment version
 
-  - [✗] Add support for desktop icon use
+- [ ] Add Flatpak/Snap support
 
-  - [✗] More CPUs, ex. Pentium, Older AMD CPUs
+- [ ] Add support for desktop icon use
 
-  - [✗] More GPUs?
+- [ ] More CPUs, ex. Pentium, Older AMD CPUs
 
-***
+- [ ] More GPUs?
+
 
 ### Installing on (GNU/)Linux
 > `#` the command should be ran as `sudo`
