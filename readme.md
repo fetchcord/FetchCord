@@ -1,5 +1,6 @@
-# FetchCord
+
 <p align="center">
+    <h1>FetchCord</h1>
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
        <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux-brightgreen?style=for-the-badge&logo=linux&logoColor=white">
     </a>
@@ -7,7 +8,7 @@
        <img src="https://img.shields.io/badge/Python-version%3A%203.8-red?style=for-the-badge&logo=python&logoColor=white"">
     </a>
    <a href="https://discord.gg/P4h9kdV">
-       <img src="https://img.shields.io/discord/742068289278312549?style=for-the-badge&logo=discord&logoColor=white"">
+       <img src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
     </a>
   
   </a>
