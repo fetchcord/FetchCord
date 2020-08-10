@@ -43,17 +43,16 @@ _Fetchcord grabs information about your distribution and displays it as Discord 
 ***
 
 ### Running on (GNU/)Linux
-:::warning
-`#` the command should be ran as `sudo`
-`$` the command should be ran as user
-:::
+> `#` the command should be ran as `sudo`
+
+> `$` the command should be ran as user
 
 #####Install
 _From download/cloned directory_
 
 
 ```sh
-# ./install.sh
+\# ./install.sh
 ```
 
 
@@ -70,7 +69,7 @@ python3.8 needs the `distro` module. If you get an error, install it via pip: `p
 _From download/cloned directory_
 
 ```sh
-# ./macinstall.sh
+\# ./macinstall.sh
 ```
 
 
