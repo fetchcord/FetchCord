@@ -64,7 +64,7 @@ $ pip3 install distro
 ```
 
 ## Running on MacOS
-#####Install
+##### Install
 _From download/cloned directory_
 
 ```sh
