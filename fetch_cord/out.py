@@ -4,6 +4,8 @@ import os
 import argparse
 from args import parse_args
 args = parse_args()
+if args.time:
+    print("setting custom time %s" % args.time)
 try:
     if args.help:
         sys.exit(0)

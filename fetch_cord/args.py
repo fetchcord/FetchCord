@@ -10,5 +10,7 @@ def parse_args():
             help="Show Hardware only")
     parser.add_argument('--shell', action='store_true',
             help="Show Shell/Terminal only")
+    parser.add_argument('--time', '-t', metavar='TIME', action='store',
+            help="Set custom time in seconds for cycles. Default is 30 seconds")
 
     return parser.parse_args()

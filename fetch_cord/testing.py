@@ -18,49 +18,49 @@ termappid = "none"
 desktopid = "none"
 #distros set id and package number
 def iUbuntu():
-	global appid, packages
+	global appid
 	appid='740434138036699178'
 def iVoid():
-        global appid, packages
+        global appid
         appid='740484961353597039'
 def iOpenSuseLeap():
-	global appid, packages
+	global appid
 	appid='740156532137787433'
 def iOpenSuseTumble():
-	global appid, packages
-	appid='740156532137787433'
+	global appid
+	appid='742180413132505088'
 def iCentos():
-	global appid, packages
+	global appid
 	appid='740483295388631071'
 def iArch():
-	global appid, packages
+	global appid
 	appid='740476198437650473'
 def iArtix():
         global appid
         appid='741918141248045107'
 def iFedora():
-	global appid, packages
+	global appid
 	appid='740485660703719464'
 def iGentoo():
-	global appid, packages
+	global appid
 	appid='740484380652208140'
 def iDebian():
-	global appid, packages
+	global appid
 	appid='740490017218232392'
 def iManjaro():
-	global appid, packages
+	global appid
 	appid='740614258177605642'
 def iLinuxMint():
-        global appid, packages
+        global appid
         appid='740633577481568317'
 def iLMDE():
         global appid
         appid='741726946588622988'
 def iPop():
-	global appid, packages
+	global appid
 	appid='740660055925587978'
 def iEnde():
-	global appid, packages
+	global appid
 	appid='740809641545564170'
 def iWindows10():
         global appid
@@ -121,7 +121,8 @@ def iMate():
 	global desktopid
 	desktopid = "mate"
 def iUnity():
-	#this is to check wether the user is actually using unity or using unity as an xdg value to fix issues with electron apps
+#this is to check wether the user is actually using unity
+#or using unity as an xdg value to fix issues with electron apps
 	if wmid.lower() == "compiz":
 		global desktopid
 		desktopid = "unity"

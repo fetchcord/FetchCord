@@ -34,6 +34,10 @@ def set_id():
     rpc_obj2 = rpc.DiscordIpcClient.for_platform(client_id2)
     client_id3 = termappid
     rpc_obj3 = rpc.DiscordIpcClient.for_platform(client_id3)
+def custom_time():
+    ctime = int(args.time)
+    time.sleep(ctime)
+    
 
 if sysosid == "macos":
     devicetype = testing.devicetype
@@ -80,7 +84,10 @@ def cycle0():
         if not args.distro:
             set_id()
         rpc_obj.set_activity(activity)
-        time.sleep(30)
+        if args.time:
+            custom_time()
+        else:
+            time.sleep(30)
 # cycle
 def cycle1():
         print("cycle 1")
@@ -101,7 +108,10 @@ def cycle1():
         if not args.hardware:
             set_id()
         rpc_obj2.set_activity(activity)
-        time.sleep(30)
+        if args.time:
+            custom_time()
+        else:
+            time.sleep(30)
 # cycle
 def cycle2():
         print("cycle 2")
@@ -122,7 +132,10 @@ def cycle2():
         if not args.shell:
             set_id()
         rpc_obj3.set_activity(activity)
-        time.sleep(30)
+        if args.time:
+            custom_time()
+        else:
+            time.sleep(30)
 
 if args.distro:
     client_id = appid
