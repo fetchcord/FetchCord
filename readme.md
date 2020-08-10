@@ -46,6 +46,8 @@ Fetchcord grabs information about your distribution and displays it as Discord R
 --hardware, shows only CPU and GPU info.
 
 --shell, shows only terminal and shell info.
+
+--time, -t, set custom duration for cycles in seconds.
  
  -h or --help, shows this information above.
 
@@ -55,12 +57,14 @@ To install the script, run `sudo ./install.sh`.
 
 To run the script simply run `fetchcord`, python 3.8 should have the `distro` module but if you get an error install it via pip, `pip3 install distro`
 
+NOTE: This script requires neofetch to be installed.
+
 python3.8 needs the `distro` module. If you get an error, install it via pip: `pip3 install distro`
 
 ## Running on MacOS
-To install the script, run `sudo ./macinstall.sh`.
+To install the script, run `sudo ./install.sh`.
 
-Run `python3 -u -m fetch_cord.macos-rpc.py`.
+Run `python3 run-rpc.py`.
 
 ## Other Examples
 
