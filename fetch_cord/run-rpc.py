@@ -3,6 +3,7 @@
 import rpc
 import time
 import argparse
+import sys
 #import info about system
 from args import parse_args
 import testing 
@@ -135,23 +136,27 @@ def cycle2():
             custom_time()
         else:
             time.sleep(30)
-while True:
-    if args.distro:
-        cycle0()
-    elif args.hardware:
-        cycle1()
-    elif args.shell:
-        cycle2()
-    elif args.distro and args.hardware:
-        cycle0()
-        cycle1()
-    elif args.distro and args.shell:
-        cycle0()
-        cycle2()
-    elif args.hardware and args.shell:
-        cycle1()
-        cycle2()
-    else:
-        cycle0()
-        cycle1()
-        cycle2()
+try:
+    while True:
+        if args.distro and not args.shell and not args.hardware:
+            cycle0()
+        elif args.hardware and not args.distro and not args.shell:
+            cycle1()
+        elif args.shell and not args.distro and not args.hardware:
+            cycle2()
+        elif args.distro and args.hardware and not args.shell:
+            cycle0()
+            cycle1()
+        elif args.distro and args.shell and not args.hardware:
+            cycle0()
+            cycle2()
+        elif args.hardware and args.shell and not args.distro:
+            cycle1()
+            cycle2()
+        else:
+            cycle0()
+            cycle1()
+            cycle2()
+except KeyboardInterrupt:
+    print("Closing connection.")
+    sys.exit(0)
