@@ -10,7 +10,7 @@ if [ $EUID -ne 0 ]; then
 else
   dir="/usr/local/bin/"
   python3 setup.py install --root="/"
-  ln -sf /lib/python$pyver/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
+  ln -sf /usr/lib/python$pyver/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
   chmod 755 ${dir}fetchcord
   exit 0
 fi
