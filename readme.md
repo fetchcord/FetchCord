@@ -57,7 +57,7 @@
 - [ ] More GPUs?
 
 
-### Installing on (GNU/)Linux
+## Installing on (GNU/)Linux
 > `#` the command should be ran as `sudo`
 
 > `$` the command should be ran as user
