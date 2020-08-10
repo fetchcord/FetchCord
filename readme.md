@@ -18,10 +18,13 @@
 </p>
 
 # Table of content
-- [Features](#Features)
-- [To-Do](#To-Do
+- [Features](#features)
+- [To-Do](#to-do)
 - [Install on (gnu/)linux](#installing-on-gnulinux)
-    - [Running on (gnu/)linux(#running)
+    - [Running on (gnu/)linux](#run)
+- [Intall on MacOS](#installing-on-macos)
+    - [Running on MacOs](#run-1)
+- [Examples](#examples)
 
 ### Features
 ***
@@ -60,9 +63,7 @@
 
 > `$` the command should be ran as user
 
-### Install
 _From download/cloned directory_
-
 
 ```sh
 # ./install.sh
@@ -75,8 +76,9 @@ To run the script simply run `fetchcord`, python 3.8 should have the `distro` mo
 $ pip3 install distro
 ```
 
-## Running on MacOS
-### Install
+## Installing on MacOS
+
+
 _From download/cloned directory_
 
 ```sh
