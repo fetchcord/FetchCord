@@ -12,33 +12,33 @@ _Fetchcord grabs information about your distribution and displays it as Discord 
 
 ***
 + What works
- - [✓] Distribution detection
+  - [✓] Distribution detection
 
- - [✓] Distribution Version
+  - [✓] Distribution Version
 
- - [✓] Package detection
+  - [✓] Package detection
 
- - [✓] Kernel Detection
+  - [✓] Kernel Detection
 
- - [✓] Uptime
+  - [✓] Uptime
 
- - [✓] Detecting Window Manager/Desktop Environment
+  - [✓] Detecting Window Manager/Desktop Environment
 
- - [✓] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
+  - [✓] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
 
 ***
 + To-Do
- - [✗] Add more distributions (If your distro is not supported open an issue)
+  - [✗] Add more distributions (If your distro is not supported open an issue)
 
- - [✗] Detect Window Manager/Desktop Environment version
+  - [✗] Detect Window Manager/Desktop Environment version
 
- - [✗] Add Flatpak/Snap support
+  - [✗] Add Flatpak/Snap support
 
- - [✗] Add support for desktop icon use
+  - [✗] Add support for desktop icon use
 
- - [✗] More CPUs, ex. Pentium, Older AMD CPUs
+  - [✗] More CPUs, ex. Pentium, Older AMD CPUs
 
- - [✗] More GPUs?
+  - [✗] More GPUs?
 
 ***
 
@@ -52,7 +52,7 @@ _From download/cloned directory_
 
 
 ```sh
-\# ./install.sh
+# ./install.sh
 ```
 
 
@@ -69,7 +69,7 @@ python3.8 needs the `distro` module. If you get an error, install it via pip: `p
 _From download/cloned directory_
 
 ```sh
-\# ./macinstall.sh
+# ./macinstall.sh
 ```
 
 
