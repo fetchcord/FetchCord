@@ -102,17 +102,34 @@ if amdgpuline and sysosid.lower() != "macos" and sysosid.lower() != "windows":
         sys.exit(1)
 gpuvendor = ""
 gpuinfo = ""
+try:
+    primeoffload = ""
+    laptop = ""
+    # only show the GPU in use with optimus, show both if prime render offload
+    primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
+    laptop = os.path.isdir("/sys/module/battery")
+except BashError:
+    pass
 if nvidiagpuline:
     for n in range(len(nvidiagpuline)):
         gpuinfo += nvidiagpuline[n]
     gpuvendor += nvidiagpuline[0].split()[1]
 if amdgpuline:
-    for a in range(len(amdgpurenderlist)):
-        gpuinfo += amdgpurenderlist[a]
-    gpuvendor += amdgpuvendor
+    try:
+        if not primeoffload and not laptop:
+            for a in range(len(amdgpurenderlist)):
+                gpuinfo += amdgpurenderlist[a]
+            gpuvendor += amdgpuvendor
+    except NameError:
+        pass
+
 if intelgpuline:
-    gpuinfo += intelgpuline[0]
-    gpuvendor += intelgpuline[0].split()[1]
+    try:
+        if not primeoffload and not laptop:
+            gpuinfo += intelgpuline[0]
+            gpuvendor += intelgpuline[0].split()[1]
+    except NameError:
+        pass
 
 cpuvendor = cpuline[0].split()[1] 
 if cpuvendor == "Intel":
@@ -136,23 +153,23 @@ else:
 if args.debug:
     print("out")
     try:
-        print(deid)
-        print(termfontline[0])
+        print("deid %s" % deid)
+        print("termfontline item 0: %s" % termfontline[0])
     except IndexError:
         pass
-    print(sysosline)
-    print(amdgpurenderlist)
-    print(amdgpurender)
-    print(gpuinfo)
-    print(gpuvendor)
-    print(nvidiagpuline)
-    print(wmid)
-    print(termid)
-    print(cpuvendor)
-    print(cpumodel)
-    print(packagesline[0])
-    print(cpuline[0])
-    print(termline[0])
-    print(sysosid)
-    print(sysosline[0])
-    print(wmline[0])
+    print("sysosline: %s" % sysosline)
+    print("amdgpurenderlist: %s" % amdgpurenderlist)
+    print("amdgpurender: %s" % amdgpurender)
+    print("gpuinfo %s" % gpuinfo)
+    print("gpuvendor: %s" % gpuvendor)
+    print("nvidiagpuline: %s" % nvidiagpuline)
+    print("wmid: %s" % wmid)
+    print("termid: %s" % termid)
+    print("cpuvendor %s" % cpuvendor)
+    print("cpumodel %s" % cpumodel)
+    print("packagesline item 0: %s" % packagesline[0])
+    print("cpuline item 0: %s" % cpuline[0])
+    print("termline item 0: %s" % termline[0])
+    print("sysosid: %s" % sysosid)
+    print("sysosline item 0: %s" % sysosline[0])
+    print("wmline item 0: %s"% wmline[0])
