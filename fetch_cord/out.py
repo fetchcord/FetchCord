@@ -1,5 +1,5 @@
 from .bash import exec_bash, BashError
-import subprocess
+import sys
 import os
 baseinfo = exec_bash("neofetch --stdout --config none")
 #make lists
