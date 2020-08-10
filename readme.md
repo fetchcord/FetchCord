@@ -45,6 +45,7 @@
 - [x] Detecting Window Manager/Desktop Environment
 
 - [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
+- [x] Flatpak support
 
 ### To-Do
 
@@ -52,7 +53,7 @@
 
 - [ ] Detect Window Manager/Desktop Environment version
 
-- [ ] Add Flatpak/Snap support
+- [ ] Add Snap support
 
 - [ ] Add support for desktop icon use
 
