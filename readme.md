@@ -5,7 +5,7 @@
        <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux-brightgreen?style=for-the-badge&logo=linux&logoColor=white">
     </a>
   <a href="https://www.python.org/downloads/">
-       <img src="https://img.shields.io/badge/Python-version%3A%203.8-red?style=for-the-badge&logo=python&logoColor=white"">
+       <img src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge">
     </a>
    <a href="https://discord.gg/P4h9kdV">
        <img src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
@@ -18,52 +18,46 @@
 </p>
 
 # Table of content
-- [Features](#features)
-- [To-Do](#to-do)
-+ Installing
-    - [Install on (gnu/)linux](#installing-on-gnulinux)
-    - [Install on MacOS](#installing-on-macos)
- + Running
+- [**Features**](#features)
+- [**To-Do**](#to-do)
+- [**Install on (gnu/)linux**](#installing-on-gnulinux)
     - [Running on (gnu/)linux](#run)
-       - [Arguments](#arguments)
-    - [Running on MacOS](#run1)
-
-- [Examples](#examples)
+- [**Install on MacOS**](#installing-on-macos)
+    - [Running on MacOs](#run-1)
+- [**Examples**](#examples)
 
 ### Features
-***
-  - [✓] Distribution detection
 
-  - [✓] Distribution Version
+- [x] Distribution detection
+ 
+- [x] Distribution Version
 
-  - [✓] Package detection
+- [x] Package detection
 
-  - [✓] Kernel Detection
+- [x] Kernel Detection
 
-  - [✓] Uptime
+- [x] Uptime
 
-  - [✓] Detecting Window Manager/Desktop Environment
+- [x] Detecting Window Manager/Desktop Environment
 
-  - [✓] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
-  - [✓] Flatpak support
+- [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
 
 ### To-Do
-***
-  - [✗] Add more distributions (If your distro is not supported open an issue)
 
-  - [✗] Detect Window Manager/Desktop Environment version
+- [ ] Add more distributions (If your distro is not supported open an issue)
 
-  - [✗] Add Snap support
+- [ ] Detect Window Manager/Desktop Environment version
 
-  - [✗] Add support for desktop icon use
+- [ ] Add Flatpak/Snap support
 
-  - [✗] More CPUs, ex. Pentium, Older AMD CPUs
+- [ ] Add support for desktop icon use
 
-  - [✗] More GPUs?
+- [ ] More CPUs, ex. Pentium, Older AMD CPUs
 
-***
+- [ ] More GPUs?
 
-### Installing on (GNU/)Linux
+
+## Installing on (GNU/)Linux
 > `#` the command should be ran as `sudo`
 
 > `$` the command should be ran as user
@@ -75,30 +69,17 @@ _From download/cloned directory_
 ```
 ### Run
 
-NOTE: you must have neofetch installed
-
 To run the script simply run `fetchcord`, python 3.8 should have the `distro` module but if you get an error install it via pip,
 
 ```sh
 $ pip3 install distro
 ```
-#### Arguments
---distro, shows only distro and kernel version and package count.
-
---hardware, shows only CPU and GPU info.
-
---shell, shows only terminal and shell info.
-
---time, -t, set custom duration for cycles in seconds.
-
--h or --help, shows this information above.
 
 ## Installing on MacOS
-> `#` the command should be ran as `sudo`
 
-> `$` the command should be ran as user
 
 _From download/cloned directory_
+
 ```sh
 # ./macinstall.sh
 ```
@@ -107,7 +88,7 @@ _From download/cloned directory_
 ### Run 
 
 ```sh
-$ python3 run-rpc.py
+$ python3 -u -m fetch_cord.macos-rpc.py
 ```
 
 ## Examples
@@ -121,3 +102,5 @@ $ python3 run-rpc.py
 ![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
 
 ![amd with nvidia](Examples/amd_example.png)
+
+
