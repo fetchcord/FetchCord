@@ -76,7 +76,7 @@ _From download/cloned directory_
 
 You will also need the `Pypresence` module, simply install it via pip
 ```sh
-$ python3 -m pip install pypresence`
+$ pip3 install --user  pypresence`
 ```
 ### Run
 NOTE: you must have neofetch installed
