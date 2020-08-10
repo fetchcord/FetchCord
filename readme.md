@@ -63,8 +63,6 @@ To run the script simply run `fetchcord`, python 3.8 should have the `distro` mo
 $ pip3 install distro
 ```
 
-python3.8 needs the `distro` module. If you get an error, install it via pip: `pip3 install distro`
-
 ## Running on MacOS
 #####Install
 _From download/cloned directory_
