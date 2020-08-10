@@ -20,12 +20,14 @@
 # Table of content
 - [Features](#features)
 - [To-Do](#to-do)
-- [Installing](#installing-and-running)
-     - [Install on (gnu/)linux](#installing-on-gnulinux)
-        - [Running on (gnu/)linux](#run)
-           - [Arguments](#arguments)
-   - [Install on MacOS](#installing-on-macos)
-       - [Running on MacOS](#run-1)
++ Installing
+    - [Install on (gnu/)linux](#installing-on-gnulinux)
+    - [Install on MacOS](#installing-on-macos)
+ + Running
+    - [Running on (gnu/)linux](#run)
+       - [Arguments](#arguments)
+    - [Running on MacOS](#run1)
+
 - [Examples](#examples)
 
 ### Features
@@ -60,8 +62,6 @@
   - [✗] More GPUs?
 
 ***
-
-# Installing and Running
 
 ### Installing on (GNU/)Linux
 > `#` the command should be ran as `sudo`
@@ -99,7 +99,6 @@ $ pip3 install distro
 > `$` the command should be ran as user
 
 _From download/cloned directory_
-
 ```sh
 # ./macinstall.sh
 ```
