@@ -81,8 +81,7 @@ def cycle0():
                 "large_image": "big" #this will be the distro logo
             }
         }
-        if not args.distro:
-            set_id()
+        set_id()
         rpc_obj.set_activity(activity)
         if args.time:
             custom_time()
@@ -105,8 +104,7 @@ def cycle1():
             }
         }
         # reset id to make discord happy
-        if not args.hardware:
-            set_id()
+        set_id()
         rpc_obj2.set_activity(activity)
         if args.time:
             custom_time()
@@ -129,30 +127,29 @@ def cycle2():
             }
         }
         # reset id to make discord happy
-        if not args.shell:
-            set_id()
+        set_id()
         rpc_obj3.set_activity(activity)
         if args.time:
             custom_time()
         else:
             time.sleep(30)
-
-if args.distro:
-    client_id = appid
-    rpc_obj = rpc.DiscordIpcClient.for_platform(client_id)
-    while True:
-        cycle0()
-if args.hardware:
-    client_id2 = cpuappid
-    rpc_obj2 = rpc.DiscordIpcClient.for_platform(client_id2)
-    while True:
-        cycle1()
-if args.shell:
-    client_id3 = termappid
-    rpc_obj3 = rpc.DiscordIpcClient.for_platform(client_id3)
-    while True:
-        cycle2()
 while True:
-    cycle0()
-    cycle1()
-    cycle2()
+    if args.distro:
+        cycle0()
+    elif args.hardware:
+        cycle1()
+    elif args.shell:
+        cycle2()
+    elif args.distro and args.hardware:
+        cycle0()
+        cycle1()
+    elif args.distro and args.shell:
+        cycle0()
+        cycle2()
+    elif args.hardware and args.shell:
+        cycle1()
+        cycle2()
+    else:
+        cycle0()
+        cycle1()
+        cycle2()
