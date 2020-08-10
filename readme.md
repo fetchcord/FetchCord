@@ -5,7 +5,7 @@
        <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux-brightgreen?style=for-the-badge&logo=linux&logoColor=white">
     </a>
   <a href="https://www.python.org/downloads/">
-       <img src="https://img.shields.io/badge/Python-version%3A%203.8-red?style=for-the-badge&logo=python&logoColor=white"">
+       <img src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge">
     </a>
    <a href="https://discord.gg/P4h9kdV">
        <img src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
