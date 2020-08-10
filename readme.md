@@ -25,7 +25,7 @@
         - [Running on (gnu/)linux](#run)
            - [Arguments](#arguments)
    - [Install on MacOS](#installing-on-macos)
-       - [Running on MacOs](#run-1)
+       - [Running on MacOS](#run-1)
 - [Examples](#examples)
 
 ### Features
