@@ -9,6 +9,12 @@ try:
         sys.exit(0)
 except AttributeError:
     pass
+home = exec_bash("echo $HOME")
+if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isdir("/usr/bin/discord" or not os.path.isdir("/opt/Discord")):
+    try:
+        exec_bash("cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 "% home)
+    except BashError as e:
+        print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
 # use default neofetch output, ignoring user config
 baseinfo = exec_bash("neofetch --stdout --config none")
 #make lists
