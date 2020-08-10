@@ -1,46 +1,88 @@
-# FetchCord
+<h1 align="center">FetchCord</h1>
+</p>
+<p align="center">
+    <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
+       <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux-brightgreen?style=for-the-badge&logo=linux&logoColor=white">
+    </a>
+  <a href="https://www.python.org/downloads/">
+       <img src="https://img.shields.io/badge/Python-version%3A%203.8-red?style=for-the-badge&logo=python&logoColor=white"">
+    </a>
+   <a href="https://discord.gg/P4h9kdV">
+       <img src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
+    </a>
+    <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
+       <img src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png"
+    </a>
+  
+  </a>
+</p>
 
-Fetchcord grabs information about your distribution and displays it as Discord Rich Presence.
+# Table of content
+- [Features](#features)
+- [To-Do](#to-do)
+- [Installing](#installing-and-running)
+     - [Install on (gnu/)linux](#installing-on-gnulinux)
+        - [Running on (gnu/)linux](#run)
+           - [Arguments](#arguments)
+   - [Install on MacOS](#installing-on-macos)
+       - [Running on MacOs](#run-1)
+- [Examples](#examples)
 
-## Examples
-![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
+### Features
+***
+  - [✓] Distribution detection
 
-![amd with nvidia](Examples/amd_example.png)
+  - [✓] Distribution Version
 
-## What works
+  - [✓] Package detection
 
-- [x] Distribution detection
+  - [✓] Kernel Detection
 
-- [x] Distribution Version
+  - [✓] Uptime
 
-- [x] Package detection
+  - [✓] Detecting Window Manager/Desktop Environment
 
-- [x] Kernel Detection
+  - [✓] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
+  - [✓] Flatpak support
 
-- [x] Uptime
+### To-Do
+***
+  - [✗] Add more distributions (If your distro is not supported open an issue)
 
-- [x] Detecting Window Manager/Desktop Environment
+  - [✗] Detect Window Manager/Desktop Environment version
 
-- [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
+  - [✗] Add Snap support
 
-- [x] Add Flatpak support
+  - [✗] Add support for desktop icon use
 
-## To-Do
-- [ ] Add more distributions (If your distro is not supported open an issue)
+  - [✗] More CPUs, ex. Pentium, Older AMD CPUs
 
-- [ ] Detect Window Manager/Desktop Environment version
+  - [✗] More GPUs?
 
-- [ ] Add Snap support
+***
 
-- [ ] Add support for desktop icon use
+# Installing and Running
 
-- [ ] More CPUs, ex. Pentium, Older AMD CPUs
+### Installing on (GNU/)Linux
+> `#` the command should be ran as `sudo`
 
-- [ ] More GPUs?
+> `$` the command should be ran as user
 
+_From download/cloned directory_
 
-## Arguments
+```sh
+# ./install.sh
+```
+### Run
 
+NOTE: you must have neofetch installed
+
+To run the script simply run `fetchcord`, python 3.8 should have the `distro` module but if you get an error install it via pip,
+
+```sh
+$ pip3 install distro
+```
+#### Arguments
 --distro, shows only distro and kernel version and package count.
 
 --hardware, shows only CPU and GPU info.
@@ -48,25 +90,28 @@ Fetchcord grabs information about your distribution and displays it as Discord R
 --shell, shows only terminal and shell info.
 
 --time, -t, set custom duration for cycles in seconds.
- 
- -h or --help, shows this information above.
 
-## Running on (GNU/)Linux
+-h or --help, shows this information above.
 
-To install the script, run `sudo ./install.sh`.
+## Installing on MacOS
+> `#` the command should be ran as `sudo`
 
-To run the script simply run `fetchcord`, python 3.8 should have the `distro` module but if you get an error install it via pip, `pip3 install distro`
+> `$` the command should be ran as user
 
-NOTE: This script requires neofetch to be installed.
+_From download/cloned directory_
 
-python3.8 needs the `distro` module. If you get an error, install it via pip: `pip3 install distro`
+```sh
+# ./macinstall.sh
+```
 
-## Running on MacOS
-To install the script, run `sudo ./install.sh`.
 
-Run `python3 run-rpc.py`.
+### Run 
 
-## Other Examples
+```sh
+$ python3 run-rpc.py
+```
+
+## Examples
 
 ![Arch with awesome](Examples/arch_example.png) ![Debian with Cinnamon](Examples/debian_example.png) ![Fedora with xfce](Examples/fedora_example.png)
 
@@ -74,6 +119,6 @@ Run `python3 run-rpc.py`.
 
 ![void with dwm](Examples/void_example.png) ![endeabour with deepinde](Examples/end_example.png) ![centos with unity](Examples/centos_example.png)
 
-## Join us on Discord!
+![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
 
- [Discord](https://discord.gg/5wP2RjF)
+![amd with nvidia](Examples/amd_example.png)
