@@ -63,27 +63,18 @@
 
 
 ## Installing on (GNU/)Linux
-> `#` the command should be ran as `sudo`
 
-> `$` the command should be ran as user
+`pip3 install FetchCord`
 
-_From download/cloned directory_
+NOTE: you need neofetch to be also installed for this to work.
 
-```sh
-# ./install.sh
-```
-You will also need the ` pypresence` module, install it by doing
-```sh
-$ python3 -m pip install --user pypresence
-```
+If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
+
 ### Run
 
 Once installed, simply run `fetchcord`.
 
-Alternativley you can run it without installing, you have to be in the fetchcord directory.
-```sh
-$ python3 run-rpc.py
-```
+If that does not work,add /home/$USER/.local/bin/ to your path, or just run `python3 -m fetchcord`.
 
 #### Arguments
 --distro, shows only distro and kernel version and package count.
@@ -98,19 +89,13 @@ $ python3 run-rpc.py
 
 ## Installing on MacOS
 
+To install FetchCord, run `pip3 install FetchCord`
 
-_From download/cloned directory_
-
-```sh
-# ./macinstall.sh
-```
-
+NOTE: you need neofetch to be also installed for this to work.
 
 ### Run 
 
-```sh
-$ python3 -u -m fetch_cord.macos-rpc.py
-```
+simply run `fetchcord`
 
 ## Examples
 
