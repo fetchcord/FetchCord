@@ -20,10 +20,14 @@
 # Table of content
 - [**Features**](#features)
 - [**To-Do**](#to-do)
-- [**Install on (gnu/)linux**](#installing-on-gnulinux)
++ **Installing**
+    - [Install on (gnu/)linux](#installing-on-gnulinux)
+    - [Install on MacOS](#installing-on-macos)
+ + **Running**
     - [Running on (gnu/)linux](#run)
-- [**Install on MacOS**](#installing-on-macos)
-    - [Running on MacOs](#run-1)
+       - [Arguments](#arguments)
+    - [Running on MacOS](#run1)
+
 - [**Examples**](#examples)
 
 ### Features
@@ -41,6 +45,7 @@
 - [x] Detecting Window Manager/Desktop Environment
 
 - [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
+- [x] Flatpak support
 
 ### To-Do
 
@@ -48,7 +53,7 @@
 
 - [ ] Detect Window Manager/Desktop Environment version
 
-- [ ] Add Flatpak/Snap support
+- [ ] Add Snap support
 
 - [ ] Add support for desktop icon use
 
@@ -58,38 +63,39 @@
 
 
 ## Installing on (GNU/)Linux
-> `#` the command should be ran as `sudo`
 
-> `$` the command should be ran as user
+`pip3 install FetchCord`
 
-_From download/cloned directory_
+NOTE: you need neofetch to be also installed for this to work.
 
-```sh
-# ./install.sh
-```
+If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
+
 ### Run
 
-To run the script simply run `fetchcord`, python 3.8 should have the `distro` module but if you get an error install it via pip,
+Once installed, simply run `fetchcord`.
 
-```sh
-$ pip3 install distro
-```
+If that does not work,add /home/$USER/.local/bin/ to your path, or just run `python3 -m fetchcord`.
+
+#### Arguments
+--distro, shows only distro and kernel version and package count.
+
+--hardware, shows only CPU and GPU info.
+
+--shell, shows only terminal and shell info.
+
+--time, -t, set custom duration for cycles in seconds.
+
+-h or --help, shows this information above.
 
 ## Installing on MacOS
 
+To install FetchCord, run `pip3 install FetchCord`
 
-_From download/cloned directory_
-
-```sh
-# ./macinstall.sh
-```
-
+NOTE: you need neofetch to be also installed for this to work.
 
 ### Run 
 
-```sh
-$ python3 -u -m fetch_cord.macos-rpc.py
-```
+simply run `fetchcord`
 
 ## Examples
 
@@ -102,4 +108,5 @@ $ python3 -u -m fetch_cord.macos-rpc.py
 ![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
 
 ![amd with nvidia](Examples/amd_example.png)
+
 

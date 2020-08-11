@@ -1,2 +1,0 @@
-#!/bin/sh
-exec python3 -u -m fetch_cord.run-rpc
