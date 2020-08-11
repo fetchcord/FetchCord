@@ -20,10 +20,14 @@
 # Table of content
 - [**Features**](#features)
 - [**To-Do**](#to-do)
-- [**Install on (gnu/)linux**](#installing-on-gnulinux)
++ **Installing**
+    - [Install on (gnu/)linux](#installing-on-gnulinux)
+    - [Install on MacOS](#installing-on-macos)
+ + **Running**
     - [Running on (gnu/)linux](#run)
-- [**Install on MacOS**](#installing-on-macos)
-    - [Running on MacOs](#run-1)
+       - [Arguments](#arguments)
+    - [Running on MacOS](#run1)
+
 - [**Examples**](#examples)
 
 ### Features
