@@ -13,7 +13,7 @@ setup(
     author='MrPotatoBobx',
     author_email='junkahole23@protonmail.com',
     license='MIT',
-    packages=['fetch_cord'],
+    packages=setuptools.find_packages(),
     keywords=['distro', 'info', 'discord', 'fetch'],
     classifiers=[
         'License :: OSI Approved :: MIT License',
