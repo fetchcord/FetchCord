@@ -6,7 +6,7 @@ import argparse
 import sys
 import os
 #import info about system
-from args import parse_args
+import args
 import testing 
 from out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, sysosline, sysosid
 # define testing functions
