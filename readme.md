@@ -18,17 +18,12 @@
 </p>
 
 # Table of content
-
 - [**Features**](#features)
 - [**To-Do**](#to-do)
-+ **Installing**
-    - [Install on (gnu/)linux](#installing-on-gnulinux)
-    - [Install on MacOS](#installing-on-macos)
- + **Running**
+- [**Install on (gnu/)linux**](#installing-on-gnulinux)
     - [Running on (gnu/)linux](#run)
-       - [Arguments](#arguments)
-    - [Running on MacOS](#run1)
-
+- [**Install on MacOS**](#installing-on-macos)
+    - [Running on MacOs](#run-1)
 - [**Examples**](#examples)
 
 ### Features
@@ -73,31 +68,16 @@ _From download/cloned directory_
 ```sh
 # ./install.sh
 ```
-
-You will also need the `Pypresence` module, simply install it via pip
-```sh
-$ python3 -m pip install --user  pypresence
-```
 ### Run
-NOTE: you must have neofetch installed
 
-To run the script simply run `fetchcord`
+To run the script simply run `fetchcord`, python 3.8 should have the `distro` module but if you get an error install it via pip,
 
-#### Arguments
---distro, shows only distro and kernel version and package count.
-
---hardware, shows only CPU and GPU info.
-
---shell, shows only terminal and shell info.
-
---time, -t, set custom duration for cycles in seconds.
-
--h or --help, shows this information above
+```sh
+$ pip3 install distro
+```
 
 ## Installing on MacOS
-> `#` the command should be ran as `sudo`
 
-> `$` the command should be ran as user
 
 _From download/cloned directory_
 
