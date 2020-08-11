@@ -1,8 +1,7 @@
-import distro
+#import shit as usual
 import os
 from fetch_cord.bash import exec_bash, BashError
 from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
-info = distro.linux_distribution(full_distribution_name=False)
 #appid for discord app
 appid = "none"
 #number of packages

@@ -9,20 +9,26 @@ import os
 from fetch_cord.args import parse_args
 from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid 
 from fetch_cord.out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, sysosline, sysosid
-
 args = parse_args()
-#printing info with debug switch
-if args.debug:
-    print("run-rpc")
-    print (uptime)
-    print (packagesline[0])
-    print (appid)
-    print (gpuid)
+def main():
+    #printing info with debug switch
+    if args.debug:
+        print("run-rpc")
+        print (uptime)
+        print (packagesline[0])
+        print (appid)
+        print (gpuid)
+    if sysosid == "macos":
+            runmac()
+    else:
+        loonix()
+
+
 print("Connecting")
 print("RPC connection successful.")
 time.sleep(5)
 start_time = float(uptime) #discord uses unix time to interpret time for rich presnse, this is uptime in unix time    
-if sysosid == "macos":
+def runmac():
     devicetype = testing.devicetype
     product = testing.product
     bigicon = testing.bigicon
@@ -103,36 +109,37 @@ def cycle2():
             custom_time()
         else:
             time.sleep(30)
-try:
-    while True:
-        if args.distro not in [args.shell, args.hardware]:
-            cycle0()
-        elif args.hardware not in [args.distro, args.shell]:
-            cycle1()
-        elif args.shell not in [args.distro, args.hardware]:
-            cycle2()
-        elif args.distro and args.hardware and not args.shell:
-            cycle0()
-            RPC.clear(pid=os.getpid())
-            cycle1()
-            RPC.clear(pid=os.getpid())
-        elif args.distro and args.shell and not args.hardware:
-            cycle0()
-            RPC.clear(pid=os.getpid())
-            cycle2()
-            RPC.clear(pid=os.getpid())
-        elif args.hardware and args.shell and not args.distro:
-            cycle1()
-            RPC.clear(pid=os.getpid())
-            cycle2()
-            RPC.clear(pid=os.getpid())
-        else:
-            cycle0()
-            RPC.clear(pid=os.getpid())
-            cycle1()
-            RPC.clear(pid=os.getpid())
-            cycle2()
-            RPC.clear(pid=os.getpid())
-except KeyboardInterrupt:
-    print("Closing connection.")
-    sys.exit(0)
+def loonix():
+    try:
+        while True:
+            if args.distro not in [args.shell, args.hardware]:
+                cycle0()
+            elif args.hardware not in [args.distro, args.shell]:
+                cycle1()
+            elif args.shell not in [args.distro, args.hardware]:
+                cycle2()
+            elif args.distro and args.hardware and not args.shell:
+                cycle0()
+                RPC.clear(pid=os.getpid())
+                cycle1()
+                RPC.clear(pid=os.getpid())
+            elif args.distro and args.shell and not args.hardware:
+                cycle0()
+                RPC.clear(pid=os.getpid())
+                cycle2()
+                RPC.clear(pid=os.getpid())
+            elif args.hardware and args.shell and not args.distro:
+                cycle1()
+                RPC.clear(pid=os.getpid())
+                cycle2()
+                RPC.clear(pid=os.getpid())
+            else:
+                cycle0()
+                RPC.clear(pid=os.getpid())
+                cycle1()
+                RPC.clear(pid=os.getpid())
+                cycle2()
+                RPC.clear(pid=os.getpid())
+    except KeyboardInterrupt:
+        print("Closing connection.")
+        sys.exit(0)
