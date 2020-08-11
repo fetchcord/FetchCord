@@ -78,7 +78,7 @@ $ python3 -m pip install --user pypresence
 ```
 ### Run
 
-To run the script simply run `fetchcord`.
+Once installed, simply run `fetchcord`.
 
 Alternativley you can run it without installing, you have to be in the fetchcord directory.
 ```sh
