@@ -10,12 +10,12 @@ if [ $EUID -ne 0 ]; then
 else
   dir="/usr/local/bin/"
   python3 setup.py install --root="/"
-  if [ -d /usr/lib/python$pyver/ ]; then
-  ln -sf /usr/lib/python$pyver/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
-  elif [ -d /lib/python$pyver/ ]; then
-  ln -sf /lib/python$pyver/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
-  elif [ -d /usr/loca/lib/python$pyver/ ]; then
-  ln -sf /usr/lib/python$pyver/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
+  if [ -d /usr/lib/python3*/ ]; then
+  ln -sf /usr/lib/python3*/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
+  elif [ -d /lib/python3*/ ]; then
+  ln -sf /lib/python3*/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
+  elif [ -d /usr/loca/lib/python3*/ ]; then
+  ln -sf /usr/lib/python3*/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
   else
     echo "Unknown python path, cannot symlink, contact me on github to resolve this."
   fi
