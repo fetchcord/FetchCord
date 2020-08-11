@@ -47,6 +47,9 @@ if sysosid == "macos":
         small_text=product, #set small image text
         start=start_time)
         time.sleep(30)
+def custom_time():
+    ctime = int(args.time)
+    time.sleep(ctime)
 
 # cycle
 def cycle0():
@@ -108,11 +111,11 @@ def cycle2():
             time.sleep(30)
 try:
     while True:
-        if args.distro and not args.shell and not args.hardware:
+        if args.distro not in [args.shell, args.hardware]:
             cycle0()
-        elif args.hardware and not args.distro and not args.shell:
+        elif args.hardware not in [args.distro, args.shell]:
             cycle1()
-        elif args.shell and not args.distro and not args.hardware:
+        elif args.shell not in [args.distro, args.hardware]:
             cycle2()
         elif args.distro and args.hardware and not args.shell:
             cycle0()
