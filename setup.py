@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 from os.path import dirname, join
-from setuptools import setup, find_packages
+import setuptools
 
 
-setup(
+setuptools.setup(
     name='FetchCord',
     version=0.1,
     description='grabs information about your Distro and displays it as Discord Rich Presence.',
     long_description=open(
         join(dirname(__file__), 'readme.md')).read(),
+    long_description_content_type="text/markdown",
     url='https://github.com/MrPotatoBobx/FetchCord',
     author='MrPotatoBobx',
     author_email='junkahole23@protonmail.com',
