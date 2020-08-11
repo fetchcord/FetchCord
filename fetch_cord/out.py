@@ -1,9 +1,8 @@
-from bash import exec_bash, BashError
+from fetch_cord.bash import exec_bash, BashError
 import sys
 import os
 import argparse
-import sys
-from args import parse_args
+from fetch_cord.args import parse_args
 args = parse_args()
 if args.time:
     if int(args.time) < 15:

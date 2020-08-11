@@ -5,7 +5,7 @@ import setuptools
 
 setuptools.setup(
     name='FetchCord',
-    version=0.4,
+    version=0.9,
     description='grabs information about your Distro and displays it as Discord Rich Presence.',
     long_description=open(
         join(dirname(__file__), 'readme.md')).read(),

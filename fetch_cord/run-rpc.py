@@ -6,9 +6,9 @@ import argparse
 import sys
 import os
 #import info about system
-import args
-import testing 
-from out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, sysosline, sysosid
+from fetch_cord.args import parse_args
+import fetch_cord.testing
+from fetch_cord.out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, sysosline, sysosid
 # define testing functions
 uptime = testing.uptime
 gpuid = testing.gpuid
