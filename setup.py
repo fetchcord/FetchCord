@@ -14,7 +14,7 @@ setuptools.setup(
     author='MrPotatoBobx',
     author_email='junkahole23@protonmail.com',
     license='MIT',
-    packages=['fetch_cord']
+    packages=['fetch_cord'],
     keywords=['distro', 'info', 'discord', 'fetch'],
     classifiers=[
         'License :: OSI Approved :: MIT License',
