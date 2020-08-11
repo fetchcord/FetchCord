@@ -11,11 +11,11 @@ else
   dir="/usr/local/bin/"
   python3 setup.py install --root="/"
   if [ -d /usr/lib/python3*/ ]; then
-  ln -sf /usr/lib/python3*/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
+  ln -sf /usr/lib/python3*/*-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
   elif [ -d /lib/python3*/ ]; then
-  ln -sf /lib/python3*/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
+  ln -sf /lib/python3*/*-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
   elif [ -d /usr/loca/lib/python3*/ ]; then
-  ln -sf /usr/lib/python3*/site-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
+  ln -sf /usr/lib/python3*/*-packages/fetch_cord/run-rpc.py /usr/local/bin/fetchcord
   else
     echo "Unknown python path, cannot symlink, contact me on github to resolve this."
   fi
