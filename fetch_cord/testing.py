@@ -1,7 +1,7 @@
 import distro
 import os
 from .bash import exec_bash, BashError
-from .out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
+from .out import cpu, wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
 info = distro.linux_distribution(full_distribution_name=False)
 ldistro = info[0]
 ver = info[1]
@@ -128,11 +128,11 @@ def iMate():
 	desktopid = "mate"
 def iUnity():
 	#this is to check wether the user is actually using unity or using unity as an xdg value to fix issues with electron apps
-	if wm.lower() == "compiz":
+	if wmid.lower() == "compiz":
 		global desktopid
 		desktopid = "unity"
 	else:
-		desktopid = wm
+		desktopid = wmid
 # cpuids
 def Amdcpu():
         global cpuid, cpuappid
