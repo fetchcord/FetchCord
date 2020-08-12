@@ -192,6 +192,10 @@ def Intelpentium():
         global cpuid, cpuappid
         cpuid = "Intel(R) Pentium(R)"
         cpuappid='741203845706940467'
+def Intelceleron():
+        global cpuid, cpuappid
+        cpuid = "Intel(R) Celeron(R)"
+        cpuappid='742904581360713849'
 def Ryzen3():
         global cpuid, cpuappid
         cpuid = "AMD Ryzen 3"
@@ -297,6 +301,7 @@ intelcpus = {
     "intel i7": Intelcorei7,
     "intel i9": Intelcorei9,
     "intel pentium": Intelpentium,
+    "intel celeron": Intelceleron,
 }
 gpus = {
     "intel": Intelgpu,
