@@ -2,7 +2,6 @@
 from os.path import dirname, join
 import setuptools
 
-
 setuptools.setup(
     name='FetchCord',
     version=2.0,
@@ -23,10 +22,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-     entry_points={
+    entry_points={
         'console_scripts': [
             'fetchcord=fetch_cord.run_rpc:main',
         ]
     }
 )
-
