@@ -96,6 +96,8 @@ if sysosid.lower() not in ["windows", "macos"]:
         # only show the GPU in use with optimus, show both if prime render offload
         laptop = os.path.isdir("/sys/module/battery")
         if laptop and nvidiagpuline:
+            if args.debug:
+                print("laptop: %s" % laptop)
             primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
     except BashError:
         pass
@@ -104,12 +106,11 @@ if nvidiagpuline:
     for n in range(len(nvidiagpuline)):
         gpuinfo += nvidiagpuline[n]
     gpuvendor += nvidiagpuline[0].split()[1]
-
-if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload == "":
+amdgpurenderlist = []
+if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload != "":
 
     try:
         # amd GPUs
-        print("AMD GPUs")
         for i in range(len(amdgpuline)):
             env_prime = "env DRI_PRIME=%s" % i
             amdgpurender = " GPU: " + exec_bash("%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'" % env_prime)
@@ -117,7 +118,6 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload =
             if i != -1:
                 amdgpurenderlist.append(amdgpurender)
         amdgpuvendor = amdgpurender.split()[1]
-        print("amdgpuvendor: %s" % amdgpuvendor)
     except BashError as e:
         print("ERROR: Could not run glxinfo [%s]" % str(e))
         sys.exit(1)
@@ -127,13 +127,10 @@ elif amdgpuline and not amdgpurenderlist:
         gpuinfo += amdgpuline[a]
     gpuvendor += amdgpuline[0].split()[1]
 
-try:
-    if amdgpurenderlist and primeoffload == "":
-        for a in range(len(amdgpurenderlist)):
-            gpuinfo += amdgpurenderlist[a]
-        gpuvendor += amdgpuvendor
-except NameError:
-    pass
+if amdgpurenderlist == [] and primeoffload == "":
+    for a in range(len(amdgpurenderlist)):
+        gpuinfo += amdgpurenderlist[a]
+    gpuvendor += amdgpuvendor
 
 if intelgpuline:
 
