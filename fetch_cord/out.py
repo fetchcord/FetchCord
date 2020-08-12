@@ -37,6 +37,10 @@ amdgpu = "GPU: AMD"
 amdgpuline = []
 intelgpu = "GPU: Intel"
 intelgpuline = []
+vmwaregpu = "GPU: VMware"
+vmwaregpuline = []
+virtiogpu = "GPU: 00:02.0 Red"
+virtiogpuline = []
 term = "Terminal:"
 termline = []
 termfont = "Terminal Font:"
@@ -66,6 +70,10 @@ with open(filepath, "rt") as f:
             amdgpuline.append(line.rstrip('\n'))
         if line.find(intelgpu) != -1:
             intelgpuline.append(line.rstrip('\n'))
+        if line.find(vmwaregpu) != -1:
+            vmwaregpuline.append(line.rstrip('\n'))
+        if line.find(virtiogpu) != -1:
+            virtiogpuline.append(line.rstrip('\n'))
         if line.find(term) != -1:
             termline.append(line.rstrip('\n'))
         if line.find(termfont) != -1:
@@ -135,6 +143,13 @@ if intelgpuline:
     except NameError:
         pass
 
+if vmwaregpuline:
+        gpuinfo = vmwaregpuline[0]
+        gpuvendor = vmwaregpuline[0].split()[1]
+if virtiogpuline:
+   gpuinfo = vitriogpuline[0]
+   gpuvendor = virtiogpuline[0].split()[2:3].join()
+
 cpuvendor = cpuline[0].split()[1] 
 if cpuvendor == "Intel":
     cpumodel = cpuline[0].replace('-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
@@ -198,4 +213,7 @@ if args.debug:
     print("termline item 0: %s" % termline[0])
     print("sysosid: %s" % sysosid)
     print("sysosline item 0: %s" % sysosline[0])
-    print("wmline item 0: %s"% wmline[0])
+    try:
+        print("wmline item 0: %s"% wmline[0])
+    except IndexError:
+        pass
