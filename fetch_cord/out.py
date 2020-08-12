@@ -103,6 +103,7 @@ if sysosid.lower() not in ["windows", "macos"]:
         pass
 
 if nvidiagpuline:
+
     for n in range(len(nvidiagpuline)):
         gpuinfo += nvidiagpuline[n]
     gpuvendor += nvidiagpuline[0].split()[1]
@@ -126,7 +127,8 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload =
         gpuinfo += amdgpurenderlist[a]
     gpuvendor += amdgpuvendor
 
-elif amdgpurenderlist == []:
+elif amdgpurenderlist == [] and primeoffload == "":
+
     for a in range(len(amdgpuline)):
         gpuinfo += amdgpuline[a]
     try:
