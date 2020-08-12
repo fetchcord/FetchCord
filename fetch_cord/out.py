@@ -157,7 +157,9 @@ kernelid = kernelline[0].split()[1]
 sysosid = sysosline[0].split()[1]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
-if not termfontline:
+if termfontline and args.termfont:
+    print("Custom terminal font not set because a terminal font already exists, %s" % termfontline[0])
+elif not termfontline:
     termfontline = []
     if args.termfont:
         termfontline.append("Terminal Font: " + args.termfont)

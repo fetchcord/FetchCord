@@ -69,6 +69,8 @@ def cycle0():
         
         if args.time:
             custom_time()
+        elif args.distro and not args.shell and not args.hardware:
+            time.sleep(9999)
         else:
             time.sleep(30)
 # cycle
@@ -90,6 +92,8 @@ def cycle1():
             print("appid: %s" % client_id)
         if args.time:
             custom_time()
+        elif args.hardware and not args.distro and not args.shell:
+            time.sleep(9999)
         else:
             time.sleep(30)
 # cycle
@@ -111,6 +115,8 @@ def cycle2():
             print("appid: %s" % client_id)
         if args.time:
             custom_time()
+        elif args.shell and not args.distro and not args.hardware:
+            time.sleep(9999)
         else:
             time.sleep(30)
 
