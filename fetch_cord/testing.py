@@ -24,84 +24,85 @@ desktopid = "none"
 
 #distros set id and package number
 def iUbuntu():
-	global appid
-	appid='740434138036699178'
+    global appid
+    appid='740434138036699178'
 def iVoid():
-        global appid
-        appid='740484961353597039'
+    global appid
+    appid='740484961353597039'
 def iOpenSuseLeap():
-	global appid
-	appid='740156532137787433'
+    global appid
+    appid='740156532137787433'
 def iOpenSuseTumble():
-	global appid
-	appid='742180413132505088'
+    global appid
+    appid='742180413132505088'
 def iCentos():
-	global appid
-	appid='740483295388631071'
+    global appid
+    appid='740483295388631071'
 def iArch():
-	global appid
-	appid='740476198437650473'
+    global appid
+    appid='740476198437650473'
 def iArtix():
-        global appid
-        appid='741918141248045107'
+    global appid
+    appid='741918141248045107'
 def iFedora():
-	global appid
-	appid='740485660703719464'
+    global appid
+    appid='740485660703719464'
 def iGentoo():
-	global appid
-	appid='740484380652208140'
+    global appid
+    appid='740484380652208140'
 def iDebian():
-	global appid
-	appid='740490017218232392'
+    global appid
+    appid='740490017218232392'
 def iManjaro():
-	global appid
-	appid='740614258177605642'
+    global appid
+    appid='740614258177605642'
 def iLinuxMint():
-        global appid
-        appid='740633577481568317'
+    global appid
+    appid='740633577481568317'
 def iLMDE():
-        global appid
-        appid='741726946588622988'
+    global appid
+    appid='741726946588622988'
 def iPop():
-	global appid
-	appid='740660055925587978'
+    global appid
+    appid='740660055925587978'
 def iEnde():
-	global appid
-	appid='740809641545564170'
+    global appid
+    appid='740809641545564170'
 def iWindows10():
-        global appid
-        appid='741949889465942099'
+    global appid
+    appid='741949889465942099'
 def iWindows8_1():
-        global appid
-        appid='741952065294827520'
+    global appid
+    appid='741952065294827520'
 def iWindows8():
-        global appid
-        appid='741952179488948324'
+    global appid
+    appid='741952179488948324'
 def iWindows7():
-        global appid
-        appid='741952383512346696'
+    global appid
+    appid='741952383512346696'
 def Unknown_distro():
-        global appid
-        appid='742887089179197462'
+    global appid
+    appid='742887089179197462'
 
 # MacOS versions
 def iHsiera():
-        global bigicon
-        bigicon = "hsierria"
+    global bigicon
+    bigicon = "hsierria"
 def iMojave():
-        global bigicon
-        bigicon = "mojave"
+    global bigicon
+    bigicon = "mojave"
 def iCatilina():
-        global bigicon
-        bigicon = "catilina"
+    global bigicon
+    bigicon = "catilina"
 
 # macOS hardwawre
 def laporp():
-        global devicetype
-        if product[0:7] == "MacBook":
-                devicetype = "laptop"
-        else:
-                devicetype = "desktop"
+    global devicetype
+    if product[0:7] == "MacBook":
+        devicetype = "laptop"
+    else:
+        devicetype = "desktop"
+
 if sysosid.lower() == "macos":
     devicetype = "none"
     bigicon = "none"
@@ -112,141 +113,147 @@ if sysosid.lower() == "macos":
 
 #def desktops and defind id
 def iKde():
-	global desktopid
-	desktopid = "kde"
+    global desktopid
+    desktopid = "kde"
 def iGnome():
-	global desktopid
-	desktopid = "gnome"
+    global desktopid
+    desktopid = "gnome"
 def iXfce():
-	global desktopid
-	desktopid = "xfce"
+    global desktopid
+    desktopid = "xfce"
 def iCinnamon():
-	global desktopid
-	desktopid = "cinnamon"
+    global desktopid
+    desktopid = "cinnamon"
 def iBudgie():
-	global desktopid
-	desktopid = "budgie"
+    global desktopid
+    desktopid = "budgie"
 def iDeepin():
-	global desktopid
-	desktopid = "deepin"
+    global desktopid
+    desktopid = "deepin"
 def iMate():
-	global desktopid
-	desktopid = "mate"
+    global desktopid
+    desktopid = "mate"
 def iUnity():
 #this is to check wether the user is actually using unity
 #or using unity as an xdg value to fix issues with electron apps
-	if wmid.lower() == "compiz":
-		global desktopid
-		desktopid = "unity"
-	else:
-		desktopid = wmid
+if wmid.lower() == "compiz":
+    global desktopid
+    desktopid = "unity"
+else:
+    desktopid = wmid
 def iAero():
-        global desktopid
-        desktopid = "aero"
+    global desktopid
+    desktopid = "aero"
 
 #window managers
 def iDwm():
-	global desktopid
-	desktopid = "dwm"
+    global desktopid
+    desktopid = "dwm"
 def iAwesome():
-	global desktopid
-	desktopid = "awesome"
+    global desktopid
+    desktopid = "awesome"
 def Ii3():
-	global desktopid
-	desktopid = "i3"
+    global desktopid
+    desktopid = "i3"
 def iEnlightenment():
-	global desktopid
-	desktopid = "enlightenment"
+    global desktopid
+    desktopid = "enlightenment"
 def iXmonad():
-        global desktopid
-        desktopid = "xmonad"
+    global desktopid
+    desktopid = "xmonad"
 def iBspwm():
-        global desktopid
-        desktopid = "bspwm"
+    global desktopid
+    desktopid = "bspwm"
 def Unknown_de_wm():
-        global desktopid
-        desktopid='unknown'
+    global desktopid
+    desktopid='unknown'
 
 # cpuids
 def Ryzen():
-        global cpuid, cpuappid
-        cpuid = "Ryzen"
-        cpuappid='740752899054895105'
+    global cpuid, cpuappid
+    cpuid = "Ryzen"
+    cpuappid='740752899054895105'
 def Intelcorei3():
-        global cpuid, cpuappid
-        cpuid = "Intel(R) Core(TM) i3"
-        cpuappid='741044208512532570'
+    global cpuid, cpuappid
+    cpuid = "Intel(R) Core(TM) i3"
+    cpuappid='741044208512532570'
 def Intelcorei5():
-        global cpuid, cpuappid
-        cpuid = "Intel(R) Core(TM) i5"
-        cpuappid='741099939198926920'
+    global cpuid, cpuappid
+    cpuid = "Intel(R) Core(TM) i5"
+    cpuappid='741099939198926920'
 def Intelcorei7():
-        global cpuid, cpuappid
-        cpuid = "Intel(R) Core(TM) i7"
-        cpuappid='741100300219187335'
+    global cpuid, cpuappid
+    cpuid = "Intel(R) Core(TM) i7"
+    cpuappid='741100300219187335'
 def Intelcorei9():
-        global cpuid, cpuappid
-        cpuid = "Intel(R) Core(TM) i9"
-        cpuappid='741100622040006719'
+    global cpuid, cpuappid
+    cpuid = "Intel(R) Core(TM) i9"
+    cpuappid='741100622040006719'
 def Intelpentium():
-        global cpuid, cpuappid
-        cpuid = "Intel(R) Pentium(R)"
-        cpuappid='741203845706940467'
+    global cpuid, cpuappid
+    cpuid = "Intel(R) Pentium(R)"
+    cpuappid='741203845706940467'
 def Intelceleron():
-        global cpuid, cpuappid
-        cpuid = "Intel(R) Celeron(R)"
-        cpuappid='742904581360713849'
+    global cpuid, cpuappid
+    cpuid = "Intel(R) Celeron(R)"
+    cpuappid='742904581360713849'
 def Ryzen3():
-        global cpuid, cpuappid
-        cpuid = "AMD Ryzen 3"
-        cpuappid='741153175779803146'
+    global cpuid, cpuappid
+    cpuid = "AMD Ryzen 3"
+    cpuappid='741153175779803146'
 def Ryzen5():
-        global cpuid, cpuappid
-        cpuid = "AMD Ryzen 5"
-        cpuappid='741152732756312125'
+    global cpuid, cpuappid
+    cpuid = "AMD Ryzen 5"
+    cpuappid='741152732756312125'
 def Ryzen7():
-        global cpuid, cpuappid
-        cpuid = "AMD Ryzen 7"
-        cpuappid='740752899054895105'
+    global cpuid, cpuappid
+    cpuid = "AMD Ryzen 7"
+    cpuappid='740752899054895105'
 def Ryzen9():
-        global cpuid, cpuappid
-        cpuid = "AMD Ryzen 9"
-        cpuappid='741152930899427364'
+    global cpuid, cpuappid
+    cpuid = "AMD Ryzen 9"
+    cpuappid='741152930899427364'
 def Ryzenth():
-        global cpuid, cpuappid
-        cpuid = "AMD Ryzen Threadripper"
-        cpuappid='742075019257184338'
+    global cpuid, cpuappid
+    cpuid = "AMD Ryzen Threadripper"
+    cpuappid='742075019257184338'
 def Unknown_cpu():
-        global cpuid, cpuappid
-        cpuid = "Unknown CPU"
-        cpuappid='742887089179197462'
+    global cpuid, cpuappid
+    cpuid = "Unknown CPU"
+    cpuappid='742887089179197462'
 
 # gpuids
 def Intelgpu():
-        global gpuid
-        gpuid = "intel"
+    global gpuid
+    gpuid = "intel"
 def Nvidiagpu():
-        global gpuid
-        gpuid = "nvidia"
+    global gpuid
+    gpuid = "nvidia"
 def Nvidia_intelgpu():
-        global gpuid
-        gpuid = "nvidia-intel"
+    global gpuid
+    gpuid = "nvidia-intel"
 def Nvidia_amdgpu():
-        global gpuid
-        gpuid = "nvidia-amd"
+    global gpuid
+    gpuid = "nvidia-amd"
 def Amdgpu():
-        global gpuid
-        gpuid = "amd"
+    global gpuid
+    gpuid = "amd"
 def Amd_intelgpu():
-        global gpuid
-        gpuid = "amd-intel"
+    global gpuid
+    gpuid = "amd-intel"
 def Nvidia_amd_intelgpu():
     # again, why
-        global gpuid
-        gpuid = "nvidia-amd-intel"
+    global gpuid
+    gpuid = "nvidia-amd-intel"
+def Vmwaregpu():
+    global gpuid
+    gpuid = "vmware"
+def Virtiogpu():
+    global gpuid
+    gpuid = "virtio"
 def Unknown_gpu():
-        global gpuid
-        gpuid = 'unknown'
+    global gpuid
+    gpuid = 'unknown'
 # terminals
 def St():
         global termappid
@@ -308,6 +315,8 @@ gpus = {
     "nvidia": Nvidiagpu,
     "amd": Amdgpu,
     "radeon": Amdgpu,
+    "vmware": Vmwaregpu,
+    "virtio": Virtiogpu,
     # multi GPUs
     "nvidiaintel": Nvidia_intelgpu,
     "nvidiaamd": Nvidia_amdgpu,
