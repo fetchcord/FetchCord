@@ -142,6 +142,8 @@ elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 if wmline:
     wmid = wmline[0].split()[1]
+else:
+    wmid = "N/A"
 
 termid = termline[0].split()[1]
 if args.terminal:

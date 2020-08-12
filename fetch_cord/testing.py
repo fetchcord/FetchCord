@@ -136,11 +136,11 @@ def iMate():
 def iUnity():
 #this is to check wether the user is actually using unity
 #or using unity as an xdg value to fix issues with electron apps
-if wmid.lower() == "compiz":
-    global desktopid
-    desktopid = "unity"
-else:
-    desktopid = wmid
+    if wmid.lower() == "compiz":
+        global desktopid
+        desktopid = "unity"
+    else:
+        desktopid = wmid
 def iAero():
     global desktopid
     desktopid = "aero"
