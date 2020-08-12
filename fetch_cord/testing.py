@@ -363,7 +363,7 @@ desktops = {
 "unity": iUnity,
 "aero": iAero,
 }
-terms = {
+terminals = {
 "st": St,
 "kitty": Kitty,
 "alacritty": Alacritty,
@@ -422,7 +422,7 @@ except KeyError:
     Unknown_gpu()
 
 try:
-    terms[termid.lower()]()
+    terminals[termid.lower()]()
 except KeyError:
     print("Unsupported Terminal. contact me on github to resolve this.(Keyerror)")
     Unknown_term()
