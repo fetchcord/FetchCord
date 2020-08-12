@@ -128,21 +128,19 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload =
     gpuvendor += amdgpuvendor
 
 elif amdgpurenderlist == [] and primeoffload == "":
-
-    for a in range(len(amdgpuline)):
-        gpuinfo += amdgpuline[a]
     try:
+        for a in range(len(amdgpuline)):
+            gpuinfo += amdgpuline[a]
         gpuvendor += amdgpuline[0].split()[1]
-    except NameError:
+    except IndexError:
         pass
 
-if intelgpuline:
+if intelgpuline and primeoffload == "":
 
     try:
-        if primeoffload == "":
-            gpuinfo += intelgpuline[0]
-            gpuvendor += intelgpuline[0].split()[1]
-    except NameError:
+        gpuinfo += intelgpuline[0]
+        gpuvendor += intelgpuline[0].split()[1]
+    except IndexError:
         pass
 
 cpuvendor = cpuline[0].split()[1] 
