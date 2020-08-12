@@ -82,7 +82,7 @@ def iWindows7():
         appid='741952383512346696'
 def Unknown_distro():
         global appid
-        appid='742887089179197462'
+        appid='742993278143692821'
 
 # MacOS versions
 def iHsiera():
