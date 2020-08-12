@@ -85,6 +85,10 @@ If that does not work,add /home/$USER/.local/bin/ to your path, or just run `pyt
 
 --time, -t, set custom duration for cycles in seconds.
 
+--terminal, set custom terminal (useful if using a script or dmenu).
+
+--termfont, set custom terminal font (useful if neofetch can't get it).
+
 -h or --help, shows this information above.
 
 ## Installing on MacOS

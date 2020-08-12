@@ -142,6 +142,8 @@ elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 wmid = wmline[0].split()[1]
 termid = termline[0].split()[1]
+if args.terminal:
+    termid = "Terminal: %s" % args.terminal
 shellid = shell_line[0].split()[1]
 kernelid = kernelline[0].split()[1]
 sysosid = sysosline[0].split()[1]
@@ -149,7 +151,10 @@ if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
 if not termfontline:
     termfontline = []
-    termfontline.append("Terminal font: N/A")
+    if args.termfont:
+        termfontline.append("Terminal Font: " + args.termfont)
+    else:
+        termfontline.append("Terminal font: N/A")
 if deline:
     deid = deline[0].split()[1]
 else:
