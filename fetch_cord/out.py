@@ -98,7 +98,6 @@ if amdgpuline and sysosid.lower() != "macos" and sysosid.lower() != "windows":
             amdgpurenderlist = []
             if i != -1:
                 amdgpurenderlist.append(amdgpurender)
-            gpuvendor = amdgpurender.split()[1]
             amdgpuvendor = amdgpurender.split()[1]
             gpuid = amdgpurender
     except BashError as e:
@@ -153,7 +152,11 @@ if args.terminal:
         sys.exit(1)
 
 shellid = shell_line[0].split()[1]
-kernelid = kernelline[0].split()[1]
+# for config file
+kernel = kernelline[0]
+packages = packagesline[0]
+gpu = gpuinfo
+cpu = cpuline[0]
 sysosid = sysosline[0].split()[1]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
@@ -165,6 +168,8 @@ elif not termfontline:
         termfontline.append("Terminal Font: " + args.termfont)
     else:
         termfontline.append("Terminal font: N/A")
+termfont = termfontline[0]
+shell = shell_line[0]
 if deline:
     deid = deline[0].split()[1]
 else:
