@@ -106,15 +106,15 @@ if nvidiagpuline:
     for n in range(len(nvidiagpuline)):
         gpuinfo += nvidiagpuline[n]
     gpuvendor += nvidiagpuline[0].split()[1]
+
 amdgpurenderlist = []
-if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload != "":
+if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload == "":
 
     try:
         # amd GPUs
         for i in range(len(amdgpuline)):
             env_prime = "env DRI_PRIME=%s" % i
             amdgpurender = " GPU: " + exec_bash("%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'" % env_prime)
-            amdgpurenderlist = []
             if i != -1:
                 amdgpurenderlist.append(amdgpurender)
         amdgpuvendor = amdgpurender.split()[1]
@@ -122,15 +122,17 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload !
         print("ERROR: Could not run glxinfo [%s]" % str(e))
         sys.exit(1)
 
-elif amdgpuline and not amdgpurenderlist:
-    for a in range(len(amdgpuline)):
-        gpuinfo += amdgpuline[a]
-    gpuvendor += amdgpuline[0].split()[1]
-
-if amdgpurenderlist == [] and primeoffload == "":
     for a in range(len(amdgpurenderlist)):
         gpuinfo += amdgpurenderlist[a]
     gpuvendor += amdgpuvendor
+
+elif amdgpurenderlist == []:
+    for a in range(len(amdgpuline)):
+        gpuinfo += amdgpuline[a]
+    try:
+        gpuvendor += amdgpuline[0].split()[1]
+    except NameError:
+        pass
 
 if intelgpuline:
 
