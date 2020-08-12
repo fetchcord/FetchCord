@@ -87,51 +87,60 @@ try:
         os.remove(filepath)
 except FileNotFoundError:
     pass
-gpuvendor = "none"
 sysosid = sysosline[0].split()[1]
-if amdgpuline and sysosid.lower() != "macos" and sysosid.lower() != "windows":
+gpuvendor = ""
+gpuinfo = ""
+primeoffload = ""
+if sysosid.lower() not in ["windows", "macos"]:
+    try:
+        # only show the GPU in use with optimus, show both if prime render offload
+        laptop = os.path.isdir("/sys/module/battery")
+        if laptop and nvidiagpuline:
+            if args.debug:
+                print("laptop: %s" % laptop)
+            primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
+    except BashError:
+        pass
+
+if nvidiagpuline:
+
+    for n in range(len(nvidiagpuline)):
+        gpuinfo += nvidiagpuline[n]
+    gpuvendor += nvidiagpuline[0].split()[1]
+
+amdgpurenderlist = []
+if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload == "":
+
     try:
         # amd GPUs
         for i in range(len(amdgpuline)):
             env_prime = "env DRI_PRIME=%s" % i
-            amdgpurender = "GPU: " + exec_bash("%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'" % env_prime)
-            amdgpurenderlist = []
+            amdgpurender = " GPU: " + exec_bash("%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'" % env_prime)
             if i != -1:
                 amdgpurenderlist.append(amdgpurender)
-            amdgpuvendor = amdgpurender.split()[1]
-            gpuid = amdgpurender
+        amdgpuvendor = amdgpurender.split()[1]
     except BashError as e:
         print("ERROR: Could not run glxinfo [%s]" % str(e))
         sys.exit(1)
-gpuvendor = ""
-gpuinfo = ""
-try:
-    # only show the GPU in use with optimus, show both if prime render offload
-    laptop = os.path.isdir("/sys/module/battery")
-    if laptop:
-        primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
-except BashError:
-    primeoffload = ""
-    pass
-if nvidiagpuline:
-    for n in range(len(nvidiagpuline)):
-        gpuinfo += nvidiagpuline[n]
-    gpuvendor += nvidiagpuline[0].split()[1]
-if amdgpuline:
+
+    for a in range(len(amdgpurenderlist)):
+        gpuinfo += amdgpurenderlist[a]
+    gpuvendor += amdgpuvendor
+
+elif amdgpurenderlist == [] and primeoffload == "":
     try:
-        if primeoffload == "":
-            for a in range(len(amdgpurenderlist)):
-                gpuinfo += amdgpurenderlist[a]
-            gpuvendor += amdgpuvendor
-    except NameError:
+        for a in range(len(amdgpuline)):
+            gpuinfo += amdgpuline[a]
+        gpuvendor += amdgpuline[0].split()[1]
+    except IndexError:
         pass
 
-if intelgpuline:
+if intelgpuline and primeoffload == "":
+
     try:
-        if primeoffload == "":
-            gpuinfo += intelgpuline[0]
-            gpuvendor += intelgpuline[0].split()[1]
-    except NameError:
+        gpuinfo += intelgpuline[0]
+        gpuvendor += intelgpuline[0].split()[1]
+    except IndexError:
         pass
 
 cpuvendor = cpuline[0].split()[1] 
