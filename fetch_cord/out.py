@@ -145,7 +145,7 @@ termid = termline[0].split()[1]
 if args.terminal:
     terminals = ['kitty', 'st', 'gnome-terminal', 'konsole', 'alacritty', 'xterm', 'cool-retro-term']
     if args.terminal in terminals:
-        termid = "Terminal: %s" % args.terminal
+        termid = args.terminal
     else:
         print("Invalid terminal, only %s are supported.\n"
             "Please make a github issue if you would like to have your terminal added.\n"
