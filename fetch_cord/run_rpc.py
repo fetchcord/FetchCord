@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 #Import cool new rpc module that gives us more control and gets rid of headaches :)
 from pypresence import Presence
 import time
@@ -7,9 +6,10 @@ import sys
 import os
 #import info about system
 from fetch_cord.args import parse_args
-from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid 
+from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid
 from fetch_cord.out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, sysosline, sysosid
 args = parse_args()
+
 def main():
     #printing info with debug switch
     if args.debug:
@@ -18,21 +18,18 @@ def main():
         print (packagesline[0])
         print (appid)
         print (gpuid)
-    if sysosid == "macos":
+    if sysosid.lower() == "macos":
             runmac()
     else:
         loonix()
-
 
 print("Connecting")
 print("RPC connection successful.")
 time.sleep(5)
 start_time = float(uptime) #discord uses unix time to interpret time for rich presnse, this is uptime in unix time    
+
 def runmac():
-    devicetype = testing.devicetype
-    product = testing.product
-    bigicon = testing.bigicon
-    ver = testing.ver
+    from fetch_cord.testing import devicetype, product, bigicon, ver
     client_id = '740822755376758944' #macos appid for discord rpc
     time.sleep(5)
     start_time = float(uptime[:-1])
@@ -47,6 +44,7 @@ def runmac():
         small_text=product, #set small image text
         start=start_time)
         time.sleep(30)
+
 def custom_time():
     ctime = int(args.time)
     time.sleep(ctime)
@@ -66,9 +64,13 @@ def cycle0():
         small_image=desktopid,
         small_text=desktopid,
         start=start_time)
+        if args.debug:
+            print("appid: %s" % client_id)
         
         if args.time:
             custom_time()
+        elif args.distro and not args.shell and not args.hardware:
+            time.sleep(9999)
         else:
             time.sleep(30)
 # cycle
@@ -86,8 +88,12 @@ def cycle1():
         small_image=gpuid,
         small_text=gpuinfo,
         start=start_time)
+        if args.debug:
+            print("appid: %s" % client_id)
         if args.time:
             custom_time()
+        elif args.hardware and not args.distro and not args.shell:
+            time.sleep(9999)
         else:
             time.sleep(30)
 # cycle
@@ -105,10 +111,15 @@ def cycle2():
         small_image=shellid,
         small_text=shellid,
         start=start_time)
+        if args.debug:
+            print("appid: %s" % client_id)
         if args.time:
             custom_time()
+        elif args.shell and not args.distro and not args.hardware:
+            time.sleep(9999)
         else:
             time.sleep(30)
+
 def loonix():
     try:
         while True:

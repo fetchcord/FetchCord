@@ -1,20 +1,27 @@
 #import shit as usual
 import os
+import argparse
+from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash, BashError
 from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
+
 #appid for discord app
 appid = "none"
+
 #number of packages
 packages = "none"
+
 #find out uptime for epoch time
 if not sysosid.lower() == "macos":
     uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
+
 # predefine ids
 cpuid = "none"
 cpuappid = "none"
 gpuid = "none"
 termappid = "none"
 desktopid = "none"
+
 #distros set id and package number
 def iUbuntu():
 	global appid
@@ -73,6 +80,10 @@ def iWindows8():
 def iWindows7():
         global appid
         appid='741952383512346696'
+def Unknown_distro():
+        global appid
+        appid='742887089179197462'
+
 # MacOS versions
 def iHsiera():
         global bigicon
@@ -83,6 +94,7 @@ def iMojave():
 def iCatilina():
         global bigicon
         bigicon = "catilina"
+
 # macOS hardwawre
 def laporp():
         global devicetype
@@ -97,6 +109,7 @@ if sysosid.lower() == "macos":
     uptime = os.popen("sysctl -n kern.boottime").read().split()[3]
     product = os.popen("sysctl -n hw.model").read()
     laorp()
+
 #def desktops and defind id
 def iKde():
 	global desktopid
@@ -130,6 +143,7 @@ def iUnity():
 def iAero():
         global desktopid
         desktopid = "aero"
+
 #window managers
 def iDwm():
 	global desktopid
@@ -149,14 +163,11 @@ def iXmonad():
 def iBspwm():
         global desktopid
         desktopid = "bspwm"
+def Unknown_de_wm():
+        global desktopid
+        desktopid='unknown'
+
 # cpuids
-def Amdcpu():
-        global cpuid, cpuappid
-        cpuid = {
-        "22": "Jaguar",
-        }[cpu]
-        cpuappid='740752899054895105'
-        return cpuid
 def Ryzen():
         global cpuid, cpuappid
         cpuid = "Ryzen"
@@ -181,6 +192,10 @@ def Intelpentium():
         global cpuid, cpuappid
         cpuid = "Intel(R) Pentium(R)"
         cpuappid='741203845706940467'
+def Intelceleron():
+        global cpuid, cpuappid
+        cpuid = "Intel(R) Celeron(R)"
+        cpuappid='742904581360713849'
 def Ryzen3():
         global cpuid, cpuappid
         cpuid = "AMD Ryzen 3"
@@ -201,6 +216,11 @@ def Ryzenth():
         global cpuid, cpuappid
         cpuid = "AMD Ryzen Threadripper"
         cpuappid='742075019257184338'
+def Unknown_cpu():
+        global cpuid, cpuappid
+        cpuid = "Unknown CPU"
+        cpuappid='742887089179197462'
+
 # gpuids
 def Intelgpu():
         global gpuid
@@ -224,6 +244,9 @@ def Nvidia_amd_intelgpu():
     # again, why
         global gpuid
         gpuid = "nvidia-amd-intel"
+def Unknown_gpu():
+        global gpuid
+        gpuid = 'unknown'
 # terminals
 def St():
         global termappid
@@ -249,6 +272,9 @@ def Coolretroterm():
 def Fetchcord():
         global termappid
         termappid='742096605502767235'
+def Unknown_term():
+        global termappid
+        termappid='742887089179197462'
 # shells
 def Fish():
         global shell
@@ -259,6 +285,9 @@ def Zsh():
 def Bash():
         global shell
         shell = "bash"
+def Unknown_shell():
+        global shell
+        shell = "unknown"
 amdcpus = {
     "ryzen 3": Ryzen3,
     "ryzen 5": Ryzen5,
@@ -272,6 +301,7 @@ intelcpus = {
     "intel i7": Intelcorei7,
     "intel i9": Intelcorei9,
     "intel pentium": Intelpentium,
+    "intel celeron": Intelceleron,
 }
 gpus = {
     "intel": Intelgpu,
@@ -313,47 +343,47 @@ versions = {
 }
 # window managers
 windowmanagers = {
-    "dwm": iDwm,
-    "i3": Ii3,
-    "awesome": iAwesome,
-    "enlightenment": iEnlightenment,
-    "bspwm": iBspwm,
-    "xmonad": iXmonad,
+"dwm": iDwm,
+"i3": Ii3,
+"awesome": iAwesome,
+"enlightenment": iEnlightenment,
+"bspwm": iBspwm,
+"xmonad": iXmonad,
 }
 #desktops
 desktops = {
-	"kde": iKde,
-        "plasma": iKde,
-	"xfce": iXfce,
-	"budgie": iBudgie,
-	"gnome": iGnome,
-	"deepin": iDeepin,
-	"cinnamon": iCinnamon,
-	"mate": iMate,
-	"unity": iUnity,
-        "aero": iAero,
+"kde": iKde,
+"plasma": iKde,
+"xfce": iXfce,
+"budgie": iBudgie,
+"gnome": iGnome,
+"deepin": iDeepin,
+"cinnamon": iCinnamon,
+"mate": iMate,
+"unity": iUnity,
+"aero": iAero,
 }
-terms = {
-    "st": St,
-    "kitty": Kitty,
-    "alacritty": Alacritty,
-    "xterm": Xterm,
-    "konsole": Konsole,
-    "dolphin": Konsole,
-    "gnome-terminal": Gnometerminal,
-    "cool-retro-term": Coolretroterm,
-    "fetchcord": Fetchcord,
+terminals = {
+"st": St,
+"kitty": Kitty,
+"alacritty": Alacritty,
+"xterm": Xterm,
+"konsole": Konsole,
+"dolphin": Konsole,
+"gnome-terminal": Gnometerminal,
+"cool-retro-term": Coolretroterm,
 }
 shells = {
-    "fish": Fish,
-    "zsh": Zsh,
-    "bash": Bash,
+"fish": Fish,
+"zsh": Zsh,
+"bash": Bash,
 }
 #bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
 try:
-	distros[sysosid.lower()]()
+    distros[sysosid.lower()]()
 except KeyError:
-	print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
+    print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
+    Unknown_distro()
 
 if sysosid == "macos":
     try:
@@ -364,33 +394,52 @@ if sysosid == "macos":
         print("Unsupported MacOS version")
 
 try:
-    if deid != "none":
+    if deid != "N/A":
         desktops[deid.lower()]()
 except KeyError:
-	print("Unsupported De contact me on github to resolve this.(Keyerror)")
-pass
-try:
-    if deid == "none":
-        windowmanagers[wmid.lower()]()
-except KeyError:
-        print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
-try:
-        if cpuvendor == "AMD":
-            amdcpus[cpumodel.lower()]()
-        elif cpuvendor == "Intel":
-            intelcpus[cpumodel.lower()]()
-except KeyError:
-        print("unknown CPU, contact me on github to resolve this.(Keyerror)")
+    print("Unsupported De contact me on github to resolve this.(Keyerror)")
+    Unknown_de_wm()
 
 try:
-        gpus[gpuvendor.lower()]()
+    if deid == "N/A":
+        windowmanagers[wmid.lower()]()
 except KeyError:
-        print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
+    print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
+    Unknown_de_wm()
 try:
-        terms[termid.lower()]()
+    if cpuvendor == "AMD":
+        amdcpus[cpumodel.lower()]()
+    elif cpuvendor == "Intel":
+        intelcpus[cpumodel.lower()]()
 except KeyError:
-        print("Unsupported Terminal. contact me on github to resolve this.(Keyerror)")
+    print("unknown CPU, contact me on github to resolve this.(Keyerror)")
+    Unknown_cpu()
+
 try:
-        shells[shellid.lower()]()
+    gpus[gpuvendor.lower()]()
 except KeyError:
-        print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
+    print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
+    Unknown_gpu()
+
+try:
+    terminals[termid.lower()]()
+except KeyError:
+    print("Unsupported Terminal. contact me on github to resolve this.(Keyerror)")
+    Unknown_term()
+
+try:
+    shells[shellid.lower()]()
+except KeyError:
+    print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
+    Unknown_shell()
+
+args = parse_args()
+
+if args.debug:
+    print("testing")
+    print("deid: %s" % deid)
+    print("wmid: %s" % wmid)
+    print("cpumodel: %s" % cpumodel)
+    print("gpuvendor: %s" % gpuvendor)
+    print("termid: %s" % termid)
+    print("shellid: %s" % shellid)

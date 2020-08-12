@@ -3,7 +3,9 @@ import sys
 import os
 import argparse
 from fetch_cord.args import parse_args
+
 args = parse_args()
+
 if args.time:
     if int(args.time) < 15:
         print("ERROR: Invalid time set, must be > 15 seconds, cannot continue.")
@@ -16,13 +18,16 @@ try:
 except AttributeError:
     pass
 home = exec_bash("echo $HOME")
-if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isdir("/usr/bin/discord" or not os.path.isdir("/opt/Discord")):
+if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
     try:
+        print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
         exec_bash("cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 "% home)
     except BashError as e:
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
+
 # use default neofetch output, ignoring user config
 baseinfo = exec_bash("neofetch --stdout --config none")
+
 #make lists
 cpu = "CPU:"
 cpuline = []
@@ -137,28 +142,46 @@ elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 wmid = wmline[0].split()[1]
 termid = termline[0].split()[1]
+if args.terminal:
+    terminals = ['kitty', 'st', 'gnome-terminal', 'konsole', 'alacritty', 'xterm', 'cool-retro-term']
+    if args.terminal in terminals:
+        termid = args.terminal
+    else:
+        print("Invalid terminal, only %s are supported.\n"
+            "Please make a github issue if you would like to have your terminal added.\n"
+            "https://github.com/MrPotatoBobx/FetchCord" % terminals)
+        sys.exit(1)
+
 shellid = shell_line[0].split()[1]
 kernelid = kernelline[0].split()[1]
 sysosid = sysosline[0].split()[1]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
-if not termfontline:
+if termfontline and args.termfont:
+    print("Custom terminal font not set because a terminal font already exists, %s" % termfontline[0])
+elif not termfontline:
     termfontline = []
-    termfontline.append("Terminal font: N/A")
+    if args.termfont:
+        termfontline.append("Terminal Font: " + args.termfont)
+    else:
+        termfontline.append("Terminal font: N/A")
 if deline:
     deid = deline[0].split()[1]
 else:
-    deid = "none"
+    deid = "N/A"
 if args.debug:
     print("out")
     try:
         print("deid %s" % deid)
         print("termfontline item 0: %s" % termfontline[0])
-    except IndexError:
+    except NameError:
         pass
     print("sysosline: %s" % sysosline)
-    print("amdgpurenderlist: %s" % amdgpurenderlist)
-    print("amdgpurender: %s" % amdgpurender)
+    try:
+        print("amdgpurenderlist: %s" % amdgpurenderlist)
+        print("amdgpurender: %s" % amdgpurender)
+    except NameError:
+        pass
     print("gpuinfo %s" % gpuinfo)
     print("gpuvendor: %s" % gpuvendor)
     print("nvidiagpuline: %s" % nvidiagpuline)
