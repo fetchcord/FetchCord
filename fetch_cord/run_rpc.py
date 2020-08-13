@@ -7,7 +7,7 @@ import os
 from fetch_cord.args import parse_args
 from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid
 from fetch_cord.out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, \
-    sysosline, sysosid
+    sysosline, sysosid, dewmid
 
 args = parse_args()
 
@@ -71,7 +71,7 @@ def cycle0():
                large_image="big",
                large_text=sysosline[0],
                small_image=desktopid,
-               small_text=desktopid,
+               small_text=dewmid,
                start=start_time)
     if args.debug:
         print("appid: %s" % client_id)

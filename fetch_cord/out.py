@@ -203,6 +203,13 @@ if deline:
     deid = deline[0].split()[1]
 else:
     deid = "N/A"
+dewmid = ""
+if deline and wmline:
+    dewmid = deline[0] + ' ' + wmline[0]
+elif deline and not wmline:
+    dewmid = deline[0]
+elif wmline and not deline:
+    dewmid = wmline[0]
 if args.debug:
     print("out")
     try:
