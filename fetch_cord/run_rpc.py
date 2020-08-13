@@ -1,7 +1,6 @@
 # Import cool new rpc module that gives us more control and gets rid of headaches :)
 from pypresence import Presence
 import time
-import argparse
 import sys
 import os
 # import info about system
@@ -30,7 +29,8 @@ def main():
 print("Connecting")
 print("RPC connection successful.")
 time.sleep(5)
-start_time = float(uptime)  # discord uses unix time to interpret time for rich presnse, this is uptime in unix time
+# discord uses unix time to interpret time for rich presnse, this is uptime in unix time
+start_time = float(uptime)
 
 
 def runmac():
@@ -57,6 +57,8 @@ def custom_time():
 
 
 # cycle
+
+
 def cycle0():
     global RPC
     if args.debug:
@@ -83,6 +85,8 @@ def cycle0():
 
 
 # cycle
+
+
 def cycle1():
     global RPC
     if args.debug:
@@ -108,6 +112,8 @@ def cycle1():
 
 
 # cycle
+
+
 def cycle2():
     global RPC
     if args.debug:

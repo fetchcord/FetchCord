@@ -21,14 +21,15 @@ home = exec_bash("echo $HOME")
 if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
     try:
         print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
-        exec_bash("cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 "% home)
+        exec_bash(
+            "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
     except BashError as e:
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
 
 # use default neofetch output, ignoring user config
 baseinfo = exec_bash("neofetch --stdout --config none")
 
-#make lists
+# make lists
 cpu = "CPU:"
 cpuline = []
 nvidiagpu = "GPU: NVIDIA"
@@ -57,7 +58,7 @@ sysos = "OS:"
 sysosline = []
 packages = "Packages:"
 packagesline = []
-filepath="/tmp/out.txt"
+filepath = "/tmp/out.txt"
 with open(filepath, 'w') as f:
     print(baseinfo, file=f)
 with open(filepath, "rt") as f:
@@ -123,7 +124,10 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload =
         # amd GPUs
         for i in range(len(amdgpuline)):
             env_prime = "env DRI_PRIME=%s" % i
-            amdgpurender = " GPU: " + exec_bash("%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'" % env_prime)
+            amdgpurender = "GPU: " + \
+                exec_bash(
+                    "%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'" % env_prime)
+            amdgpurenderlist = []
             if i != -1:
                 amdgpurenderlist.append(amdgpurender)
         amdgpuvendor = amdgpurender.split()[1]
@@ -152,15 +156,16 @@ if intelgpuline and primeoffload == "":
         pass
 
 if vmwaregpuline:
-        gpuinfo = vmwaregpuline[0]
-        gpuvendor = vmwaregpuline[0].split()[1]
+    gpuinfo = vmwaregpuline[0]
+    gpuvendor = vmwaregpuline[0].split()[1]
 if virtiogpuline:
-   gpuinfo = vitriogpuline[0]
-   gpuvendor = virtiogpuline[0].split()[2:3].join()
+    gpuinfo = vitriogpuline[0]
+    gpuvendor = virtiogpuline[0].split()[2:3].join()
 
-cpuvendor = cpuline[0].split()[1] 
+cpuvendor = cpuline[0].split()[1]
 if cpuvendor == "Intel":
-    cpumodel = cpuline[0].replace('-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
+    cpumodel = cpuline[0].replace(
+        '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 if wmline:
@@ -170,13 +175,14 @@ else:
 
 termid = termline[0].split()[1]
 if args.terminal:
-    terminals = ['kitty', 'st', 'gnome-terminal', 'konsole', 'alacritty', 'xterm', 'cool-retro-term']
+    terminals = ['kitty', 'st', 'gnome-terminal',
+                 'konsole', 'alacritty', 'xterm', 'cool-retro-term']
     if args.terminal in terminals:
         termid = args.terminal
     else:
         print("Invalid terminal, only %s are supported.\n"
-            "Please make a github issue if you would like to have your terminal added.\n"
-            "https://github.com/MrPotatoBobx/FetchCord" % terminals)
+              "Please make a github issue if you would like to have your terminal added.\n"
+              "https://github.com/MrPotatoBobx/FetchCord" % terminals)
         sys.exit(1)
 
 shellid = shell_line[0].split()[1]
@@ -185,7 +191,8 @@ sysosid = sysosline[0].split()[1]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
 if termfontline and args.termfont:
-    print("Custom terminal font not set because a terminal font already exists, %s" % termfontline[0])
+    print("Custom terminal font not set because a terminal font already exists, %s" %
+          termfontline[0])
 elif not termfontline:
     termfontline = []
     if args.termfont:
@@ -222,6 +229,6 @@ if args.debug:
     print("sysosid: %s" % sysosid)
     print("sysosline item 0: %s" % sysosline[0])
     try:
-        print("wmline item 0: %s"% wmline[0])
+        print("wmline item 0: %s" % wmline[0])
     except IndexError:
         pass
