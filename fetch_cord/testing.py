@@ -1,8 +1,7 @@
-#import shit as usual
+# import shit as usual
 import os
-import argparse
 from fetch_cord.args import parse_args
-from fetch_cord.bash import exec_bash, BashError
+from fetch_cord.bash import exec_bash
 from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
 
 # appid for discord app

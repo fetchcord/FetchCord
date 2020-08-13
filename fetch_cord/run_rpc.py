@@ -1,7 +1,6 @@
 # Import cool new rpc module that gives us more control and gets rid of headaches :)
 from pypresence import Presence
 import time
-import argparse
 import sys
 import os
 # import info about system
