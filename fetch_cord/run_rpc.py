@@ -8,7 +8,7 @@ from fetch_cord.args import parse_args
 from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid
 from fetch_cord.config import load_config, ConfigError
 from fetch_cord.out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, \
-    sysosline, sysosid
+    sysosline, sysosid, kernel, packages, gpu, cpu, shell, termfont
 
 args = parse_args()
 
@@ -73,7 +73,7 @@ def custom_time():
 # cycle
 
 
-def cycle0():
+def cycle0(config):
     global RPC
     top_line = config["cycle_0"]["top_line"]
     if top_line == "kernel":
@@ -115,7 +115,7 @@ def cycle0():
 # cycle
 
 
-def cycle1():
+def cycle1(config):
     global RPC
     top_line = config["cycle_1"]["top_line"]
     if top_line == "gpu":
@@ -157,7 +157,7 @@ def cycle1():
 # cycle
 
 
-def cycle2():
+def cycle2(config):
     global RPC
     top_line = config["cycle_2"]["top_line"]
     if top_line == "termfont":

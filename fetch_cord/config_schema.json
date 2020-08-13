@@ -3,20 +3,20 @@
 	{
 		"top_line": ["single_word", ["kernel", "packages"], false],
 		"bottom_line": ["single_word", ["packages", "kernel"], false],
-		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120"], false]
+		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
 	},
 
 	"cycle_1":
 	{
 		"top_line": ["single_word", ["cpu", "gpu"], false],
 		"bottom_line": ["single_word", ["cpu", "gpu"], false],
-		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120"], false]
+		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
 	},
 
 	"cycle_2":
 	{
 		"top_line": ["single_word", ["termfont", "shell"], false],
 		"bottom_line": ["single_word", ["termfont", "shell"], false],
-		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120"], false]
+		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
 	}
 }
