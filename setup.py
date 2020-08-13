@@ -2,10 +2,9 @@
 from os.path import dirname, join
 import setuptools
 
-
 setuptools.setup(
     name='FetchCord',
-    version=2.0,
+    version=2.2,
     description='grabs information about your Distro and displays it as Discord Rich Presence.',
     long_description=open(
         join(dirname(__file__), 'readme.md')).read(),
@@ -23,10 +22,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-     entry_points={
+    entry_points={
         'console_scripts': [
             'fetchcord=fetch_cord.run_rpc:main',
         ]
     }
 )
-
