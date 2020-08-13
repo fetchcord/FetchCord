@@ -1,7 +1,6 @@
 # Import cool new rpc module that gives us more control and gets rid of headaches :)
 from pypresence import Presence
 import time
-import argparse
 import sys
 import os
 # import info about system
@@ -32,7 +31,8 @@ def main():
 print("Connecting")
 print("RPC connection successful.")
 time.sleep(5)
-start_time = float(uptime)  # discord uses unix time to interpret time for rich presnse, this is uptime in unix time
+# discord uses unix time to interpret time for rich presnse, this is uptime in unix time
+start_time = float(uptime)
 
 
 def get_config():
@@ -71,7 +71,10 @@ def custom_time():
 
 
 # cycle
-def cycle0(config):
+
+
+def cycle0():
+    global RPC
     top_line = config["cycle_0"]["top_line"]
     if top_line == "kernel":
         top_line = kernel
@@ -82,7 +85,6 @@ def cycle0(config):
         bottom_line = kernel
     else:
         bottom_line = packages
-    global RPC
     if args.debug:
         print("cycle 0")
     client_id = appid
@@ -108,8 +110,13 @@ def cycle0(config):
         time.sleep(9999)
     else:
         time.sleep(30)
+
+
 # cycle
-def cycle1(config):
+
+
+def cycle1():
+    global RPC
     top_line = config["cycle_1"]["top_line"]
     if top_line == "gpu":
         top_line = gpu
@@ -120,7 +127,6 @@ def cycle1(config):
         bottom_line = gpu
     else:
         bottom_line = cpu
-    global RPC
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
@@ -146,8 +152,13 @@ def cycle1(config):
         time.sleep(9999)
     else:
         time.sleep(30)
+
+
 # cycle
-def cycle2(config):
+
+
+def cycle2():
+    global RPC
     top_line = config["cycle_2"]["top_line"]
     if top_line == "termfont":
         top_line = termfont
@@ -158,7 +169,6 @@ def cycle2(config):
         bottom_line = termfont
     else: 
         bottom_line = shell
-    global RPC
     if args.debug:
         print("cycle 2")
     client_id = termappid
