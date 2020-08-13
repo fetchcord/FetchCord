@@ -5,13 +5,13 @@ from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash, BashError
 from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
 
-#appid for discord app
+# appid for discord app
 appid = "none"
 
-#number of packages
+# number of packages
 packages = "none"
 
-#find out uptime for epoch time
+# find out uptime for epoch time
 if not sysosid.lower() == "macos":
     uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
 
