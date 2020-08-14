@@ -18,18 +18,17 @@ try:
 except AttributeError:
     pass
 neofetchwin = ""
-try:
-    home = exec_bash("echo $HOME")
-except BashError:
+if os.name == "nt":
     neofetchwin = os.popen("neofetch --noart").read()
-    pass
-if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
-    try:
-        print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
-        exec_bash(
-            "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
-    except BashError as e:
-        print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
+else:
+    home = exec_bash("echo $HOME")
+    if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
+        try:
+            print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
+            exec_bash(
+                "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
+        except BashError as e:
+            print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
 
 # use default neofetch output, ignoring user config
 baseinfo = exec_bash("neofetch --stdout --config none")
