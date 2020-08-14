@@ -22,6 +22,8 @@ def main():
         print(gpuid)
     if sysosid.lower() == "macos":
         runmac()
+    elif sysosid.lower() in ["windows10", "windows7", "windows8.1", "windows8"]:
+        wandowz()
     else:
         loonix()
 
@@ -138,6 +140,55 @@ def cycle2():
         time.sleep(30)
 
 
+def w_cycle0():
+    global RPC
+    if args.debug:
+        print("cycle 2")
+    client_id = termappid
+    RPC = Presence(client_id)
+    RPC.connect()
+    RPC.update(state=sysosline[0],
+               details=memline[0],
+               large_image="big",
+               large_text=sysosline[0],
+               small_image=moboid,
+               small_text=moboline[0],
+               start=start_time)
+    if args.debug:
+        print("appid: %s" % client_id)
+    if args.time:
+        custom_time()
+    elif args.shell and not args.distro and not args.hardware:
+        time.sleep(9999)
+    else:
+        time.sleep(30)
+
+
+def w_cycle1():
+    global RPC
+    if args.debug:
+        print("cycle 2")
+    client_id = termappid
+    RPC = Presence(client_id)
+    RPC.connect()
+    RPC.update(state=cpuline[0],
+               details=gpuinfo,
+               large_image="big",
+               large_text=cpuline[0],
+               small_image=gpuid,
+               small_text=gpuinfo,
+               start=start_time)
+    if args.debug:
+        print("appid: %s" % client_id)
+    if args.time:
+        custom_time()
+    elif args.shell and not args.distro and not args.hardware:
+        time.sleep(9999)
+    else:
+        time.sleep(30)
+
+
+
 def loonix():
     try:
         while True:
@@ -168,6 +219,23 @@ def loonix():
                 cycle1()
                 RPC.clear(pid=os.getpid())
                 cycle2()
+                RPC.clear(pid=os.getpid())
+    except KeyboardInterrupt:
+        print("Closing connection.")
+        sys.exit(0)
+
+
+def wandowz():
+    try:
+        while True:
+            if args.distro not in [args.hardware]:
+                w_cycle0()
+            elif args.hardware not in [args.distro]:
+                w_cycle1()
+            else:
+                w_cycle0()
+                RPC.clear(pid=os.getpid())
+                w_cycle1()
                 RPC.clear(pid=os.getpid())
     except KeyboardInterrupt:
         print("Closing connection.")
