@@ -66,7 +66,7 @@
 
 ## Installing on (GNU/)Linux
 
-`pip3 install FetchCord`
+`pip3 install fetchcord`
 
 NOTE: you need neofetch to be also installed for this to work.
 
