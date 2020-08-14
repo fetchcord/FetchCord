@@ -2,7 +2,7 @@
 import os
 from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
-from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid
+from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid, hostid, lapordesk
 
 # appid for discord app
 appid = "none"
@@ -451,6 +451,27 @@ def Unknown_shell():
     shell = "unknown"
 
 
+# hosts
+
+
+def iAsus():
+    global hostappid
+    hostappid = "743936082780880928"
+
+
+def iDell():
+    global hostappid
+    hostappid = "dell"
+
+def iHP():
+    global hostappid
+    hostappid = "hp"
+
+def Unknown_host():
+    global hostappid
+    hostappid = "unknown"
+
+
 amdcpus = {
     "ryzen 3": Ryzen3,
     "ryzen 5": Ryzen5,
@@ -544,6 +565,11 @@ shells = {
     "zsh": Zsh,
     "bash": Bash,
 }
+hosts= {
+    "inspiron": iDell,
+    "hp": iHP,
+    "tuf": iAsus,
+}
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
 try:
     distros[sysosid.lower()]()
@@ -598,7 +624,11 @@ try:
 except KeyError:
     print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
     Unknown_shell()
-
+try:
+    hosts[hostid.lower()]()
+except KeyError:
+    print("Unknown Host, contact us on github to resolve this.(Keyerror)")
+    Unknown_host()
 args = parse_args()
 
 if args.debug:
@@ -609,3 +639,4 @@ if args.debug:
     print("gpuvendor: %s" % gpuvendor)
     print("termid: %s" % termid)
     print("shellid: %s" % shellid)
+    print("hostid: %s" % hostid)

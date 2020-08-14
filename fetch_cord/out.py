@@ -66,6 +66,10 @@ mobo = "Motherboard:"
 moboline = []
 packages = "Packages:"
 packagesline = []
+host = "Host:"
+hostline= []
+res = "Resolution:"
+resline = []
 if neofetchwin != "":
     filepath = "%userprofile%\\AppData\\Local\\Temp"
     with open(filepath, 'w') as f:
@@ -123,6 +127,10 @@ elif neofetchwin == "":
                 kernelline.append(line.rstrip('\n'))
             if line.find(sysos) != -1:
                 sysosline.append(line.rstrip('\n'))
+            if line.find(host) != -1:
+                hostline.append(line.rstrip('\n'))
+            if line.find(res) != -1:
+                resline.append(line.rstrip('\n'))
 try:
     if os.path.isfile(filepath):
         os.remove(filepath)
@@ -249,6 +257,17 @@ elif deline and not wmline:
     dewmid = deline[0]
 elif wmline and not deline:
     dewmid = wmline[0]
+hostid = ""
+if hostline:
+    hostid = hostline[0].split()[1]
+if laptop:
+    lapordesk = "laptop"
+else:
+    lapordesk = "desktop"
+if not resline:
+    resline = "Resolution: N/A"
+else:
+    resline = resline[0]
 if args.debug:
     print("out")
     try:
@@ -276,5 +295,6 @@ if args.debug:
     print("sysosline item 0: %s" % sysosline[0])
     try:
         print("wmline item 0: %s" % wmline[0])
+        print("hostid: %s" % hostid)
     except IndexError:
         pass
