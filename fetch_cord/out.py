@@ -17,14 +17,18 @@ try:
         sys.exit(0)
 except AttributeError:
     pass
-home = exec_bash("echo $HOME")
-if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
-    try:
-        print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
-        exec_bash(
-            "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
-    except BashError as e:
-        print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
+neofetchwin = ""
+if os.name == "nt":
+    neofetchwin = os.popen("neofetch --noart").read()
+else:
+    home = exec_bash("echo $HOME")
+    if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
+        try:
+            print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
+            exec_bash(
+                "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
+        except BashError as e:
+            print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
 
 # use default neofetch output, ignoring user config
 baseinfo = exec_bash("neofetch --stdout --config none")
@@ -56,41 +60,69 @@ kernel = "Kernel:"
 kernelline = []
 sysos = "OS:"
 sysosline = []
+mem = "Memory:"
+memline = []
+mobo = "Motherboard:"
+moboline = []
 packages = "Packages:"
 packagesline = []
-filepath = "/tmp/out.txt"
-with open(filepath, 'w') as f:
-    print(baseinfo, file=f)
-with open(filepath, "rt") as f:
-    for line in f:
-        if line.find(cpu) != -1:
-            cpuline.append(line.rstrip('\n'))
-        if line.find(nvidiagpu) != -1:
-            nvidiagpuline.append(line.rstrip('\n'))
-        if line.find(amdgpu) != -1:
-            amdgpuline.append(line.rstrip('\n'))
-        if line.find(intelgpu) != -1:
-            intelgpuline.append(line.rstrip('\n'))
-        if line.find(vmwaregpu) != -1:
-            vmwaregpuline.append(line.rstrip('\n'))
-        if line.find(virtiogpu) != -1:
-            virtiogpuline.append(line.rstrip('\n'))
-        if line.find(term) != -1:
-            termline.append(line.rstrip('\n'))
-        if line.find(termfont) != -1:
-            termfontline.append(line.rstrip('\n'))
-        if line.find(de) != -1:
-            deline.append(line.rstrip('\n'))
-        if line.find(wm) != -1:
-            wmline.append(line.rstrip('\n'))
-        if line.find(shell) != -1:
-            shell_line.append(line.rstrip('\n'))
-        if line.find(packages) != -1:
-            packagesline.append(line.rstrip('\n'))
-        if line.find(kernel) != -1:
-            kernelline.append(line.rstrip('\n'))
-        if line.find(sysos) != -1:
-            sysosline.append(line.rstrip('\n'))
+if neofetchwin != "":
+    filepath = "%userprofile%\\AppData\\Local\\Temp"
+    with open(filepath, 'w') as f:
+        print(neofetchwin, file=f)
+    with open(filepath, 'rt') as f:
+        for line in f:
+            if line.find(cpu) != -1:
+                cpuline.append(line.rstrip('\n'))
+            if line.find(nvidiagpu) != -1:
+                nvidiagpuline.append(line.rstrip('\n'))
+            if line.find(amdgpu) != -1:
+                amdgpuline.append(line.rstrip('\n'))
+            if line.find(intelgpu) != -1:
+                intelgpuline.append(line.rstrip('\n'))
+            if line.find(vmwaregpu) != -1:
+                vmwaregpuline.append(line.rstrip('\n'))
+            if line.find(sysos) != -1:
+                sysosline.append(line.rstrip('\n'))
+            if line.find(mem) != -1:
+                memline.append(line.rstrip('\n'))
+            if line.find(mobo) != -1:
+                moboline.append(line.rstrip('\n'))
+
+elif neofetchwin == "":
+    filepath = "/tmp/out.txt"
+    with open(filepath, 'w') as f:
+        print(baseinfo, file=f)
+    with open(filepath, "rt") as f:
+        for line in f:
+            if line.find(cpu) != -1:
+                cpuline.append(line.rstrip('\n'))
+            if line.find(nvidiagpu) != -1:
+                nvidiagpuline.append(line.rstrip('\n'))
+            if line.find(amdgpu) != -1:
+                amdgpuline.append(line.rstrip('\n'))
+            if line.find(intelgpu) != -1:
+                intelgpuline.append(line.rstrip('\n'))
+            if line.find(vmwaregpu) != -1:
+                vmwaregpuline.append(line.rstrip('\n'))
+            if line.find(virtiogpu) != -1:
+                virtiogpuline.append(line.rstrip('\n'))
+            if line.find(term) != -1:
+                termline.append(line.rstrip('\n'))
+            if line.find(termfont) != -1:
+                termfontline.append(line.rstrip('\n'))
+            if line.find(de) != -1:
+                deline.append(line.rstrip('\n'))
+            if line.find(wm) != -1:
+                wmline.append(line.rstrip('\n'))
+            if line.find(shell) != -1:
+                shell_line.append(line.rstrip('\n'))
+            if line.find(packages) != -1:
+                packagesline.append(line.rstrip('\n'))
+            if line.find(kernel) != -1:
+                kernelline.append(line.rstrip('\n'))
+            if line.find(sysos) != -1:
+                sysosline.append(line.rstrip('\n'))
 try:
     if os.path.isfile(filepath):
         os.remove(filepath)
