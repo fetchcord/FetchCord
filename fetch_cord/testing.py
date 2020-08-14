@@ -461,15 +461,15 @@ def iAsus():
 
 def iDell():
     global hostappid
-    hostappid = "dell"
+    hostappid = "743970870631858288"
 
 def iHP():
     global hostappid
-    hostappid = "hp"
+    hostappid = "743971270395297852"
 
 def Unknown_host():
     global hostappid
-    hostappid = "unknown"
+    hostappid = "742887089179197462"
 
 
 amdcpus = {
