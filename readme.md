@@ -61,6 +61,8 @@
 
 - [ ] More GPUs?
 
+- [ ] Add Windows support. [WIP]
+
 
 ## Installing on (GNU/)Linux
 
@@ -69,6 +71,8 @@
 NOTE: you need neofetch to be also installed for this to work.
 
 If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
+
+You can copy the discord script to somewhere in PATH to have fetchcord run upon opening discord, making sure the discord script is executable. `sudo chmod +x /path/to/discord/script`
 
 ### Run
 
