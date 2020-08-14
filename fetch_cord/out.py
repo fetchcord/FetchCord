@@ -201,6 +201,9 @@ if cpuvendor == "Intel":
         '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
+# fuck you intel
+elif cpuvendor == "Pentium":
+    cpumodel = cpuline[0].split()[1]
 if wmline:
     wmid = wmline[0].split()[1]
 else:

@@ -465,6 +465,7 @@ intelcpus = {
     "intel i9": Intelcorei9,
     "intel pentium": Intelpentium,
     "intel celeron": Intelceleron,
+    "pentium": Intelpentium,
 }
 gpus = {
     "intel": Intelgpu,
@@ -574,7 +575,7 @@ except KeyError:
 try:
     if cpuvendor == "AMD":
         amdcpus[cpumodel.lower()]()
-    elif cpuvendor == "Intel":
+    elif cpuvendor in ["Intel", "Pentium"]:
         intelcpus[cpumodel.lower()]()
 except KeyError:
     print("unknown CPU, contact me on github to resolve this.(Keyerror)")
