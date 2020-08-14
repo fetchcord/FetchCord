@@ -228,9 +228,9 @@ def loonix():
 def wandowz():
     try:
         while True:
-            if args.distro not in [args.hardware]:
+            if args.distro and not args.hardware:
                 w_cycle0()
-            elif args.hardware not in [args.distro]:
+            elif args.hardware and not args.distro:
                 w_cycle1()
             else:
                 w_cycle0()
