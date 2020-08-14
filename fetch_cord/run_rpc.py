@@ -29,10 +29,10 @@ def main():
 
 
 print("Connecting")
-print("RPC connection successful.")
 time.sleep(5)
 # discord uses unix time to interpret time for rich presnse, this is uptime in unix time
 start_time = float(uptime)
+print("RPC connection successful.")
 
 
 def runmac():
