@@ -7,7 +7,7 @@ import os
 from fetch_cord.args import parse_args
 from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid
 from fetch_cord.out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, \
-    sysosline, sysosid, dewmid
+    sysosline, sysosid, dewmid, termline
 
 args = parse_args()
 
@@ -126,9 +126,9 @@ def cycle2():
     RPC.update(state=shell_line[0],
                details=termfontline[0],
                large_image="big",
-               large_text=termid,
+               large_text=termline[0],
                small_image=shellid,
-               small_text=shellid,
+               small_text=shell_line[0],
                start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
