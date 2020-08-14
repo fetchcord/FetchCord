@@ -141,11 +141,11 @@ def cycle2():
 def loonix():
     try:
         while True:
-            if args.distro not in [args.shell, args.hardware]:
+            if args.distro and not args.shell and not args.hardware:
                 cycle0()
-            elif args.hardware not in [args.distro, args.shell]:
+            elif args.hardware and not args.distro and not args.shell:
                 cycle1()
-            elif args.shell not in [args.distro, args.hardware]:
+            elif args.shell and not args.distro and not args.hardware:
                 cycle2()
             elif args.distro and args.hardware and not args.shell:
                 cycle0()
