@@ -204,7 +204,7 @@ if virtiogpuline:
 
 cpusplit = cpuline[0].split()[:-1]
 s=' '.join(cpusplit)
-cpuinfo = s + ' ' + cpuline[0].split()[10].replace("0", "")
+cpuinfo = s + ' ' + cpuline[0].split()[-1].replace("0", "")
 cpuvendor = cpuline[0].split()[1]
 cpumodel = ""
 if cpuvendor == "Intel":
