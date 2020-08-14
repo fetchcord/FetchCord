@@ -13,6 +13,8 @@ packages = "none"
 # find out uptime for epoch time
 if not sysosid.lower() == "macos":
     uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
+if sysosid.lower() in ["windows10", "windows7", "windows8", "windows8.1"]:
+    uptime = os.popen("wmic os get lastbootuptime").read()
 
 # predefine ids
 cpuid = "none"
