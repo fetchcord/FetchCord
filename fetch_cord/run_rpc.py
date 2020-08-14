@@ -6,8 +6,8 @@ import os
 # import info about system
 from fetch_cord.args import parse_args
 from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid
-from fetch_cord.out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, \
-    sysosline, sysosid, dewmid, termline
+from fetch_cord.out import packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, \
+    sysosline, sysosid, dewmid, termline, cpuinfo
 
 args = parse_args()
 
@@ -96,10 +96,10 @@ def cycle1():
     client_id = cpuappid
     RPC = Presence(client_id)
     RPC.connect()
-    RPC.update(state=cpuline[0],
+    RPC.update(state=cpuinfo,
                details=gpuinfo,
                large_image="big",
-               large_text=cpuline[0],
+               large_text=cpuinfo,
                small_image=gpuid,
                small_text=gpuinfo,
                start=start_time)
