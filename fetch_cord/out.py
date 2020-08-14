@@ -195,6 +195,7 @@ if virtiogpuline:
     gpuvendor = virtiogpuline[0].split()[2:3].join()
 
 cpuvendor = cpuline[0].split()[1]
+cpumodel = ""
 if cpuvendor == "Intel":
     cpumodel = cpuline[0].replace(
         '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
