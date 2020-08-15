@@ -21,5 +21,7 @@ def parse_args():
                         help="Set custom Terminal (useful if using something like dmenu, or launching from a script).")
     parser.add_argument('--host', action='store_true',
                         help="Show Host info only or with other arguments.")
+    parser.add_argument('--update', action='store_true',
+                        help="Update database.")
 
     return parser.parse_args()

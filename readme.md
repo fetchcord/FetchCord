@@ -97,6 +97,8 @@ If that does not work,add /home/$USER/.local/bin/ to your path, or just run `pyt
 
 --termfont, set custom terminal font (useful if neofetch can't get it).
 
+--update, Update database of distros, hardware, etc.
+
 -h or --help, shows this information above.
 
 ## Installing on MacOS

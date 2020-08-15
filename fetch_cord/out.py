@@ -4,11 +4,14 @@ import os
 import argparse
 import urllib.request
 from fetch_cord.args import parse_args
+from fetch_cord.update import update
+
 
 args = parse_args()
 
-url = "https://raw.githubusercontent.com/MrPotatoBobx/FetchCord/master/fetch_cord/testing.py"
-urllib.request.urlretrieve(url, os.path.dirname(__file__) + "/testing.py")
+
+if args.update:
+    update()
 
 
 if args.time:
