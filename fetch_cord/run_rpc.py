@@ -92,7 +92,7 @@ def cycle0():
 
     if args.time:
         custom_time()
-    elif args.distro and not args.shell and not args.hardware and not args.host:
+    elif args.nohost and args.nohardware and args.noshell:
         time.sleep(9999)
     else:
         time.sleep(30)
@@ -119,7 +119,7 @@ def cycle1():
         print("appid: %s" % client_id)
     if args.time:
         custom_time()
-    elif args.hardware and not args.distro and not args.shell and not args.host:
+    elif args.nodistro and args.noshell and args.nohost:
         time.sleep(9999)
     else:
         time.sleep(30)
@@ -146,7 +146,7 @@ def cycle2():
         print("appid: %s" % client_id)
     if args.time:
         custom_time()
-    elif args.shell and not args.distro and not args.hardware and not args.host:
+    elif args.nodistro and args.nohardware and args.nohost:
         time.sleep(9999)
     else:
         time.sleep(30)
@@ -172,7 +172,7 @@ def cycle3():
             print("appid: %s" % client_id)
         if args.time:
             custom_time()
-        elif args.host and not args.distro and not args.hardware and not args.shell:
+        elif args.nodistro and args.nohardware and args.noshell:
             time.sleep(9999)
         else:
             time.sleep(30)
@@ -233,72 +233,16 @@ def w_cycle1():
 def loonix():
     try:
         while True:
-            if args.distro and not args.shell and not args.hardware and not args.host:
-                cycle0()
-            elif args.hardware and not args.distro and not args.shell and not args.host:
-                cycle1()
-            elif args.shell and not args.distro and not args.hardware and not args.host:
-                cycle2()
-            elif args.host and not args.distro and not args.hardware and not args.shell:
-                cycle3()
-            elif args.distro and args.hardware and not args.shell and not args.host:
+            if not args.nodistro:
                 cycle0()
                 RPC.clear(pid=os.getpid())
+            if not args.nohardware:
                 cycle1()
                 RPC.clear(pid=os.getpid())
-            elif args.distro and args.shell and not args.hardware and not args.host:
-                cycle0()
-                RPC.clear(pid=os.getpid())
+            if not args.noshell:
                 cycle2()
                 RPC.clear(pid=os.getpid())
-            elif args.hardware and args.shell and not args.distro and not args.host:
-                cycle1()
-                RPC.clear(pid=os.getpid())
-                cycle2()
-                RPC.clear(pid=os.getpid())
-            elif args.host and args.hardware and not args.distro and not args.shell:
-                cycle1()
-                RPC.clear(pid=os.getpid())
-                cycle3()
-                RPC.clear(pid=os.getpid())
-            elif args.host and args.distro and not args.hardware and not args.shell:
-                cycle0()
-                RPC.clear(pid=os.getpid())
-                cycle3()
-                RPC.clear(pid=os.getpid())
-            elif args.host and args.shell and not args.distro and not args.hardware:
-                cycle2()
-                RPC.clear(pid=os.getpid())
-                cycle3()
-                RPC.clear(pid=os.getpid())
-            elif args.host and args.shell and args.distro and not args.hardware:
-                cycle0()
-                RPC.clear(pid=os.getpid())
-                cycle2()
-                RPC.clear(pid=os.getpid())
-                cycle3()
-                RPC.clear(pid=os.getpid())
-            elif args.host and args.shell and args.hardware and not args.distro:
-                cycle1()
-                RPC.clear(pid=os.getpid())
-                cycle2()
-                RPC.clear(pid=os.getpid())
-                cycle3()
-                RPC.clear(pid=os.getpid())
-            elif args.host and args.distro and args.hardware and not args.shell:
-                cycle0()
-                RPC.clear(pid=os.getpid())
-                cycle1()
-                RPC.clear(pid=os.getpid())
-                cycle3()
-                RPC.clear(pid=os.getpid())
-            else:
-                cycle0()
-                RPC.clear(pid=os.getpid())
-                cycle1()
-                RPC.clear(pid=os.getpid())
-                cycle2()
-                RPC.clear(pid=os.getpid())
+            if not args.nohost:
                 cycle3()
                 RPC.clear(pid=os.getpid())
     except KeyboardInterrupt:

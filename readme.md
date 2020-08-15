@@ -83,13 +83,13 @@ Once installed, simply run `fetchcord`.
 If that does not work,add /home/$USER/.local/bin/ to your path, or just run `python3 -m fetchcord`.
 
 #### Arguments
---distro, shows only distro and kernel version and package count or with other args combined.
+--nodistro, Don't show distro info.
 
---hardware, shows only CPU and GPU info or with other args combined.
+--nohardware, Don't show hardware info.
 
---shell, shows only terminal and shell info or with other args combined.
+--noshell, Don't show shell/terminal info.
 
---host, shows only host info or with other args combined.
+--nohost, Don't show host info.
 
 --time, -t, set custom duration for cycles in seconds.
 
