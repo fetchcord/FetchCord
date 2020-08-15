@@ -451,6 +451,10 @@ def Fetchcord():
     global termappid
     termappid = '742096605502767235'
 
+def Xfce4_terminal():
+    global termappid
+    termappid = '744332423072055296'
+
 
 def Unknown_term():
     global termappid
@@ -484,6 +488,10 @@ def Unknown_shell():
 def iAsus():
     global hostappid
     hostappid = "743936082780880928"
+
+def iTUF():
+    global hostappid
+    hostappid = '744330890343219262'
 
 
 def iDell():
@@ -599,6 +607,7 @@ terminals = {
     "gnome-terminal": Gnometerminal,
     "cool-retro-term": Coolretroterm,
     "urxvt": Urxvt,
+    "xfce4-terminal": Xfce4_terminal,
 }
 
 
@@ -610,7 +619,8 @@ shells = {
 hosts= {
     "inspiron": iDell,
     "hp": iHP,
-    "tuf": iAsus,
+    "tuf": iTUF,
+    "asus": iAsus,
     "acer": iAcer,
     "thinkpad": iLenovo,
     "lenovo": iLenovo,
