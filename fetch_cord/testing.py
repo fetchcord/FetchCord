@@ -103,6 +103,11 @@ def iEnde():
     appid = '740809641545564170'
 
 
+def iNixOS():
+    global appid
+    appid = '742887089179197462'
+
+
 def iWindows10():
     global appid
     appid = '741949889465942099'
@@ -529,6 +534,7 @@ distros = {
     "windows7": iWindows7,
     "windows8": iWindows8,
     "windows8.1": iWindows8_1,
+    "nixos": iNixOS,
 }
 versions = {
     "10.13": iHsiera,
