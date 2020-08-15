@@ -2,7 +2,7 @@ from fetch_cord.bash import exec_bash, BashError
 import sys
 import os
 import argparse
-import urllib
+import urllib.request
 from fetch_cord.args import parse_args
 
 args = parse_args()
