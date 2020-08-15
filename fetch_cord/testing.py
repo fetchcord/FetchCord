@@ -597,69 +597,63 @@ hosts= {
     "tuf": iAsus,
 }
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
-try:
-    if sysosid.lower() != "macos":
-        distros[sysosid.lower()]()
-    elif sysosid.lower() == "macos":
-        macos()
-except KeyError:
-    print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
-    Unknown_distro()
-
-if sysosid == "macos":
+if sysosid.lower() != "macos":
     try:
-        versions[ver[0:5]]()
-    except IndexError:
-        bigicon = "bigslurp"
+        distros[sysosid.lower()]()
     except KeyError:
-        print("Unsupported MacOS version")
+        print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
+        Unknown_distro()
+    try:
+        if deid != "N/A":
+            desktops[deid.lower()]()
+    except KeyError:
+        print("Unsupported De contact me on github to resolve this.(Keyerror)")
+        Unknown_de_wm()
 
-try:
-    if deid != "N/A":
-        desktops[deid.lower()]()
-except KeyError:
-    print("Unsupported De contact me on github to resolve this.(Keyerror)")
-    Unknown_de_wm()
+    try:
+        if deid == "N/A":
+            windowmanagers[wmid.lower()]()
+    except KeyError:
+        print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
+        Unknown_de_wm()
+    try:
+        if cpuvendor == "AMD":
+            amdcpus[cpumodel.lower()]()
+        elif cpuvendor in ["Intel", "Pentium"]:
+            intelcpus[cpumodel.lower()]()
+    except KeyError:
+        print("unknown CPU, contact me on github to resolve this.(Keyerror)")
+        Unknown_cpu()
 
-try:
-    if deid == "N/A":
-        windowmanagers[wmid.lower()]()
-except KeyError:
-    print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
-    Unknown_de_wm()
-try:
-    if cpuvendor == "AMD":
-        amdcpus[cpumodel.lower()]()
-    elif cpuvendor in ["Intel", "Pentium"]:
-        intelcpus[cpumodel.lower()]()
-except KeyError:
-    print("unknown CPU, contact me on github to resolve this.(Keyerror)")
-    Unknown_cpu()
+    try:
+        gpus[gpuvendor.lower()]()
+    except KeyError:
+        print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
+        Unknown_gpu()
 
-try:
-    gpus[gpuvendor.lower()]()
-except KeyError:
-    print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
-    Unknown_gpu()
+    try:
+        terminals[termid.lower()]()
+    except KeyError:
+        print("Unsupported Terminal. contact me on github to resolve this.(Keyerror)")
+        Unknown_term()
 
-try:
-    terminals[termid.lower()]()
-except KeyError:
-    print("Unsupported Terminal. contact me on github to resolve this.(Keyerror)")
-    Unknown_term()
+    try:
+        shells[shellid.lower()]()
+    except KeyError:
+        print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
+        Unknown_shell()
+    try:
+        if hostid != "" and sysosid.lower() != "macos":
+            hosts[hostid.lower()]()
+    except KeyError:
+        print("Unknown Host, contact us on github to resolve this.(Keyerror)")
+        Unknown_host()
+else:
+    macos()
 
-try:
-    shells[shellid.lower()]()
-except KeyError:
-    print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
-    Unknown_shell()
-try:
-    if hostid != "" and sysosid.lower() != "macos":
-        hosts[hostid.lower()]()
-except KeyError:
-    print("Unknown Host, contact us on github to resolve this.(Keyerror)")
-    Unknown_host()
+
 args = parse_args()
+
 
 if args.debug:
     print("testing")
