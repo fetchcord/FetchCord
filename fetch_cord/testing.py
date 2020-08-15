@@ -145,9 +145,9 @@ def iMojave():
     bigicon = "mojave"
 
 
-def iCatilina():
+def iCatalina():
     global bigicon
-    bigicon = "catilina"
+    bigicon = "catalina"
 
 # macOS hardwawre
 
@@ -550,7 +550,7 @@ distros = {
 versions = {
     "10.13": iHsiera,
     "10.14": iMojave,
-    "10.15": iCatilina
+    "10.15": iCatalina
 }
 # window managers
 windowmanagers = {
