@@ -222,12 +222,15 @@ if wmline:
     wmid = wmline[0].split()[1]
 else:
     wmid = "N/A"
-
-if termline:
-    termid = termline[0].split()[1]
-else:
-    termid = "N/A"
-    termline = ["N/A"]
+termid = ""
+try:
+    if termline:
+        termid = termline[0].split()[1]
+    else:
+        termid = "N/A"
+        termline = ["N/A"]
+except IndexError:
+    pass
 
 if args.terminal:
     terminals = ['kitty', 'st', 'gnome-terminal',
