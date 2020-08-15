@@ -240,17 +240,6 @@ try:
 except IndexError:
     pass
 
-if args.terminal:
-    terminals = ['kitty', 'st', 'gnome-terminal',
-                 'konsole', 'alacritty', 'xterm', 'cool-retro-term']
-    if args.terminal in terminals:
-        termid = args.terminal
-    else:
-        print("Invalid terminal, only %s are supported.\n"
-              "Please make a github issue if you would like to have your terminal added.\n"
-              "https://github.com/MrPotatoBobx/FetchCord" % terminals)
-        sys.exit(1)
-
 shellid = shell_line[0].split()[1]
 kernelid = kernelline[0].split()[1]
 sysosid = sysosline[0].split()[1]

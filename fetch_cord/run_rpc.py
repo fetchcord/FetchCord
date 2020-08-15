@@ -184,7 +184,7 @@ def cycle3():
 def w_cycle0():
     global RPC
     if args.debug:
-        print("cycle 2")
+        print("cycle 0")
     client_id = termappid
     RPC = Presence(client_id)
     RPC.connect()
@@ -199,7 +199,7 @@ def w_cycle0():
         print("appid: %s" % client_id)
     if args.time:
         custom_time()
-    elif args.shell and not args.distro and not args.hardware:
+    elif args.nohardware:
         time.sleep(9999)
     else:
         time.sleep(30)
@@ -208,7 +208,7 @@ def w_cycle0():
 def w_cycle1():
     global RPC
     if args.debug:
-        print("cycle 2")
+        print("cycle 1")
     client_id = termappid
     RPC = Presence(client_id)
     RPC.connect()
@@ -223,7 +223,7 @@ def w_cycle1():
         print("appid: %s" % client_id)
     if args.time:
         custom_time()
-    elif args.shell and not args.distro and not args.hardware:
+    elif args.nodistro:
         time.sleep(9999)
     else:
         time.sleep(30)
@@ -253,13 +253,10 @@ def loonix():
 def wandowz():
     try:
         while True:
-            if args.distro and not args.hardware:
-                w_cycle0()
-            elif args.hardware and not args.distro:
-                w_cycle1()
-            else:
+            if not args.nodistro:
                 w_cycle0()
                 RPC.clear(pid=os.getpid())
+            if not args.nohardware:
                 w_cycle1()
                 RPC.clear(pid=os.getpid())
     except KeyboardInterrupt:

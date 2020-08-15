@@ -1,5 +1,6 @@
 # import shit as usual
 import os
+import sys
 from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
 from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid, hostid
@@ -586,6 +587,8 @@ terminals = {
     "cool-retro-term": Coolretroterm,
     "urxvt": Urxvt,
 }
+
+
 shells = {
     "fish": Fish,
     "zsh": Zsh,
@@ -654,6 +657,15 @@ else:
 
 args = parse_args()
 
+terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt"]
+if args.terminal:
+    if args.terminal in terminallist:
+        termid = args.terminal
+    else:
+        print("\nInvalid terminal, only %s are supported.\n"
+              "Please make a github issue if you would like to have your terminal added.\n"
+              "https://github.com/MrPotatoBobx/FetchCord" % terminallist)
+        sys.exit(1)
 
 if args.debug:
     print("testing")
