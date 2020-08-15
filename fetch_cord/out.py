@@ -164,6 +164,8 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload =
         # amd GPUs
         for i in range(len(amdgpuline)):
             env_prime = "env DRI_PRIME=%s" % i
+            if laptop:
+                env_prime = "env DRI_PRIME=1"
             amdgpurender = "GPU: " + \
                 exec_bash(
                     "%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/(.*//'" % env_prime) + ' '
