@@ -66,7 +66,9 @@
 
 ## Installing on (GNU/)Linux
 
-`pip3 install fetchcord`
+On Arch Linux install this package for the git version: [fetchcord-git](https://aur.archlinux.org/packages/fetchcord-git/)
+
+On other distros and the non git version: `pip3 install fetchcord`
 
 NOTE: you need neofetch to be also installed for this to work.
 
