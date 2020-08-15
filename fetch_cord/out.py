@@ -268,10 +268,13 @@ elif wmline and not deline:
 hostid = ""
 if hostline:
     hostid = hostline[0].split()[1]
-if laptop and sysosid.lower() not in ['windows', 'macos']:
-    lapordesk = "laptop"
-else:
-    lapordesk = "desktop"
+try:
+    if laptop and sysosid.lower() not in ['windows', 'macos']:
+        lapordesk = "laptop"
+    else:
+        lapordesk = "desktop"
+except NameError:
+    pass
 if not resline:
     resline = "Resolution: N/A"
 else:
