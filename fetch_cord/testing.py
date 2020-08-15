@@ -160,6 +160,7 @@ def laporp():
         devicetype = "desktop"
 
 def macos():
+    global product
     if sysosid.lower() == "macos":
         devicetype = "none"
         bigicon = "none"
