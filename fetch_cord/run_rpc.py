@@ -34,7 +34,8 @@ def main():
 print("Connecting")
 time.sleep(5)
 # discord uses unix time to interpret time for rich presnse, this is uptime in unix time
-start_time = float(uptime)
+if sysosid.lower() not in ['macos', 'windows']:
+    start_time = float(uptime)
 print("RPC connection successful.")
 
 
