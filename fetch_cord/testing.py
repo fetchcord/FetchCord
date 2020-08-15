@@ -503,6 +503,7 @@ gpus = {
     "nvidiaintel": Nvidia_intelgpu,
     "nvidiaamd": Nvidia_amdgpu,
     "amdintel": Amd_intelgpu,
+    "radeonintel": Amd_intelgpu,
     "nvidiaamdintel": Nvidia_amd_intelgpu,
 }
 distros = {
@@ -630,7 +631,8 @@ except KeyError:
     print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
     Unknown_shell()
 try:
-    hosts[hostid.lower()]()
+    if hostid != "":
+        hosts[hostid.lower()]()
 except KeyError:
     print("Unknown Host, contact us on github to resolve this.(Keyerror)")
     Unknown_host()
