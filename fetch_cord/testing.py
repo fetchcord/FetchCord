@@ -153,14 +153,14 @@ def laporp():
     else:
         devicetype = "desktop"
 
-
-if sysosid.lower() == "macos":
-    devicetype = "none"
-    bigicon = "none"
-    ver = os.popen("sw_vers -productVersion").read()
-    uptime = os.popen("sysctl -n kern.boottime").read().split()[3]
-    product = os.popen("sysctl -n hw.model").read()
-    laporp()
+def macos():
+    if sysosid.lower() == "macos":
+        devicetype = "none"
+        bigicon = "none"
+        ver = os.popen("sw_vers -productVersion").read()
+        uptime = os.popen("sysctl -n kern.boottime").read().split()[3]
+        product = os.popen("sysctl -n hw.model").read()
+        laporp()
 
 # def desktops and defind id
 
@@ -579,7 +579,8 @@ hosts= {
 }
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
 try:
-    distros[sysosid.lower()]()
+    if sysosid.lower() != "macos":
+        distros[sysosid.lower()]()
 except KeyError:
     print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
     Unknown_distro()
@@ -632,7 +633,7 @@ except KeyError:
     print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
     Unknown_shell()
 try:
-    if hostid != "":
+    if hostid != "" and sysosid.lower() != "macos":
         hosts[hostid.lower()]()
 except KeyError:
     print("Unknown Host, contact us on github to resolve this.(Keyerror)")
