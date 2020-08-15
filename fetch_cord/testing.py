@@ -616,6 +616,7 @@ hosts= {
     "lenovo": iLenovo,
 }
 
+args = parse_args()
 
 hostlist = ['Acer', 'TUF', 'HP', 'Thinkpad', 'Inspiron', 'Lenovo']
 hostid = ""
@@ -686,8 +687,6 @@ if sysosid.lower() != "macos":
 else:
     macos()
 
-
-args = parse_args()
 
 terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt"]
 if args.terminal:
