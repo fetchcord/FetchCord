@@ -430,6 +430,10 @@ def Coolretroterm():
     global termappid
     termappid = '741731097498353794'
 
+def Urxvt():
+    global termappid
+    termappid = '743246048968835092'
+
 
 def Fetchcord():
     global termappid
@@ -573,6 +577,7 @@ terminals = {
     "dolphin": Konsole,
     "gnome-terminal": Gnometerminal,
     "cool-retro-term": Coolretroterm,
+    "urxvt": Urxvt,
 }
 shells = {
     "fish": Fish,
