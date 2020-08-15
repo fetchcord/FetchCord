@@ -3,7 +3,7 @@ import os
 import sys
 from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
-from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid, hostid
+from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid, hostline
 
 # appid for discord app
 appid = "none"
@@ -604,6 +604,22 @@ hosts= {
     "hp": iHP,
     "tuf": iAsus,
 }
+
+
+hostlist = ['Acer', 'TUF', 'HP', 'Thinkpad', 'Inspiron']
+hostid = ""
+if hostline:
+    hostsplit = hostline[0].split()
+    hostid = []
+    for line in range(len(hostsplit)):
+        if hostsplit[line] in hostlist:
+            hostid.append(hostsplit[line].rstrip('\n'))
+    hostid = hostid[0]
+    if args.debug:
+        print("hostsplit: %s" % hostsplit)
+        print("hostid: %s" % hostid)
+
+
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
 if sysosid.lower() != "macos":
     try:

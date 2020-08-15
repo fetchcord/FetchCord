@@ -265,9 +265,6 @@ elif deline and not wmline:
     dewmid = deline[0]
 elif wmline and not deline:
     dewmid = wmline[0]
-hostid = ""
-if hostline:
-    hostid = hostline[0].split()[1]
 lapordesk = ""
 try:
     if laptop and sysosid.lower() not in ['windows', 'macos']:
@@ -307,6 +304,5 @@ if args.debug:
     print("sysosline item 0: %s" % sysosline[0])
     try:
         print("wmline item 0: %s" % wmline[0])
-        print("hostid: %s" % hostid)
     except IndexError:
         pass
