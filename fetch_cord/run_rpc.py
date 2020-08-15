@@ -13,6 +13,9 @@ args = parse_args()
 
 
 def main():
+    if not hostline and args.host and not args.distro and not args.shell and not args.hardware:
+        print("ERROR: --host argument used but no hostline is available!")
+        sys.exit(1)
     # printing info with debug switch
     if args.debug:
         print("run-rpc")
@@ -254,7 +257,7 @@ def loonix():
                 RPC.clear(pid=os.getpid())
                 cycle3()
                 RPC.clear(pid=os.getpid())
-            elif args.host and args.shell and not args.distro and not args.shell:
+            elif args.host and args.shell and not args.distro and not args.hardware:
                 cycle2()
                 RPC.clear(pid=os.getpid())
                 cycle3()
@@ -270,6 +273,13 @@ def loonix():
                 cycle1()
                 RPC.clear(pid=os.getpid())
                 cycle2()
+                RPC.clear(pid=os.getpid())
+                cycle3()
+                RPC.clear(pid=os.getpid())
+            elif args.host and args.distro and args.hardware and not args.shell:
+                cycle0()
+                RPC.clear(pid=os.getpid())
+                cycle1()
                 RPC.clear(pid=os.getpid())
                 cycle3()
                 RPC.clear(pid=os.getpid())

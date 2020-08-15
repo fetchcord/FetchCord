@@ -245,6 +245,10 @@ def iBspwm():
     global desktopid
     desktopid = "bspwm"
 
+def iSway():
+    global desktopid
+    desktopid = "sway"
+
 
 def Unknown_de_wm():
     global desktopid
@@ -536,6 +540,7 @@ windowmanagers = {
     "enlightenment": iEnlightenment,
     "bspwm": iBspwm,
     "xmonad": iXmonad,
+    "sway": iSway,
 }
 # desktops
 desktops = {
