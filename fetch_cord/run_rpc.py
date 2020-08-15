@@ -5,14 +5,17 @@ import sys
 import os
 # import info about system
 from fetch_cord.args import parse_args
-from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid
-from fetch_cord.out import cpuline, packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, \
-    sysosline, sysosid, dewmid, termline
+from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid, hostappid
+from fetch_cord.out import packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, \
+    sysosline, sysosid, dewmid, termline, cpuinfo, lapordesk, hostline, resline
 
 args = parse_args()
 
 
 def main():
+    if not hostline and args.host and not args.distro and not args.shell and not args.hardware:
+        print("ERROR: --host argument used but no hostline is available!")
+        sys.exit(1)
     # printing info with debug switch
     if args.debug:
         print("run-rpc")
@@ -31,7 +34,8 @@ def main():
 print("Connecting")
 time.sleep(5)
 # discord uses unix time to interpret time for rich presnse, this is uptime in unix time
-start_time = float(uptime)
+if sysosid.lower() not in ['macos', 'windows']:
+    start_time = float(uptime)
 print("RPC connection successful.")
 
 
@@ -80,7 +84,7 @@ def cycle0():
 
     if args.time:
         custom_time()
-    elif args.distro and not args.shell and not args.hardware:
+    elif args.distro and not args.shell and not args.hardware and not args.host:
         time.sleep(9999)
     else:
         time.sleep(30)
@@ -96,10 +100,10 @@ def cycle1():
     client_id = cpuappid
     RPC = Presence(client_id)
     RPC.connect()
-    RPC.update(state=cpuline[0],
+    RPC.update(state=cpuinfo,
                details=gpuinfo,
                large_image="big",
-               large_text=cpuline[0],
+               large_text=cpuinfo,
                small_image=gpuid,
                small_text=gpuinfo,
                start=start_time)
@@ -107,7 +111,7 @@ def cycle1():
         print("appid: %s" % client_id)
     if args.time:
         custom_time()
-    elif args.hardware and not args.distro and not args.shell:
+    elif args.hardware and not args.distro and not args.shell and not args.host:
         time.sleep(9999)
     else:
         time.sleep(30)
@@ -134,10 +138,39 @@ def cycle2():
         print("appid: %s" % client_id)
     if args.time:
         custom_time()
-    elif args.shell and not args.distro and not args.hardware:
+    elif args.shell and not args.distro and not args.hardware and not args.host:
         time.sleep(9999)
     else:
         time.sleep(30)
+
+
+def cycle3():
+    # if not then forget it
+    if hostline:
+        global RPC
+        if args.debug:
+            print("cycle 3")
+        client_id = hostappid
+        RPC = Presence(client_id)
+        RPC.connect()
+        RPC.update(state=resline,
+                details=hostline[0],
+                large_image="big",
+                large_text=hostline[0],
+                small_image=lapordesk,
+                small_text=lapordesk,
+                start=start_time)
+        if args.debug:
+            print("appid: %s" % client_id)
+        if args.time:
+            custom_time()
+        elif args.host and not args.distro and not args.hardware and not args.shell:
+            time.sleep(9999)
+        else:
+            time.sleep(30)
+    # back from whence you came
+    else:
+        loonix()
 
 
 def w_cycle0():
@@ -192,26 +225,64 @@ def w_cycle1():
 def loonix():
     try:
         while True:
-            if args.distro and not args.shell and not args.hardware:
+            if args.distro and not args.shell and not args.hardware and not args.host:
                 cycle0()
-            elif args.hardware and not args.distro and not args.shell:
+            elif args.hardware and not args.distro and not args.shell and not args.host:
                 cycle1()
-            elif args.shell and not args.distro and not args.hardware:
+            elif args.shell and not args.distro and not args.hardware and not args.host:
                 cycle2()
-            elif args.distro and args.hardware and not args.shell:
-                cycle0()
-                RPC.clear(pid=os.getpid())
-                cycle1()
-                RPC.clear(pid=os.getpid())
-            elif args.distro and args.shell and not args.hardware:
+            elif args.host and not args.distro and not args.hardware and not args.shell:
+                cycle3()
+            elif args.distro and args.hardware and not args.shell and not args.host:
                 cycle0()
                 RPC.clear(pid=os.getpid())
+                cycle1()
+                RPC.clear(pid=os.getpid())
+            elif args.distro and args.shell and not args.hardware and not args.host:
+                cycle0()
+                RPC.clear(pid=os.getpid())
                 cycle2()
                 RPC.clear(pid=os.getpid())
-            elif args.hardware and args.shell and not args.distro:
+            elif args.hardware and args.shell and not args.distro and not args.host:
                 cycle1()
                 RPC.clear(pid=os.getpid())
                 cycle2()
+                RPC.clear(pid=os.getpid())
+            elif args.host and args.hardware and not args.distro and not args.shell:
+                cycle1()
+                RPC.clear(pid=os.getpid())
+                cycle3()
+                RPC.clear(pid=os.getpid())
+            elif args.host and args.distro and not args.hardware and not args.shell:
+                cycle0()
+                RPC.clear(pid=os.getpid())
+                cycle3()
+                RPC.clear(pid=os.getpid())
+            elif args.host and args.shell and not args.distro and not args.hardware:
+                cycle2()
+                RPC.clear(pid=os.getpid())
+                cycle3()
+                RPC.clear(pid=os.getpid())
+            elif args.host and args.shell and args.distro and not args.hardware:
+                cycle0()
+                RPC.clear(pid=os.getpid())
+                cycle2()
+                RPC.clear(pid=os.getpid())
+                cycle3()
+                RPC.clear(pid=os.getpid())
+            elif args.host and args.shell and args.hardware and not args.distro:
+                cycle1()
+                RPC.clear(pid=os.getpid())
+                cycle2()
+                RPC.clear(pid=os.getpid())
+                cycle3()
+                RPC.clear(pid=os.getpid())
+            elif args.host and args.distro and args.hardware and not args.shell:
+                cycle0()
+                RPC.clear(pid=os.getpid())
+                cycle1()
+                RPC.clear(pid=os.getpid())
+                cycle3()
                 RPC.clear(pid=os.getpid())
             else:
                 cycle0()
@@ -219,6 +290,8 @@ def loonix():
                 cycle1()
                 RPC.clear(pid=os.getpid())
                 cycle2()
+                RPC.clear(pid=os.getpid())
+                cycle3()
                 RPC.clear(pid=os.getpid())
     except KeyboardInterrupt:
         print("Closing connection.")
@@ -228,9 +301,9 @@ def loonix():
 def wandowz():
     try:
         while True:
-            if args.distro not in [args.hardware]:
+            if args.distro and not args.hardware:
                 w_cycle0()
-            elif args.hardware not in [args.distro]:
+            elif args.hardware and not args.distro:
                 w_cycle1()
             else:
                 w_cycle0()
