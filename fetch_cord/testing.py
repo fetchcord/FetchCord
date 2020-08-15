@@ -223,6 +223,10 @@ def iUnity():
     else:
         desktopid = wmid
 
+def iPantheon():
+    global desktopid
+    desktopid = "pantheon"
+
 
 def iAero():
     global desktopid
@@ -575,6 +579,7 @@ desktops = {
     "mate": iMate,
     "unity": iUnity,
     "aero": iAero,
+    "pantheon": iPantheon,
 }
 terminals = {
     "st": St,
