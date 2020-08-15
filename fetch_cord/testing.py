@@ -630,7 +630,7 @@ args = parse_args()
 
 hostlist = ['Acer', 'TUF', 'HP', 'Thinkpad', 'Inspiron', 'Lenovo']
 hostid = ""
-if hostline:
+if hostline != "":
     hostsplit = hostline[0].split()
     hostid = []
     for line in range(len(hostsplit)):

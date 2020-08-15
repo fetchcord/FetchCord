@@ -13,8 +13,8 @@ args = parse_args()
 
 
 def main():
-    if not hostline and args.host and not args.distro and not args.shell and not args.hardware:
-        print("ERROR: --host argument used but no hostline is available!")
+    if hostline == "" and args.nodistro and args.noshell and args.nohardware:
+        print("ERROR: no hostline is available!")
         sys.exit(1)
     # printing info with debug switch
     if args.debug:

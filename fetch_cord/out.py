@@ -266,6 +266,8 @@ elif deline and not wmline:
 elif wmline and not deline:
     dewmid = wmline[0]
 lapordesk = ""
+if not hostline:
+    hostline = ""
 try:
     if laptop and sysosid.lower() not in ['windows', 'macos']:
         lapordesk = "laptop"
