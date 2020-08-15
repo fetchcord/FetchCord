@@ -42,6 +42,14 @@ print("RPC connection successful.")
 def runmac():
     from fetch_cord.testing import devicetype, product, bigicon, ver, uptime
     client_id = '740822755376758944'  # macos appid for discord rpc
+    if args.debug:
+        print("runmac")
+        print("devicetype: %s" % devicetype)
+        print("product %s" % product)
+        print("bigicon: %s" % bigicon)
+        print("ver: %s" % ver)
+        print("uptime: %s" % uptime)
+        print("client_id: %s" % client_id)
     time.sleep(5)
     start_time = float(uptime[:-1])
     while True:
