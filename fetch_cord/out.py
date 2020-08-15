@@ -220,7 +220,11 @@ if wmline:
 else:
     wmid = "N/A"
 
-termid = termline[0].split()[1]
+if termline:
+    termid = termline[0].split()[1]
+else:
+    termid = "N/A"
+
 if args.terminal:
     terminals = ['kitty', 'st', 'gnome-terminal',
                  'konsole', 'alacritty', 'xterm', 'cool-retro-term']
