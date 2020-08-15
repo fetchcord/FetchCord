@@ -167,6 +167,12 @@ def macos():
         ver = os.popen("sw_vers -productVersion").read()
         uptime = os.popen("sysctl -n kern.boottime").read().split()[3]
         product = os.popen("sysctl -n hw.model").read()
+        try:
+            versions[ver[0:5]]()
+        except IndexError:
+            bigicon = "bigslurp"
+        except KeyError:
+            print("Unsupported MacOS version")
         laporp()
 
 # def desktops and defind id
