@@ -494,6 +494,14 @@ def iHP():
     global hostappid
     hostappid = "743971270395297852"
 
+def iLenovo():
+    global hostappid
+    hostappid = '744326223412461630'
+
+def iAcer():
+    global hostappid
+    hostappid = '744326890512318544'
+
 def Unknown_host():
     global hostappid
     hostappid = "742887089179197462"
@@ -603,10 +611,13 @@ hosts= {
     "inspiron": iDell,
     "hp": iHP,
     "tuf": iAsus,
+    "acer": iAcer,
+    "thinkpad": iLenovo,
+    "lenovo": iLenovo,
 }
 
 
-hostlist = ['Acer', 'TUF', 'HP', 'Thinkpad', 'Inspiron']
+hostlist = ['Acer', 'TUF', 'HP', 'Thinkpad', 'Inspiron', 'Lenovo']
 hostid = ""
 if hostline:
     hostsplit = hostline[0].split()
