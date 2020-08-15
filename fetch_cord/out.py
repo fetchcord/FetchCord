@@ -164,7 +164,7 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload =
         # amd GPUs
         for i in range(len(amdgpuline)):
             # assume DRI_PRIME=0 is the intel GPU
-            if laptop:
+            if laptop and intelgpuline:
                 i = i + 1
             env_prime = "env DRI_PRIME=%s" % i
             amdgpurender = "GPU: " + \
