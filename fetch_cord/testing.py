@@ -22,6 +22,7 @@ cpuappid = "none"
 gpuid = "none"
 termappid = "none"
 desktopid = "none"
+hostappid = "none"
 
 # distros set id and package number
 
