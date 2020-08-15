@@ -160,7 +160,7 @@ if sysosid.lower() == "macos":
     ver = os.popen("sw_vers -productVersion").read()
     uptime = os.popen("sysctl -n kern.boottime").read().split()[3]
     product = os.popen("sysctl -n hw.model").read()
-    laorp()
+    laporp()
 
 # def desktops and defind id
 
