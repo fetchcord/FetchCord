@@ -2,9 +2,14 @@ from fetch_cord.bash import exec_bash, BashError
 import sys
 import os
 import argparse
+import urllib
 from fetch_cord.args import parse_args
 
 args = parse_args()
+
+url = "https://raw.githubusercontent.com/MrPotatoBobx/FetchCord/master/fetch_cord/testing.py"
+urllib.request.urlretrieve(url, os.path.dirname(__file__) + "/testing.py")
+
 
 if args.time:
     if int(args.time) < 15:
