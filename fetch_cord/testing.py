@@ -11,6 +11,7 @@ appid = "none"
 packages = "none"
 
 # find out uptime for epoch time
+uptime = ""
 if not sysosid.lower() == "macos":
     uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
 if sysosid.lower() in ["windows10", "windows7", "windows8", "windows8.1"]:
@@ -581,6 +582,8 @@ hosts= {
 try:
     if sysosid.lower() != "macos":
         distros[sysosid.lower()]()
+    elif sysosid.lower() == "macos":
+        macos()
 except KeyError:
     print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
     Unknown_distro()
