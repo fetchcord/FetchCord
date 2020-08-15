@@ -268,6 +268,7 @@ elif wmline and not deline:
 hostid = ""
 if hostline:
     hostid = hostline[0].split()[1]
+lapordesk = ""
 try:
     if laptop and sysosid.lower() not in ['windows', 'macos']:
         lapordesk = "laptop"
