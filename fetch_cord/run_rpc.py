@@ -12,7 +12,7 @@ if os.name != "nt":
         dewmid, termline, lapordesk, hostline, resline
 from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo
 if os.name == "nt":
-    from fetch_cord.out import moboline, moboid, memline
+    from fetch_cord.out import moboline, memline
 args = parse_args()
 
 
