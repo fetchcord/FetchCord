@@ -5,10 +5,14 @@ import sys
 import os
 # import info about system
 from fetch_cord.args import parse_args
-from fetch_cord.testing import uptime, gpuid, desktopid, appid, cpuappid, termappid, hostappid
-from fetch_cord.out import packagesline, termid, shellid, kernelline, gpuinfo, shell_line, termfontline, \
-    sysosline, sysosid, dewmid, termline, cpuinfo, lapordesk, hostline, resline
-
+from fetch_cord.testing import uptime, gpuid, appid, cpuappid
+if os.name != "nt":
+    from fetch_cord.testing import uptime, desktopid, termappid, hostappid
+    from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, termfontline, \
+        dewmid, termline, lapordesk, hostline, resline
+from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo
+if os.name == "nt":
+    from fetch_cord.out import moboline, moboid, memline
 args = parse_args()
 
 
@@ -192,7 +196,7 @@ def w_cycle0():
                details=memline[0],
                large_image="big",
                large_text=sysosline[0],
-               small_image=moboid,
+               small_image=moboline[0],
                small_text=moboline[0],
                start=start_time)
     if args.debug:

@@ -3,7 +3,9 @@ import os
 import sys
 from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
-from fetch_cord.out import wmid, deid, termid, shellid, cpumodel, cpuvendor, gpuvendor, sysosid, hostline
+from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
+if os.name != "nt":
+    from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline
 
 # appid for discord app
 appid = "none"
@@ -662,40 +664,7 @@ if args.terminal:
 
 
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
-if sysosid.lower() != "macos":
-    try:
-        distros[sysosid.lower()]()
-    except KeyError:
-        print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
-        Unknown_distro()
-    try:
-        if deid != "N/A":
-            desktops[deid.lower()]()
-    except KeyError:
-        print("Unsupported De contact me on github to resolve this.(Keyerror)")
-        Unknown_de_wm()
-
-    try:
-        if deid == "N/A":
-            windowmanagers[wmid.lower()]()
-    except KeyError:
-        print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
-        Unknown_de_wm()
-    try:
-        if cpuvendor == "AMD":
-            amdcpus[cpumodel.lower()]()
-        elif cpuvendor in ["Intel", "Pentium"]:
-            intelcpus[cpumodel.lower()]()
-    except KeyError:
-        print("unknown CPU, contact me on github to resolve this.(Keyerror)")
-        Unknown_cpu()
-
-    try:
-        gpus[gpuvendor.lower()]()
-    except KeyError:
-        print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
-        Unknown_gpu()
-
+if sysosid.lower() not in ["macos", "windows10", "windows8", "windows7", "winodows8.1"]:
     try:
         terminals[termid.lower()]()
     except KeyError:
@@ -713,7 +682,43 @@ if sysosid.lower() != "macos":
     except KeyError:
         print("Unknown Host, contact us on github to resolve this.(Keyerror)")
         Unknown_host()
-else:
+
+    try:
+        if deid != "N/A":
+            desktops[deid.lower()]()
+    except KeyError:
+        print("Unsupported De contact me on github to resolve this.(Keyerror)")
+        Unknown_de_wm()
+
+    try:
+        if deid == "N/A":
+            windowmanagers[wmid.lower()]()
+    except KeyError:
+        print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
+        Unknown_de_wm()
+if sysosis.lower() != "macos":
+    try:
+        distros[sysosid.lower()]()
+    except KeyError:
+        print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
+        Unknown_distro()
+
+    try:
+        if cpuvendor == "AMD":
+            amdcpus[cpumodel.lower()]()
+        elif cpuvendor in ["Intel", "Pentium"]:
+            intelcpus[cpumodel.lower()]()
+    except KeyError:
+        print("unknown CPU, contact me on github to resolve this.(Keyerror)")
+        Unknown_cpu()
+
+    try:
+        gpus[gpuvendor.lower()]()
+    except KeyError:
+        print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
+        Unknown_gpu()
+
+elif sysosid.lower() == "macos":
     macos()
 
 

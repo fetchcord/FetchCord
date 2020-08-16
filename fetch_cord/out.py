@@ -270,7 +270,7 @@ if os.name != "nt":
     if not hostline:
         hostline = ""
     try:
-        if laptop and sysosid.lower() not in ['windows', 'macos']:
+        if laptop and sysosid.lower() != 'macos':
             lapordesk = "laptop"
         else:
             lapordesk = "desktop"
