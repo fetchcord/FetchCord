@@ -634,17 +634,18 @@ args = parse_args()
 
 hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude', 'G3']
 hostid = ""
-if hostline != "":
-    hostsplit = hostline[0].split()
-    hostid = []
-    for line in range(len(hostsplit)):
-        if hostsplit[line] in hostlist:
-            hostid.append(hostsplit[line].rstrip('\n'))
-    try:
-        hostid = hostid[0]
-    except IndexError:
-        hostid = ""
-        pass
+if os.name != "nt":
+    if hostline != "":
+        hostsplit = hostline[0].split()
+        hostid = []
+        for line in range(len(hostsplit)):
+            if hostsplit[line] in hostlist:
+                hostid.append(hostsplit[line].rstrip('\n'))
+        try:
+            hostid = hostid[0]
+        except IndexError:
+            hostid = ""
+            pass
 
 
 terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt"]
