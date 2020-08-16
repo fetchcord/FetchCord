@@ -482,29 +482,35 @@ def Unknown_shell():
 
 
 def iAsus():
-    global hostappid
+    global hostappid, moboid
     hostappid = "743936082780880928"
+    moboid = 'asus'
 
 def iTUF():
-    global hostappid
+    global hostappid, moboid
     hostappid = '744330890343219262'
+    moboid = 'tuf'
 
 
 def iDell():
-    global hostappid
+    global hostappid, moboid
     hostappid = "743970870631858288"
+    moboid = 'dell'
 
 def iHP():
-    global hostappid
+    global hostappid, moboid
     hostappid = "743971270395297852"
+    moboid = 'hp'
 
 def iLenovo():
-    global hostappid
+    global hostappid, moboid
     hostappid = '744326223412461630'
+    moboid = 'lenovo'
 
 def iAcer():
-    global hostappid
+    global hostappid, moboid
     hostappid = '744326890512318544'
+    moboid = 'acer'
 
 def Unknown_host():
     global hostappid
