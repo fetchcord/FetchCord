@@ -200,7 +200,7 @@ def w_cycle0():
                large_text=sysosline[0],
                small_image=moboline[0],
                small_text=moboline[0],
-               start=start_time)
+               start=0)
     if args.debug:
         print("appid: %s" % client_id)
     if args.time:
@@ -224,7 +224,7 @@ def w_cycle1():
                large_text=cpuline[0],
                small_image=gpuid,
                small_text=gpuinfo,
-               start=start_time)
+               start=0)
     if args.debug:
         print("appid: %s" % client_id)
     if args.time:
