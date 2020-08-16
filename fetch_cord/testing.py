@@ -156,7 +156,7 @@ def laporp():
         devicetype = "desktop"
 
 def macos():
-    global product, bigicon, ver, uptime
+    global product, devicetype, bigicon, ver
     if sysosid.lower() == "macos":
         devicetype = "none"
         bigicon = "none"
@@ -543,7 +543,7 @@ distros = {
     "ubuntu": iUbuntu,
     "opensuseleap": iOpenSuseLeap,
     "arch": iArch,
-    "artix": iArch,
+    "artix": iArtix,
     "fedora": iFedora,
     "void": iVoid,
     "gentoo": iGentoo,
@@ -555,7 +555,6 @@ distros = {
     "lmde": iLMDE,
     "pop!_os": iPop,
     "endeavouros": iEnde,
-    "artix": iArtix,
     "windows10": iWindows10,
     "windows7": iWindows7,
     "windows8": iWindows8,
