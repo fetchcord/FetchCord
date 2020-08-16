@@ -696,7 +696,7 @@ if sysosid.lower() not in ["macos", "windows10", "windows8", "windows7", "winodo
     except KeyError:
         print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
         Unknown_de_wm()
-if sysosis.lower() != "macos":
+if sysosid.lower() != "macos":
     try:
         distros[sysosid.lower()]()
     except KeyError:
