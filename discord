@@ -1,7 +1,0 @@
-#!/bin/bash
-/opt/Discord/Discord &
-# give discord time to start
-sleep 30
-echo "starting fetchcord"
-fetchcord
-
