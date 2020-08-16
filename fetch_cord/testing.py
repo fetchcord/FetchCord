@@ -5,7 +5,7 @@ from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
 if os.name != "nt":
-    from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline
+    from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline
 
 # appid for discord app
 appid = "none"
@@ -644,6 +644,7 @@ terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal"
 if args.terminal:
     if args.terminal in terminallist:
         termid = args.terminal
+        termline[0] = "Terminal: %s" % args.terminal
     else:
         print("\nInvalid terminal, only %s are supported.\n"
               "Please make a github issue if you would like to have your terminal added.\n"
