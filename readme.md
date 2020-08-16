@@ -76,13 +76,13 @@ NOTE: you need neofetch to be also installed for this to work.
 
 If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
 
-You can copy the discord script to somewhere in PATH to have fetchcord run upon opening discord, making sure the discord script is executable. `sudo chmod +x /path/to/discord/script`
-
 ### Run
 
-Once installed, simply run `fetchcord`.
+Once installed, simply run `fetchcord`. The program is also daemonizable meaning you can start it on boot using any method you prefer.
 
 If that does not work,add /home/$USER/.local/bin/ to your path, or just run `python3 -m fetchcord`.
+
+Optionally for `systemd` users there is a user-side `fetchcord.service` in this repo that can be installed to `~/.local/share/systemd/user/`, started and enabled on boot using `systemctl --user enable --now fetchcord`.
 
 #### Arguments
 --nodistro, Don't show distro info.

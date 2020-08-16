@@ -1,5 +1,5 @@
 # Import cool new rpc module that gives us more control and gets rid of headaches :)
-from pypresence import Presence
+from pypresence import Presence, exceptions
 import time
 import sys
 import os
@@ -48,6 +48,33 @@ if sysosid.lower() != "macos" and os.name != "nt":
 print("RPC connection successful.")
 
 
+def rpc_tryconnect():
+    while True:
+        try:
+            RPC.connect()
+            break
+        except ConnectionRefusedError:
+            print("RPC connection refused (is Discord open?); trying again in 30 seconds")
+            time.sleep(30)
+
+
+def rpc_tryclear():
+    try:
+        RPC.clear(pid=os.getpid())
+    except exceptions.InvalidID:
+        pass
+
+
+def rpc_tryupdate(state, details, large_image, large_text, small_image, small_text, start):
+    try:
+        RPC.update(state=state, details=details, large_image=large_image,
+                    large_text=large_text, small_image=small_image, small_text=small_text,
+                    start=start)
+    # ConnectionResetError is here to avoid crashing if Discord is still just starting
+    except (ConnectionResetError, exceptions.InvalidID):
+        pass
+
+
 def runmac():
     global RPC
     from fetch_cord.testing import devicetype, product, bigicon, ver
@@ -63,8 +90,8 @@ def runmac():
     time.sleep(5)
     while True:
         RPC = Presence(client_id)
-        RPC.connect()
-        RPC.update(state=packagesline[0],  # uptadte state as packages
+        rpc_tryconnect()
+        rpc_tryupdate(state=packagesline[0],  # update state as packages
                    details=kernelline[0],  # update details as kernel
                    large_image=bigicon,  # set icon
                    large_text=sysosline[0],  # set large icon text
@@ -88,8 +115,8 @@ def cycle0():
         print("cycle 0")
     client_id = appid
     RPC = Presence(client_id)
-    RPC.connect()
-    RPC.update(state=packagesline[0],
+    rpc_tryconnect()
+    rpc_tryupdate(state=packagesline[0],
                details=kernelline[0],
                large_image="big",
                large_text=sysosline[0],
@@ -116,8 +143,8 @@ def cycle1():
         print("cycle 1")
     client_id = cpuappid
     RPC = Presence(client_id)
-    RPC.connect()
-    RPC.update(state=cpuinfo,
+    rpc_tryconnect()
+    rpc_tryupdate(state=cpuinfo,
                details=gpuinfo,
                large_image="big",
                large_text=cpuinfo,
@@ -143,8 +170,8 @@ def cycle2():
         print("cycle 2")
     client_id = termappid
     RPC = Presence(client_id)
-    RPC.connect()
-    RPC.update(state=shell_line[0],
+    rpc_tryconnect()
+    rpc_tryupdate(state=shell_line[0],
                details=termfontline,
                large_image="big",
                large_text=termline[0],
@@ -169,8 +196,8 @@ def cycle3():
             print("cycle 3")
         client_id = hostappid
         RPC = Presence(client_id)
-        RPC.connect()
-        RPC.update(state=resline,
+        rpc_tryconnect()
+        rpc_tryupdate(state=resline,
                 details=hostline[0],
                 large_image="big",
                 large_text=hostline[0],
@@ -196,8 +223,8 @@ def w_cycle0():
         print("cycle 0")
     client_id = appid
     RPC = Presence(client_id)
-    RPC.connect()
-    RPC.update(state=sysosline[0],
+    rpc_tryconnect()
+    rpc_tryupdate(state=sysosline[0],
                details=memline[0],
                large_image="big",
                large_text=sysosline[0],
@@ -220,8 +247,8 @@ def w_cycle1():
         print("cycle 1")
     client_id = cpuappid
     RPC = Presence(client_id)
-    RPC.connect()
-    RPC.update(state=cpuinfo,
+    rpc_tryconnect()
+    rpc_tryupdate(state=cpuinfo,
                details=gpuinfo,
                large_image="big",
                large_text=cpuinfo,
@@ -244,16 +271,16 @@ def loonix():
         while True:
             if not args.nodistro:
                 cycle0()
-                RPC.clear(pid=os.getpid())
+                rpc_tryclear()
             if not args.nohardware:
                 cycle1()
-                RPC.clear(pid=os.getpid())
+                rpc_tryclear()
             if not args.noshell:
                 cycle2()
-                RPC.clear(pid=os.getpid())
+                rpc_tryclear()
             if not args.nohost:
                 cycle3()
-                RPC.clear(pid=os.getpid())
+                rpc_tryclear()
     except KeyboardInterrupt:
         print("Closing connection.")
         sys.exit(0)
@@ -264,10 +291,10 @@ def wandowz():
         while True:
             if not args.nodistro:
                 w_cycle0()
-                RPC.clear(pid=os.getpid())
+                rpc_tryclear()
             if not args.nohardware:
                 w_cycle1()
-                RPC.clear(pid=os.getpid())
+                rpc_tryclear()
     except KeyboardInterrupt:
         print("Closing connection.")
         sys.exit(0)
