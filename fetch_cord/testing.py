@@ -103,7 +103,7 @@ def iEnde():
 
 def iNixOS():
     global appid
-    appid = '742887089179197462'
+    appid = '744644133494325329'
 
 
 def iWindows10():
