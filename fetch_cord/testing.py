@@ -618,6 +618,7 @@ shells = {
 }
 hosts= {
     "inspiron": iDell,
+    "latitude": iDell,
     "hp": iHP,
     "tuf": iTUF,
     "asus": iAsus,
@@ -628,7 +629,7 @@ hosts= {
 
 args = parse_args()
 
-hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo']
+hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude']
 hostid = ""
 if hostline != "":
     hostsplit = hostline[0].split()
