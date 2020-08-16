@@ -619,6 +619,7 @@ shells = {
 hosts= {
     "inspiron": iDell,
     "latitude": iDell,
+    "g3": iDell,
     "hp": iHP,
     "tuf": iTUF,
     "asus": iAsus,
@@ -629,7 +630,7 @@ hosts= {
 
 args = parse_args()
 
-hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude']
+hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude', 'G3']
 hostid = ""
 if hostline != "":
     hostsplit = hostline[0].split()
@@ -694,7 +695,7 @@ if sysosid.lower() != "macos":
         print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
         Unknown_shell()
     try:
-        if hostid != "" and sysosid.lower() != "macos":
+        if sysosid.lower() != "macos":
             hosts[hostid.lower()]()
     except KeyError:
         print("Unknown Host, contact us on github to resolve this.(Keyerror)")
