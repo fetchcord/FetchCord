@@ -636,7 +636,10 @@ if hostline != "":
     for line in range(len(hostsplit)):
         if hostsplit[line] in hostlist:
             hostid.append(hostsplit[line].rstrip('\n'))
-    hostid = hostid[0]
+    try:
+        hostid = hostid[0]
+    except IndexError:
+        pass
     if args.debug:
         print("hostsplit: %s" % hostsplit)
         print("hostid: %s" % hostid)
