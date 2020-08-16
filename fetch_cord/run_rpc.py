@@ -17,9 +17,10 @@ args = parse_args()
 
 
 def main():
-    if hostline == "" and args.nodistro and args.noshell and args.nohardware:
-        print("ERROR: no hostline is available!")
-        sys.exit(1)
+    if os.name != "nt":
+        if hostline == "" and args.nodistro and args.noshell and args.nohardware:
+            print("ERROR: no hostline is available!")
+            sys.exit(1)
     # printing info with debug switch
     if args.debug:
         print("run-rpc")
