@@ -650,6 +650,7 @@ if os.name == "nt":
         try:
             moboid = moboid[0]
         except IndexError:
+            moboid = ""
             pass
 
 
