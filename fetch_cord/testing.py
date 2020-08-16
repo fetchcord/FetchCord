@@ -639,6 +639,7 @@ if hostline != "":
     try:
         hostid = hostid[0]
     except IndexError:
+        hostid = ""
         pass
     if args.debug:
         print("hostsplit: %s" % hostsplit)
