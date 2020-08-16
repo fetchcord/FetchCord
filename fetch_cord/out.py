@@ -256,9 +256,9 @@ if termfontline and args.termfont:
 elif not termfontline:
     termfontline = []
     if args.termfont:
-        termfontline.append("Terminal Font: " + args.termfont)
+        termfontline = "Font: " + args.termfont
     else:
-        termfontline.append("Terminal Font: N/A")
+        termfontline = "Font: N/A"
 if deline:
     deid = deline[0].split()[1]
 else:
