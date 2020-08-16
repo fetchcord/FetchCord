@@ -245,6 +245,11 @@ kernelid = kernelline[0].split()[1]
 sysosid = sysosline[0].split()[1]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
+if termfontline:
+    termfontsplit = termfontline[0].split()[-2:]
+    s=' '.join(termfontsplit)
+    print(termfontsplit)
+    termfontline = s
 if termfontline and args.termfont:
     print("Custom terminal font not set because a terminal font already exists, %s" %
           termfontline[0])
@@ -253,7 +258,7 @@ elif not termfontline:
     if args.termfont:
         termfontline.append("Terminal Font: " + args.termfont)
     else:
-        termfontline.append("Terminal font: N/A")
+        termfontline.append("Terminal Font: N/A")
 if deline:
     deid = deline[0].split()[1]
 else:
@@ -283,7 +288,7 @@ if args.debug:
     print("out")
     try:
         print("deid %s" % deid)
-        print("termfontline item 0: %s" % termfontline[0])
+        print("termfontline: %s" % termfontline)
     except NameError:
         pass
     print("sysosline: %s" % sysosline)

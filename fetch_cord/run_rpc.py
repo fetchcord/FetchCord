@@ -136,7 +136,7 @@ def cycle2():
     RPC = Presence(client_id)
     RPC.connect()
     RPC.update(state=shell_line[0],
-               details=termfontline[0],
+               details=termfontline,
                large_image="big",
                large_text=termline[0],
                small_image=shellid,
