@@ -226,63 +226,64 @@ elif cpuvendor == "AMD":
 # fuck you intel
 elif cpuvendor == "Pentium":
     cpumodel = cpuline[0].split()[1]
-if wmline:
-    wmid = wmline[0].split()[1]
-else:
-    wmid = "N/A"
-termid = ""
-try:
-    if termline:
-        termid = termline[0].split()[1]
-    else:
-        termid = "N/A"
-        termline = ["N/A"]
-except IndexError:
-    pass
 
-shellid = shell_line[0].split()[1]
-kernelid = kernelline[0].split()[1]
+if os.name != "nt":
+    if wmline:
+        wmid = wmline[0].split()[1]
+    else:
+        wmid = "N/A"
+    termid = ""
+    try:
+        if termline:
+            termid = termline[0].split()[1]
+        else:
+            termid = "N/A"
+            termline = ["N/A"]
+    except IndexError:
+        pass
+    shellid = shell_line[0].split()[1]
+    if termfontline:
+        termfontsplit = termfontline[0].split()[-2:]
+        s=' '.join(termfontsplit)
+        print(termfontsplit)
+        termfontline = s
+    if termfontline and args.termfont:
+        print("Custom terminal font not set because a terminal font already exists, %s" %
+            termfontline[0])
+    elif not termfontline:
+        if args.termfont:
+            termfontline = "Font: " + args.termfont
+        else:
+            termfontline = "Font: N/A"
+    if deline:
+        deid = deline[0].split()[1]
+    else:
+        deid = "N/A"
+    dewmid = ""
+    if deline and wmline:
+        dewmid = deline[0] + ' ' + wmline[0]
+    elif deline and not wmline:
+        dewmid = deline[0]
+    elif wmline and not deline:
+        dewmid = wmline[0]
+    lapordesk = ""
+    if not hostline:
+        hostline = ""
+    try:
+        if laptop and sysosid.lower() not in ['windows', 'macos']:
+            lapordesk = "laptop"
+        else:
+            lapordesk = "desktop"
+    except NameError:
+        pass
+    if not resline:
+        resline = "Resolution: N/A"
+    else:
+        resline = resline[0]
+    kernelid = kernelline[0].split()[1]
 sysosid = sysosline[0].split()[1]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
-if termfontline:
-    termfontsplit = termfontline[0].split()[-2:]
-    s=' '.join(termfontsplit)
-    print(termfontsplit)
-    termfontline = s
-if termfontline and args.termfont:
-    print("Custom terminal font not set because a terminal font already exists, %s" %
-          termfontline[0])
-elif not termfontline:
-    if args.termfont:
-        termfontline = "Font: " + args.termfont
-    else:
-        termfontline = "Font: N/A"
-if deline:
-    deid = deline[0].split()[1]
-else:
-    deid = "N/A"
-dewmid = ""
-if deline and wmline:
-    dewmid = deline[0] + ' ' + wmline[0]
-elif deline and not wmline:
-    dewmid = deline[0]
-elif wmline and not deline:
-    dewmid = wmline[0]
-lapordesk = ""
-if not hostline:
-    hostline = ""
-try:
-    if laptop and sysosid.lower() not in ['windows', 'macos']:
-        lapordesk = "laptop"
-    else:
-        lapordesk = "desktop"
-except NameError:
-    pass
-if not resline:
-    resline = "Resolution: N/A"
-else:
-    resline = resline[0]
 if args.debug:
     print("out")
     try:
@@ -299,13 +300,14 @@ if args.debug:
     print("gpuinfo %s" % gpuinfo)
     print("gpuvendor: %s" % gpuvendor)
     print("nvidiagpuline: %s" % nvidiagpuline)
-    print("wmid: %s" % wmid)
-    print("termid: %s" % termid)
     print("cpuvendor %s" % cpuvendor)
     print("cpumodel %s" % cpumodel)
-    print("packagesline item 0: %s" % packagesline[0])
     print("cpuline item 0: %s" % cpuline[0])
-    print("termline item 0: %s" % termline[0])
+    if os.name != "nt":
+        print("wmid: %s" % wmid)
+        print("termid: %s" % termid)
+        print("termline item 0: %s" % termline[0])
+        print("packagesline item 0: %s" % packagesline[0])
     print("sysosid: %s" % sysosid)
     print("sysosline item 0: %s" % sysosline[0])
     try:
