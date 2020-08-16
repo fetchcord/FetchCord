@@ -50,12 +50,12 @@
 
 - [x] Add Windows support.
 
+- [x] Detect Window Manager/Desktop Environment version
+
 
 ### To-Do
 
 - [ ] Add more distributions (If your distro is not supported open an issue)
-
-- [ ] Detect Window Manager/Desktop Environment version
 
 - [ ] Add Snap support
 
