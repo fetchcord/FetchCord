@@ -45,7 +45,11 @@
 - [x] Detecting Window Manager/Desktop Environment
 
 - [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
+
 - [x] Flatpak support
+
+- [x] Add Windows support.
+
 
 ### To-Do
 
@@ -60,8 +64,6 @@
 - [ ] More CPUs, ex. Pentium, Older AMD CPUs
 
 - [ ] More GPUs?
-
-- [ ] Add Windows support. [WIP]
 
 
 ## Installing on (GNU/)Linux
