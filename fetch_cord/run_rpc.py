@@ -218,10 +218,10 @@ def w_cycle1():
     client_id = cpuappid
     RPC = Presence(client_id)
     RPC.connect()
-    RPC.update(state=cpuline[0],
+    RPC.update(state=cpuinfo,
                details=gpuinfo,
                large_image="big",
-               large_text=cpuline[0],
+               large_text=cpuinfo,
                small_image=gpuid,
                small_text=gpuinfo,
                start=1)
