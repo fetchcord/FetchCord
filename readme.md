@@ -26,7 +26,7 @@
  + **Running**
     - [Running on (gnu/)linux](#run)
        - [Arguments](#arguments)
-    - [Running on MacOS](#run1)
+    - [Running on MacOS](#run-1)
 
 - [**Examples**](#examples)
 
