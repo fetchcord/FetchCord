@@ -25,9 +25,10 @@ def main():
     if args.debug:
         print("run-rpc")
         print(uptime)
-        print(packagesline[0])
         print(appid)
         print(gpuid)
+        if os.name != "nt":
+            print(packagesline[0])
     if sysosid.lower() == "macos":
         runmac()
     elif sysosid.lower() in ["windows10", "windows7", "windows8.1", "windows8"]:
