@@ -533,6 +533,7 @@ intelcpus = {
 }
 gpus = {
     "intel": Intelgpu,
+    "intel(r)": Intelgpu,
     "nvidia": Nvidiagpu,
     "amd": Amdgpu,
     "radeon": Amdgpu,
@@ -748,6 +749,9 @@ if args.debug:
         print("termid: %s" % termid)
         print("shellid: %s" % shellid)
         print("hostid: %s" % hostid)
+    elif os.name == "nt":
+        print("moboid: %s" % moboid)
+        print("moboline: %s" % moboline)
     print("cpumodel: %s" % cpumodel)
     print("gpuvendor: %s" % gpuvendor)
 
