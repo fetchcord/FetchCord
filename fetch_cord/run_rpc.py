@@ -3,16 +3,19 @@ from pypresence import Presence
 import time
 import sys
 import os
+import psutil
 # import info about system
 from fetch_cord.args import parse_args
-from fetch_cord.testing import uptime, gpuid, appid, cpuappid
+from fetch_cord.testing import gpuid, appid, cpuappid
 if os.name != "nt":
-    from fetch_cord.testing import uptime, desktopid, termappid, hostappid
+    from fetch_cord.testing import desktopid, termappid, hostappid
     from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, termfontline, \
         dewmid, termline, lapordesk, hostline, resline
 from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo
 if os.name == "nt":
     from fetch_cord.out import moboline, memline
+
+uptime = psutil.boot_time()
 args = parse_args()
 
 
@@ -31,7 +34,7 @@ def main():
             print(packagesline[0])
     if sysosid.lower() == "macos":
         runmac()
-    elif sysosid.lower() in ["windows10", "windows7", "windows8.1", "windows8"]:
+    elif os.name == "nt":
         wandowz()
     else:
         loonix()
@@ -46,7 +49,7 @@ print("RPC connection successful.")
 
 
 def runmac():
-    from fetch_cord.testing import devicetype, product, bigicon, ver, uptime
+    from fetch_cord.testing import devicetype, product, bigicon, ver
     client_id = '740822755376758944'  # macos appid for discord rpc
     if args.debug:
         print("runmac")
@@ -57,7 +60,6 @@ def runmac():
         print("uptime: %s" % uptime)
         print("client_id: %s" % client_id)
     time.sleep(5)
-    start_time = float(uptime[:-1])
     while True:
         RPC = Presence(client_id)
         RPC.connect()
@@ -200,7 +202,7 @@ def w_cycle0():
                large_text=sysosline[0],
                small_image=moboline[0],
                small_text=moboline[0],
-               start=1)
+               start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
     if args.time:
@@ -224,7 +226,7 @@ def w_cycle1():
                large_text=cpuinfo,
                small_image=gpuid,
                small_text=gpuinfo,
-               start=1)
+               start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
     if args.time:

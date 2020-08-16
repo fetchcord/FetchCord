@@ -13,13 +13,6 @@ appid = "none"
 # number of packages
 packages = "none"
 
-# find out uptime for epoch time
-uptime = ""
-if not sysosid.lower() == "macos" and os.name != "nt":
-    uptime = exec_bash("cat /proc/stat | grep btime | awk '{print $2}'")
-if sysosid.lower() in ["windows10", "windows7", "windows8", "windows8.1"]:
-    uptime = os.popen("wmic os get lastbootuptime").read()
-
 # predefine ids
 cpuid = "none"
 cpuappid = "none"
@@ -168,7 +161,6 @@ def macos():
         devicetype = "none"
         bigicon = "none"
         ver = os.popen("sw_vers -productVersion").read()
-        uptime = os.popen("sysctl -n kern.boottime").read().split()[3]
         product = os.popen("sysctl -n hw.model").read()
         try:
             versions[ver[0:5]]()
