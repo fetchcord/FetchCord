@@ -254,7 +254,6 @@ if termfontline and args.termfont:
     print("Custom terminal font not set because a terminal font already exists, %s" %
           termfontline[0])
 elif not termfontline:
-    termfontline = []
     if args.termfont:
         termfontline = "Font: " + args.termfont
     else:
