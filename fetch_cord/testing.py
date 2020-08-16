@@ -510,6 +510,10 @@ def Unknown_host():
     global hostappid
     hostappid = "742887089179197462"
 
+def Unknown_mobo():
+    global moboid
+    moboid = "unknown"
+
 
 amdcpus = {
     "ryzen 3": Ryzen3,
@@ -650,7 +654,7 @@ if os.name == "nt":
         try:
             moboid = moboid[0]
         except IndexError:
-            moboid = "none"
+            moboid = ""
             pass
 
 
@@ -730,7 +734,7 @@ if os.name == "nt":
         hosts[moboid.lower()]()
     except KeyError:
         print("Unknown Host, contact us on github to resolve this problem.(Keyerror)")
-        Unknown_host()
+        Unknown_mobo()
 
 elif sysosid.lower() == "macos":
     macos()
