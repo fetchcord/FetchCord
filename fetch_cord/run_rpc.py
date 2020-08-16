@@ -191,7 +191,7 @@ def w_cycle0():
     global RPC
     if args.debug:
         print("cycle 0")
-    client_id = termappid
+    client_id = appid
     RPC = Presence(client_id)
     RPC.connect()
     RPC.update(state=sysosline[0],
@@ -215,7 +215,7 @@ def w_cycle1():
     global RPC
     if args.debug:
         print("cycle 1")
-    client_id = termappid
+    client_id = cpuappid
     RPC = Presence(client_id)
     RPC.connect()
     RPC.update(state=cpuline[0],
