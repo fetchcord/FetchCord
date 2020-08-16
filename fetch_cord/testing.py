@@ -725,10 +725,12 @@ elif sysosid.lower() == "macos":
 
 if args.debug:
     print("testing")
-    print("deid: %s" % deid)
-    print("wmid: %s" % wmid)
+    if os.name != "nt":
+        print("deid: %s" % deid)
+        print("wmid: %s" % wmid)
+        print("termid: %s" % termid)
+        print("shellid: %s" % shellid)
+        print("hostid: %s" % hostid)
     print("cpumodel: %s" % cpumodel)
     print("gpuvendor: %s" % gpuvendor)
-    print("termid: %s" % termid)
-    print("shellid: %s" % shellid)
-    print("hostid: %s" % hostid)
+
