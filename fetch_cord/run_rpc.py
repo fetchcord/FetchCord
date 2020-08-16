@@ -49,6 +49,7 @@ print("RPC connection successful.")
 
 
 def runmac():
+    global RPC
     from fetch_cord.testing import devicetype, product, bigicon, ver
     client_id = '740822755376758944'  # macos appid for discord rpc
     if args.debug:

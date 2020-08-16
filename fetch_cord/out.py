@@ -210,7 +210,7 @@ if vmwaregpuline:
     gpuinfo = vmwaregpuline[0]
     gpuvendor = vmwaregpuline[0].split()[1]
 if virtiogpuline:
-    gpuinfo = vitriogpuline[0]
+    gpuinfo = virtiogpuline[0]
     gpuvendor = virtiogpuline[0].split()[2:3].join()
 
 cpusplit = cpuline[0].split()[:-1]
