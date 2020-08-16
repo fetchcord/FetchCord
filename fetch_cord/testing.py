@@ -643,6 +643,19 @@ if hostline != "":
     except IndexError:
         hostid = ""
         pass
+
+
+terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt"]
+if args.terminal:
+    if args.terminal in terminallist:
+        termid = args.terminal
+    else:
+        print("\nInvalid terminal, only %s are supported.\n"
+              "Please make a github issue if you would like to have your terminal added.\n"
+              "https://github.com/MrPotatoBobx/FetchCord" % terminallist)
+        sys.exit(1)
+
+
     if args.debug:
         print("hostsplit: %s" % hostsplit)
         print("hostid: %s" % hostid)
@@ -703,16 +716,6 @@ if sysosid.lower() != "macos":
 else:
     macos()
 
-
-terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt"]
-if args.terminal:
-    if args.terminal in terminallist:
-        termid = args.terminal
-    else:
-        print("\nInvalid terminal, only %s are supported.\n"
-              "Please make a github issue if you would like to have your terminal added.\n"
-              "https://github.com/MrPotatoBobx/FetchCord" % terminallist)
-        sys.exit(1)
 
 if args.debug:
     print("testing")
