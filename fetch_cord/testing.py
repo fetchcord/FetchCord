@@ -628,7 +628,7 @@ hosts= {
 
 args = parse_args()
 
-hostlist = ['Acer', 'TUF', 'HP', 'Thinkpad', 'Inspiron', 'Lenovo']
+hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo']
 hostid = ""
 if hostline != "":
     hostsplit = hostline[0].split()

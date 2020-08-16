@@ -29,7 +29,7 @@ neofetchwin = ""
 if os.name == "nt":
     neofetchwin = os.popen("neofetch --noart").read()
 else:
-    home = exec_bash("echo $HOME")
+    home = os.getenv('HOME')
     if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
         try:
             print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
