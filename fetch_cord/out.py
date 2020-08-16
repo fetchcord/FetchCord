@@ -38,8 +38,8 @@ else:
         except BashError as e:
             print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
 
-# use default neofetch output, ignoring user config
-baseinfo = exec_bash("neofetch --stdout --config none")
+    # use default neofetch output, ignoring user config
+    baseinfo = exec_bash("neofetch --stdout --config none")
 
 # make lists
 cpu = "CPU:"
