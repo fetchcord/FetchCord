@@ -79,7 +79,7 @@ hostline= []
 res = "Resolution:"
 resline = []
 if neofetchwin != "":
-    filepath = "%userprofile%\\AppData\\Local\\Temp"
+    filepath = "AppData\\Local\\Temp\\tmp.txt"
     with open(filepath, 'w') as f:
         print(neofetchwin, file=f)
     with open(filepath, 'rt') as f:
