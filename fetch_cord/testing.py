@@ -623,6 +623,7 @@ hosts= {
     "hp": iHP,
     "tuf": iTUF,
     "asus": iAsus,
+    "asustek": iAsus,
     "acer": iAcer,
     "thinkpad": iLenovo,
     "lenovo": iLenovo,
@@ -630,7 +631,7 @@ hosts= {
 
 args = parse_args()
 
-hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude', 'G3']
+hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude', 'G3', 'Asus', 'ASUSTeK']
 hostid = ""
 if os.name != "nt":
     if hostline != "":
