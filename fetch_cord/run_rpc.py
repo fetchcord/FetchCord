@@ -14,6 +14,7 @@ if os.name != "nt":
 from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo
 if os.name == "nt":
     from fetch_cord.out import moboline, memline
+    from fetch_cord.testing import moboid
 
 uptime = psutil.boot_time()
 args = parse_args()
@@ -227,7 +228,7 @@ def w_cycle0():
                details=memline[0],
                large_image="big",
                large_text=sysosline[0],
-               small_image=moboline[0],
+               small_image=moboid,
                small_text=moboline[0],
                start=start_time)
     if args.debug:

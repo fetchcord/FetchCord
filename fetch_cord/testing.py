@@ -6,6 +6,8 @@ from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
 if os.name != "nt":
     from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline
+elif os.name == "nt":
+    from fetch_cord.out import moboline
 
 # appid for discord app
 appid = "none"
@@ -637,6 +639,18 @@ if os.name != "nt":
         except IndexError:
             hostid = ""
             pass
+moboid = ""
+if os.name == "nt":
+    if moboline != "":
+        mobosplit = moboline[0].split()
+        moboid = []
+        for line in range(len(mobosplit)):
+            if mobosplit[line] in hostlist:
+                moboid.append(mobosplit[line].rstrip('\n'))
+        try:
+            moboid = moboid[0]
+        except IndexError:
+            pass
 
 
 terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt"]
@@ -710,6 +724,12 @@ if sysosid.lower() != "macos":
     except KeyError:
         print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
         Unknown_gpu()
+if os.name == "nt":
+    try:
+        hosts[moboid.lower()]()
+    except KeyError:
+        print("Unknown Host, contact us on github to resolve this problem.(Keyerror)")
+        Unknown_host()
 
 elif sysosid.lower() == "macos":
     macos()
