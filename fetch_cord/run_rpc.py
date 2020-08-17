@@ -85,17 +85,20 @@ def runmac():
         print("ver: %s" % ver)
         print("uptime: %s" % uptime)
         print("client_id: %s" % client_id)
-    time.sleep(5)
-    while True:
-        RPC = Presence(client_id)
-        rpc_tryconnect()
-        rpc_tryupdate(state=packagesline[0],  # update state as packages
-                   details=kernelline[0],  # update details as kernel
-                   large_image=bigicon,  # set icon
-                   large_text=sysosline[0],  # set large icon text
-                   small_image=devicetype,  # set small image icon
-                   small_text=product,  # set small image text
-                   start=start_time)
+    RPC = Presence(client_id)
+    rpc_tryconnect()
+    rpc_tryupdate(state=packagesline[0],  # update state as packages
+                details=kernelline[0],  # update details as kernel
+                large_image=bigicon,  # set icon
+                large_text=sysosline[0],  # set large icon text
+                small_image=devicetype,  # set small image icon
+                small_text=product,  # set small image text
+                start=start_time)
+    if args.time:
+        custom_time()
+    elif args.nohost and args.nohardware and args.noshell:
+        time.sleep(9999)
+    else:
         time.sleep(30)
 
 
