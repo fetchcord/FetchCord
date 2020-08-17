@@ -224,7 +224,7 @@ if cpuvendor == "Intel":
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 # fuck you intel
-elif cpuvendor == "Pentium":
+elif cpuvendor in ["Pentium", "Qualcomm"]:
     cpumodel = cpuline[0].split()[1]
 
 if os.name != "nt":
@@ -282,7 +282,7 @@ if os.name != "nt":
         resline = resline[0]
     kernelid = kernelline[0].split()[1]
 sysosid = sysosline[0].split()[1]
-if sysosid.lower() in ['windows', 'linux', 'opensuse']:
+if sysosid.lower() in ['windows', 'linux', 'opensuse', 'android']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
 if args.debug:
     print("out")

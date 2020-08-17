@@ -103,6 +103,10 @@ def iNixOS():
     global appid
     appid = '742887089179197462'
 
+def iAndroid9():
+    global appid
+    appid = '744983961804996779'
+
 
 def iWindows10():
     global appid
@@ -575,6 +579,7 @@ distros = {
     "windows8": iWindows8,
     "windows8.1": iWindows8_1,
     "nixos": iNixOS,
+    "android9": iAndroid9,
 }
 versions = {
     "10.13": iHsiera,
@@ -639,7 +644,7 @@ hosts = {
 args = parse_args()
 
 hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad',
-            'Inspiron', 'Lenovo', 'Latitude', 'G3']
+            'Inspiron', 'Lenovo', 'Latitude', 'G3', 'samsung']
 hostid = ""
 if os.name != "nt":
     if hostline != "":
@@ -672,7 +677,7 @@ if args.terminal:
 
 
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
-if sysosid.lower() not in ["macos", "windows10", "windows8", "windows7", "winodows8.1"]:
+if sysosid.lower() not in ["macos", "windows10", "windows8", "windows7", "winodows8.1", "android9"]:
     try:
         terminals[termid.lower()]()
     except KeyError:
@@ -691,19 +696,27 @@ if sysosid.lower() not in ["macos", "windows10", "windows8", "windows7", "winodo
         print("Unknown Host, contact us on github to resolve this.(Keyerror)")
         Unknown_host()
 
-    try:
-        if deid != "N/A":
-            desktops[deid.lower()]()
-    except KeyError:
-        print("Unsupported De contact me on github to resolve this.(Keyerror)")
-        Unknown_de_wm()
+    if sysosid.lower() != "android9":
+        try:
+            if deid != "N/A":
+                desktops[deid.lower()]()
+        except KeyError:
+            print("Unsupported De contact me on github to resolve this.(Keyerror)")
+            Unknown_de_wm()
 
-    try:
-        if deid == "N/A":
-            windowmanagers[wmid.lower()]()
-    except KeyError:
-        print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
-        Unknown_de_wm()
+        try:
+            if deid == "N/A":
+                windowmanagers[wmid.lower()]()
+        except KeyError:
+            print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
+            Unknown_de_wm()
+
+        try:
+            gpus[gpuvendor.lower()]()
+        except KeyError:
+            print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
+            Unknown_gpu()
+
 if sysosid.lower() != "macos":
     try:
         distros[sysosid.lower()]()
@@ -717,15 +730,11 @@ if sysosid.lower() != "macos":
             amdcpus[cpumodel.lower()]()
         elif cpuvendor in ["Intel", "Pentium"]:
             intelcpus[cpumodel.lower()]()
+        elif cpuvendor == "Qualcomm":
+            qc_cpus[cpumodel.lower()]()
     except KeyError:
         print("unknown CPU, contact me on github to resolve this.(Keyerror)")
         Unknown_cpu()
-
-    try:
-        gpus[gpuvendor.lower()]()
-    except KeyError:
-        print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
-        Unknown_gpu()
 
 elif sysosid.lower() == "macos":
     macos()
