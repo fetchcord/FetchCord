@@ -698,14 +698,14 @@ if os.name != "nt":
         Unknown_host()
 
     try:
-        if deid != "N/A":
+        if deid != "N/A" and sysosid.lower() != "macos":
             desktops[deid.lower()]()
     except KeyError:
         print("Unsupported De contact me on github to resolve this.(Keyerror)")
         Unknown_de_wm()
 
     try:
-        if deid == "N/A":
+        if deid == "N/A" and sysosid.lower() != "macos":
             windowmanagers[wmid.lower()]()
     except KeyError:
         print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
