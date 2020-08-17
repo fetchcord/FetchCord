@@ -270,7 +270,7 @@ def w_cycle1():
 def loonix():
     try:
         while True:
-            if not args.nodistro and sysosid.lower() != "macos":
+            if not args.nodistro:
                 cycle0()
                 rpc_tryclear()
             if not args.nohardware:

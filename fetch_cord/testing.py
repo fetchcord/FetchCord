@@ -117,6 +117,9 @@ def iWindows8():
     global appid
     appid = '741952179488948324'
 
+def imacOS():
+    global appid
+    appid = '740822755376758944'
 
 def iWindows7():
     global appid
@@ -567,6 +570,7 @@ distros = {
     "windows8": iWindows8,
     "windows8.1": iWindows8_1,
     "nixos": iNixOS,
+    "macos": imacOS,
 }
 versions = {
     "10.13": iHsiera,
@@ -712,8 +716,7 @@ if os.name != "nt":
         Unknown_de_wm()
 
     try:
-        if sysosid.lower() != "macos":
-            distros[sysosid.lower()]()
+        distros[sysosid.lower()]()
     except KeyError:
         print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
         Unknown_distro()
