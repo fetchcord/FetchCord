@@ -99,6 +99,8 @@ Optionally for `systemd` users there is a user-side `fetchcord.service` in this 
 
 --termfont, set custom terminal font (useful if neofetch can't get it).
 
+--pause-cycle, Extra cycle that pauses FetchCord to show other activities.
+
 --update, Update database of distros, hardware, etc.
 
 --debug, For debug logs.

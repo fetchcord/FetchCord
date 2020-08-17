@@ -218,6 +218,16 @@ def cycle3():
         loonix()
 
 
+def pause():
+    if args.debug:
+        print("pause_cycle")
+    client_id = hostappid
+    if args.time:
+        custom_time()
+    else:
+        time.sleep(30)
+
+
 def w_cycle0():
     global RPC
     if args.debug:
@@ -284,6 +294,9 @@ def loonix():
                 rpc_tryclear()
             if sysosid.lower() == "macos":
                 runmac()
+                rpc_tryclear()
+            if args.pause_cycle:
+                pause()
                 rpc_tryclear()
     except KeyboardInterrupt:
         print("Closing connection.")
