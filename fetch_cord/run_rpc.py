@@ -33,9 +33,7 @@ def main():
         print(gpuid)
         if os.name != "nt":
             print(packagesline[0])
-    if sysosid.lower() == "macos":
-        runmac()
-    elif os.name == "nt":
+    if os.name == "nt":
         wandowz()
     else:
         loonix()
