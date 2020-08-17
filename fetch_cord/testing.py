@@ -128,6 +128,9 @@ def Unknown_distro():
     global appid
     appid = '742887089179197462'
 
+def Iandroid(): 
+    pass
+
 # MacOS versions
 
 
