@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name='FetchCord',
-    version=2.5,
+    version='2.5.1',
     description='grabs information about your Distro and displays it as Discord Rich Presence.',
     long_description=open(
         join(dirname(__file__), 'readme.md')).read(),
@@ -14,7 +14,7 @@ setuptools.setup(
     author_email='junkahole23@protonmail.com',
     license='MIT',
     packages=['fetch_cord'],
-    install_requires=['pypresence'],
+    install_requires=['pypresence', 'psutil'],
     keywords=['distro', 'info', 'discord', 'fetch'],
     classifiers=[
         'License :: OSI Approved :: MIT License',
