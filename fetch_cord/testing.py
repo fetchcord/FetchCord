@@ -128,7 +128,8 @@ def Unknown_distro():
     global appid
     appid = '742887089179197462'
 
-def Iandroid(): 
+
+def Iandroid():
     pass
 
 # MacOS versions
@@ -157,6 +158,7 @@ def laporp():
         devicetype = "laptop"
     else:
         devicetype = "desktop"
+
 
 def macos():
     global product, bigicon, ver, uptime
@@ -220,6 +222,7 @@ def iUnity():
     else:
         desktopid = wmid
 
+
 def iPantheon():
     global desktopid
     desktopid = "pantheon"
@@ -260,6 +263,7 @@ def iXmonad():
 def iBspwm():
     global desktopid
     desktopid = "bspwm"
+
 
 def iSway():
     global desktopid
@@ -439,6 +443,7 @@ def Coolretroterm():
     global termappid
     termappid = '741731097498353794'
 
+
 def Urxvt():
     global termappid
     termappid = '743246048968835092'
@@ -447,6 +452,7 @@ def Urxvt():
 def Fetchcord():
     global termappid
     termappid = '742096605502767235'
+
 
 def Xfce4_terminal():
     global termappid
@@ -486,6 +492,7 @@ def iAsus():
     global hostappid
     hostappid = "743936082780880928"
 
+
 def iTUF():
     global hostappid
     hostappid = '744330890343219262'
@@ -495,17 +502,21 @@ def iDell():
     global hostappid
     hostappid = "743970870631858288"
 
+
 def iHP():
     global hostappid
     hostappid = "743971270395297852"
+
 
 def iLenovo():
     global hostappid
     hostappid = '744326223412461630'
 
+
 def iAcer():
     global hostappid
     hostappid = '744326890512318544'
+
 
 def Unknown_host():
     global hostappid
@@ -613,7 +624,7 @@ shells = {
     "zsh": Zsh,
     "bash": Bash,
 }
-hosts= {
+hosts = {
     "inspiron": iDell,
     "latitude": iDell,
     "g3": iDell,
@@ -627,7 +638,8 @@ hosts= {
 
 args = parse_args()
 
-hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude', 'G3']
+hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad',
+            'Inspiron', 'Lenovo', 'Latitude', 'G3']
 hostid = ""
 if os.name != "nt":
     if hostline != "":
@@ -643,7 +655,8 @@ if os.name != "nt":
             pass
 
 
-terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt"]
+terminallist = ["st", "kitty", "alacritty", "xterm",
+                "konsole", "gnome-terminal", "cool-retro-term", "urxvt"]
 if args.terminal:
     if args.terminal in terminallist:
         termid = args.terminal
@@ -652,7 +665,6 @@ if args.terminal:
               "Please make a github issue if you would like to have your terminal added.\n"
               "https://github.com/MrPotatoBobx/FetchCord" % terminallist)
         sys.exit(1)
-
 
     if args.debug:
         print("hostsplit: %s" % hostsplit)
@@ -696,7 +708,8 @@ if sysosid.lower() != "macos":
     try:
         distros[sysosid.lower()]()
     except KeyError:
-        print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
+        print(
+            "Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
         Unknown_distro()
 
     try:
@@ -728,4 +741,3 @@ if args.debug:
         print("hostid: %s" % hostid)
     print("cpumodel: %s" % cpumodel)
     print("gpuvendor: %s" % gpuvendor)
-
