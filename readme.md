@@ -101,6 +101,8 @@ Optionally for `systemd` users there is a user-side `fetchcord.service` in this 
 
 --update, Update database of distros, hardware, etc.
 
+--debug, For debug logs.
+
 -h or --help, shows this information above.
 
 ## Installing on MacOS
