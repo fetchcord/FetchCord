@@ -102,6 +102,10 @@ def iNixOS():
     global appid
     appid = '744644133494325329'
 
+def IinstantOS():
+    global appid
+    appid = '744784599653285938'
+
 
 def iWindows10():
     global appid
@@ -567,6 +571,7 @@ distros = {
     "windows8": iWindows8,
     "windows8.1": iWindows8_1,
     "nixos": iNixOS,
+    "instantos": IinstantOS,
 }
 versions = {
     "10.13": iHsiera,
