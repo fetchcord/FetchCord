@@ -16,7 +16,7 @@ from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo
 if os.name == "nt":
     from fetch_cord.out import moboline, memline
 
-if sysosid.lower() != "android":
+if sysosid.lower() != "android9":
     uptime = psutil.boot_time()
 else:
     uptime = uptime.uptime()

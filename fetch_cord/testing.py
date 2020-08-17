@@ -352,6 +352,11 @@ def Ryzenth():
     cpuid = "AMD Ryzen Threadripper"
     cpuappid = '742075019257184338'
 
+def Qualcomm():
+    global cpuid, cpuappid
+    cpuid = "Qualcomm Snapdragon CPU"
+    cpuappid = '744983961804996779'
+
 
 def Unknown_cpu():
     global cpuid, cpuappid
@@ -542,6 +547,9 @@ intelcpus = {
     "intel pentium": Intelpentium,
     "intel celeron": Intelceleron,
     "pentium": Intelpentium,
+}
+qc_cpus = {
+    "Qualcomm": Qualcomm,
 }
 gpus = {
     "intel": Intelgpu,
