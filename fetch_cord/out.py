@@ -102,7 +102,7 @@ if neofetchwin != "":
                 moboline.append(line.rstrip('\n'))
 
 elif neofetchwin == "":
-    filepath = "/tmp/out.txt"
+    filepath = "out.txt"
     with open(filepath, 'w') as f:
         print(baseinfo, file=f)
     with open(filepath, "rt") as f:

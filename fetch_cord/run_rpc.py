@@ -4,6 +4,7 @@ import time
 import sys
 import os
 import psutil
+import uptime
 # import info about system
 from fetch_cord.args import parse_args
 from fetch_cord.testing import gpuid, appid, cpuappid
@@ -15,7 +16,10 @@ from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo
 if os.name == "nt":
     from fetch_cord.out import moboline, memline
 
-uptime = psutil.boot_time()
+if sysosid.lower() != "android":
+    uptime = psutil.boot_time()
+else:
+    uptime = uptime.uptime()
 args = parse_args()
 
 
