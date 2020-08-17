@@ -1,9 +1,20 @@
+# Please use 'systemctl --user edit fetchcord' to change 'ExecStart' when adding arguments!
+# The following is a simple example of the override:
+
+# [Service]
+# ExecStart=
+# ExecStart=-%h/.local/bin/fetchcord --nohost --time 15 --terminal 'gnome-terminal' --termfont 'Terminus Medium'
+
 [Unit]
-Description=System info Discord Rich Presence Daemon
+Description=Display OS info as Discord Rich Presence
+Documentation=https://github.com/MrPotatoBobx/FetchCord
+After=network.target multi-user.target graphical-session.target
 
 [Service]
-Type=simple
-ExecStart=/usr/bin/python3 -u -m fetch_cord.run-rpc
+Environment=PYTHONUNBUFFERED=1
+ExecStart=-%h/.local/bin/fetchcord
+Restart=on-failure
+RestartSec=10
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

@@ -20,10 +20,14 @@
 # Table of content
 - [**Features**](#features)
 - [**To-Do**](#to-do)
-- [**Install on (gnu/)linux**](#installing-on-gnulinux)
++ **Installing**
+    - [Install on (gnu/)linux](#installing-on-gnulinux)
+    - [Install on MacOS](#installing-on-macos)
+ + **Running**
     - [Running on (gnu/)linux](#run)
-- [**Install on MacOS**](#installing-on-macos)
-    - [Running on MacOs](#run-1)
+       - [Arguments](#arguments)
+    - [Running on MacOS](#run-1)
+
 - [**Examples**](#examples)
 
 ### Features
@@ -42,13 +46,18 @@
 
 - [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
 
+- [x] Flatpak support
+
+- [x] Add Windows support.
+
+- [x] Detect Window Manager/Desktop Environment version
+
+
 ### To-Do
 
 - [ ] Add more distributions (If your distro is not supported open an issue)
 
-- [ ] Detect Window Manager/Desktop Environment version
-
-- [ ] Add Flatpak/Snap support
+- [ ] Add Snap support
 
 - [ ] Add support for desktop icon use
 
@@ -58,38 +67,51 @@
 
 
 ## Installing on (GNU/)Linux
-> `#` the command should be ran as `sudo`
 
-> `$` the command should be ran as user
+On Arch Linux install this package for the git version: [fetchcord-git](https://aur.archlinux.org/packages/fetchcord-git/)
 
-_From download/cloned directory_
+On other distros and the non git version: `pip3 install fetchcord`
 
-```sh
-# ./install.sh
-```
+NOTE: you need neofetch to be also installed for this to work.
+
+If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
+
 ### Run
 
-To run the script simply run `fetchcord`, python 3.8 should have the `distro` module but if you get an error install it via pip,
+Once installed, simply run `fetchcord`. The program is also daemonizable meaning you can start it on boot using any method you prefer.
 
-```sh
-$ pip3 install distro
-```
+If that does not work,add /home/$USER/.local/bin/ to your path, or just run `python3 -m fetchcord`.
+
+Optionally for `systemd` users there is a user-side `fetchcord.service` in this repo that can be installed to `~/.local/share/systemd/user/`, started and enabled on boot using `systemctl --user enable --now fetchcord`.
+
+#### Arguments
+--nodistro, Don't show distro info.
+
+--nohardware, Don't show hardware info.
+
+--noshell, Don't show shell/terminal info.
+
+--nohost, Don't show host info.
+
+--time, -t, set custom duration for cycles in seconds.
+
+--terminal, set custom terminal (useful if using a script or dmenu).
+
+--termfont, set custom terminal font (useful if neofetch can't get it).
+
+--update, Update database of distros, hardware, etc.
+
+-h or --help, shows this information above.
 
 ## Installing on MacOS
 
+To install FetchCord, run `pip3 install FetchCord`
 
-_From download/cloned directory_
-
-```sh
-# ./macinstall.sh
-```
-
+NOTE: you need neofetch to be also installed for this to work.
 
 ### Run 
 
-```sh
-$ python3 -u -m fetch_cord.macos-rpc.py
-```
+simply run `fetchcord`
 
 ## Examples
 
@@ -102,4 +124,5 @@ $ python3 -u -m fetch_cord.macos-rpc.py
 ![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
 
 ![amd with nvidia](Examples/amd_example.png)
+
 

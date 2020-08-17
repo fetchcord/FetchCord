@@ -125,8 +125,10 @@ dmypy.json
 .pyre/
 
 # Mac-specific
-._* 
+._*
 .DS_Store
 
 # vscode
 .vscode
+#pycharm file
+.idea
