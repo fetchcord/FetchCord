@@ -452,6 +452,10 @@ def Xfce4_terminal():
     global termappid
     termappid = '744332423072055296'
 
+def Apple_terminal():
+    global termappid
+    termappid = '744950796298354689'
+
 
 def Unknown_term():
     global termappid
@@ -613,6 +617,7 @@ terminals = {
     "cool-retro-term": Coolretroterm,
     "urxvt": Urxvt,
     "xfce4-terminal": Xfce4_terminal,
+    "apple_terminal": Apple_terminal,
 }
 
 
