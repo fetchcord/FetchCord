@@ -18,7 +18,7 @@ if os.name == "nt":
 
 if sysosid.lower() != "android9":
     uptime = psutil.boot_time()
-else:
+elif sysosid.lower() == "android9":
     uptime = uptime.uptime()
 args = parse_args()
 
