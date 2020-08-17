@@ -678,7 +678,7 @@ if args.terminal:
 
 
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
-if sysosid.lower() != "macos" and os.name != "nt":
+if os.name != "nt":
     try:
         terminals[termid.lower()]()
     except KeyError:
@@ -710,9 +710,10 @@ if sysosid.lower() != "macos" and os.name != "nt":
     except KeyError:
         print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
         Unknown_de_wm()
-if sysosid.lower() != "macos":
+
     try:
-        distros[sysosid.lower()]()
+        if sysosid.lower() != "macos":
+            distros[sysosid.lower()]()
     except KeyError:
         print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
         Unknown_distro()
