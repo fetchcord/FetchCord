@@ -19,12 +19,14 @@ if args.time:
         print("ERROR: Invalid time set, must be > 15 seconds, cannot continue.")
         sys.exit(1)
     else:
-        print("setting custom time %s" % args.time)
+        print("setting custom time %s seconds" % args.time)
+
 try:
     if args.help:
         sys.exit(0)
 except AttributeError:
     pass
+
 neofetchwin = ""
 if os.name == "nt":
     neofetchwin = os.popen("neofetch --noart").read()
@@ -148,16 +150,16 @@ sysosid = sysosline[0].split()[1]
 gpuvendor = ""
 gpuinfo = ""
 primeoffload = ""
-if sysosid.lower() not in ["windows", "macos"]:
-    try:
+if sysosid.lower() != "macos" and os.name != "nt":
         # only show the GPU in use with optimus, show both if prime render offload
         laptop = os.path.isdir("/sys/module/battery")
         if laptop and nvidiagpuline:
             if args.debug:
                 print("laptop: %s" % laptop)
-            primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
-    except BashError:
-        pass
+            try:
+                primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
+            except BashError:
+                pass
 
 if nvidiagpuline:
 
@@ -228,6 +230,7 @@ elif cpuvendor == "Pentium":
     cpumodel = cpuline[0].split()[1]
 
 if os.name != "nt":
+    # linux shit
     if wmline:
         wmid = wmline[0].split()[1]
     else:
@@ -249,7 +252,7 @@ if os.name != "nt":
         termfontline = s
     if termfontline and args.termfont:
         print("Custom terminal font not set because a terminal font already exists, %s" %
-            termfontline[0])
+            termfontline)
     elif not termfontline:
         if args.termfont:
             termfontline = "Font: " + args.termfont
@@ -281,27 +284,30 @@ if os.name != "nt":
     else:
         resline = resline[0]
     kernelid = kernelline[0].split()[1]
-sysosid = sysosline[0].split()[1]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
 if args.debug:
     print("out")
     try:
-        print("deid %s" % deid)
+        print("deid: %s" % deid)
         print("termfontline: %s" % termfontline)
     except NameError:
         pass
-    print("sysosline: %s" % sysosline)
     try:
         print("amdgpurenderlist: %s" % amdgpurenderlist)
         print("amdgpurender: %s" % amdgpurender)
     except NameError:
         pass
-    print("gpuinfo %s" % gpuinfo)
+    try:
+        print("intelgpuline: %s" % intelgpuline)
+    except NameError:
+        pass
+    print("sysosline: %s" % sysosline)
+    print("gpuinfo: %s" % gpuinfo)
     print("gpuvendor: %s" % gpuvendor)
     print("nvidiagpuline: %s" % nvidiagpuline)
-    print("cpuvendor %s" % cpuvendor)
-    print("cpumodel %s" % cpumodel)
+    print("cpuvendor: %s" % cpuvendor)
+    print("cpumodel: %s" % cpumodel)
     print("cpuline item 0: %s" % cpuline[0])
     if os.name != "nt":
         print("wmid: %s" % wmid)

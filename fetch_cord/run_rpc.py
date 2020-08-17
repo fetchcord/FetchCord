@@ -7,12 +7,12 @@ import psutil
 # import info about system
 from fetch_cord.args import parse_args
 from fetch_cord.testing import gpuid, appid, cpuappid
+from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
     from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, termfontline, \
         dewmid, termline, lapordesk, hostline, resline
-from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo
-if os.name == "nt":
+elif os.name == "nt":
     from fetch_cord.out import moboline, memline
     from fetch_cord.testing import moboid
 
@@ -269,7 +269,7 @@ def w_cycle1():
 def loonix():
     try:
         while True:
-            if not args.nodistro:
+            if not args.nodistro and sysosid.lower() != "macos":
                 cycle0()
                 rpc_tryclear()
             if not args.nohardware:
@@ -278,8 +278,11 @@ def loonix():
             if not args.noshell:
                 cycle2()
                 rpc_tryclear()
-            if not args.nohost:
+            if not args.nohost and sysosid.lower() != "macos":
                 cycle3()
+                rpc_tryclear()
+            if sysosid.lower() == "macos":
+                runmac()
                 rpc_tryclear()
     except KeyboardInterrupt:
         print("Closing connection.")

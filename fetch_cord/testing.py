@@ -12,9 +12,6 @@ elif os.name == "nt":
 # appid for discord app
 appid = "none"
 
-# number of packages
-packages = "none"
-
 # predefine ids
 cpuid = "none"
 cpuappid = "none"
@@ -513,12 +510,9 @@ def iAcer():
     moboid = 'acer'
 
 def Unknown_host():
-    global hostappid
+    global hostappid, moboid
     hostappid = "742887089179197462"
-
-def Unknown_mobo():
-    global moboid
-    moboid = "unknown"
+    moboid = 'unknown'
 
 
 amdcpus = {
@@ -666,7 +660,7 @@ if os.name == "nt":
             pass
 
 
-terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt"]
+terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt", "xfce4-terminal"]
 if args.terminal:
     if args.terminal in terminallist:
         termid = args.terminal
@@ -684,7 +678,7 @@ if args.terminal:
 
 
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
-if sysosid.lower() not in ["macos", "windows10", "windows8", "windows7", "winodows8.1"]:
+if sysosid.lower() != "macos" and os.name != "nt":
     try:
         terminals[termid.lower()]()
     except KeyError:
@@ -742,7 +736,7 @@ if os.name == "nt":
         hosts[moboid.lower()]()
     except KeyError:
         print("Unknown Host, contact us on github to resolve this problem.(Keyerror)")
-        Unknown_mobo()
+        Unknown_host()
 
 elif sysosid.lower() == "macos":
     macos()
