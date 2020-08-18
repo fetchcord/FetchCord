@@ -52,6 +52,9 @@ def iArch():
     global appid
     appid = '740476198437650473'
 
+def iArcoLinux():
+    global appid
+    appid = '740476198437650474'
 
 def iArtix():
     global appid
@@ -97,6 +100,10 @@ def iEnde():
     global appid
     appid = '740809641545564170'
 
+
+def iFuntoo():
+    global appid
+    appid = '744332423072055352I'
 
 def iNixOS():
     global appid
@@ -456,6 +463,10 @@ def Xfce4_terminal():
     global termappid
     termappid = '744332423072055296'
 
+def Terminator():
+  global termappid
+  termappid = '744332423072055294'
+
 def Apple_terminal():
     global termappid
     termappid = '744950796298354689'
@@ -562,6 +573,7 @@ distros = {
     "ubuntu": iUbuntu,
     "opensuseleap": iOpenSuseLeap,
     "arch": iArch,
+    "archo" iArcoLinux
     "artix": iArtix,
     "fedora": iFedora,
     "void": iVoid,
@@ -581,6 +593,7 @@ distros = {
     "nixos": iNixOS,
     "instantos": IinstantOS,
     "freebsd": iFreeBSD,
+    "funtoo": iFuntoo,
 }
 versions = {
     "10.13": iHsiera,
@@ -675,7 +688,7 @@ if os.name == "nt":
             pass
 
 
-terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt", "xfce4-terminal"]
+terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt", "xfce4-terminal", "terminator"]
 if args.terminal:
     if args.terminal in terminallist:
         termid = args.terminal
@@ -776,4 +789,3 @@ if args.debug:
     print("gpuvendor: %s" % gpuvendor)
     print("\n----CPU INFO----\n")
     print("cpumodel: %s\n" % cpumodel)
-
