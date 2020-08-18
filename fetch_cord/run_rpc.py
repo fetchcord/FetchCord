@@ -27,7 +27,7 @@ def main():
             sys.exit(1)
     # printing info with debug switch
     if args.debug:
-        print("run-rpc")
+        print("----run_rpc----")
         print(uptime)
         print(appid)
         print(gpuid)
@@ -38,12 +38,21 @@ def main():
     else:
         loonix()
 
+def first_connect():
+    global RPC
+    try:
+        client_id = appid
+        RPC = Presence(client_id)
+        RPC.connect()
+        print("RPC Connection Successful.")
+    except ConnectionRefusedError:
+        rpc_tryconnect()
 
 print("Connecting")
 time.sleep(5)
 # discord uses unix time to interpret time for rich presnse, this is uptime in unix time
 start_time = float(uptime)
-print("RPC connection successful.")
+
 
 
 def rpc_tryconnect():
@@ -54,6 +63,7 @@ def rpc_tryconnect():
         except ConnectionRefusedError:
             print("RPC connection refused (is Discord open?); trying again in 30 seconds")
             time.sleep(30)
+
 
 
 def rpc_tryclear():
@@ -221,7 +231,6 @@ def cycle3():
 def pause():
     if args.debug:
         print("pause_cycle")
-    client_id = hostappid
     if args.time:
         custom_time()
     else:
@@ -279,6 +288,7 @@ def w_cycle1():
 
 def loonix():
     try:
+        first_connect()
         while True:
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0()

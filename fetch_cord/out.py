@@ -180,7 +180,6 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload =
             amdgpurender = "GPU: " + \
                 exec_bash(
                     "%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
-            amdgpurenderlist = []
             if i != -1:
                 amdgpurenderlist.append(amdgpurender)
         amdgpuvendor = amdgpurender.split()[1]
@@ -248,7 +247,6 @@ if os.name != "nt":
     if termfontline:
         termfontsplit = termfontline[0].split()[-2:]
         s=' '.join(termfontsplit)
-        print(termfontsplit)
         termfontline = s
     if termfontline and args.termfont:
         print("Custom terminal font not set because a terminal font already exists, %s" %
@@ -286,37 +284,37 @@ if os.name != "nt":
     kernelid = kernelline[0].split()[1]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
+
+
 if args.debug:
-    print("out")
-    try:
-        print("deid: %s" % deid)
+    print("----out.py----\n")
+    print("----DE/WM----")
+    print("deid: %s" % deid)
+    if os.name != "nt":
+        print("wmid: %s" % wmid)
+        try:
+            print("wmline item 0: %s" % wmline[0])
+        except IndexError:
+            pass
+        print("\n----TERMINAL----\n")
         print("termfontline: %s" % termfontline)
-    except NameError:
-        pass
+        print("termid: %s" % termid)
+        print("termline item 0: %s" % termline[0])
+        print("packagesline item 0: %s" % packagesline[0])
+    print("\n----GPU INFO----\n")
     try:
         print("amdgpurenderlist: %s" % amdgpurenderlist)
         print("amdgpurender: %s" % amdgpurender)
     except NameError:
         pass
-    try:
-        print("intelgpuline: %s" % intelgpuline)
-    except NameError:
-        pass
-    print("sysosline: %s" % sysosline)
+    print("nvidiagpuline: %s" % nvidiagpuline)
+    print("intelgpuline: %s" % intelgpuline)
     print("gpuinfo: %s" % gpuinfo)
     print("gpuvendor: %s" % gpuvendor)
-    print("nvidiagpuline: %s" % nvidiagpuline)
+    print("\n----CPU INFO----\n")
     print("cpuvendor: %s" % cpuvendor)
     print("cpumodel: %s" % cpumodel)
     print("cpuline item 0: %s" % cpuline[0])
-    if os.name != "nt":
-        print("wmid: %s" % wmid)
-        print("termid: %s" % termid)
-        print("termline item 0: %s" % termline[0])
-        print("packagesline item 0: %s" % packagesline[0])
+    print("\n----OS INFO----\n")
+    print("sysosline: %s" % sysosline)
     print("sysosid: %s" % sysosid)
-    print("sysosline item 0: %s" % sysosline[0])
-    try:
-        print("wmline item 0: %s" % wmline[0])
-    except IndexError:
-        pass

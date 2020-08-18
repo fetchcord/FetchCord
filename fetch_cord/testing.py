@@ -106,6 +106,10 @@ def IinstantOS():
     global appid
     appid = '744784599653285938'
 
+def iFreeBSD():
+    global appid
+    appid = '745054697047457822'
+
 
 def iWindows10():
     global appid
@@ -561,7 +565,7 @@ distros = {
     "artix": iArtix,
     "fedora": iFedora,
     "void": iVoid,
-    "gentoo": iGentoo,
+    "gentoo/linux": iGentoo,
     "centos": iCentos,
     "debian": iDebian,
     "opensusetumbleweed": iOpenSuseTumble,
@@ -576,6 +580,7 @@ distros = {
     "windows8.1": iWindows8_1,
     "nixos": iNixOS,
     "instantos": IinstantOS,
+    "freebsd": iFreeBSD,
 }
 versions = {
     "10.13": iHsiera,
@@ -754,16 +759,21 @@ elif sysosid.lower() == "macos":
 
 
 if args.debug:
-    print("testing")
+    print("\n----testing.py----")
     if os.name != "nt":
+        print("----DE/WM----\n")
         print("deid: %s" % deid)
         print("wmid: %s" % wmid)
+        print("\n----TERMINAL/SHELL----\n")
         print("termid: %s" % termid)
         print("shellid: %s" % shellid)
+        print("\n----HOST INFO----\n")
         print("hostid: %s" % hostid)
     elif os.name == "nt":
         print("moboid: %s" % moboid)
         print("moboline: %s" % moboline)
-    print("cpumodel: %s" % cpumodel)
+    print("\n----GPU INFO----\n")
     print("gpuvendor: %s" % gpuvendor)
+    print("\n----CPU INFO----\n")
+    print("cpumodel: %s\n" % cpumodel)
 
