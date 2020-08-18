@@ -456,6 +456,10 @@ def Xfce4_terminal():
     global termappid
     termappid = '744332423072055296'
 
+def Terminator():
+  global termappid
+  termappid = '744332423072055294'
+
 def Apple_terminal():
     global termappid
     termappid = '744950796298354689'
@@ -675,7 +679,7 @@ if os.name == "nt":
             pass
 
 
-terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt", "xfce4-terminal"]
+terminallist = ["st", "kitty", "alacritty", "xterm", "konsole", "gnome-terminal", "cool-retro-term", "urxvt", "xfce4-terminal", "terminator"]
 if args.terminal:
     if args.terminal in terminallist:
         termid = args.terminal
@@ -776,4 +780,3 @@ if args.debug:
     print("gpuvendor: %s" % gpuvendor)
     print("\n----CPU INFO----\n")
     print("cpumodel: %s\n" % cpumodel)
-
