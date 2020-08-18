@@ -23,7 +23,5 @@ def parse_args():
                         help="Update database of distros, hardware, etc.")
     parser.add_argument('--debug', action='store_true',
                         help="Enable debugging.")
-    parser.add_argument('--pause-cycle', action='store_true',
-                        help="Extra cycle that pauses for 30 seconds or custom time using --time argument.")
 
     return parser.parse_args()
