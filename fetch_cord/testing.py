@@ -52,6 +52,9 @@ def iArch():
     global appid
     appid = '740476198437650473'
 
+def iArcoLinux():
+    global appid
+    appid = '740476198437650474'
 
 def iArtix():
     global appid
@@ -97,6 +100,10 @@ def iEnde():
     global appid
     appid = '740809641545564170'
 
+
+def iFuntoo():
+    global appid
+    appid = '744332423072055352I'
 
 def iNixOS():
     global appid
@@ -566,6 +573,7 @@ distros = {
     "ubuntu": iUbuntu,
     "opensuseleap": iOpenSuseLeap,
     "arch": iArch,
+    "archo" iArcoLinux
     "artix": iArtix,
     "fedora": iFedora,
     "void": iVoid,
@@ -585,6 +593,7 @@ distros = {
     "nixos": iNixOS,
     "instantos": IinstantOS,
     "freebsd": iFreeBSD,
+    "funtoo": iFuntoo,
 }
 versions = {
     "10.13": iHsiera,
