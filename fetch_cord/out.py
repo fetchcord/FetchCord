@@ -245,7 +245,7 @@ if os.name != "nt":
         pass
     shellid = shell_line[0].split()[1]
     if termfontline:
-        termfontsplit = termfontline[0].split()[-2:]
+        termfontsplit = termfontline[0].split()[1:]
         s=' '.join(termfontsplit)
         termfontline = s
     if termfontline and args.termfont:
@@ -300,7 +300,6 @@ if args.debug:
         print("termfontline: %s" % termfontline)
         print("termid: %s" % termid)
         print("termline item 0: %s" % termline[0])
-        print("packagesline item 0: %s" % packagesline[0])
     print("\n----GPU INFO----\n")
     try:
         print("amdgpurenderlist: %s" % amdgpurenderlist)
@@ -318,3 +317,4 @@ if args.debug:
     print("\n----OS INFO----\n")
     print("sysosline: %s" % sysosline)
     print("sysosid: %s" % sysosid)
+    print("packagesline item 0: %s" % packagesline[0])
