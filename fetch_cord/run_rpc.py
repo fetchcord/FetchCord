@@ -27,10 +27,15 @@ def main():
             sys.exit(1)
     # printing info with debug switch
     if args.debug:
-        print("----run_rpc----")
-        print(uptime)
-        print(appid)
-        print(gpuid)
+        print("----run_rpc----\n")
+        print("uptime in epoch: %s" % uptime)
+        print("cpuid: %s" % appid)
+        print("cpuappid: %s" % cpuappid)
+        print("termappid: %s" % termappid)
+        if hostline != "":
+            print("hostappid: %s" % hostappid)
+        if os.name != "nt":
+            print("termappid: %s" % termappid)
         if os.name != "nt":
             print(packagesline[0])
     if os.name == "nt":

@@ -566,6 +566,7 @@ distros = {
     "fedora": iFedora,
     "void": iVoid,
     "gentoo/linux": iGentoo,
+    "funtoo": iGentoo,
     "centos": iCentos,
     "debian": iDebian,
     "opensusetumbleweed": iOpenSuseTumble,
