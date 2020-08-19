@@ -100,7 +100,6 @@ simply run `fetchcord`
 ## Installing on Windows
 
 To install fetchcord on Windows run `python -m pip install fetchcord neofetch-win`.
-
 ### Run
 To run Fetchcord run `fetchcord`
 
@@ -128,6 +127,11 @@ To run Fetchcord run `fetchcord`
 -h or --help, shows this information above.
 ## Examples
 
-Revamping examples, come back soon, to see old examples check the `examples` directory.
-
-
+### Operating Systems
+![MacOS bigsur](Examples/mac.png) ![Windows 10](Examples/windows.png) ![Ubuntu](Examples/ubuntu.png)
+### Terminals
+![Konsole](Examples/konsole.png) ![Gnome terminal](Examples/gnometerm.png) ![Apple terminal](Examples/appleterm.png)
+### Cpus
+![Ryzen 9](Examples/ryzencpu.png) ![Intel i7](Examples/intelcpu.png) ![Intel pentium](Examples/pent.png)
+### Hosts
+![HP laptop](Examples/hp.png) ![TUF gaming laptop](Examples/tuf.png) ![Lenovo desktop](Examples/len.png)
