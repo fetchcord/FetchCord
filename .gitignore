@@ -125,3 +125,6 @@ dmypy.json
 .pyre/
 #pycharm file
 .idea
+
+# vim file
+.vim/
