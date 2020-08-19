@@ -128,6 +128,6 @@ To run Fetchcord run `fetchcord`
 -h or --help, shows this information above.
 ## Examples
 
-Revamping examples, come back soon to see old examples check the `examples` directory.
+Revamping examples, come back soon, to see old examples check the `examples` directory.
 
 
