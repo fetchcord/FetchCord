@@ -142,6 +142,8 @@ distros = {
     "instantos": '744784599653285938',
     "freebsd": '745054697047457822',
     "funtoo": '740484380652208140',
+    "solus": '745689115944681683',
+    "zorin": '745689865798156379'
 }
 versions = {
     "10.13": "hsierria",
@@ -157,6 +159,7 @@ windowmanagers = {
     "bspwm": "bspwm",
     "xmonad": "xmonad",
     "sway": "sway",
+    "openbox": "opebox", # not a typo i accidently added all the openbox as 'opebox'
 }
 # desktops
 desktops = {
@@ -184,6 +187,7 @@ terminals = {
     "urxvt": '743246048968835092',
     "xfce4-terminal": '744332423072055296',
     "apple_terminal": '744950796298354689',
+    "lxterminal": '745701997503840380',
 }
 
 
