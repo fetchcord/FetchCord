@@ -22,122 +22,6 @@ hostappid = "none"
 
 # distros set id and package number
 
-
-def iUbuntu():
-    global appid
-    appid = '740434138036699178'
-
-
-def iVoid():
-    global appid
-    appid = '740484961353597039'
-
-
-def iOpenSuseLeap():
-    global appid
-    appid = '740156532137787433'
-
-
-def iOpenSuseTumble():
-    global appid
-    appid = '742180413132505088'
-
-
-def iCentos():
-    global appid
-    appid = '740483295388631071'
-
-
-def iArch():
-    global appid
-    appid = '740476198437650473'
-
-def iArcoLinux():
-    global appid
-    appid = '745435867971321866'
-
-def iArtix():
-    global appid
-    appid = '741918141248045107'
-
-
-def iFedora():
-    global appid
-    appid = '740485660703719464'
-
-
-def iGentoo():
-    global appid
-    appid = '740484380652208140'
-
-
-def iDebian():
-    global appid
-    appid = '740490017218232392'
-
-
-def iManjaro():
-    global appid
-    appid = '740614258177605642'
-
-
-def iLinuxMint():
-    global appid
-    appid = '740633577481568317'
-
-
-def iLMDE():
-    global appid
-    appid = '741726946588622988'
-
-
-def iPop():
-    global appid
-    appid = '740660055925587978'
-
-
-def iEnde():
-    global appid
-    appid = '740809641545564170'
-
-
-def iFuntoo():
-    global appid
-    appid = '740484380652208140'
-
-def iNixOS():
-    global appid
-    appid = '744644133494325329'
-
-def IinstantOS():
-    global appid
-    appid = '744784599653285938'
-
-def iFreeBSD():
-    global appid
-    appid = '745054697047457822'
-
-
-def iWindows10():
-    global appid
-    appid = '741949889465942099'
-
-
-def iWindows8_1():
-    global appid
-    appid = '741952065294827520'
-
-
-def iWindows8():
-    global appid
-    appid = '741952179488948324'
-
-
-def iWindows7():
-    global appid
-    appid = '741952383512346696'
-
-
 def Unknown_distro():
     global appid
     appid = '742887089179197462'
@@ -574,31 +458,31 @@ gpus = {
     "nvidiaamdintel": Nvidia_amd_intelgpu,
 }
 distros = {
-    "ubuntu": iUbuntu,
-    "opensuseleap": iOpenSuseLeap,
-    "arch": iArch,
-    "arco": iArcoLinux,
-    "artix": iArtix,
-    "fedora": iFedora,
-    "void": iVoid,
-    "gentoo/linux": iGentoo,
-    "funtoo": iGentoo,
-    "centos": iCentos,
-    "debian": iDebian,
-    "opensusetumbleweed": iOpenSuseTumble,
-    "manjaro": iManjaro,
-    "linuxmint": iLinuxMint,
-    "lmde": iLMDE,
-    "pop!_os": iPop,
-    "endeavouros": iEnde,
-    "windows10": iWindows10,
-    "windows7": iWindows7,
-    "windows8": iWindows8,
-    "windows8.1": iWindows8_1,
-    "nixos": iNixOS,
-    "instantos": IinstantOS,
-    "freebsd": iFreeBSD,
-    "funtoo": iFuntoo,
+    "ubuntu": '740434138036699178',
+    "opensuseleap": '740156532137787433',
+    "arch": '740476198437650473',
+    "arco": '745435867971321866',
+    "artix": '741918141248045107',
+    "fedora": '740485660703719464',
+    "void": '740484961353597039',
+    "gentoo/linux": '740484380652208140',
+    "funtoo": '740484380652208140',
+    "centos": '740483295388631071',
+    "debian": '740490017218232392',
+    "opensusetumbleweed": '742180413132505088',
+    "manjaro": '740614258177605642',
+    "linuxmint": '740633577481568317',
+    "lmde": '741726946588622988',
+    "pop!_os": '740660055925587978',
+    "endeavouros": '740809641545564170',
+    "windows10": '741949889465942099',
+    "windows7": '741952383512346696',
+    "windows8": '741952179488948324',
+    "windows8.1": '741952065294827520',
+    "nixos": '744644133494325329',
+    "instantos": '744784599653285938',
+    "freebsd": '745054697047457822',
+    "funtoo": '740484380652208140',
 }
 versions = {
     "10.13": iHsiera,
@@ -746,8 +630,8 @@ if os.name != "nt":
         Unknown_de_wm()
 
     try:
-        if sysosid.lower() != "macos":
-            distros[sysosid.lower()]()
+        if sysosid.lower() != "macos": 
+          appid = distros[sysosid.lower()]
     except KeyError:
         print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
         Unknown_distro()
