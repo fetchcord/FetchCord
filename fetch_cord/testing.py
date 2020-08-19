@@ -19,11 +19,36 @@ termappid = "none"
 desktopid = "none"
 hostappid = "none"
 
-# distros set id and package number
 
 def Unknown_distro():
     global appid
     appid = '742887089179197462'
+
+def Unknown_de_wm():
+    global desktopid
+    desktopid = 'unknown'
+
+def Unknown_cpu():
+    global cpuid, cpuappid
+    cpuappid = '742887089179197462'
+
+def Unknown_gpu():
+    global gpuid
+    gpuid = 'unknown'
+
+def Unknown_term():
+    global termappid
+    termappid = '742887089179197462'
+
+def Unknown_shell():
+    global shell
+    shell = "unknown"
+
+def Unknown_host():
+    global hostappid, moboid
+    hostappid = "742887089179197462"
+    moboid = 'unknown'
+
 
 # macOS hardwawre
 
@@ -263,7 +288,7 @@ if os.name != "nt":
         Unknown_de_wm()
 
     try:
-        if sysosid.lower() != "macos": 
+        if sysosid.lower() != "macos":
           appid = distros[sysosid.lower()]
     except KeyError:
         print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
