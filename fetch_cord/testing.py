@@ -54,7 +54,7 @@ def iArch():
 
 def iArcoLinux():
     global appid
-    appid = '740476198437650474'
+    appid = '745435867971321866'
 
 def iArtix():
     global appid
@@ -103,7 +103,7 @@ def iEnde():
 
 def iFuntoo():
     global appid
-    appid = '744332423072055352I'
+    appid = '740484380652208140'
 
 def iNixOS():
     global appid
@@ -465,11 +465,15 @@ def Xfce4_terminal():
 
 def Terminator():
   global termappid
-  termappid = '744332423072055294'
+  termappid = '745427387659059321'
 
 def Apple_terminal():
     global termappid
     termappid = '744950796298354689'
+
+def Tmux():
+    global termappid
+    termappid = '744786101272707152'
 
 
 def Unknown_term():
@@ -712,13 +716,13 @@ if os.name != "nt":
     try:
         terminals[termid.lower()]()
     except KeyError:
-        print("Unsupported Terminal. contact me on github to resolve this.(Keyerror)")
+        print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
         Unknown_term()
 
     try:
         shells[shellid.lower()]()
     except KeyError:
-        print("Unsupported Shell, contact me on guthub to resolve this.(Keyerror)")
+        print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
         Unknown_shell()
     try:
         if sysosid.lower() != "macos":
@@ -731,21 +735,21 @@ if os.name != "nt":
         if deid != "N/A" and sysosid.lower() != "macos":
             desktops[deid.lower()]()
     except KeyError:
-        print("Unsupported De contact me on github to resolve this.(Keyerror)")
+        print("Unsupported De contact us on github to resolve this.(Keyerror)")
         Unknown_de_wm()
 
     try:
         if deid == "N/A" and sysosid.lower() != "macos":
             windowmanagers[wmid.lower()]()
     except KeyError:
-        print("Unsupported Wm contact me on github to resolve this.(Keyerror)")
+        print("Unsupported Wm contact us on github to resolve this.(Keyerror)")
         Unknown_de_wm()
 
     try:
         if sysosid.lower() != "macos":
             distros[sysosid.lower()]()
     except KeyError:
-        print("Unsupported Distro, contact me on the GitHub page to resolve this.(keyerror)")
+        print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
         Unknown_distro()
 
     try:
@@ -754,13 +758,13 @@ if os.name != "nt":
         elif cpuvendor in ["Intel", "Pentium"]:
             intelcpus[cpumodel.lower()]()
     except KeyError:
-        print("unknown CPU, contact me on github to resolve this.(Keyerror)")
+        print("unknown CPU, contact us on github to resolve this.(Keyerror)")
         Unknown_cpu()
 
     try:
         gpus[gpuvendor.lower()]()
     except KeyError:
-        print("Unknown GPU, contact me on github to resolve this.(Keyerror)")
+        print("Unknown GPU, contact us on github to resolve this.(Keyerror)")
         Unknown_gpu()
 if os.name == "nt":
     try:
