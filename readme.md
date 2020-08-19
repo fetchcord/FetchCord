@@ -23,12 +23,14 @@
 + **Installing**
     - [Install on (gnu/)linux](#installing-on-gnulinux)
     - [Install on MacOS](#installing-on-macos)
+    - [Install on Windows](installing-on-windows)
  + **Running**
     - [Running on (gnu/)linux](#run)
-       - [Arguments](#arguments)
     - [Running on MacOS](#run-1)
+    - [Running on Windows](#run-2)
+- [**Arguments**](#arguments)
 
-- [**Examples**](#examples)
++ [**Examples**](#examples)
 
 ### Features
 
@@ -67,12 +69,13 @@
 
 
 ## Installing on (GNU/)Linux
-
+NOTE: you need neofetch to be also installed for this to work.
+#### Via AUR
 On Arch Linux install this package for the git version: [fetchcord-git](https://aur.archlinux.org/packages/fetchcord-git/)
 
-On other distros and the non git version: `pip3 install fetchcord`
-
-NOTE: you need neofetch to be also installed for this to work.
+Do note that this version is directly from master, for the stable release use [pip](#via-pip)
+#### Via pip
+To Install fetchcord via pip you can run `pip3 install fetchcord`
 
 If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
 
@@ -80,11 +83,28 @@ If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
 
 Once installed, simply run `fetchcord`. The program is also daemonizable meaning you can start it on boot using any method you prefer.
 
-If that does not work,add /home/$USER/.local/bin/ to your path, or just run `python3 -m fetchcord`.
+If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PATH"` to your bashrc, or just run `python3 -m fetchcord`.
 
-Optionally for `systemd` users there is a user-side `fetchcord.service` in this repo that can be installed to `~/.local/share/systemd/user/`, started and enabled on boot using `systemctl --user enable --now fetchcord`.
+Optionally for systemd users there is a user-side `fetchcord.service` in this repo that can be installed to `~/.local/share/systemd/user/`, started and enabled on boot using `systemctl --user enable --now fetchcord`.
 
-#### Arguments
+## Installing on MacOS
+
+To install FetchCord, run `pip3 install FetchCord`
+
+NOTE: you need neofetch to be also installed for this to work.
+
+### Run 
+
+simply run `fetchcord`
+
+## Installing on Windows
+
+To install fetchcord on Windows run `python -m pip install fetchcord neofetch-win`.
+
+### Run
+To run Fetchcord run `fetchcord`
+
+## Arguments
 --nodistro, Don't show distro info.
 
 --nohardware, Don't show hardware info.
@@ -106,27 +126,8 @@ Optionally for `systemd` users there is a user-side `fetchcord.service` in this 
 --debug, For debug logs.
 
 -h or --help, shows this information above.
-
-## Installing on MacOS
-
-To install FetchCord, run `pip3 install FetchCord`
-
-NOTE: you need neofetch to be also installed for this to work.
-
-### Run 
-
-simply run `fetchcord`
-
 ## Examples
 
-![Arch with awesome](Examples/arch_example.png) ![Debian with Cinnamon](Examples/debian_example.png) ![Fedora with xfce](Examples/fedora_example.png)
-
-![manjaro with i3](Examples/manjaro%20example.png) ![mint with mate](Examples/mint_example.png) ![popos with kde](Examples/pop_example.png)
-
-![void with dwm](Examples/void_example.png) ![endeabour with deepinde](Examples/end_example.png) ![centos with unity](Examples/centos_example.png)
-
-![ubuntu with budgie](Examples/ubuntu_example.png) ![macos with a macbook](Examples/mac_example.png) ![OpenSUSE with gnome](Examples/suse_example.png)
-
-![amd with nvidia](Examples/amd_example.png)
+Revamping examples, come back soon, to see old examples check the `examples` directory.
 
 
