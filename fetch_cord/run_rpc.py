@@ -249,7 +249,7 @@ def pause():
 def w_cycle0():
     global RPC
     if args.debug:
-        print("cycle 0")
+        print("w_cycle 0")
     client_id = appid
     RPC = Presence(client_id)
     rpc_tryconnect()
@@ -273,7 +273,7 @@ def w_cycle0():
 def w_cycle1():
     global RPC
     if args.debug:
-        print("cycle 1")
+        print("w_cycle 1")
     client_id = cpuappid
     RPC = Presence(client_id)
     rpc_tryconnect()
@@ -324,6 +324,7 @@ def loonix():
 
 def wandowz():
     try:
+        first_connect()
         while True:
             if not args.nodistro:
                 w_cycle0()

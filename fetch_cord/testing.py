@@ -270,6 +270,7 @@ if os.name != "nt":
     except KeyError:
         print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
         Unknown_shell()
+
     try:
         if sysosid.lower() != "macos":
             hostappid = hosts[hostid.lower()]
@@ -291,27 +292,28 @@ if os.name != "nt":
         print("Unsupported Wm contact us on github to resolve this.(Keyerror)")
         Unknown_de_wm()
 
-    try:
-        if sysosid.lower() != "macos":
-          appid = distros[sysosid.lower()]
-    except KeyError:
-        print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
-        Unknown_distro()
+try:
+    if sysosid.lower() != "macos":
+        appid = distros[sysosid.lower()]
+except KeyError:
+    print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
+    Unknown_distro()
 
-    try:
-        if cpuvendor == "AMD":
-            cpuappid = amdcpus[cpumodel.lower()]
-        elif cpuvendor in ["Intel", "Pentium"]:
-            cpuappid = intelcpus[cpumodel.lower()]
-    except KeyError:
-        print("unknown CPU, contact us on github to resolve this.(Keyerror)")
-        Unknown_cpu()
+try:
+    if cpuvendor == "AMD":
+        cpuappid = amdcpus[cpumodel.lower()]
+    elif cpuvendor in ["Intel", "Pentium"]:
+        cpuappid = intelcpus[cpumodel.lower()]
+except KeyError:
+    print("unknown CPU, contact us on github to resolve this.(Keyerror)")
+    Unknown_cpu()
 
-    try:
-        gpuid = gpus[gpuvendor.lower()]
-    except KeyError:
-        print("Unknown GPU, contact us on github to resolve this.(Keyerror)")
-        Unknown_gpu()
+try:
+    gpuid = gpus[gpuvendor.lower()]
+except KeyError:
+    print("Unknown GPU, contact us on github to resolve this.(Keyerror)")
+    Unknown_gpu()
+
 if os.name == "nt":
     try:
         moboid = hosts[moboid.lower()]
