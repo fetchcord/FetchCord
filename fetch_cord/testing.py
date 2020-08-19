@@ -22,7 +22,7 @@ hostappid = "none"
 
 def Unknown_distro():
     global appid
-    appid = '742887089179197462'
+    appid = '742993278143692821'
 
 def Unknown_de_wm():
     global desktopid
@@ -38,7 +38,7 @@ def Unknown_gpu():
 
 def Unknown_term():
     global termappid
-    termappid = '742887089179197462'
+    termappid = '745691250186911796'
 
 def Unknown_shell():
     global shell
