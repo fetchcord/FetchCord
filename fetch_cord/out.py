@@ -310,6 +310,7 @@ if args.debug:
         print("termfontline: %s" % termfontline)
         print("termid: %s" % termid)
         print("termline item 0: %s" % termline[0])
+        print("themeline: %s" % themeline)
     print("\n----GPU INFO----\n")
     try:
         print("amdgpurenderlist: %s" % amdgpurenderlist)
@@ -324,6 +325,7 @@ if args.debug:
     print("cpuvendor: %s" % cpuvendor)
     print("cpumodel: %s" % cpumodel)
     print("cpuline item 0: %s" % cpuline[0])
+    print("memline: %s" % memline)
     print("\n----OS INFO----\n")
     print("sysosline: %s" % sysosline)
     print("sysosid: %s" % sysosid)

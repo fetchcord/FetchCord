@@ -54,7 +54,11 @@ def first_connect():
         rpc_tryconnect()
 
 print("Connecting")
-time.sleep(5)
+try:
+    time.sleep(5)
+except KeyboardInterrupt:
+    print("Stopping connection.")
+    sys.exit(0)
 # discord uses unix time to interpret time for rich presnse, this is uptime in unix time
 start_time = float(uptime)
 
