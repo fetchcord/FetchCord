@@ -13,7 +13,6 @@ elif os.name == "nt":
 appid = "none"
 
 # predefine ids
-cpuid = "none"
 cpuappid = "none"
 gpuid = "none"
 termappid = "none"
@@ -142,23 +141,6 @@ def Unknown_distro():
     global appid
     appid = '742887089179197462'
 
-# MacOS versions
-
-
-def iHsiera():
-    global bigicon
-    bigicon = "hsierria"
-
-
-def iMojave():
-    global bigicon
-    bigicon = "mojave"
-
-
-def iCatalina():
-    global bigicon
-    bigicon = "catalina"
-
 # macOS hardwawre
 
 
@@ -177,51 +159,14 @@ def macos():
         ver = os.popen("sw_vers -productVersion").read()
         product = os.popen("sysctl -n hw.model").read()
         try:
-            versions[ver[0:5]]()
+            bigicon = versions[ver[0:5]]
         except IndexError:
             bigicon = "bigslurp"
         except KeyError:
             print("Unsupported MacOS version")
         laporp()
 
-# def desktops and defind id
-
-
-def iKde():
-    global desktopid
-    desktopid = "kde"
-
-
-def iGnome():
-    global desktopid
-    desktopid = "gnome"
-
-
-def iXfce():
-    global desktopid
-    desktopid = "xfce"
-
-
-def iCinnamon():
-    global desktopid
-    desktopid = "cinnamon"
-
-
-def iBudgie():
-    global desktopid
-    desktopid = "budgie"
-
-
-def iDeepin():
-    global desktopid
-    desktopid = "deepin"
-
-
-def iMate():
-    global desktopid
-    desktopid = "mate"
-
-
+# this is staying
 def iUnity():
     # this is to check wether the user is actually using unity
     # or using unity as an xdg value to fix issues with electron apps
@@ -231,347 +176,36 @@ def iUnity():
     else:
         desktopid = wmid
 
-def iPantheon():
-    global desktopid
-    desktopid = "pantheon"
-
-
-def iAero():
-    global desktopid
-    desktopid = "aero"
-
-# window managers
-
-
-def iDwm():
-    global desktopid
-    desktopid = "dwm"
-
-
-def iAwesome():
-    global desktopid
-    desktopid = "awesome"
-
-
-def Ii3():
-    global desktopid
-    desktopid = "i3"
-
-
-def iEnlightenment():
-    global desktopid
-    desktopid = "enlightenment"
-
-
-def iXmonad():
-    global desktopid
-    desktopid = "xmonad"
-
-
-def iBspwm():
-    global desktopid
-    desktopid = "bspwm"
-
-def iSway():
-    global desktopid
-    desktopid = "sway"
-
-
-def Unknown_de_wm():
-    global desktopid
-    desktopid = 'unknown'
-
-# cpuids
-
-
-def Ryzen():
-    global cpuid, cpuappid
-    cpuid = "Ryzen"
-    cpuappid = '740752899054895105'
-
-
-def Intelcorei3():
-    global cpuid, cpuappid
-    cpuid = "Intel(R) Core(TM) i3"
-    cpuappid = '741044208512532570'
-
-
-def Intelcorei5():
-    global cpuid, cpuappid
-    cpuid = "Intel(R) Core(TM) i5"
-    cpuappid = '741099939198926920'
-
-
-def Intelcorei7():
-    global cpuid, cpuappid
-    cpuid = "Intel(R) Core(TM) i7"
-    cpuappid = '741100300219187335'
-
-
-def Intelcorei9():
-    global cpuid, cpuappid
-    cpuid = "Intel(R) Core(TM) i9"
-    cpuappid = '741100622040006719'
-
-
-def Intelpentium():
-    global cpuid, cpuappid
-    cpuid = "Intel(R) Pentium(R)"
-    cpuappid = '741203845706940467'
-
-
-def Intelceleron():
-    global cpuid, cpuappid
-    cpuid = "Intel(R) Celeron(R)"
-    cpuappid = '742904581360713849'
-
-
-def Ryzen3():
-    global cpuid, cpuappid
-    cpuid = "AMD Ryzen 3"
-    cpuappid = '741153175779803146'
-
-
-def Ryzen5():
-    global cpuid, cpuappid
-    cpuid = "AMD Ryzen 5"
-    cpuappid = '741152732756312125'
-
-
-def Ryzen7():
-    global cpuid, cpuappid
-    cpuid = "AMD Ryzen 7"
-    cpuappid = '740752899054895105'
-
-
-def Ryzen9():
-    global cpuid, cpuappid
-    cpuid = "AMD Ryzen 9"
-    cpuappid = '741152930899427364'
-
-
-def Ryzenth():
-    global cpuid, cpuappid
-    cpuid = "AMD Ryzen Threadripper"
-    cpuappid = '742075019257184338'
-
-
-def Unknown_cpu():
-    global cpuid, cpuappid
-    cpuid = "Unknown CPU"
-    cpuappid = '742887089179197462'
-
-# gpuids
-
-
-def Intelgpu():
-    global gpuid
-    gpuid = "intel"
-
-
-def Nvidiagpu():
-    global gpuid
-    gpuid = "nvidia"
-
-
-def Nvidia_intelgpu():
-    global gpuid
-    gpuid = "nvidia-intel"
-
-
-def Nvidia_amdgpu():
-    global gpuid
-    gpuid = "nvidia-amd"
-
-
-def Amdgpu():
-    global gpuid
-    gpuid = "amd"
-
-
-def Amd_intelgpu():
-    global gpuid
-    gpuid = "amd-intel"
-
-
-def Nvidia_amd_intelgpu():
-    # again, why
-    global gpuid
-    gpuid = "nvidia-amd-intel"
-
-
-def Vmwaregpu():
-    global gpuid
-    gpuid = "vmware"
-
-
-def Virtiogpu():
-    global gpuid
-    gpuid = "virtio"
-
-
-def Unknown_gpu():
-    global gpuid
-    gpuid = 'unknown'
-# terminals
-
-
-def St():
-    global termappid
-    termappid = '741280043220861030'
-
-
-def Kitty():
-    global termappid
-    termappid = '741285676250824725'
-
-
-def Alacritty():
-    global termappid
-    termappid = '741291339945345045'
-
-
-def Xterm():
-    global termappid
-    termappid = '741287143187546125'
-
-
-def Konsole():
-    global termappid
-    termappid = '741286819676553258'
-
-
-def Gnometerminal():
-    global termappid
-    termappid = '741328861115056160'
-
-
-def Coolretroterm():
-    global termappid
-    termappid = '741731097498353794'
-
-def Urxvt():
-    global termappid
-    termappid = '743246048968835092'
-
-
-def Fetchcord():
-    global termappid
-    termappid = '742096605502767235'
-
-def Xfce4_terminal():
-    global termappid
-    termappid = '744332423072055296'
-
-def Terminator():
-  global termappid
-  termappid = '745427387659059321'
-
-def Apple_terminal():
-    global termappid
-    termappid = '744950796298354689'
-
-def Tmux():
-    global termappid
-    termappid = '744786101272707152'
-
-
-def Unknown_term():
-    global termappid
-    termappid = '742887089179197462'
-# shells
-
-
-def Fish():
-    global shell
-    shell = "fish"
-
-
-def Zsh():
-    global shell
-    shell = "zsh"
-
-
-def Bash():
-    global shell
-    shell = "bash"
-
-
-def Unknown_shell():
-    global shell
-    shell = "unknown"
-
-
-# hosts
-
-
-def iAsus():
-    global hostappid, moboid
-    hostappid = "743936082780880928"
-    moboid = 'asus'
-
-def iTUF():
-    global hostappid, moboid
-    hostappid = '744330890343219262'
-    moboid = 'tuf'
-
-
-def iDell():
-    global hostappid, moboid
-    hostappid = "743970870631858288"
-    moboid = 'dell'
-
-def iHP():
-    global hostappid, moboid
-    hostappid = "743971270395297852"
-    moboid = 'hp'
-
-def iLenovo():
-    global hostappid, moboid
-    hostappid = '744326223412461630'
-    moboid = 'lenovo'
-
-def iAcer():
-    global hostappid, moboid
-    hostappid = '744326890512318544'
-    moboid = 'acer'
-
-def Unknown_host():
-    global hostappid, moboid
-    hostappid = "742887089179197462"
-    moboid = 'unknown'
-
-
 amdcpus = {
-    "ryzen 3": Ryzen3,
-    "ryzen 5": Ryzen5,
-    "ryzen 7": Ryzen7,
-    "ryzen 9": Ryzen9,
-    "ryzen threadripper": Ryzenth,
+    "ryzen 3": '741153175779803146',
+    "ryzen 5": '741152732756312125',
+    "ryzen 7": '740752899054895105',
+    "ryzen 9": '741152930899427364',
+    "ryzen threadripper": '742075019257184338',
 }
 intelcpus = {
-    "intel i3": Intelcorei3,
-    "intel i5": Intelcorei5,
-    "intel i7": Intelcorei7,
-    "intel i9": Intelcorei9,
-    "intel pentium": Intelpentium,
-    "intel celeron": Intelceleron,
-    "pentium": Intelpentium,
+    "intel i3": '741044208512532570',
+    "intel i5": '741099939198926920',
+    "intel i7": '741100300219187335',
+    "intel i9": '741100622040006719',
+    "intel pentium": '741203845706940467',
+    "intel celeron": '742904581360713849',
+    "pentium": '741203845706940467',
 }
 gpus = {
-    "intel": Intelgpu,
-    "intel(r)": Intelgpu,
-    "nvidia": Nvidiagpu,
-    "amd": Amdgpu,
-    "radeon": Amdgpu,
-    "vmware": Vmwaregpu,
-    "virtio": Virtiogpu,
+    "intel": "intel",
+    "intel(r)": "intel",
+    "nvidia": "nvidia",
+    "amd": "amd",
+    "radeon": "amd",
+    "vmware": "vmware",
+    "virtio": "virtio",
     # multi GPUs
-    "nvidiaintel": Nvidia_intelgpu,
-    "nvidiaamd": Nvidia_amdgpu,
-    "amdintel": Amd_intelgpu,
-    "radeonintel": Amd_intelgpu,
-    "nvidiaamdintel": Nvidia_amd_intelgpu,
+    "nvidiaintel": "nvidia-intel",
+    "nvidiaamd": "nvidia-amd",
+    "amdintel": "amd-intel",
+    "radeonintel": "amd-intel",
+    "nvidiaamdintel": "nvidia-amd-intel",
 }
 distros = {
     "ubuntu": iUbuntu,
@@ -601,66 +235,65 @@ distros = {
     "funtoo": iFuntoo,
 }
 versions = {
-    "10.13": iHsiera,
-    "10.14": iMojave,
-    "10.15": iCatalina
+    "10.13": "hsierria",
+    "10.14": "mojave",
+    "10.15": "catalina",
 }
 # window managers
 windowmanagers = {
-    "dwm": iDwm,
-    "i3": Ii3,
-    "awesome": iAwesome,
-    "enlightenment": iEnlightenment,
-    "bspwm": iBspwm,
-    "xmonad": iXmonad,
-    "sway": iSway,
+    "dwm": "dwm",
+    "i3": "i3",
+    "awesome": "awesome",
+    "enlightenment": "enlightenment",
+    "bspwm": "bspwm",
+    "xmonad": "xmonad",
+    "sway": "sway",
 }
 # desktops
 desktops = {
-    "kde": iKde,
-    "plasma": iKde,
-    "xfce": iXfce,
-    "budgie": iBudgie,
-    "gnome": iGnome,
-    "deepin": iDeepin,
-    "cinnamon": iCinnamon,
-    "mate": iMate,
+    "kde": "kde",
+    "plasma": "kde",
+    "xfce": "xfce",
+    "budgie": "budgie",
+    "gnome": "gnome",
+    "deepin": "deepin",
+    "cinnamon": "cinnamon",
+    "mate": "mate",
     "unity": iUnity,
-    "aero": iAero,
-    "pantheon": iPantheon,
-    "terminator": Terminator,
+    "aero": "aero",
+    "pantheon": "pantheon",
 }
 terminals = {
-    "st": St,
-    "kitty": Kitty,
-    "alacritty": Alacritty,
-    "xterm": Xterm,
-    "konsole": Konsole,
-    "dolphin": Konsole,
-    "gnome-terminal": Gnometerminal,
-    "cool-retro-term": Coolretroterm,
-    "urxvt": Urxvt,
-    "xfce4-terminal": Xfce4_terminal,
-    "apple_terminal": Apple_terminal,
+    "st": '741280043220861030',
+    "kitty": '741285676250824725',
+    "alacritty": '741291339945345045',
+    "xterm": '741287143187546125',
+    "konsole": '741286819676553258',
+    "dolphin": '741286819676553258',
+    "gnome-terminal": '741328861115056160',
+    "cool-retro-term": '741731097498353794',
+    "urxvt": '743246048968835092',
+    "xfce4-terminal": '744332423072055296',
+    "apple_terminal": '744950796298354689',
 }
 
 
 shells = {
-    "fish": Fish,
-    "zsh": Zsh,
-    "bash": Bash,
+    "fish": "fish",
+    "zsh": "zsh",
+    "bash": "bash",
 }
 hosts= {
-    "inspiron": iDell,
-    "latitude": iDell,
-    "g3": iDell,
-    "hp": iHP,
-    "tuf": iTUF,
-    "asus": iAsus,
-    "asustek": iAsus,
-    "acer": iAcer,
-    "thinkpad": iLenovo,
-    "lenovo": iLenovo,
+    "inspiron": "743970870631858288",
+    "latitude": "743970870631858288",
+    "g3": "743970870631858288",
+    "hp": "743971270395297852",
+    "tuf": '744330890343219262',
+    "asus": "743936082780880928",
+    "asustek": "743936082780880928",
+    "acer": '744326890512318544',
+    "thinkpad": '744326223412461630',
+    "lenovo": '744326223412461630',
 }
 
 args = parse_args()
@@ -714,33 +347,33 @@ if args.terminal:
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
 if os.name != "nt":
     try:
-        terminals[termid.lower()]()
+        termappid = terminals[termid.lower()]
     except KeyError:
         print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
         Unknown_term()
 
     try:
-        shells[shellid.lower()]()
+        shell = shells[shellid.lower()]
     except KeyError:
         print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
         Unknown_shell()
     try:
         if sysosid.lower() != "macos":
-            hosts[hostid.lower()]()
+            hostappid = hosts[hostid.lower()]
     except KeyError:
         print("Unknown Host, contact us on github to resolve this.(Keyerror)")
         Unknown_host()
 
     try:
         if deid != "N/A" and sysosid.lower() != "macos":
-            desktops[deid.lower()]()
+            desktopid = desktops[deid.lower()]
     except KeyError:
         print("Unsupported De contact us on github to resolve this.(Keyerror)")
         Unknown_de_wm()
 
     try:
         if deid == "N/A" and sysosid.lower() != "macos":
-            windowmanagers[wmid.lower()]()
+            desktopid = windowmanagers[wmid.lower()]
     except KeyError:
         print("Unsupported Wm contact us on github to resolve this.(Keyerror)")
         Unknown_de_wm()
@@ -754,21 +387,21 @@ if os.name != "nt":
 
     try:
         if cpuvendor == "AMD":
-            amdcpus[cpumodel.lower()]()
+            cpuappid = amdcpus[cpumodel.lower()]
         elif cpuvendor in ["Intel", "Pentium"]:
-            intelcpus[cpumodel.lower()]()
+            cpuappid = intelcpus[cpumodel.lower()]
     except KeyError:
         print("unknown CPU, contact us on github to resolve this.(Keyerror)")
         Unknown_cpu()
 
     try:
-        gpus[gpuvendor.lower()]()
+        gpuid = gpus[gpuvendor.lower()]
     except KeyError:
         print("Unknown GPU, contact us on github to resolve this.(Keyerror)")
         Unknown_gpu()
 if os.name == "nt":
     try:
-        hosts[moboid.lower()]()
+        moboid = hosts[moboid.lower()]
     except KeyError:
         print("Unknown Host, contact us on github to resolve this problem.(Keyerror)")
         Unknown_host()
