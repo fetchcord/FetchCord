@@ -80,6 +80,8 @@ host = "Host:"
 hostline= []
 res = "Resolution:"
 resline = []
+theme = "Theme:"
+themeline = []
 if neofetchwin != "":
     filepath = "tmp.txt"
     with open(filepath, 'w') as f:
@@ -141,6 +143,10 @@ elif neofetchwin == "":
                 hostline.append(line.rstrip('\n'))
             if line.find(res) != -1:
                 resline.append(line.rstrip('\n'))
+            if line.find(mem) != -1:
+                memline.append(line.rstrip('\n'))
+            if line.find(theme) != -1:
+                themeline.append(line.rstrip('\n'))
 try:
     if os.path.isfile(filepath):
         os.remove(filepath)
@@ -282,6 +288,10 @@ if os.name != "nt":
     else:
         resline = resline[0]
     kernelid = kernelline[0].split()[1]
+    if not themeline:
+        themeline = ["N/A"]
+    if not memline:
+        memline = ["N/A"]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
 

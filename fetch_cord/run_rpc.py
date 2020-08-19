@@ -7,13 +7,13 @@ import psutil
 # import info about system
 from fetch_cord.args import parse_args
 from fetch_cord.testing import gpuid, appid, cpuappid
-from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo
+from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo, memline
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
     from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, termfontline, \
-        dewmid, termline, lapordesk, hostline, resline
+        dewmid, termline, lapordesk, hostline, resline, themeline
 elif os.name == "nt":
-    from fetch_cord.out import moboline, memline
+    from fetch_cord.out import moboline
     from fetch_cord.testing import moboid
 
 uptime = psutil.boot_time()
@@ -161,7 +161,7 @@ def cycle1():
     RPC = Presence(client_id)
     rpc_tryconnect()
     rpc_tryupdate(state=cpuinfo,
-               details=gpuinfo,
+               details=memline[0],
                large_image="big",
                large_text=cpuinfo,
                small_image=gpuid,
@@ -187,7 +187,7 @@ def cycle2():
     client_id = termappid
     RPC = Presence(client_id)
     rpc_tryconnect()
-    rpc_tryupdate(state=shell_line[0],
+    rpc_tryupdate(state=themeline[0],
                details=termfontline,
                large_image="big",
                large_text=termline[0],
