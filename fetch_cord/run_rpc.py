@@ -6,6 +6,7 @@ import os
 import psutil
 # import info about system
 from fetch_cord.args import parse_args
+from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, appid, cpuappid
 from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo, memline
 if os.name != "nt":
@@ -41,7 +42,7 @@ def main():
     if os.name == "nt":
         wandowz()
     else:
-        loonix()
+        loonix(memline, packagesline)
 
 def first_connect():
     try:
@@ -127,7 +128,7 @@ def custom_time():
 # cycle
 
 
-def cycle0():
+def cycle0(packagesline):
     if args.debug:
         print("cycle 0")
     client_id = appid
@@ -156,7 +157,7 @@ def cycle0():
 # cycle
 
 
-def cycle1():
+def cycle1(memline):
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
@@ -235,7 +236,7 @@ def cycle3():
             time.sleep(30)
     # back from whence you came
     else:
-        loonix(client_id)
+        loonix(memline, packagesline)
     rpc_tryclear(RPC)
 
 
@@ -297,16 +298,56 @@ def w_cycle1():
         time.sleep(30)
     rpc_tryclear(RPC)
 
+def check_change(memline, packagesline):
+    neofetchwin = False
+    if os.name == "nt":
+        neofetchwin = os.popen("neofetch --noart").read()
+    else:
+        try:
+            baseinfo = exec_bash("neofetch --stdout --config none")
+        except BashError as e:
+            print("Could not run neofetch, is neofetch installed? %s" % str(e))
+    mem = "Memory:"
+    memline = []
+    packages = "Packages:"
+    packagesline = []
+    if neofetchwin:
+        filepath = "tmp.txt"
+        with open(filepath, 'w') as f:
+            print(neofetchwin, file=f)
+        with open(filepath, 'rt') as f:
+            for line in f:
+                if line.find(mem) != -1:
+                    memline.append(line.rstrip('\n'))
 
+    elif not neofetchwin:
+        filepath = "tmp.txt"
+        with open(filepath, 'w') as f:
+            print(baseinfo, file=f)
+        with open(filepath, 'rt') as f:
+            for line in f:
+                if line.find(mem) != -1:
+                    memline.append(line.rstrip('\n'))
+                if line.find(packages) != -1:
+                    packagesline.append(line.rstrip('\n'))
 
-def loonix():
+    try:
+        if os.path.isfile(filepath):
+            os.remove(filepath)
+    except FileNotFoundError:
+        pass
+
+    return loonix(memline, packagesline)
+
+def loonix(memline, packagesline):
     try:
         first_connect()
-        while True:
+        i = 0
+        while i < 10:
             if not args.nodistro and sysosid.lower() != "macos":
-                cycle0()
+                cycle0(packagesline)
             if not args.nohardware:
-                cycle1()
+                cycle1(memline)
             if not args.noshell:
                 cycle2()
             if not args.nohost and sysosid.lower() != "macos":
@@ -315,6 +356,9 @@ def loonix():
                 runmac()
             if args.pause_cycle:
                 pause()
+            i += 1
+        if not args.nohardware and not args.nodistro:
+            check_change(memline, packagesline)
     except KeyboardInterrupt:
         print("Closing connection.")
         sys.exit(0)
