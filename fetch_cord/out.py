@@ -159,6 +159,7 @@ primeoffload = ""
 if sysosid.lower() != "macos" and os.name != "nt":
         # only show the GPU in use with optimus, show both if prime render offload
         batpath = "/sys/class/power_supply"
+        laptop = False
         for i in os.listdir(batpath):
             if i.startswith("BAT"):
                 laptop = True
