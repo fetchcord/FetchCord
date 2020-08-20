@@ -9,81 +9,67 @@ if os.name != "nt":
 elif os.name == "nt":
     from fetch_cord.out import moboline
 
-# appid for discord app
-appid = "none"
-
-# predefine ids
-cpuappid = "none"
-gpuid = "none"
-termappid = "none"
-desktopid = "none"
-hostappid = "none"
-
-
 def Unknown_distro():
-    global appid
     appid = '742993278143692821'
+    return appid
 
 def Unknown_de_wm():
-    global desktopid
     desktopid = 'unknown'
+    return desktopid
 
 def Unknown_cpu():
-    global cpuid, cpuappid
     cpuappid = '742887089179197462'
+    return cpuappid
 
 def Unknown_gpu():
-    global gpuid
     gpuid = 'unknown'
+    return gpuid
 
 def Unknown_term():
-    global termappid
     termappid = '745691250186911796'
+    return termappid
 
 def Unknown_shell():
-    global shell
     shell = "unknown"
+    return shell
 
 def Unknown_host():
-    global hostappid, moboid
     hostappid = "742887089179197462"
     moboid = 'unknown'
+    return hostappid, moboid
 
 
 # macOS hardwawre
 
 
 def laporp():
-    global devicetype
     if product[0:7] == "MacBook":
         devicetype = "laptop"
     else:
         devicetype = "desktop"
+    return devicetype
 
 def macos():
-    global product, devicetype, bigicon, ver
-    if sysosid.lower() == "macos":
-        devicetype = "none"
-        bigicon = "none"
-        ver = os.popen("sw_vers -productVersion").read()
-        product = os.popen("sysctl -n hw.model").read()
-        try:
-            bigicon = versions[ver[0:5]]
-        except IndexError:
-            bigicon = "bigslurp"
-        except KeyError:
-            print("Unsupported MacOS version")
-        laporp()
-
+    devicetype = "none"
+    ver = os.popen("sw_vers -productVersion").read()
+    product = os.popen("sysctl -n hw.model").read()
+    try:
+        bigicon = versions[ver[0:5]]
+    except IndexError:
+        bigicon = "bigslurp"
+    except KeyError:
+        print("Unsupported MacOS version")
+    laporp()
+    return product, devicetype, bigicon, ver
 # this is staying
 def iUnity():
     # this is to check wether the user is actually using unity
     # or using unity as an xdg value to fix issues with electron apps
     if wmid.lower() == "compiz":
-        global desktopid
         desktopid = "unity"
     else:
         desktopid = wmid
+    return desktopid
 
 amdcpus = {
     "ryzen 3": '741153175779803146',
@@ -171,7 +157,7 @@ desktops = {
     "deepin": "deepin",
     "cinnamon": "cinnamon",
     "mate": "mate",
-    "unity": iUnity,
+    "unity": iUnity(),
     "aero": "aero",
     "pantheon": "pantheon",
 }
@@ -214,7 +200,7 @@ args = parse_args()
 hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude', 'G3', 'Asus', 'ASUSTeK']
 hostid = ""
 if os.name != "nt":
-    if hostline != "":
+    if hostline:
         hostsplit = hostline[0].split()
         hostid = []
         for line in range(len(hostsplit)):
@@ -225,9 +211,10 @@ if os.name != "nt":
         except IndexError:
             hostid = ""
             pass
+
 moboid = ""
 if os.name == "nt":
-    if moboline != "":
+    if moboline:
         mobosplit = moboline[0].split()
         moboid = []
         for line in range(len(mobosplit)):

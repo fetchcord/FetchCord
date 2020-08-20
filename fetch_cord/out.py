@@ -1,8 +1,6 @@
 from fetch_cord.bash import exec_bash, BashError
 import sys
 import os
-import argparse
-import urllib.request
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
 
@@ -27,7 +25,7 @@ try:
 except AttributeError:
     pass
 
-neofetchwin = ""
+neofetchwin = False
 if os.name == "nt":
     neofetchwin = os.popen("neofetch --noart").read()
 else:
@@ -82,7 +80,7 @@ res = "Resolution:"
 resline = []
 theme = "Theme:"
 themeline = []
-if neofetchwin != "":
+if neofetchwin:
     filepath = "tmp.txt"
     with open(filepath, 'w') as f:
         print(neofetchwin, file=f)
@@ -105,7 +103,7 @@ if neofetchwin != "":
             if line.find(mobo) != -1:
                 moboline.append(line.rstrip('\n'))
 
-elif neofetchwin == "":
+elif not neofetchwin:
     filepath = "/tmp/out.txt"
     with open(filepath, 'w') as f:
         print(baseinfo, file=f)
@@ -155,7 +153,7 @@ except FileNotFoundError:
 sysosid = sysosline[0].split()[1]
 gpuvendor = ""
 gpuinfo = ""
-primeoffload = ""
+primeoffload = False
 if sysosid.lower() != "macos" and os.name != "nt":
         # only show the GPU in use with optimus, show both if prime render offload
         batpath = "/sys/class/power_supply"
@@ -178,7 +176,7 @@ if nvidiagpuline:
     gpuvendor += nvidiagpuline[0].split()[1]
 
 amdgpurenderlist = []
-if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload == "":
+if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeoffload:
 
     try:
         # amd GPUs
@@ -201,7 +199,7 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and primeoffload =
         gpuinfo += amdgpurenderlist[a]
     gpuvendor += amdgpuvendor
 
-elif amdgpurenderlist == [] and primeoffload == "":
+elif amdgpurenderlist == [] and not primeoffload:
     try:
         for a in range(len(amdgpuline)):
             gpuinfo += amdgpuline[a]
@@ -209,7 +207,7 @@ elif amdgpurenderlist == [] and primeoffload == "":
     except IndexError:
         pass
 
-if intelgpuline and primeoffload == "":
+if intelgpuline and not primeoffload:
 
     try:
         gpuinfo += intelgpuline[0]

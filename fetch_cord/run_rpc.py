@@ -32,7 +32,7 @@ def main():
         print("cpuid: %s" % appid)
         print("cpuappid: %s" % cpuappid)
         print("termappid: %s" % termappid)
-        if hostline != "":
+        if hostline:
             print("hostappid: %s" % hostappid)
         if os.name != "nt":
             print("termappid: %s" % termappid)
@@ -44,14 +44,13 @@ def main():
         loonix()
 
 def first_connect():
-    global RPC
     try:
         client_id = appid
         RPC = Presence(client_id)
         RPC.connect()
         print("RPC Connection Successful.")
     except ConnectionRefusedError:
-        rpc_tryconnect()
+        rpc_tryconnect(RPC)
 
 print("Connecting")
 try:
@@ -63,8 +62,7 @@ except KeyboardInterrupt:
 start_time = float(uptime)
 
 
-
-def rpc_tryconnect():
+def rpc_tryconnect(RPC):
     while True:
         try:
             RPC.connect()
@@ -75,14 +73,14 @@ def rpc_tryconnect():
 
 
 
-def rpc_tryclear():
+def rpc_tryclear(RPC):
     try:
         RPC.clear(pid=os.getpid())
     except exceptions.InvalidID:
         pass
 
 
-def rpc_tryupdate(state, details, large_image, large_text, small_image, small_text, start):
+def rpc_tryupdate(RPC, state, details, large_image, large_text, small_image, small_text, start):
     try:
         RPC.update(state=state, details=details, large_image=large_image,
                     large_text=large_text, small_image=small_image, small_text=small_text,
@@ -92,8 +90,7 @@ def rpc_tryupdate(state, details, large_image, large_text, small_image, small_te
         pass
 
 
-def runmac():
-    global RPC
+def runmac(client_id):
     from fetch_cord.testing import devicetype, product, bigicon, ver
     client_id = '740822755376758944'  # macos appid for discord rpc
     if args.debug:
@@ -105,8 +102,9 @@ def runmac():
         print("uptime: %s" % uptime)
         print("client_id: %s" % client_id)
     RPC = Presence(client_id)
-    rpc_tryconnect()
-    rpc_tryupdate(state=packagesline[0],  # update state as packages
+    rpc_tryconnect(RPC)
+    rpc_tryupdate(RPC,
+                state=packagesline[0],  # update state as packages
                 details=kernelline[0],  # update details as kernel
                 large_image=bigicon,  # set icon
                 large_text=sysosline[0],  # set large icon text
@@ -119,7 +117,7 @@ def runmac():
         time.sleep(9999)
     else:
         time.sleep(30)
-
+    rpc_tryclear(RPC)
 
 def custom_time():
     ctime = int(args.time)
@@ -130,13 +128,13 @@ def custom_time():
 
 
 def cycle0():
-    global RPC
     if args.debug:
         print("cycle 0")
     client_id = appid
     RPC = Presence(client_id)
-    rpc_tryconnect()
-    rpc_tryupdate(state=packagesline[0],
+    rpc_tryconnect(RPC)
+    rpc_tryupdate(RPC,
+               state=packagesline[0],
                details=kernelline[0],
                large_image="big",
                large_text=sysosline[0],
@@ -152,19 +150,20 @@ def cycle0():
         time.sleep(9999)
     else:
         time.sleep(30)
+    rpc_tryclear(RPC)
 
 
 # cycle
 
 
 def cycle1():
-    global RPC
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
     RPC = Presence(client_id)
-    rpc_tryconnect()
-    rpc_tryupdate(state=cpuinfo,
+    rpc_tryconnect(RPC)
+    rpc_tryupdate(RPC,
+               state=cpuinfo,
                details=memline[0],
                large_image="big",
                large_text=cpuinfo,
@@ -179,19 +178,20 @@ def cycle1():
         time.sleep(9999)
     else:
         time.sleep(30)
+    rpc_tryclear(RPC)
 
 
 # cycle
 
 
 def cycle2():
-    global RPC
     if args.debug:
         print("cycle 2")
     client_id = termappid
     RPC = Presence(client_id)
-    rpc_tryconnect()
-    rpc_tryupdate(state=themeline[0],
+    rpc_tryconnect(RPC)
+    rpc_tryupdate(RPC,
+               state=themeline[0],
                details=termfontline,
                large_image="big",
                large_text=termline[0],
@@ -206,18 +206,19 @@ def cycle2():
         time.sleep(9999)
     else:
         time.sleep(30)
+    rpc_tryclear(RPC)
 
 
 def cycle3():
     # if not then forget it
     if hostline:
-        global RPC
         if args.debug:
             print("cycle 3")
         client_id = hostappid
         RPC = Presence(client_id)
-        rpc_tryconnect()
-        rpc_tryupdate(state=resline,
+        rpc_tryconnect(RPC)
+        rpc_tryupdate(RPC,
+                state=resline,
                 details=hostline[0],
                 large_image="big",
                 large_text=hostline[0],
@@ -234,7 +235,8 @@ def cycle3():
             time.sleep(30)
     # back from whence you came
     else:
-        loonix()
+        loonix(client_id)
+    rpc_tryclear(RPC)
 
 
 def pause():
@@ -247,13 +249,13 @@ def pause():
 
 
 def w_cycle0():
-    global RPC
     if args.debug:
         print("w_cycle 0")
     client_id = appid
     RPC = Presence(client_id)
-    rpc_tryconnect()
-    rpc_tryupdate(state=sysosline[0],
+    rpc_tryconnect(RPC)
+    rpc_tryupdate(RPC,
+               state=sysosline[0],
                details=memline[0],
                large_image="big",
                large_text=sysosline[0],
@@ -268,16 +270,17 @@ def w_cycle0():
         time.sleep(9999)
     else:
         time.sleep(30)
+    rpc_tryclear(RPC)
 
 
 def w_cycle1():
-    global RPC
     if args.debug:
         print("w_cycle 1")
     client_id = cpuappid
     RPC = Presence(client_id)
-    rpc_tryconnect()
-    rpc_tryupdate(state=cpuinfo,
+    rpc_tryconnect(RPC)
+    rpc_tryupdate(RPC,
+               state=cpuinfo,
                details=gpuinfo,
                large_image="big",
                large_text=cpuinfo,
@@ -292,6 +295,7 @@ def w_cycle1():
         time.sleep(9999)
     else:
         time.sleep(30)
+    rpc_tryclear(RPC)
 
 
 
@@ -301,22 +305,16 @@ def loonix():
         while True:
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0()
-                rpc_tryclear()
             if not args.nohardware:
                 cycle1()
-                rpc_tryclear()
             if not args.noshell:
                 cycle2()
-                rpc_tryclear()
             if not args.nohost and sysosid.lower() != "macos":
                 cycle3()
-                rpc_tryclear()
             if sysosid.lower() == "macos":
                 runmac()
-                rpc_tryclear()
             if args.pause_cycle:
                 pause()
-                rpc_tryclear()
     except KeyboardInterrupt:
         print("Closing connection.")
         sys.exit(0)
@@ -328,10 +326,8 @@ def wandowz():
         while True:
             if not args.nodistro:
                 w_cycle0()
-                rpc_tryclear()
             if not args.nohardware:
                 w_cycle1()
-                rpc_tryclear()
     except KeyboardInterrupt:
         print("Closing connection.")
         sys.exit(0)
