@@ -9,36 +9,6 @@ if os.name != "nt":
 elif os.name == "nt":
     from fetch_cord.out import moboline
 
-def Unknown_distro():
-    appid = '742993278143692821'
-    return appid
-
-def Unknown_de_wm():
-    desktopid = 'unknown'
-    return desktopid
-
-def Unknown_cpu():
-    cpuappid = '742887089179197462'
-    return cpuappid
-
-def Unknown_gpu():
-    gpuid = 'unknown'
-    return gpuid
-
-def Unknown_term():
-    termappid = '745691250186911796'
-    return termappid
-
-def Unknown_shell():
-    shell = "unknown"
-    return shell
-
-def Unknown_host():
-    hostappid = "742887089179197462"
-    moboid = 'unknown'
-    return hostappid, moboid
-
-
 # macOS hardwawre
 
 
@@ -243,48 +213,48 @@ if args.terminal:
         print("hostsplit: %s" % hostsplit)
         print("hostid: %s" % hostid)
 
-
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
 if os.name != "nt":
     try:
         termappid = terminals[termid.lower()]
     except KeyError:
         print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
-        Unknown_term()
+        termappid = '745691250186911796'
+
 
     try:
         shell = shells[shellid.lower()]
     except KeyError:
         print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
-        Unknown_shell()
+        shell = "unknown"
 
     try:
         if sysosid.lower() != "macos":
             hostappid = hosts[hostid.lower()]
     except KeyError:
         print("Unknown Host, contact us on github to resolve this.(Keyerror)")
-        Unknown_host()
+        hostappid = "742887089179197462"
 
     try:
         if deid != "N/A" and sysosid.lower() != "macos":
             desktopid = desktops[deid.lower()]
     except KeyError:
         print("Unsupported De contact us on github to resolve this.(Keyerror)")
-        Unknown_de_wm()
+        desktopid = 'unknown'
 
     try:
         if deid == "N/A" and sysosid.lower() != "macos":
             desktopid = windowmanagers[wmid.lower()]
     except KeyError:
         print("Unsupported Wm contact us on github to resolve this.(Keyerror)")
-        Unknown_de_wm()
+        desktopid = 'unknown'
 
 try:
     if sysosid.lower() != "macos":
         appid = distros[sysosid.lower()]
 except KeyError:
     print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
-    Unknown_distro()
+    appid = '742993278143692821'
 
 try:
     if cpuvendor == "AMD":
@@ -293,20 +263,20 @@ try:
         cpuappid = intelcpus[cpumodel.lower()]
 except KeyError:
     print("unknown CPU, contact us on github to resolve this.(Keyerror)")
-    Unknown_cpu()
+    cpuappid = '742887089179197462'
 
 try:
     gpuid = gpus[gpuvendor.lower()]
 except KeyError:
     print("Unknown GPU, contact us on github to resolve this.(Keyerror)")
-    Unknown_gpu()
+    gpuid = 'unknown'
 
 if os.name == "nt":
     try:
         moboid = hosts[moboid.lower()]
     except KeyError:
         print("Unknown Host, contact us on github to resolve this problem.(Keyerror)")
-        Unknown_host()
+        moboid = 'unknown'
 
 elif sysosid.lower() == "macos":
     macos()
