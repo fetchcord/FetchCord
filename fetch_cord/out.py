@@ -158,7 +158,10 @@ gpuinfo = ""
 primeoffload = ""
 if sysosid.lower() != "macos" and os.name != "nt":
         # only show the GPU in use with optimus, show both if prime render offload
-        laptop = os.path.isdir("/sys/module/battery")
+        laptop = "/sys/class/power_supply"
+        for i in os.listdir(laptop):
+            if i.startswith("BAT"):
+                laptop = True
         if laptop and nvidiagpuline:
             if args.debug:
                 print("laptop: %s" % laptop)
