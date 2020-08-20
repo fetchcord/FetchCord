@@ -12,7 +12,7 @@ elif os.name == "nt":
 # macOS hardwawre
 
 
-def laporp():
+def laporp(product):
     if product[0:7] == "MacBook":
         devicetype = "laptop"
     else:
@@ -23,13 +23,14 @@ def macos():
     devicetype = "none"
     ver = os.popen("sw_vers -productVersion").read()
     product = os.popen("sysctl -n hw.model").read()
+    bigicon = "none"
     try:
         bigicon = versions[ver[0:5]]
     except IndexError:
         bigicon = "bigslurp"
     except KeyError:
         print("Unsupported MacOS version")
-    laporp()
+    laporp(product)
     return product, devicetype, bigicon, ver
 # this is staying
 def iUnity():
@@ -250,8 +251,7 @@ if os.name != "nt":
         desktopid = 'unknown'
 
 try:
-    if sysosid.lower() != "macos":
-        appid = distros[sysosid.lower()]
+    appid = distros[sysosid.lower()]
 except KeyError:
     print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
     appid = '742993278143692821'

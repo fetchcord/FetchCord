@@ -7,7 +7,7 @@ import psutil
 # import info about system
 from fetch_cord.args import parse_args
 from fetch_cord.bash import BashError, exec_bash
-from fetch_cord.testing import gpuid, appid, cpuappid
+from fetch_cord.testing import gpuid, cpuappid, appid
 from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo, memline
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
