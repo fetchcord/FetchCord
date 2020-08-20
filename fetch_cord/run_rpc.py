@@ -341,6 +341,7 @@ def check_change(memline, packagesline):
 
 def loonix(memline, packagesline):
     try:
+        # TODO: fix this from running again since we call this function in check_change
         first_connect()
         i = 0
         while i < 10:
@@ -359,6 +360,8 @@ def loonix(memline, packagesline):
             i += 1
         if not args.nohardware and not args.nodistro:
             check_change(memline, packagesline)
+        else:
+            loonix(memline, packagesline)
     except KeyboardInterrupt:
         print("Closing connection.")
         sys.exit(0)
