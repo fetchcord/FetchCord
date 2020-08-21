@@ -105,7 +105,7 @@ if neofetchwin:
             if line.find(mobo) != -1:
                 moboline.append(line.rstrip('\n'))
             if line.find(radgpu) != -1:
-                radgpuline.append(line.rsrtip('\n'))
+                radgpuline.append(line.rstrip('\n'))
 
 elif not neofetchwin:
     filepath = "/tmp/out.txt"
