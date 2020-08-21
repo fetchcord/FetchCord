@@ -32,12 +32,10 @@ def main():
         print("uptime in epoch: %s" % uptime)
         print("cpuid: %s" % appid)
         print("cpuappid: %s" % cpuappid)
-        print("termappid: %s" % termappid)
-        if hostline:
-            print("hostappid: %s" % hostappid)
         if os.name != "nt":
             print("termappid: %s" % termappid)
-        if os.name != "nt":
+            if hostline:
+                print("hostappid: %s" % hostappid)
             print(packagesline[0])
     if os.name == "nt":
         wandowz()
