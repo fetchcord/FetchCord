@@ -11,36 +11,36 @@ elif os.name == "nt":
 
 # macOS hardwawre
 
+if os.name != "nt":
+    def laporp(product):
+        if product[0:7] == "MacBook":
+            devicetype = "laptop"
+        else:
+            devicetype = "desktop"
+        return devicetype
 
-def laporp(product):
-    if product[0:7] == "MacBook":
-        devicetype = "laptop"
-    else:
-        devicetype = "desktop"
-    return devicetype
-
-def macos():
-    devicetype = "none"
-    ver = os.popen("sw_vers -productVersion").read()
-    product = os.popen("sysctl -n hw.model").read()
-    bigicon = "none"
-    try:
-        bigicon = versions[ver[0:5]]
-    except IndexError:
-        bigicon = "bigslurp"
-    except KeyError:
-        print("Unsupported MacOS version")
-    laporp(product)
-    return product, devicetype, bigicon, ver
-# this is staying
-def iUnity():
-    # this is to check wether the user is actually using unity
-    # or using unity as an xdg value to fix issues with electron apps
-    if wmid.lower() == "compiz":
-        desktopid = "unity"
-    else:
-        desktopid = wmid
-    return desktopid
+    def macos():
+        devicetype = "none"
+        ver = os.popen("sw_vers -productVersion").read()
+        product = os.popen("sysctl -n hw.model").read()
+        bigicon = "none"
+        try:
+            bigicon = versions[ver[0:5]]
+        except IndexError:
+            bigicon = "bigslurp"
+        except KeyError:
+            print("Unsupported MacOS version")
+        laporp(product)
+        return product, devicetype, bigicon, ver
+    # this is staying
+    def iUnity():
+        # this is to check wether the user is actually using unity
+        # or using unity as an xdg value to fix issues with electron apps
+        if wmid.lower() == "compiz":
+            desktopid = "unity"
+        else:
+            desktopid = wmid
+        return desktopid
 
 amdcpus = {
     "ryzen 3": '741153175779803146',
