@@ -119,19 +119,20 @@ windowmanagers = {
     "openbox": "opebox", # not a typo i accidently added all the openbox as 'opebox'
 }
 # desktops
-desktops = {
-    "kde": "kde",
-    "plasma": "kde",
-    "xfce": "xfce",
-    "budgie": "budgie",
-    "gnome": "gnome",
-    "deepin": "deepin",
-    "cinnamon": "cinnamon",
-    "mate": "mate",
-    "unity": iUnity(),
-    "aero": "aero",
-    "pantheon": "pantheon",
-}
+if os.name != "nt":
+    desktops = {
+        "kde": "kde",
+        "plasma": "kde",
+        "xfce": "xfce",
+        "budgie": "budgie",
+        "gnome": "gnome",
+        "deepin": "deepin",
+        "cinnamon": "cinnamon",
+        "mate": "mate",
+        "unity": iUnity(),
+        "aero": "aero",
+        "pantheon": "pantheon",
+    }
 terminals = {
     "st": '741280043220861030',
     "kitty": '741285676250824725',

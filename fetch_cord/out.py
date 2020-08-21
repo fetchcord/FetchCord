@@ -309,8 +309,8 @@ if sysosid.lower() in ['windows', 'linux', 'opensuse']:
 if args.debug:
     print("----out.py----\n")
     print("----DE/WM----")
-    print("deid: %s" % deid)
     if os.name != "nt":
+        print("deid: %s" % deid)
         print("wmid: %s" % wmid)
         try:
             print("wmline item 0: %s" % wmline[0])
@@ -339,4 +339,5 @@ if args.debug:
     print("\n----OS INFO----\n")
     print("sysosline: %s" % sysosline)
     print("sysosid: %s" % sysosid)
-    print("packagesline item 0: %s" % packagesline[0])
+    if os.name != "nt":
+        print("packagesline item 0: %s" % packagesline[0])
