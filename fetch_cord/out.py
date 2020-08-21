@@ -214,7 +214,11 @@ elif amdgpurenderlist == [] and not primeoffload:
 if os.name == "nt" and radgpuline:
     try:
         for r in range(len(radgpuline)):
-            gpuinfo += " GPU:" + radgpuline[r]
+            # formatting
+            if nvidiagpuline:
+                gpuinfo += " GPU:" + radgpuline[r]
+            else:
+                gpuinfo += "GPU:" + radgpuline[r]
         gpuvendor += "AMD"
     except IndexError:
         pass
