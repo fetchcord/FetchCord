@@ -81,7 +81,9 @@ resline = []
 theme = "Theme:"
 themeline = []
 if neofetchwin:
+    nvidiagpu = "NVIDIA"
     radgpu = "Radeon"
+    intelgpu = "Intel"
     radgpuline = []
     filepath = "tmp.txt"
     with open(filepath, 'w') as f:
@@ -91,7 +93,7 @@ if neofetchwin:
             if line.find(cpu) != -1:
                 cpuline.append(line.rstrip('\n'))
             if line.find(nvidiagpu) != -1:
-                nvidiagpuline.append(line.rstrip('\n'))
+                nvidiagpuline.append(line[line.find(nvidiagpu):].rstrip('\n'))
             if line.find(amdgpu) != -1:
                 amdgpuline.append(line.rstrip('\n'))
             if line.find(intelgpu) != -1:
@@ -173,8 +175,7 @@ if sysosid.lower() != "macos" and os.name != "nt":
             except BashError:
                 pass
 
-if nvidiagpuline:
-
+if nvidiagpuline and os.name != "nt":
     for n in range(len(nvidiagpuline)):
         gpuinfo += nvidiagpuline[n]
     gpuvendor += nvidiagpuline[0].split()[1]
@@ -211,21 +212,40 @@ elif amdgpurenderlist == [] and not primeoffload:
     except IndexError:
         pass
 
-if os.name == "nt" and radgpuline:
-    try:
-        for r in range(len(radgpuline)):
-            # formatting
+if os.name == "nt":
+    if nvidiagpuline:
+        try:
+            gpuinfo += "GPU: " +  nvidiagpuline[0]
+            for n in nvidiagpuline[1:]:
+                gpuinfo += "\nGPU: " + n
+
+            gpuvendor += nvidiagpuline[0].split()[0]
+        except IndexError:
+            pass
+    if radgpuline:
+        try:
             if nvidiagpuline:
-                gpuinfo += "\nGPU: " + radgpuline[r]
-            else:
-                gpuinfo += radgpuline[r]
-        gpuvendor += "AMD"
-    except IndexError:
-        pass
+                gpuinfo += "\n"
+            gpuinfo += "GPU: " + radgpuline[0]
+            for r in radgpuline[1:]:
+                gpuinfo += "\nGPU: " + r
+                    
+            gpuvendor += "AMD"
+        except IndexError:
+            pass
+    if intelgpuline:
+        try:
+            if nvidiagpuline or radgpuline:
+                gpuinfo += "\n"
+            gpuinfo += "GPU: " + intelgpuline[0]
+            for i in intelgpuline[1:]:
+                gpuinfo += "\nGPU: " + i
+                    
+            gpuvendor += intelgpuline[0].split()[0]
+        except IndexError:
+            pass
 
-
-if intelgpuline and not primeoffload:
-
+if intelgpuline and not primeoffload and os.name!="nt":
     try:
         gpuinfo += intelgpuline[0]
         gpuvendor += intelgpuline[0].split()[1]
