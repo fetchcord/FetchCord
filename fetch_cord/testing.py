@@ -165,11 +165,25 @@ hosts= {
     "acer": '744326890512318544',
     "thinkpad": '744326223412461630',
     "lenovo": '744326223412461630',
+    "gigabyte": '746447043190456561',
+}
+motherboards= {
+    "inspiron": "dell",
+    "latitude": "dell",
+    "g3": "dell",
+    "hp": "hp",
+    "tuf": 'tuf',
+    "asus": "asus",
+    "asustek": "asus",
+    "acer": 'acer',
+    "thinkpad": 'lenovo',
+    "lenovo": 'lenovo',
+    "gigabyte": 'gigabyte',
 }
 
 args = parse_args()
 
-hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude', 'G3', 'Asus', 'ASUSTeK']
+hostlist = ['Acer', 'TUF', 'HP', 'ThinkPad', 'Inspiron', 'Lenovo', 'Latitude', 'G3', 'Asus', 'ASUSTeK', 'Gigabyte']
 hostid = ""
 if os.name != "nt":
     if hostline:
@@ -274,7 +288,7 @@ except KeyError:
 
 if os.name == "nt":
     try:
-        moboid = hosts[moboid.lower()]
+        moboid = motherboards[moboid.lower()]
     except KeyError:
         print("Unknown Host, contact us on github to resolve this problem.(Keyerror)")
         moboid = 'unknown'
