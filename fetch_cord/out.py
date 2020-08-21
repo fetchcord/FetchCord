@@ -218,7 +218,7 @@ if os.name == "nt" and radgpuline:
             if nvidiagpuline:
                 gpuinfo += " GPU:" + radgpuline[r]
             else:
-                gpuinfo += "GPU:" + radgpuline[r]
+                gpuinfo += radgpuline[r]
         gpuvendor += "AMD"
     except IndexError:
         pass
