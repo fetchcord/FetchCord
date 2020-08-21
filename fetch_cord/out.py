@@ -105,7 +105,7 @@ if neofetchwin:
             if line.find(mobo) != -1:
                 moboline.append(line.rstrip('\n'))
             if line.find(radgpu) != -1:
-                radgpuline.append(line.rstrip('\n'))
+                radgpuline.append(line[line.find(radgpu):].rstrip('\n'))
 
 elif not neofetchwin:
     filepath = "/tmp/out.txt"
@@ -216,7 +216,7 @@ if os.name == "nt" and radgpuline:
         for r in range(len(radgpuline)):
             # formatting
             if nvidiagpuline:
-                gpuinfo += " GPU:" + radgpuline[r]
+                gpuinfo += "\nGPU: " + radgpuline[r]
             else:
                 gpuinfo += radgpuline[r]
         gpuvendor += "AMD"
