@@ -149,11 +149,12 @@ terminals = {
 }
 
 
-shells = {
-    "fish": "fish",
-    "zsh": "zsh",
-    "bash": "bash",
-}
+shells = [
+    "fish",
+    "zsh",
+    "bash",
+    "ruby",
+]
 hosts= {
     "inspiron": "743970870631858288",
     "latitude": "743970870631858288",
@@ -239,7 +240,7 @@ if os.name != "nt":
 
 
     try:
-        shell = shells[shellid.lower()]
+        shell = [s for s in shells if shellid in s]
     except KeyError:
         print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
         shell = "unknown"
