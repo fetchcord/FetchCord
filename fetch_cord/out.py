@@ -96,7 +96,7 @@ if neofetchwin:
                 nvidiagpuline.append(line[line.find(nvidiagpu):].rstrip('\n'))
             if line.find(amdgpu) != -1:
                 amdgpuline.append(line.rstrip('\n'))
-            if line.find(intelgpu) != -1:
+            if line.find(intelgpu) != -1 and line.find(cpu) == -1:
                 intelgpuline.append(line[line.find(intelgpu):].rstrip('\n'))
             if line.find(vmwaregpu) != -1:
                 vmwaregpuline.append(line.rstrip('\n'))
