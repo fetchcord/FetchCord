@@ -98,11 +98,12 @@
         "lxterminal": "745701997503840380",
         "mate-terminal": "746531413360377856"
     },
-    "shells": {
-        "fish": "fish",
-        "zsh": "zsh",
-        "bash": "bash"
-    },
+    "shells": [
+        "fish",
+        "zsh",
+        "bash",
+        "ruby"
+    ],
     "hosts": {
         "inspiron": "743970870631858288",
         "latitude": "743970870631858288",

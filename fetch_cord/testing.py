@@ -123,7 +123,7 @@ if os.name != "nt":
 
 
     try:
-        shell = shells[shellid.lower()]
+        shell = [s for s in shells if shellid in s]
     except KeyError:
         print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
         shell = "unknown"
