@@ -80,7 +80,9 @@ resline = []
 theme = "Theme:"
 themeline = []
 if neofetchwin:
+    nvidiagpu = "NVIDIA"
     radgpu = "Radeon"
+    intelgpu = "Intel"
     radgpuline = []
     filepath = "tmp.txt"
     with open(filepath, 'w') as f:
@@ -90,11 +92,11 @@ if neofetchwin:
             if line.find(cpu) != -1:
                 cpuline.append(line.rstrip('\n'))
             if line.find(nvidiagpu) != -1:
-                nvidiagpuline.append(line.rstrip('\n'))
+                nvidiagpuline.append(line[line.find(nvidiagpu):].rstrip('\n'))
             if line.find(amdgpu) != -1:
                 amdgpuline.append(line.rstrip('\n'))
-            if line.find(intelgpu) != -1:
-                intelgpuline.append(line.rstrip('\n'))
+            if line.find(intelgpu) != -1 and line.find(cpu) == -1:
+                intelgpuline.append(line[line.find(intelgpu):].rstrip('\n'))
             if line.find(vmwaregpu) != -1:
                 vmwaregpuline.append(line.rstrip('\n'))
             if line.find(sysos) != -1:
@@ -172,62 +174,81 @@ if sysosid.lower() != "macos" and os.name != "nt":
             except BashError:
                 pass
 
-if nvidiagpuline:
-
-    for n in range(len(nvidiagpuline)):
-        gpuinfo += nvidiagpuline[n]
-    gpuvendor += "NVIDIA"
-
 amdgpurenderlist = []
-if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeoffload:
+if os.name != "nt":
+    if nvidiagpuline:
+        for n in range(len(nvidiagpuline)):
+            gpuinfo += nvidiagpuline[n]
+        gpuvendor += "NVIDIA"
 
-    try:
-        # amd GPUs
-        for i in range(len(amdgpuline)):
-            # assume DRI_PRIME=0 is the intel GPU
-            if laptop and intelgpuline:
-                i = i + 1
-            env_prime = "env DRI_PRIME=%s" % i
-            amdgpurender = "GPU: " + \
-                exec_bash(
-                    "%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
-            if i != -1:
-                amdgpurenderlist.append(amdgpurender)
-        amdgpuvendor = amdgpurender.split()[1]
-    except BashError as e:
-        print("ERROR: Could not run glxinfo [%s]" % str(e))
-        sys.exit(1)
+    if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeoffload:
+        try:
+            # amd GPUs
+            for i in range(len(amdgpuline)):
+                # assume DRI_PRIME=0 is the intel GPU
+                if laptop and intelgpuline:
+                    i = i + 1
+                env_prime = "env DRI_PRIME=%s" % i
+                amdgpurender = "GPU: " + \
+                    exec_bash(
+                        "%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
+                if i != -1:
+                    amdgpurenderlist.append(amdgpurender)
+            amdgpuvendor = "AMD"
+        except BashError as e:
+            print("ERROR: Could not run glxinfo [%s]" % str(e))
+            sys.exit(1)
 
-    for a in range(len(amdgpurenderlist)):
-        gpuinfo += amdgpurenderlist[a]
-    gpuvendor += "AMD"
-
-elif amdgpurenderlist == [] and not primeoffload:
-    try:
-        for a in range(len(amdgpuline)):
-            gpuinfo += amdgpuline[a]
+        for a in range(len(amdgpurenderlist)):
+            gpuinfo += amdgpurenderlist[a]
         gpuvendor += "AMD"
-    except IndexError:
-        pass
 
-if os.name == "nt" and radgpuline:
-    try:
-        for r in range(len(radgpuline)):
-            # formatting
+    elif amdgpurenderlist == [] and not primeoffload:
+        try:
+            for a in range(len(amdgpuline)):
+                gpuinfo += amdgpuline[a]
+            gpuvendor += amdgpuline[0].split()[1]
+        except IndexError:
+            pass
+
+    if intelgpuline and not primeoffload:
+        try:
+            gpuinfo += intelgpuline[0]
+            gpuvendor += intelgpuline[0].split()[1]
+        except IndexError:
+            pass
+else: # Cursed windows stuff
+    if nvidiagpuline:
+        try:
+            gpuinfo += "GPU: " +  nvidiagpuline[0]
+            for n in nvidiagpuline[1:]:
+                gpuinfo += "\nGPU: " + n
+
+            gpuvendor += nvidiagpuline[0].split()[0]
+        except IndexError:
+            pass
+    if radgpuline:
+        try:
             if nvidiagpuline:
-                gpuinfo += " GPU: " + radgpuline[r]
-        gpuvendor += "AMD"
-    except IndexError:
-        pass
-
-
-if intelgpuline and not primeoffload:
-
-    try:
-        gpuinfo += intelgpuline[0]
-        gpuvendor += "Intel"
-    except IndexError:
-        pass
+                gpuinfo += "\n"
+            gpuinfo += "GPU: " + radgpuline[0]
+            for r in radgpuline[1:]:
+                gpuinfo += "\nGPU: " + r
+                    
+            gpuvendor += "AMD"
+        except IndexError:
+            pass
+    if intelgpuline:
+        try:
+            if nvidiagpuline or radgpuline:
+                gpuinfo += "\n"
+            gpuinfo += "GPU: " + intelgpuline[0]
+            for i in intelgpuline[1:]:
+                gpuinfo += "\nGPU: " + i
+                    
+            gpuvendor += "Intel"
+        except IndexError:
+            pass
 
 if vmwaregpuline:
     gpuinfo = vmwaregpuline[0]
