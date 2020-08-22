@@ -57,20 +57,19 @@ intelcpus = {
     "intel pentium": '741203845706940467',
     "intel celeron": '742904581360713849',
     "pentium": '741203845706940467',
+    "intel core 2 duo": '746527640382603375',
 }
 gpus = {
     "intel": "intel",
     "intel(r)": "intel",
     "nvidia": "nvidia",
     "amd": "amd",
-    "radeon": "amd",
     "vmware": "vmware",
     "virtio": "virtio",
     # multi GPUs
     "nvidiaintel": "nvidia-intel",
     "nvidiaamd": "nvidia-amd",
     "amdintel": "amd-intel",
-    "radeonintel": "amd-intel",
     "nvidiaamdintel": "nvidia-amd-intel",
 }
 distros = {
@@ -146,6 +145,7 @@ terminals = {
     "xfce4-terminal": '744332423072055296',
     "apple_terminal": '744950796298354689',
     "lxterminal": '745701997503840380',
+    "mate-terminal": '746531413360377856',
 }
 
 

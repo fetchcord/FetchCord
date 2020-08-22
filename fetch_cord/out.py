@@ -105,7 +105,7 @@ if neofetchwin:
             if line.find(mobo) != -1:
                 moboline.append(line.rstrip('\n'))
             if line.find(radgpu) != -1:
-                radgpuline.append(line.rstrip('\n'))
+                radgpuline.append(line[line.find(radgpu):].rstrip('\n'))
 
 elif not neofetchwin:
     filepath = "/tmp/out.txt"
@@ -177,7 +177,7 @@ if nvidiagpuline:
 
     for n in range(len(nvidiagpuline)):
         gpuinfo += nvidiagpuline[n]
-    gpuvendor += nvidiagpuline[0].split()[1]
+    gpuvendor += "NVIDIA"
 
 amdgpurenderlist = []
 if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeoffload:
@@ -201,13 +201,13 @@ if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeofflo
 
     for a in range(len(amdgpurenderlist)):
         gpuinfo += amdgpurenderlist[a]
-    gpuvendor += amdgpuvendor
+    gpuvendor += "AMD"
 
 elif amdgpurenderlist == [] and not primeoffload:
     try:
         for a in range(len(amdgpuline)):
             gpuinfo += amdgpuline[a]
-        gpuvendor += amdgpuline[0].split()[1]
+        gpuvendor += "AMD"
     except IndexError:
         pass
 
@@ -216,9 +216,7 @@ if os.name == "nt" and radgpuline:
         for r in range(len(radgpuline)):
             # formatting
             if nvidiagpuline:
-                gpuinfo += " GPU:" + radgpuline[r]
-            else:
-                gpuinfo += radgpuline[r]
+                gpuinfo += " GPU: " + radgpuline[r]
         gpuvendor += "AMD"
     except IndexError:
         pass
@@ -228,7 +226,7 @@ if intelgpuline and not primeoffload:
 
     try:
         gpuinfo += intelgpuline[0]
-        gpuvendor += intelgpuline[0].split()[1]
+        gpuvendor += "Intel"
     except IndexError:
         pass
 
@@ -247,6 +245,9 @@ cpumodel = ""
 if cpuvendor == "Intel":
     cpumodel = cpuline[0].replace(
         '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
+    if cpumodel == "Intel Core":
+        cpumodel = cpuline[0].split()[1:5]
+        cpumodel = ' '.join(cpumodel)
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 # fuck you intel
