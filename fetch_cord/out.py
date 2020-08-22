@@ -40,7 +40,6 @@ else:
 
     # use default neofetch output, ignoring user config
     baseinfo = exec_bash("neofetch --stdout --config none")
-
 # make lists
 cpu = "CPU:"
 cpuline = []

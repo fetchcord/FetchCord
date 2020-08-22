@@ -339,9 +339,9 @@ def check_change(memline, packagesline):
 
 def loonix(memline, packagesline):
     try:
-        # TODO: fix this from running again since we call this function in check_change
-        first_connect()
         i = 0
+        if i == 0:
+            first_connect()
         while i < 10:
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0(packagesline)
@@ -360,9 +360,12 @@ def loonix(memline, packagesline):
             check_change(memline, packagesline)
         else:
             loonix(memline, packagesline)
-    except KeyboardInterrupt:
-        print("Closing connection.")
-        sys.exit(0)
+    except (KeyboardInterrupt, ConnectionResetError):
+        if KeyboardInterrupt:
+            print("Closing connection.")
+            sys.exit(0)
+        else:
+            rpc_tryconnect(RPC)
 
 
 def wandowz():
@@ -373,6 +376,9 @@ def wandowz():
                 w_cycle0()
             if not args.nohardware:
                 w_cycle1()
-    except KeyboardInterrupt:
-        print("Closing connection.")
-        sys.exit(0)
+    except (KeyboardInterrupt, ConnectionResetError):
+        if KeyboardInterrupt:
+            print("Closing connection.")
+            sys.exit(0)
+        else:
+            rpc_tryconnect(RPC)
