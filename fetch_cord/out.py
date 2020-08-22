@@ -180,7 +180,7 @@ if os.name != "nt":
     if nvidiagpuline:
         for n in range(len(nvidiagpuline)):
             gpuinfo += nvidiagpuline[n]
-        gpuvendor += nvidiagpuline[0].split()[1]
+        gpuvendor += "NVIDIA"
 
     if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeoffload:
         try:
@@ -195,14 +195,14 @@ if os.name != "nt":
                         "%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
                 if i != -1:
                     amdgpurenderlist.append(amdgpurender)
-            amdgpuvendor = amdgpurender.split()[1]
+            amdgpuvendor = "AMD"
         except BashError as e:
             print("ERROR: Could not run glxinfo [%s]" % str(e))
             sys.exit(1)
 
         for a in range(len(amdgpurenderlist)):
             gpuinfo += amdgpurenderlist[a]
-        gpuvendor += amdgpuvendor
+        gpuvendor += "AMD"
 
     elif amdgpurenderlist == [] and not primeoffload:
         try:
@@ -247,7 +247,7 @@ else: # Cursed windows stuff
             for i in intelgpuline[1:]:
                 gpuinfo += "\nGPU: " + i
                     
-            gpuvendor += intelgpuline[0].split()[0]
+            gpuvendor += "Intel"
         except IndexError:
             pass
 
@@ -266,6 +266,9 @@ cpumodel = ""
 if cpuvendor == "Intel":
     cpumodel = cpuline[0].replace(
         '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
+    if cpumodel == "Intel Core":
+        cpumodel = cpuline[0].split()[1:5]
+        cpumodel = ' '.join(cpumodel)
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 # fuck you intel
