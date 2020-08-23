@@ -3,7 +3,7 @@
 
 # [Service]
 # ExecStart=
-# ExecStart=-%h/.local/bin/fetchcord --nohost --time 15 --terminal 'gnome-terminal' --termfont 'Terminus Medium'
+# ExecStart=-/usr/bin/fetchcord --nohost --time 15 --terminal 'gnome-terminal' --termfont 'Terminus Medium'
 
 [Unit]
 Description=Display OS info as Discord Rich Presence
@@ -12,7 +12,7 @@ After=network.target multi-user.target graphical-session.target
 
 [Service]
 Environment=PYTHONUNBUFFERED=1
-ExecStart=-%h/.local/bin/fetchcord
+ExecStart=-/usr/bin/fetchcord
 Restart=on-failure
 RestartSec=10
 
