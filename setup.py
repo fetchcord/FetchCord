@@ -14,7 +14,7 @@ setuptools.setup(
     author_email='junkahole23@protonmail.com',
     license='MIT',
     packages=['fetch_cord'],
-    package_data={'fetch_cord/resources': ['infos.json']},
+    package_data={'fetch_cord/ressources': ['infos.json']},
     install_requires=['pypresence', 'psutil'],
     keywords=['distro', 'info', 'discord', 'fetch'],
     classifiers=[
