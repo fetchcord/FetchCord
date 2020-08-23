@@ -46,7 +46,7 @@ try:
 except ImportError:
     # Try backported to PY<37 `importlib_resources`.
     import importlib_resources as pkg_resources
-from . import ressources
+import fetch_cord.ressources as ressources
 with pkg_resources.open_text(ressources, 'infos.json') as f:
     infos = json.load(f)
 
@@ -55,7 +55,7 @@ intelcpus = infos["intelcpus"]
 gpus = infos["gpus"]
 distros = infos["distros"]
 versions = infos["versions"]
-windowmanagers = infos["windowmanagers"] # not a typo i accidently added all the openbox as 'opebox'
+windowmanagers = infos["windowmanagers"]
 desktops = infos["desktops"]
 terminals = infos["terminals"]
 shells = infos["shells"]

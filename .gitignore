@@ -128,3 +128,6 @@ dmypy.json
 
 # vim file
 .vim/
+
+# auth key
+authkey_pypi
