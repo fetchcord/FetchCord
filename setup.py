@@ -4,10 +4,10 @@ import setuptools
 
 setuptools.setup(
     name='FetchCord',
-    version='2.5.3',
+    version='2.5.4',
     description='grabs information about your Distro and displays it as Discord Rich Presence.',
     long_description=open(
-        join(dirname(__file__), 'readme.md')).read(),
+        join(dirname(__file__), 'README.md')).read(),
     long_description_content_type="text/markdown",
     url='https://github.com/MrPotatoBobx/FetchCord',
     author='MrPotatoBobx',

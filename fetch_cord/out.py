@@ -268,15 +268,19 @@ else:
 cpuvendor = cpuline[0].split()[1]
 cpumodel = ""
 if cpuvendor == "Intel" or cpuvendor == "Intel(R)":
-    cpumodel = cpuline[0].replace(
-        '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
-    if cpumodel == "Intel Core":
-        cpumodel = cpuline[0].split()[1:5]
-        cpumodel = ' '.join(cpumodel)
+    if os.name != "nt":
+        cpumodel = cpuline[0].replace(
+            '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
+        if cpumodel == "Intel Core":
+            cpumodel = cpuline[0].split()[1:5]
+            cpumodel = ' '.join(cpumodel)
     # Windows
-    elif cpumodel == "Intel(R) Core(TM)2":
-        cpumodel = cpuline[0].split()[1:4]
-        cpumodel = ' '.join(cpumodel)
+    else:
+        cpumodel = cpuline[0].replace(
+            '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[3]
+        if cpumodel == "Intel(R) Core(TM)2" or cpumodel == "Intel(R) Core(TM)":
+            cpumodel = cpuline[0].split()[1:4]
+            cpumodel = ' '.join(cpumodel)
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 # fuck you intel
