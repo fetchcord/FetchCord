@@ -269,8 +269,8 @@ if cpuvendor == "Intel" or cpuvendor == "Intel(R)":
         cpumodel = cpuline[0].split()[1:5]
         cpumodel = ' '.join(cpumodel)
     # Windows
-    elif cpumodel == "Intel(R) Core((TM)":
-        cpumodel = cpuline[0].split()[1:6]
+    elif cpumodel == "Intel(R) Core((TM)2":
+        cpumodel = cpuline[0].split()[1:4]
         cpumodel = ' '.join(cpumodel)
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
