@@ -264,7 +264,8 @@ if os.name != "nt":
 else:
     cpusplit = cpuline[0].split()[:-1]
     s=' '.join(cpusplit)
-    cpuinfo = s + ' ' + cpuline[0].split()[-1].replace("0", "", 1).replace("(TM)", " ").replace("(R)", "")
+    # I fucking hate you intel
+    cpuinfo = s + ' ' + cpuline[0].split()[-1].replace("0", "", 1).replace("Core(TM)2", "Core 2").replace("Intel(R)", "Intel").replace("Core(TM)", "Core")
 cpuvendor = cpuline[0].split()[1]
 cpumodel = ""
 if cpuvendor == "Intel":
