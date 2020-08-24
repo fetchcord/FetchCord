@@ -264,23 +264,23 @@ if os.name != "nt":
 else:
     cpusplit = cpuline[0].split()[:-1]
     s=' '.join(cpusplit)
-    cpuinfo = s + ' ' + cpuline[0].split()[-1].replace("0", "", 1)
+    cpuinfo = s + ' ' + cpuline[0].split()[-1].replace("0", "", 1).replace("(TM)", " ").replace("(R)", "")
 cpuvendor = cpuline[0].split()[1]
 cpumodel = ""
-if cpuvendor == "Intel" or cpuvendor == "Intel(R)":
+if cpuvendor == "Intel":
     if os.name != "nt":
         cpumodel = cpuline[0].replace(
             '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
         if cpumodel == "Intel Core":
             cpumodel = cpuline[0].split()[1:5]
             cpumodel = ' '.join(cpumodel)
-    # Windows
     else:
         cpumodel = cpuline[0].replace(
             '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[3]
-        if cpumodel == "Intel(R) Core(TM)2" or cpumodel == "Intel(R) Core(TM)":
+        if cpumodel == "Intel 2" or cpumodel == "Intel Solo":
             cpumodel = cpuline[0].split()[1:4]
             cpumodel = ' '.join(cpumodel)
+
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
 # fuck you intel
