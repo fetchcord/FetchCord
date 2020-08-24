@@ -160,6 +160,8 @@ try:
         cpuappid = amdcpus[cpumodel.lower()]
     elif cpuvendor in ["Intel", "Pentium"]:
         cpuappid = intelcpus[cpumodel.lower()]
+    else:
+        cpuappid = '742887089179197462'
 except KeyError:
     print("unknown CPU, contact us on github to resolve this.(Keyerror)")
     cpuappid = '742887089179197462'
