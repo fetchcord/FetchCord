@@ -257,11 +257,13 @@ if virtiogpuline:
     gpuinfo = virtiogpuline[0]
     gpuvendor = virtiogpuline[0].split()[2:3].join()
 
-cpusplit = cpuline[0].split()[:-2]
-s=' '.join(cpusplit)
 if os.name != "nt":
+    cpusplit = cpuline[0].split()[:-2]
+    s=' '.join(cpusplit)
     cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1)
 else:
+    cpusplit = cpuline[0].split()[:-1]
+    s=' '.join(cpusplit)
     cpuinfo = s + ' ' + cpuline[0].split()[-1].replace("0", "", 1)
 cpuvendor = cpuline[0].split()[1]
 cpumodel = ""
