@@ -234,6 +234,7 @@ def cycle3():
         else:
             time.sleep(30)
     # back from whence you came
+        i = 1
     else:
         loonix(memline, packagesline, i)
     rpc_tryclear(RPC)
