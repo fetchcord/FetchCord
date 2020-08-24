@@ -259,7 +259,10 @@ if virtiogpuline:
 
 cpusplit = cpuline[0].split()[:-2]
 s=' '.join(cpusplit)
-cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1)
+if os.name != "nt":
+    cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1)
+else:
+    cpuinfo = s + ' ' + cpuline[0].split()[-1].replace("0", "", 1)
 cpuvendor = cpuline[0].split()[1]
 cpumodel = ""
 if cpuvendor == "Intel" or cpuvendor == "Intel(R)":
@@ -269,7 +272,7 @@ if cpuvendor == "Intel" or cpuvendor == "Intel(R)":
         cpumodel = cpuline[0].split()[1:5]
         cpumodel = ' '.join(cpumodel)
     # Windows
-    elif cpumodel == "Intel(R) Core((TM)2":
+    elif cpumodel == "Intel(R) Core(TM)2":
         cpumodel = cpuline[0].split()[1:4]
         cpumodel = ' '.join(cpumodel)
 elif cpuvendor == "AMD":

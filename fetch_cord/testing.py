@@ -158,7 +158,7 @@ except KeyError:
 try:
     if cpuvendor == "AMD":
         cpuappid = amdcpus[cpumodel.lower()]
-    elif cpuvendor in ["Intel", "Pentium"]:
+    elif cpuvendor in ["Intel", "Intel(R)", "Pentium"]:
         cpuappid = intelcpus[cpumodel.lower()]
     else:
         cpuappid = '742887089179197462'
