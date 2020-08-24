@@ -37,10 +37,11 @@ def main():
             if hostline:
                 print("hostappid: %s" % hostappid)
             print(packagesline[0])
+    i = 0
     if os.name == "nt":
         wandowz()
     else:
-        loonix(memline, packagesline)
+        loonix(memline, packagesline, i)
 
 def first_connect():
     try:
@@ -234,7 +235,7 @@ def cycle3():
             time.sleep(30)
     # back from whence you came
     else:
-        loonix(memline, packagesline)
+        loonix(memline, packagesline, i)
     rpc_tryclear(RPC)
 
 
@@ -334,12 +335,11 @@ def check_change(memline, packagesline):
             os.remove(filepath)
     except FileNotFoundError:
         pass
+    i = 1
+    return loonix(memline, packagesline, i)
 
-    return loonix(memline, packagesline)
-
-def loonix(memline, packagesline):
+def loonix(memline, packagesline, i):
     try:
-        i = 0
         if i == 0:
             first_connect()
         while i < 10:
@@ -356,10 +356,11 @@ def loonix(memline, packagesline):
             if args.pause_cycle:
                 pause()
             i += 1
+        i = 1
         if not args.nohardware and not args.nodistro:
             check_change(memline, packagesline)
         else:
-            loonix(memline, packagesline)
+            loonix(memline, packagesline, i)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")
