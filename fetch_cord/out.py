@@ -256,38 +256,41 @@ if vmwaregpuline:
 if virtiogpuline:
     gpuinfo = virtiogpuline[0]
     gpuvendor = virtiogpuline[0].split()[2:3].join()
-
-if os.name != "nt":
-    cpusplit = cpuline[0].split()[:-2]
-    s=' '.join(cpusplit)
-    cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1) + ' ' + cpuline[0].split()[-1]
-else:
-    cpusplit = cpuline[0].split()[:-1]
-    s=' '.join(cpusplit)
-    # I fucking hate you intel
-    cpuinfo = s + ' ' + cpuline[0].split()[-1].replace("0", "", 1).replace("Core(TM)2", "Core 2").replace("Intel(R)", "Intel").replace("Core(TM)", "Core")
-cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
-cpumodel = ""
-if cpuvendor == "Intel":
+def getcpuinfo(cpuline):
+    global cpumodel, cpuvendor, cpuinfo
     if os.name != "nt":
-        cpumodel = cpuline[0].replace(
-            '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
-        if cpumodel == "Intel Core":
-            cpumodel = cpuline[0].split()[1:5]
-            cpumodel = ' '.join(cpumodel)
+        cpusplit = cpuline[0].split()[:-2]
+        s=' '.join(cpusplit)
+        cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1) + ' ' + cpuline[0].split()[-1]
     else:
-        cpumodel = cpuline[0].replace(
-            '-', ' ').split()[1].replace("Intel(R)", "Intel") + ' ' + cpuline[0].replace('-', ' ').split()[3]
-        if cpumodel == "Intel 2" or cpumodel == "Intel Solo":
-            cpumodel = cpuline[0].split()[1:5]
-            cpumodel = ' '.join(cpumodel)
+        cpusplit = cpuline[0].split()[:-1]
+        s=' '.join(cpusplit)
+        # I fucking hate you intel
+        cpuinfo = s + ' ' + cpuline[0].split()[-1].replace(
+                "0", "", 1).replace("Core(TM)2", "Core 2").replace("Intel(R)", "Intel").replace("Core(TM)", "Core")
+    cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
+    cpumodel = ""
+    if cpuvendor == "Intel":
+        if os.name != "nt":
+            cpumodel = cpuline[0].replace(
+                '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
+            if cpumodel == "Intel Core":
+                cpumodel = cpuline[0].split()[1:5]
+                cpumodel = ' '.join(cpumodel)
+        else:
+            cpumodel = cpuline[0].replace(
+                '-', ' ').split()[1].replace("Intel(R)", "Intel") + ' ' + cpuline[0].replace('-', ' ').split()[3]
+            if cpumodel == "Intel 2" or cpumodel == "Intel Solo":
+                cpumodel = cpuline[0].split()[1:5]
+                cpumodel = ' '.join(cpumodel)
 
-elif cpuvendor == "AMD":
-    cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
-# fuck you intel
-elif cpuvendor == "Pentium":
-    cpumodel = cpuline[0].split()[1]
-
+    elif cpuvendor == "AMD":
+        cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
+    # fuck you intel
+    elif cpuvendor == "Pentium":
+        cpumodel = cpuline[0].split()[1]
+    return cpuinfo
+getcpuinfo(cpuline)
 if os.name != "nt":
     # linux shit
     if wmline:
