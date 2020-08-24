@@ -262,10 +262,10 @@ s=' '.join(cpusplit)
 cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1)
 cpuvendor = cpuline[0].split()[1]
 cpumodel = ""
-if cpuvendor == "Intel":
+if cpuvendor == "Intel" or cpuvendor == "Intel(R)":
     cpumodel = cpuline[0].replace(
         '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
-    if cpumodel == "Intel Core":
+    if cpumodel == "Intel Core" or cpumodel == "Intel(R) Core(TM)":
         cpumodel = cpuline[0].split()[1:5]
         cpumodel = ' '.join(cpumodel)
 elif cpuvendor == "AMD":

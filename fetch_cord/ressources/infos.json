@@ -15,6 +15,7 @@
         "intel celeron": "742904581360713849",
         "pentium": "741203845706940467",
         "intel core 2 duo": "746527640382603375"
+        "intel(r) core(tm) 2 duo": "746527640382603375"
     },
     "gpus": {
         "intel": "intel",
