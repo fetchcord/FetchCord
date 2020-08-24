@@ -260,7 +260,7 @@ if virtiogpuline:
 if os.name != "nt":
     cpusplit = cpuline[0].split()[:-2]
     s=' '.join(cpusplit)
-    cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1)
+    cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1) + ' ' + cpuline[0].split()[-1]
 else:
     cpusplit = cpuline[0].split()[:-1]
     s=' '.join(cpusplit)
@@ -378,6 +378,7 @@ if args.debug:
     print("\n----CPU INFO----\n")
     print("cpuvendor: %s" % cpuvendor)
     print("cpumodel: %s" % cpumodel)
+    print("cpuinfo: %s" % cpuinfo)
     print("cpuline item 0: %s" % cpuline[0])
     print("memline: %s" % memline)
     print("\n----OS INFO----\n")
