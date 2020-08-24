@@ -39,7 +39,7 @@ else:
             print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
 
     # use default neofetch output, ignoring user config
-    baseinfo = exec_bash("neofetch --stdout --config none")
+    baseinfo = exec_bash("neofetch --stdout --config none --cpu_temp C")
 # make lists
 cpu = "CPU:"
 cpuline = []
@@ -234,7 +234,7 @@ else: # Cursed windows stuff
             gpuinfo += "GPU: " + radgpuline[0]
             for r in radgpuline[1:]:
                 gpuinfo += "\nGPU: " + r
-                    
+
             gpuvendor += "AMD"
         except IndexError:
             pass
@@ -245,7 +245,7 @@ else: # Cursed windows stuff
             gpuinfo += "GPU: " + intelgpuline[0]
             for i in intelgpuline[1:]:
                 gpuinfo += "\nGPU: " + i
-                    
+
             gpuvendor += "Intel"
         except IndexError:
             pass
@@ -257,9 +257,9 @@ if virtiogpuline:
     gpuinfo = virtiogpuline[0]
     gpuvendor = virtiogpuline[0].split()[2:3].join()
 
-cpusplit = cpuline[0].split()[:-1]
+cpusplit = cpuline[0].split()[:-2]
 s=' '.join(cpusplit)
-cpuinfo = s + ' ' + cpuline[0].split()[-1].replace("0", "", 1)
+cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1)
 cpuvendor = cpuline[0].split()[1]
 cpumodel = ""
 if cpuvendor == "Intel":
