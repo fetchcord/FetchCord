@@ -265,8 +265,12 @@ cpumodel = ""
 if cpuvendor == "Intel" or cpuvendor == "Intel(R)":
     cpumodel = cpuline[0].replace(
         '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
-    if cpumodel == "Intel Core" or cpumodel == "Intel(R) Core(TM)":
+    if cpumodel == "Intel Core":
         cpumodel = cpuline[0].split()[1:5]
+        cpumodel = ' '.join(cpumodel)
+    # Windows
+    elif cpumodel == "Intel(R) Core((TM)":
+        cpumodel = cpuline[0].split()[1:6]
         cpumodel = ' '.join(cpumodel)
 elif cpuvendor == "AMD":
     cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
