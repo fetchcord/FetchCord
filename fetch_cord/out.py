@@ -277,7 +277,7 @@ if cpuvendor == "Intel":
             cpumodel = ' '.join(cpumodel)
     else:
         cpumodel = cpuline[0].replace(
-            '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[3]
+            '-', ' ').split()[1].replace("Intel(R)", "Intel") + ' ' + cpuline[0].replace('-', ' ').split()[3]
         if cpumodel == "Intel 2" or cpumodel == "Intel Solo":
             cpumodel = cpuline[0].split()[1:4]
             cpumodel = ' '.join(cpumodel)
