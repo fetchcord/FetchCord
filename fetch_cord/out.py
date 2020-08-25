@@ -25,9 +25,9 @@ try:
 except AttributeError:
     pass
 
-i = 0
+loop = 0
 
-def neofetch(i):
+def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
             vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
             deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline
@@ -36,7 +36,7 @@ def neofetch(i):
         neofetchwin = os.popen("neofetch --noart").read()
     else:
         home = os.getenv('HOME')
-        if i == 0 and os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
+        if loop == 0 and os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
             try:
                 print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
                 exec_bash(
@@ -194,10 +194,10 @@ def neofetch(i):
         pass
 
     return (memline, packagesline, diskline, batteryline, cpuline)
-neofetch(i)
+neofetch(loop)
 
 sysosid = sysosline[0].split()[1]
-def get_gpu(i):
+def get_gpu(loop):
     global gpuinfo, gpuvendor, primeoffload, laptop, amdgpurenderlist, amdgpurender
     primeoffload = False
     if sysosid.lower() != "macos" and os.name != "nt":
@@ -208,7 +208,7 @@ def get_gpu(i):
             if i.startswith("BAT"):
                 laptop = True
         if laptop and nvidiagpuline:
-            if args.debug and i == 0:
+            if args.debug and loop == 0:
                 print("laptop: %s" % laptop)
             try:
                 primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
@@ -276,7 +276,7 @@ def get_gpu(i):
     return gpuinfo
 
 if os.name != "nt":
-    get_gpu(i)
+    get_gpu(loop)
 
 def get_win_gpu():
     global gpuinfo, gpuvendor
