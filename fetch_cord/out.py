@@ -25,150 +25,160 @@ try:
 except AttributeError:
     pass
 
-neofetchwin = False
-if os.name == "nt":
-    neofetchwin = os.popen("neofetch --noart").read()
-else:
-    home = os.getenv('HOME')
-    if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
-        try:
-            print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
-            exec_bash(
-                "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
-        except BashError as e:
-            print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
+def neofetch():
+    global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
+            vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
+            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline
+    neofetchwin = False
+    if os.name == "nt":
+        neofetchwin = os.popen("neofetch --noart").read()
+    else:
+        home = os.getenv('HOME')
+        if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
+            try:
+                print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
+                exec_bash(
+                    "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
+            except BashError as e:
+                print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
 
-    baseinfo = exec_bash("neofetch --stdout")
-# make lists
-cpu = "CPU:"
-cpuline = []
-nvidiagpu = "GPU: NVIDIA"
-nvidiagpuline = []
-amdgpu = "GPU: AMD"
-amdgpuline = []
-intelgpu = "GPU: Intel"
-intelgpuline = []
-vmwaregpu = "GPU: VMware"
-vmwaregpuline = []
-virtiogpu = "GPU: 00:02.0 Red"
-virtiogpuline = []
-term = "Terminal:"
-termline = []
-font = "Font:"
-fontline = []
-wm = "WM:"
-wmline = []
-disk  =  "Disk"
-diskline = []
-de = "DE:"
-deline = []
-shell = "Shell:"
-shell_line = []
-kernel = "Kernel:"
-kernelline = []
-sysos = "OS:"
-sysosline = []
-mem = "Memory:"
-memline = []
-mobo = "Motherboard:"
-moboline = []
-packages = "Packages:"
-packagesline = []
-host = "Host:"
-hostline= []
-res = "Resolution:"
-resline = []
-theme = "Theme:"
-themeline = []
-battery = "Battery"
-batteryline = []
+        baseinfo = exec_bash("neofetch --stdout")
+    # make lists
+    cpu = "CPU:"
+    cpuline = []
+    nvidiagpu = "GPU: NVIDIA"
+    nvidiagpuline = []
+    amdgpu = "GPU: AMD"
+    amdgpuline = []
+    intelgpu = "GPU: Intel"
+    intelgpuline = []
+    vmwaregpu = "GPU: VMware"
+    vmwaregpuline = []
+    virtiogpu = "GPU: 00:02.0 Red"
+    virtiogpuline = []
+    term = "Terminal:"
+    termline = []
+    font = "Font:"
+    fontline = []
+    wm = "WM:"
+    wmline = []
+    disk  =  "Disk"
+    diskline = []
+    de = "DE:"
+    deline = []
+    shell = "Shell:"
+    shell_line = []
+    kernel = "Kernel:"
+    kernelline = []
+    sysos = "OS:"
+    sysosline = []
+    mem = "Memory:"
+    memline = []
+    mobo = "Motherboard:"
+    moboline = []
+    packages = "Packages:"
+    packagesline = []
+    host = "Host:"
+    hostline= []
+    res = "Resolution:"
+    resline = []
+    theme = "Theme:"
+    themeline = []
+    battery = "Battery"
+    batteryline = []
 
-if neofetchwin:
-    nvidiagpu = "NVIDIA"
-    radgpu = "Radeon"
-    intelgpu = "Intel"
-    radgpuline = []
-    filepath = "tmp.txt"
-    with open(filepath, 'w') as f:
-        print(neofetchwin, file=f)
-    with open(filepath, 'rt') as f:
-        for line in f:
-            if line.find(cpu) != -1:
-                cpuline.append(line.rstrip('\n'))
-            if line.find(nvidiagpu) != -1:
-                nvidiagpuline.append(line[line.find(nvidiagpu):].rstrip('\n'))
-            if line.find(amdgpu) != -1:
-                amdgpuline.append(line.rstrip('\n'))
-            if line.find(intelgpu) != -1 and line.find(cpu) == -1:
-                intelgpuline.append(line[line.find(intelgpu):].rstrip('\n'))
-            if line.find(vmwaregpu) != -1:
-                vmwaregpuline.append(line.rstrip('\n'))
-            if line.find(sysos) != -1:
-                sysosline.append(line.rstrip('\n'))
-            if line.find(mem) != -1:
-                memline.append(line.rstrip('\n'))
-            if line.find(mobo) != -1:
-                moboline.append(line.rstrip('\n'))
-            if line.find(radgpu) != -1:
-                radgpuline.append(line[line.find(radgpu):].rstrip('\n'))
+    if neofetchwin:
+        nvidiagpu = "NVIDIA"
+        radgpu = "Radeon"
+        intelgpu = "Intel"
+        radgpuline = []
+        filepath = "tmp.txt"
+        with open(filepath, 'w') as f:
+            print(neofetchwin, file=f)
+        with open(filepath, 'rt') as f:
+            for line in f:
+                if line.find(cpu) != -1:
+                    cpuline.append(line.rstrip('\n'))
+                if line.find(nvidiagpu) != -1:
+                    nvidiagpuline.append(line[line.find(nvidiagpu):].rstrip('\n'))
+                if line.find(amdgpu) != -1:
+                    amdgpuline.append(line.rstrip('\n'))
+                if line.find(intelgpu) != -1 and line.find(cpu) == -1:
+                    intelgpuline.append(line[line.find(intelgpu):].rstrip('\n'))
+                if line.find(vmwaregpu) != -1:
+                    vmwaregpuline.append(line.rstrip('\n'))
+                if line.find(sysos) != -1:
+                    sysosline.append(line.rstrip('\n'))
+                if line.find(mem) != -1:
+                    memline.append(line.rstrip('\n'))
+                if line.find(mobo) != -1:
+                    moboline.append(line.rstrip('\n'))
+                if line.find(radgpu) != -1:
+                    radgpuline.append(line[line.find(radgpu):].rstrip('\n'))
 
-elif not neofetchwin:
-    filepath = "/tmp/out.txt"
-    with open(filepath, 'w') as f:
-        print(baseinfo, file=f)
-    with open(filepath, "rt") as f:
-        for line in f:
-            if line.find(cpu) != -1:
-                cpuline.append(line.rstrip('\n'))
-            if line.find(nvidiagpu) != -1:
-                nvidiagpuline.append(line.rstrip('\n'))
-            if line.find(amdgpu) != -1:
-                amdgpuline.append(line.rstrip('\n'))
-            if line.find(intelgpu) != -1:
-                intelgpuline.append(line.rstrip('\n'))
-            if line.find(vmwaregpu) != -1:
-                vmwaregpuline.append(line.rstrip('\n'))
-            if line.find(virtiogpu) != -1:
-                virtiogpuline.append(line.rstrip('\n'))
-            if line.find(term) != -1:
-                termline.append(line.rstrip('\n'))
-            if line.find(font) != -1:
-                fontline.append(line.rstrip('\n'))
-            if line.find(de) != -1:
-                deline.append(line.rstrip('\n'))
-            if line.find(wm) != -1:
-                wmline.append(line.rstrip('\n'))
-            if line.find(shell) != -1:
-                shell_line.append(line.rstrip('\n'))
-            if line.find(packages) != -1:
-                packagesline.append(line.rstrip('\n'))
-            if line.find(kernel) != -1:
-                kernelline.append(line.rstrip('\n'))
-            if line.find(sysos) != -1:
-                sysosline.append(line.rstrip('\n'))
-            if line.find(host) != -1:
-                hostline.append(line.rstrip('\n'))
-            if line.find(res) != -1:
-                resline.append(line.rstrip('\n'))
-            if line.find(mem) != -1:
-                memline.append(line.rstrip('\n'))
-            if line.find(theme) != -1:
-                themeline.append(line.rstrip('\n'))
-            if line.find(disk) != -1:
-                diskline.append(line.rstrip('\n'))
-            if line.find(battery) != -1:
-                batteryline.append(line.rstrip('\n'))
+    elif not neofetchwin:
+        filepath = "/tmp/out.txt"
+        with open(filepath, 'w') as f:
+            print(baseinfo, file=f)
+        with open(filepath, "rt") as f:
+            for line in f:
+                if line.find(cpu) != -1:
+                    cpuline.append(line.rstrip('\n'))
+                if line.find(nvidiagpu) != -1:
+                    nvidiagpuline.append(line.rstrip('\n'))
+                if line.find(amdgpu) != -1:
+                    amdgpuline.append(line.rstrip('\n'))
+                if line.find(intelgpu) != -1:
+                    intelgpuline.append(line.rstrip('\n'))
+                if line.find(vmwaregpu) != -1:
+                    vmwaregpuline.append(line.rstrip('\n'))
+                if line.find(virtiogpu) != -1:
+                    virtiogpuline.append(line.rstrip('\n'))
+                if line.find(term) != -1:
+                    termline.append(line.rstrip('\n'))
+                if line.find(font) != -1:
+                    fontline.append(line.rstrip('\n'))
+                if line.find(de) != -1:
+                    deline.append(line.rstrip('\n'))
+                if line.find(wm) != -1:
+                    wmline.append(line.rstrip('\n'))
+                if line.find(shell) != -1:
+                    shell_line.append(line.rstrip('\n'))
+                if line.find(packages) != -1:
+                    packagesline.append(line.rstrip('\n'))
+                if line.find(kernel) != -1:
+                    kernelline.append(line.rstrip('\n'))
+                if line.find(sysos) != -1:
+                    sysosline.append(line.rstrip('\n'))
+                if line.find(host) != -1:
+                    hostline.append(line.rstrip('\n'))
+                if line.find(res) != -1:
+                    resline.append(line.rstrip('\n'))
+                if line.find(mem) != -1:
+                    memline.append(line.rstrip('\n'))
+                if line.find(theme) != -1:
+                    themeline.append(line.rstrip('\n'))
+                if line.find(disk) != -1:
+                    diskline.append(line.rstrip('\n'))
+                if line.find(battery) != -1:
+                    batteryline.append(line.rstrip('\n'))
 
-try:
-    if os.path.isfile(filepath):
-        os.remove(filepath)
-except FileNotFoundError:
-    pass
+    try:
+        if os.path.isfile(filepath):
+            os.remove(filepath)
+    except FileNotFoundError:
+        pass
+
+    return (memline, packagesline, diskline, batteryline, cpuline)
+neofetch()
+
+get_gpuinfo = ""
 sysosid = sysosline[0].split()[1]
-gpuvendor = ""
-gpuinfo = ""
-primeoffload = False
-if sysosid.lower() != "macos" and os.name != "nt":
+i = 0
+def get_gpu(get_gpuinfo, i):
+    global gpuinfo, gpuvendor, primeoffload, laptop
+    primeoffload = False
+    if sysosid.lower() != "macos" and os.name != "nt":
         # only show the GPU in use with optimus, show both if prime render offload
         batpath = "/sys/class/power_supply"
         laptop = False
@@ -176,23 +186,26 @@ if sysosid.lower() != "macos" and os.name != "nt":
             if i.startswith("BAT"):
                 laptop = True
         if laptop and nvidiagpuline:
-            if args.debug:
+            if args.debug and i == 0:
                 print("laptop: %s" % laptop)
             try:
                 primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
             except BashError:
                 pass
 
-amdgpurenderlist = []
-if os.name != "nt":
+    get_gpuinfo = ""
+    gpuinfo = ""
+    get_gpuinfo = ""
+    amdgpurenderlist = []
+    gpuvendor = ""
     if nvidiagpuline:
         for n in range(len(nvidiagpuline)):
             gpuinfo += nvidiagpuline[n]
         gpuvendor += "NVIDIA"
-        try:
-            gputemp = exec_bash("nvidia-smi | awk '{print $3}' | xargs | awk '{print $7}' | sed 's/C/°C/;s/^/[/;s/$/]/'")
-            gpuinfo += gputemp
-        except BashError:
+    try:
+        gputemp = exec_bash("nvidia-smi | awk '{print $3}' | xargs | awk '{print $7}' | sed 's/C/°C/;s/^/[/;s/$/]/'")
+        gpuinfo += gputemp
+    except BashError:
             pass
 
     if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeoffload:
@@ -237,6 +250,12 @@ if os.name != "nt":
             gpuvendor += intelgpuline[0].split()[1]
         except IndexError:
             pass
+    get_gpuinfo = gpuinfo
+    return get_gpuinfo
+
+if os.name != "nt":
+    get_gpu(get_gpuinfo, i)
+
 else: # Cursed windows stuff
     if nvidiagpuline:
         try:
@@ -276,6 +295,7 @@ if vmwaregpuline:
 if virtiogpuline:
     gpuinfo = virtiogpuline[0]
     gpuvendor = virtiogpuline[0].split()[2:3].join()
+
 def getcpuinfo(cpuline):
     global cpumodel, cpuvendor, cpuinfo
     if os.name != "nt":
@@ -310,7 +330,9 @@ def getcpuinfo(cpuline):
     elif cpuvendor == "Pentium":
         cpumodel = cpuline[0].split()[1]
     return cpuinfo
+
 getcpuinfo(cpuline)
+
 if os.name != "nt":
     # linux shit
     if wmline:
@@ -377,8 +399,10 @@ if batteryline:
     batteryline = ' '.join(batteryline)
 elif not batteryline:
     batteryline = lapordesk
+if memline:
+    memline = memline[0]
 
-if args.debug:
+def run_debug():
     print("----out.py----\n")
     print("----DE/WM----")
     if os.name != "nt":
@@ -418,3 +442,5 @@ if args.debug:
         print("batteryline: %s" % batteryline)
     if os.name != "nt":
         print("packagesline item 0: %s" % packagesline[0])
+if args.debug:
+    run_debug()
