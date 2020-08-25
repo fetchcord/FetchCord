@@ -115,6 +115,8 @@ def neofetch():
                     moboline.append(line.rstrip('\n'))
                 if line.find(radgpu) != -1:
                     radgpuline.append(line[line.find(radgpu):].rstrip('\n'))
+                if line.find(disk) != -1:
+                    diskline.append(line[line.find(disk):].rstrip('\n'))
 
     elif not neofetchwin:
         filepath = "/tmp/out.txt"
