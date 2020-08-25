@@ -258,7 +258,7 @@ def w_cycle0():
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
                state=sysosline[0],
-               details=memline[0],
+               details=memline,
                large_image="big",
                large_text=sysosline[0],
                small_image=moboid,
