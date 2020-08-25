@@ -8,11 +8,12 @@ import psutil
 from fetch_cord.args import parse_args
 from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
-from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, getcpuinfo, cpuinfo, run_debug, neofetch
+from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, getcpuinfo, cpuinfo, run_debug, \
+        neofetch, diskline
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
     from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, fontline, \
-        dewmid, termline, lapordesk, hostline, resline, themeline, diskline, batteryline, \
+        dewmid, termline, lapordesk, hostline, resline, themeline, batteryline, \
         get_gpu, cpuline
 elif os.name == "nt":
     from fetch_cord.out import moboline
