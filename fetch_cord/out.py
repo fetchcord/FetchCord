@@ -170,7 +170,10 @@ def neofetch(i):
                 if line.find(res) != -1:
                     resline.append(line.rstrip('\n'))
                 if line.find(mem) != -1:
-                    memline.append(line.rstrip('\n'))
+                    mem = line.rstrip('\n')
+                    used = int(mem[8:12])
+                    total = int(mem[18:22])
+                    memline.append(str(round(used / 1024, 2)) + "GiB / " + str(round(total / 1024,2)) + "GiB")
                 if line.find(theme) != -1:
                     themeline.append(line.rstrip('\n'))
                 if line.find(disk) != -1:
