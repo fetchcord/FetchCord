@@ -25,5 +25,7 @@ def parse_args():
                         help="Enable debugging.")
     parser.add_argument('--pause-cycle', action='store_true',
                         help="Extra cycle that pauses for 30 seconds or custom time using --time argument.")
+    parser.add_argument('--memtype', metavar='TYPE', action='store',
+                        help="Show Memory in GiB or MiB. Valid vaules are 'gb', 'mb'")
 
     return parser.parse_args()
