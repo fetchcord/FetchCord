@@ -25,7 +25,9 @@ try:
 except AttributeError:
     pass
 
-def neofetch():
+i = 0
+
+def neofetch(i):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
             vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
             deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline
@@ -34,7 +36,7 @@ def neofetch():
         neofetchwin = os.popen("neofetch --noart").read()
     else:
         home = os.getenv('HOME')
-        if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
+        if i == 0 and os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
             try:
                 print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
                 exec_bash(
@@ -96,7 +98,7 @@ def neofetch():
         with open(filepath, 'w') as f:
             print(neofetchwin, file=f)
 
-        
+
         with open(filepath, 'rt') as f:
             lines = f.readlines()
             for i in range(len(lines)):
@@ -183,12 +185,11 @@ def neofetch():
         pass
 
     return (memline, packagesline, diskline, batteryline, cpuline)
-neofetch()
+neofetch(i)
 
 sysosid = sysosline[0].split()[1]
-i = 0
 def get_gpu(i):
-    global gpuinfo, gpuvendor, primeoffload, laptop
+    global gpuinfo, gpuvendor, primeoffload, laptop, amdgpurenderlist, amdgpurender
     primeoffload = False
     if sysosid.lower() != "macos" and os.name != "nt":
         # only show the GPU in use with optimus, show both if prime render offload
@@ -435,8 +436,11 @@ def run_debug():
         print("termid: %s" % termid)
         print("termline item 0: %s" % termline[0])
         print("themeline: %s" % themeline)
-        if batteryline != lapordesk:
-            print("batteryline: %s" % batteryline)
+        if hostline:
+            print("\n----HOST INFO----\n")
+            print("hostline: %s" % hostline)
+            if batteryline != lapordesk:
+                print("batteryline: %s" % batteryline)
     print("\n----GPU INFO----\n")
     try:
         print("amdgpurenderlist: %s" % amdgpurenderlist)

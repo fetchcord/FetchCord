@@ -301,7 +301,7 @@ def w_cycle1():
     rpc_tryclear(RPC)
 
 def check_change(i):
-    neofetch()
+    neofetch(i)
     from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, cpuline, nvidiagpuline
     global memline, diskline, batteryline, packagesline, cpuinfo, gpuinfo
     cpuinfo = getcpuinfo(cpuline)
