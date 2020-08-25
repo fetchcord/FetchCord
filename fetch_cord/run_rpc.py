@@ -92,7 +92,7 @@ def rpc_tryupdate(RPC, state, details, large_image, large_text, small_image, sma
         pass
 
 
-def runmac(client_id):
+def runmac():
     from fetch_cord.testing import devicetype, product, bigicon, ver
     client_id = '740822755376758944'  # macos appid for discord rpc
     if args.debug:
@@ -301,7 +301,7 @@ def w_cycle1():
     rpc_tryclear(RPC)
 
 def check_change(i):
-    neofetch()
+    neofetch(i)
     from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, cpuline, nvidiagpuline
     global memline, diskline, batteryline, packagesline, cpuinfo, gpuinfo
     cpuinfo = getcpuinfo(cpuline)
