@@ -193,7 +193,6 @@ def get_gpu(get_gpuinfo, i):
             except BashError:
                 pass
 
-    get_gpuinfo = ""
     gpuinfo = ""
     get_gpuinfo = ""
     amdgpurenderlist = []
@@ -256,7 +255,9 @@ def get_gpu(get_gpuinfo, i):
 if os.name != "nt":
     get_gpu(get_gpuinfo, i)
 
-else: # Cursed windows stuff
+def get_win_gpu():
+    global gpuinfo
+    gpuinfo = ""
     if nvidiagpuline:
         try:
             gpuinfo += "GPU: " +  nvidiagpuline[0]
@@ -288,6 +289,9 @@ else: # Cursed windows stuff
             gpuvendor += "Intel"
         except IndexError:
             pass
+
+if os.name == "nt":
+    get_win_gpu()
 
 if vmwaregpuline:
     gpuinfo = vmwaregpuline[0]
