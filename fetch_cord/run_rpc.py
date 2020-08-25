@@ -39,11 +39,11 @@ def main():
             if hostline:
                 print("hostappid: %s" % hostappid)
             print(packagesline[0])
-    i = 0
+    loop = 0
     if os.name == "nt":
-        wandowz(i)
+        wandowz(loop)
     else:
-        loonix(i)
+        loonix(loop)
 
 def first_connect():
     try:
@@ -236,9 +236,9 @@ def cycle3():
         else:
             time.sleep(30)
     # back from whence you came
-        i = 1
+        loop = 1
     else:
-        loonix(i)
+        loonix(loop)
     rpc_tryclear(RPC)
 
 
@@ -300,13 +300,13 @@ def w_cycle1():
         time.sleep(30)
     rpc_tryclear(RPC)
 
-def check_change(i):
-    neofetch(i)
+def check_change(loop):
+    neofetch(loop)
     from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, cpuline, nvidiagpuline
     global memline, diskline, batteryline, packagesline, cpuinfo, gpuinfo
     cpuinfo = getcpuinfo(cpuline)
     if os.name != "nt" and nvidiagpuline and sysosid.lower() != "macos":
-        gpuinfo = get_gpu(i)
+        gpuinfo = get_gpu(loop)
     memline = memline[0]
     if batteryline and os.name != "nt":
         batteryline = '\n'.join(batteryline)
@@ -316,17 +316,17 @@ def check_change(i):
         diskline = '\n'.join(diskline)
     else:
         diskline = cpuinfo
-    i = 1
+    loop = 1
     if os.name != "nt":
-        return loonix(i)
+        return loonix(loop)
     else:
-        return wandowz(i)
+        return wandowz(loop)
 
-def loonix(i):
+def loonix(loop):
     try:
-        if i == 0:
+        if loop == 0:
             first_connect()
-        while i < 3:
+        while loop < 3:
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0()
             if not args.nohardware:
@@ -339,13 +339,13 @@ def loonix(i):
                 runmac()
             if args.pause_cycle:
                 pause()
-            i += 1
+            loop += 1
         if not args.nohardware or not args.nodistro or not args.nohost:
-            i = 1
-            check_change(i)
+            loop = 1
+            check_change(loop)
         else:
-            i = 1
-            loonix(i, gpuinfo)
+            loop = 1
+            loonix(loop, gpuinfo)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")
@@ -354,22 +354,22 @@ def loonix(i):
             rpc_tryconnect(RPC)
 
 
-def wandowz(i):
+def wandowz(loop):
     try:
-        if i == 0:
+        if loop == 0:
             first_connect()
-        while i < 3:
+        while loop < 3:
             if not args.nodistro:
                 w_cycle0()
             if not args.nohardware:
                 w_cycle1()
-            i += 1
+            loop += 1
         if not args.nohardware:
-            i = 1
-            check_change(i)
+            loop = 1
+            check_change(loop)
         else:
-            i = 1
-            wandowz(i)
+            loop = 1
+            wandowz(loop)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")
