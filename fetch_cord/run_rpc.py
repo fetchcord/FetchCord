@@ -8,6 +8,7 @@ import psutil
 from fetch_cord.args import parse_args
 from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
+from fetch_cord.config import ConfigError, load_config
 from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, getcpuinfo, cpuinfo, run_debug
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
@@ -124,7 +125,6 @@ def runmac(client_id):
 def get_config():
     try:
         config = load_config()
-        print(config)
     except ConfigError as e:
         print("Error loading config file, using default values." % str(e))
     return config
@@ -141,22 +141,22 @@ def cycle0(config):
     global RPC
     top_line = config["cycle_0"]["top_line"]
     if top_line == "kernel":
-        top_line = kernel
+        top_line = kernelline[0]
     else:
-        top_line = pacakges
+        top_line = pacakgesline[0]
     bottom_line = config["cycle_0"]["bottom_line"]
     if bottom_line == "kernel":
-        bottom_line = kernel
+        bottom_line = kernelline[0]
     else:
-        bottom_line = packages
+        bottom_line = packagesline[0]
     if args.debug:
         print("cycle 0")
     client_id = appid
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=packagesline[0],
-               details=kernelline[0],
+               state=bottom_line,
+               details=top_line,
                large_image="big",
                large_text=sysosline[0],
                small_image=desktopid,
@@ -182,14 +182,14 @@ def cycle0(config):
 def cycle1(gpuinfo, config):
     top_line = config["cycle_1"]["top_line"]
     if top_line == "gpu":
-        top_line = gpu
+        top_line = gpuinfo
     else:
-        top_line = cpu
+        top_line = memline
     bottom_line = config["cycle_1"]["bottom_line"]
     if bottom_line == "gpu":
-        bottom_line = gpu
+        bottom_line = gpuinfo
     else:
-        bottom_line = cpu
+        bottom_line = memline
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
@@ -386,7 +386,7 @@ def loonix(config, i, gpuinfo):
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0(config)
             if not args.nohardware:
-                cycle1(config, gpuinfo)
+                cycle1(gpuinfo, config)
             if not args.noshell:
                 cycle2(config)
             if not args.nohost and sysosid.lower() != "macos":
