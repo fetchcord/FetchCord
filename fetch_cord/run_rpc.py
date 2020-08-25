@@ -43,7 +43,7 @@ def main():
     if os.name == "nt":
         wandowz(i)
     else:
-        loonix(i, gpuinfo)
+        loonix(i)
 
 def first_connect():
     try:
@@ -158,7 +158,7 @@ def cycle0():
 # cycle
 
 
-def cycle1(gpuinfo):
+def cycle1():
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
@@ -238,7 +238,7 @@ def cycle3():
     # back from whence you came
         i = 1
     else:
-        loonix(cpuinfo, i)
+        loonix(i)
     rpc_tryclear(RPC)
 
 
@@ -300,11 +300,13 @@ def w_cycle1():
         time.sleep(30)
     rpc_tryclear(RPC)
 
-def check_change(i, gpuinfo):
+def check_change(i):
     neofetch()
     from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, cpuline
-    global memline, diskline, batteryline, packagesline, cpuinfo
+    global memline, diskline, batteryline, packagesline, cpuinfo, gpuinfo
     cpuinfo = getcpuinfo(cpuline)
+    if os.name != "nt":
+        gpuinfo = get_gpu(i)
     memline = memline[0]
     if batteryline and os.name != "nt":
         batteryline = '\n'.join(batteryline)
@@ -316,13 +318,11 @@ def check_change(i, gpuinfo):
         diskline = cpuinfo
     i = 1
     if os.name != "nt":
-        get_gpuinfo = ""
-        gpuinfo = get_gpu(get_gpuinfo, i)
-        return loonix(i, gpuinfo)
+        return loonix(i)
     else:
         return wandowz(i)
 
-def loonix(i, gpuinfo):
+def loonix(i):
     try:
         if i == 0:
             first_connect()
@@ -330,7 +330,7 @@ def loonix(i, gpuinfo):
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0()
             if not args.nohardware:
-                cycle1(gpuinfo)
+                cycle1()
             if not args.noshell:
                 cycle2()
             if not args.nohost and sysosid.lower() != "macos":
@@ -342,7 +342,7 @@ def loonix(i, gpuinfo):
             i += 1
         if not args.nohardware or not args.nodistro or not args.nohost:
             i = 1
-            check_change(i, gpuinfo)
+            check_change(i)
         else:
             i = 1
             loonix(i, gpuinfo)
@@ -366,7 +366,7 @@ def wandowz(i):
             i += 1
         if not args.nohardware:
             i = 1
-            check_change(i, gpuinfo)
+            check_change(i)
         else:
             i = 1
             wandowz(i)

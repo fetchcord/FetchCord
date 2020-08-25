@@ -174,10 +174,9 @@ def neofetch():
     return (memline, packagesline, diskline, batteryline, cpuline)
 neofetch()
 
-get_gpuinfo = ""
 sysosid = sysosline[0].split()[1]
 i = 0
-def get_gpu(get_gpuinfo, i):
+def get_gpu(i):
     global gpuinfo, gpuvendor, primeoffload, laptop
     primeoffload = False
     if sysosid.lower() != "macos" and os.name != "nt":
@@ -251,11 +250,10 @@ def get_gpu(get_gpuinfo, i):
             gpuvendor += intelgpuline[0].split()[1]
         except IndexError:
             pass
-    get_gpuinfo = gpuinfo
-    return get_gpuinfo
+    return gpuinfo
 
 if os.name != "nt":
-    get_gpu(get_gpuinfo, i)
+    get_gpu(i)
 
 def get_win_gpu():
     global gpuinfo, gpuvendor
