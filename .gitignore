@@ -131,3 +131,4 @@ dmypy.json
 
 # auth key
 authkey_pypi
+.DS_Store
