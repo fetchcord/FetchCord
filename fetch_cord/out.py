@@ -422,6 +422,8 @@ def run_debug():
         print("termid: %s" % termid)
         print("termline item 0: %s" % termline[0])
         print("themeline: %s" % themeline)
+        if batteryline != lapordesk:
+            print("batteryline: %s" % batteryline)
     print("\n----GPU INFO----\n")
     try:
         print("amdgpurenderlist: %s" % amdgpurenderlist)
@@ -443,8 +445,6 @@ def run_debug():
     print("sysosid: %s" % sysosid)
     if diskline != cpuinfo:
         print("diskline: %s" % diskline)
-    if batteryline != lapordesk:
-        print("batteryline: %s" % batteryline)
     if os.name != "nt":
         print("packagesline item 0: %s" % packagesline[0])
 if args.debug:
