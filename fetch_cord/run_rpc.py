@@ -302,10 +302,10 @@ def w_cycle1():
 
 def check_change(i):
     neofetch()
-    from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, cpuline
+    from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, cpuline, nvidiagpuline
     global memline, diskline, batteryline, packagesline, cpuinfo, gpuinfo
     cpuinfo = getcpuinfo(cpuline)
-    if os.name != "nt":
+    if os.name != "nt" and nvidiagpuline and sysosid.lower() != "macos":
         gpuinfo = get_gpu(i)
     memline = memline[0]
     if batteryline and os.name != "nt":
