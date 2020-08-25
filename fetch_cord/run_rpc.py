@@ -8,11 +8,12 @@ import psutil
 from fetch_cord.args import parse_args
 from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
-from fetch_cord.out import gpuinfo, sysosline, sysosid, cpuinfo, memline
+from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, getcpuinfo, cpuinfo, run_debug, neofetch
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
-    from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, termfontline, \
-        dewmid, termline, lapordesk, hostline, resline, themeline
+    from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, fontline, \
+        dewmid, termline, lapordesk, hostline, resline, themeline, diskline, batteryline, \
+        get_gpu, cpuline
 elif os.name == "nt":
     from fetch_cord.out import moboline
     from fetch_cord.testing import moboid
@@ -39,9 +40,9 @@ def main():
             print(packagesline[0])
     i = 0
     if os.name == "nt":
-        wandowz()
+        wandowz(i)
     else:
-        loonix(memline, packagesline, i)
+        loonix(i, gpuinfo)
 
 def first_connect():
     try:
@@ -127,7 +128,7 @@ def custom_time():
 # cycle
 
 
-def cycle0(packagesline):
+def cycle0():
     if args.debug:
         print("cycle 0")
     client_id = appid
@@ -156,15 +157,15 @@ def cycle0(packagesline):
 # cycle
 
 
-def cycle1(memline):
+def cycle1(gpuinfo):
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=cpuinfo,
-               details=memline[0],
+               state=diskline,
+               details=memline,
                large_image="big",
                large_text=cpuinfo,
                small_image=gpuid,
@@ -191,8 +192,8 @@ def cycle2():
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=themeline[0],
-               details=termfontline,
+               state=themeline,
+               details=fontline,
                large_image="big",
                large_text=termline[0],
                small_image=shellid,
@@ -219,7 +220,7 @@ def cycle3():
         rpc_tryconnect(RPC)
         rpc_tryupdate(RPC,
                 state=resline,
-                details=hostline[0],
+                details=batteryline,
                 large_image="big",
                 large_text=hostline[0],
                 small_image=lapordesk,
@@ -234,8 +235,9 @@ def cycle3():
         else:
             time.sleep(30)
     # back from whence you came
+        i = 1
     else:
-        loonix(memline, packagesline, i)
+        loonix(cpuinfo, i)
     rpc_tryclear(RPC)
 
 
@@ -256,7 +258,7 @@ def w_cycle0():
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
                state=sysosline[0],
-               details=memline[0],
+               details=memline,
                large_image="big",
                large_text=sysosline[0],
                small_image=moboid,
@@ -280,7 +282,7 @@ def w_cycle1():
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=cpuinfo,
+               state=diskline,
                details=gpuinfo,
                large_image="big",
                large_text=cpuinfo,
@@ -297,56 +299,37 @@ def w_cycle1():
         time.sleep(30)
     rpc_tryclear(RPC)
 
-def check_change(memline, packagesline):
-    neofetchwin = False
-    if os.name == "nt":
-        neofetchwin = os.popen("neofetch --noart").read()
+def check_change(i, gpuinfo):
+    neofetch()
+    from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, cpuline
+    global memline, diskline, batteryline, packagesline, cpuinfo
+    cpuinfo = getcpuinfo(cpuline)
+    memline = memline[0]
+    if batteryline:
+        batteryline = '\n'.join(batteryline)
     else:
-        try:
-            baseinfo = exec_bash("neofetch --stdout --config none")
-        except BashError as e:
-            print("Could not run neofetch, is neofetch installed? %s" % str(e))
-    mem = "Memory:"
-    memline = []
-    packages = "Packages:"
-    packagesline = []
-    if neofetchwin:
-        filepath = "tmp.txt"
-        with open(filepath, 'w') as f:
-            print(neofetchwin, file=f)
-        with open(filepath, 'rt') as f:
-            for line in f:
-                if line.find(mem) != -1:
-                    memline.append(line.rstrip('\n'))
-
-    elif not neofetchwin:
-        filepath = "tmp.txt"
-        with open(filepath, 'w') as f:
-            print(baseinfo, file=f)
-        with open(filepath, 'rt') as f:
-            for line in f:
-                if line.find(mem) != -1:
-                    memline.append(line.rstrip('\n'))
-                if line.find(packages) != -1:
-                    packagesline.append(line.rstrip('\n'))
-
-    try:
-        if os.path.isfile(filepath):
-            os.remove(filepath)
-    except FileNotFoundError:
-        pass
+        batteryline = lapordesk
+    if diskline:
+        diskline = '\n'.join(diskline)
+    else:
+        diskline = cpuinfo
     i = 1
-    return loonix(memline, packagesline, i)
+    get_gpuinfo = ""
+    gpuinfo = get_gpu(get_gpuinfo, i)
+    if os.name != "nt":
+        return loonix(i, gpuinfo)
+    else:
+        return wandowz(i)
 
-def loonix(memline, packagesline, i):
+def loonix(i, gpuinfo):
     try:
         if i == 0:
             first_connect()
-        while i < 10:
+        while i < 3:
             if not args.nodistro and sysosid.lower() != "macos":
-                cycle0(packagesline)
+                cycle0()
             if not args.nohardware:
-                cycle1(memline)
+                cycle1(gpuinfo)
             if not args.noshell:
                 cycle2()
             if not args.nohost and sysosid.lower() != "macos":
@@ -356,11 +339,12 @@ def loonix(memline, packagesline, i):
             if args.pause_cycle:
                 pause()
             i += 1
-        i = 1
-        if not args.nohardware and not args.nodistro:
-            check_change(memline, packagesline)
+        if not args.nohardware or not args.nodistro or not args.nohost:
+            i = 1
+            check_change(i, gpuinfo)
         else:
-            loonix(memline, packagesline, i)
+            i = 1
+            loonix(i, gpuinfo)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")
@@ -369,14 +353,22 @@ def loonix(memline, packagesline, i):
             rpc_tryconnect(RPC)
 
 
-def wandowz():
+def wandowz(i):
     try:
-        first_connect()
-        while True:
+        if i == 0:
+            first_connect()
+        while i < 3:
             if not args.nodistro:
                 w_cycle0()
             if not args.nohardware:
                 w_cycle1()
+            i += 1
+        if not args.nohardware:
+            i = 1
+            check_change(i, gpuinfo)
+        else:
+            i = 1
+            wandowz(i)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")

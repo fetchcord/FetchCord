@@ -129,21 +129,21 @@ if os.name != "nt":
         shell = "unknown"
 
     try:
-        if sysosid.lower() != "macos":
+        if sysosid.lower():
             hostappid = hosts[hostid.lower()]
     except KeyError:
         print("Unknown Host, contact us on github to resolve this.(Keyerror)")
         hostappid = "742887089179197462"
 
     try:
-        if deid != "N/A" and sysosid.lower() != "macos":
+        if deid != "N/A":
             desktopid = desktops[deid.lower()]
     except KeyError:
         print("Unsupported De contact us on github to resolve this.(Keyerror)")
         desktopid = 'unknown'
 
     try:
-        if deid == "N/A" and sysosid.lower() != "macos":
+        if deid == "N/A":
             desktopid = windowmanagers[wmid.lower()]
     except KeyError:
         print("Unsupported Wm contact us on github to resolve this.(Keyerror)")
