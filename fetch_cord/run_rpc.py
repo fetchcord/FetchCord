@@ -42,7 +42,8 @@ def main():
     if os.name == "nt":
         wandowz()
     else:
-        loonix(i, gpuinfo)
+        config = get_config()
+        loonix(config, i, gpuinfo)
 
 def first_connect():
     try:
@@ -120,6 +121,14 @@ def runmac(client_id):
         time.sleep(30)
     rpc_tryclear(RPC)
 
+def get_config():
+    try:
+        config = load_config()
+        print(config)
+    except ConfigError as e:
+        print("Error loading config file, using default values." % str(e))
+    return config
+
 def custom_time():
     ctime = int(args.time)
     time.sleep(ctime)
@@ -128,7 +137,18 @@ def custom_time():
 # cycle
 
 
-def cycle0():
+def cycle0(config):
+    global RPC
+    top_line = config["cycle_0"]["top_line"]
+    if top_line == "kernel":
+        top_line = kernel
+    else:
+        top_line = pacakges
+    bottom_line = config["cycle_0"]["bottom_line"]
+    if bottom_line == "kernel":
+        bottom_line = kernel
+    else:
+        bottom_line = packages
     if args.debug:
         print("cycle 0")
     client_id = appid
@@ -144,11 +164,13 @@ def cycle0():
                start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
-
+    config_time = config["cycle_0"]["time"]
     if args.time:
         custom_time()
     elif args.nohost and args.nohardware and args.noshell:
         time.sleep(9999)
+    elif config_time:
+        time.sleep(int(config_time))
     else:
         time.sleep(30)
     rpc_tryclear(RPC)
@@ -157,15 +179,25 @@ def cycle0():
 # cycle
 
 
-def cycle1(gpuinfo):
+def cycle1(gpuinfo, config):
+    top_line = config["cycle_1"]["top_line"]
+    if top_line == "gpu":
+        top_line = gpu
+    else:
+        top_line = cpu
+    bottom_line = config["cycle_1"]["bottom_line"]
+    if bottom_line == "gpu":
+        bottom_line = gpu
+    else:
+        bottom_line = cpu
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=diskline,
-               details=memline,
+               state=bottom_line,
+               details=top_line,
                large_image="big",
                large_text=cpuinfo,
                small_image=gpuid,
@@ -173,10 +205,13 @@ def cycle1(gpuinfo):
                start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
+    config_time = config["cycle_1"]["time"]
     if args.time:
         custom_time()
     elif args.nodistro and args.noshell and args.nohost:
         time.sleep(9999)
+    elif config_time:
+        time.sleep(int(config_time))
     else:
         time.sleep(30)
     rpc_tryclear(RPC)
@@ -185,15 +220,25 @@ def cycle1(gpuinfo):
 # cycle
 
 
-def cycle2():
+def cycle2(config):
+    top_line = config["cycle_2"]["top_line"]
+    if top_line == "termfont":
+        top_line = termfont
+    else:
+        top_line = shell
+    bottom_line = config["cycle_2"]["bottom_line"]
+    if bottom_line == "termfont":
+        bottom_line = termfont
+    else:
+        bottom_line = shell
     if args.debug:
         print("cycle 2")
     client_id = termappid
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=themeline,
-               details=fontline,
+               state=bottom_line,
+               details=top_line,
                large_image="big",
                large_text=termline[0],
                small_image=shellid,
@@ -201,18 +246,33 @@ def cycle2():
                start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
+
+    config_time = config["cycle_2"]["time"]
+
     if args.time:
         custom_time()
     elif args.nodistro and args.nohardware and args.nohost:
         time.sleep(9999)
+    elif config_time:
+        time.sleep(int(config_time))
     else:
         time.sleep(30)
     rpc_tryclear(RPC)
 
 
-def cycle3():
+def cycle3(config):
     # if not then forget it
     if hostline:
+        top_line = config["cycle_3"]["top_line"]
+        if top_line == "batteryline":
+            top_line = batteryline
+        else:
+            top_line = hostline
+        bottom_line = config["cycle_3"]["bottom_line"]
+        if bottom_line == "resline":
+            bottom_line = resline
+        else:
+            bottom_line = lapordesk
         if args.debug:
             print("cycle 3")
         client_id = hostappid
@@ -228,10 +288,13 @@ def cycle3():
                 start=start_time)
         if args.debug:
             print("appid: %s" % client_id)
+        config_time = config["cycle_3"]["time"]
         if args.time:
             custom_time()
         elif args.nodistro and args.nohardware and args.noshell:
             time.sleep(9999)
+        elif config_time:
+            time.sleep(int(config_time))
         else:
             time.sleep(30)
     # back from whence you came
@@ -315,19 +378,19 @@ def check_change(i, gpuinfo):
     else:
         return wandowz(i)
 
-def loonix(i, gpuinfo):
+def loonix(config, i, gpuinfo):
     try:
         if i == 0:
             first_connect()
         while i < 3:
             if not args.nodistro and sysosid.lower() != "macos":
-                cycle0()
+                cycle0(config)
             if not args.nohardware:
-                cycle1(gpuinfo)
+                cycle1(config, gpuinfo)
             if not args.noshell:
-                cycle2()
+                cycle2(config)
             if not args.nohost and sysosid.lower() != "macos":
-                cycle3()
+                cycle3(config)
             if sysosid.lower() == "macos":
                 runmac()
             if args.pause_cycle:
@@ -338,7 +401,7 @@ def loonix(i, gpuinfo):
             check_change(i, gpuinfo)
         else:
             i = 1
-            loonix(i, gpuinfo)
+            loonix(config, i, gpuinfo)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")
