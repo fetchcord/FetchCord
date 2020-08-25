@@ -393,17 +393,17 @@ if os.name != "nt":
         themeline = '\n'.join(themeline)
     if not memline:
         memline = ["N/A"]
+    if batteryline:
+        batteryline = ' '.join(batteryline)
+    elif not batteryline:
+        batteryline = lapordesk
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
 if diskline:
     diskline = '\n'.join(diskline)
 # return to default line
 elif not diskline:
-    diskline = cpuinfo
-if batteryline:
-    batteryline = ' '.join(batteryline)
-elif not batteryline:
-    batteryline = lapordesk
+    diskline = getcpuinfo
 if memline:
     memline = memline[0]
 
