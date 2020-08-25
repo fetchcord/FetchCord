@@ -305,8 +305,14 @@ def check_change(i, gpuinfo):
     global memline, diskline, batteryline, packagesline, cpuinfo
     cpuinfo = getcpuinfo(cpuline)
     memline = memline[0]
-    batteryline =  '\n'.join(batteryline)
-    diskline =  '\n'.join(diskline)
+    if batteryline:
+        batteryline = '\n'.join(batteryline)
+    else:
+        batteryline = lapordesk
+    if diskline:
+        diskline = '\n'.join(diskline)
+    else:
+        diskline = cpuinfo
     i = 1
     get_gpuinfo = ""
     gpuinfo = get_gpu(get_gpuinfo, i)
