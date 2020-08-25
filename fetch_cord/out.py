@@ -95,8 +95,12 @@ def neofetch():
         filepath = "tmp.txt"
         with open(filepath, 'w') as f:
             print(neofetchwin, file=f)
+
+        
         with open(filepath, 'rt') as f:
-            for line in f:
+            lines = f.readlines()
+            for i in range(len(lines)):
+                line = lines[i]
                 if line.find(cpu) != -1:
                     cpuline.append(line.rstrip('\n'))
                 if line.find(nvidiagpu) != -1:
@@ -117,6 +121,12 @@ def neofetch():
                     radgpuline.append(line[line.find(radgpu):].rstrip('\n'))
                 if line.find(disk) != -1:
                     diskline.append(line[line.find(disk):].rstrip('\n'))
+                    i+=1
+                    while(i < len(lines)):
+                        line = lines[i]
+                        diskline.append(line.rstrip('\n'))
+                        i+=1
+                    break
 
     elif not neofetchwin:
         filepath = "/tmp/out.txt"
