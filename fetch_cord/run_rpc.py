@@ -315,9 +315,9 @@ def check_change(i, gpuinfo):
     else:
         diskline = cpuinfo
     i = 1
-    get_gpuinfo = ""
-    gpuinfo = get_gpu(get_gpuinfo, i)
     if os.name != "nt":
+        get_gpuinfo = ""
+        gpuinfo = get_gpu(get_gpuinfo, i)
         return loonix(i, gpuinfo)
     else:
         return wandowz(i)
