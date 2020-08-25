@@ -54,8 +54,8 @@ virtiogpu = "GPU: 00:02.0 Red"
 virtiogpuline = []
 term = "Terminal:"
 termline = []
-termfont = "Terminal Font:"
-termfontline = []
+font = "Font:"
+fontline = []
 wm = "WM:"
 wmline = []
 disk  =  "Disk"
@@ -132,8 +132,8 @@ elif not neofetchwin:
                 virtiogpuline.append(line.rstrip('\n'))
             if line.find(term) != -1:
                 termline.append(line.rstrip('\n'))
-            if line.find(termfont) != -1:
-                termfontline.append(line.rstrip('\n'))
+            if line.find(font) != -1:
+                fontline.append(line.rstrip('\n'))
             if line.find(de) != -1:
                 deline.append(line.rstrip('\n'))
             if line.find(wm) != -1:
@@ -322,18 +322,13 @@ if os.name != "nt":
     except IndexError:
         pass
     shellid = shell_line[0].split()[1]
-    if termfontline:
-        termfontsplit = termfontline[0].split()[1:]
-        s=' '.join(termfontsplit)
-        termfontline = s
-    if termfontline and args.termfont:
+    if fontline:
+        fontline = '\n'.join(fontline)
+    if fontline and args.termfont:
         print("Custom terminal font not set because a terminal font already exists, %s" %
-            termfontline)
-    elif not termfontline:
-        if args.termfont:
-            termfontline = "Font: " + args.termfont
-        else:
-            termfontline = "Font: N/A"
+            fontline)
+    elif not fontline:
+        fontline = "Terminal Font: N/A\nFont: N/A"
     if deline:
         deid = deline[0].split()[1]
     else:
@@ -362,6 +357,8 @@ if os.name != "nt":
     kernelid = kernelline[0].split()[1]
     if not themeline:
         themeline = ["N/A"]
+    else:
+        themeline = '\n'.join(themeline)
     if not memline:
         memline = ["N/A"]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
@@ -387,7 +384,7 @@ if args.debug:
         except IndexError:
             pass
         print("\n----TERMINAL----\n")
-        print("termfontline: %s" % termfontline)
+        print("fontline: %s" % fontline)
         print("termid: %s" % termid)
         print("termline item 0: %s" % termline[0])
         print("themeline: %s" % themeline)

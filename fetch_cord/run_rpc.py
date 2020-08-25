@@ -11,7 +11,7 @@ from fetch_cord.testing import gpuid, cpuappid, appid
 from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, getcpuinfo, cpuinfo
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
-    from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, termfontline, \
+    from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, fontline, \
         dewmid, termline, lapordesk, hostline, resline, themeline, diskline, batteryline
 elif os.name == "nt":
     from fetch_cord.out import moboline
@@ -191,8 +191,8 @@ def cycle2():
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=themeline[0],
-               details=termfontline,
+               state=themeline,
+               details=fontline,
                large_image="big",
                large_text=termline[0],
                small_image=shellid,
