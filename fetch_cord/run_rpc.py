@@ -40,7 +40,7 @@ def main():
             print(packagesline[0])
     i = 0
     if os.name == "nt":
-        wandowz()
+        wandowz(i)
     else:
         loonix(i, gpuinfo)
 
@@ -368,7 +368,7 @@ def wandowz(i):
             check_change(i, gpuinfo)
         else:
             i = 1
-            wandowz()
+            wandowz(i)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")
