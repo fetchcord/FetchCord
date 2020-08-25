@@ -26,9 +26,8 @@ if os.name != "nt":
         bigicon = "none"
         try:
             bigicon = versions[ver[0:5]]
-        except IndexError:
-            bigicon = "bigslurp"
         except KeyError:
+            bigicon = "bigslurp"
             print("Unsupported MacOS version")
         laporp()
     # this is staying
