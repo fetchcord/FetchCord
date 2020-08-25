@@ -173,7 +173,6 @@ def neofetch(i):
                     if args.memtype == "gb":
                         memgb = line.rstrip('\n')
                         memgb = memgb.split()
-                        print(memgb)
                         used = float(memgb[1].replace("MiB", ""))
                         total = float(memgb[3].replace("MiB", ""))
                         memline.append(
