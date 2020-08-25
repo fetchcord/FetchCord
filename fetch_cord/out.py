@@ -124,7 +124,8 @@ def neofetch():
                     i+=1
                     while(i < len(lines)):
                         line = lines[i]
-                        diskline.append(line.rstrip('\n'))
+                        print(line)
+                        diskline.append("Disk:"+line.lstrip().rstrip('\n'))
                         i+=1
                     break
 
