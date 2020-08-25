@@ -256,7 +256,7 @@ if os.name != "nt":
     get_gpu(get_gpuinfo, i)
 
 def get_win_gpu():
-    global gpuinfo
+    global gpuinfo, gpuvendor
     gpuinfo = ""
     if nvidiagpuline:
         try:
