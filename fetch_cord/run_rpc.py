@@ -92,7 +92,7 @@ def rpc_tryupdate(RPC, state, details, large_image, large_text, small_image, sma
         pass
 
 
-def runmac(client_id):
+def runmac():
     from fetch_cord.testing import devicetype, product, bigicon, ver
     client_id = '740822755376758944'  # macos appid for discord rpc
     if args.debug:
