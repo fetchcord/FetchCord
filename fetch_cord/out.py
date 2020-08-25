@@ -258,6 +258,8 @@ def get_gpu(i):
                 gpuinfo += '\n' + intelgpuline[0]
             else:
                 gpuinfo += intelgpuline[0]
+                if sysosid.lower() == "macos" and "Radeon" in intelgpuline[0].split():
+                    gpuvendor += "AMD"
             gpuvendor += intelgpuline[0].split()[1]
         except IndexError:
             pass
