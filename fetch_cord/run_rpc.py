@@ -282,7 +282,7 @@ def w_cycle1():
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=cpuinfo,
+               state=diskline,
                details=gpuinfo,
                large_image="big",
                large_text=cpuinfo,
