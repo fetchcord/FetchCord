@@ -405,7 +405,7 @@ if os.name != "nt":
     else:
         themeline = '\n'.join(themeline)
     if not memline:
-        memline = ["N/A"]
+        memline = ["Memory: N/A"]
     if batteryline:
         batteryline = ' '.join(batteryline)
     elif not batteryline:
