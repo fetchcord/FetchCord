@@ -11,7 +11,8 @@ elif os.name == "nt":
 # macOS hardwawre
 
 if os.name != "nt":
-    def laporp(product):
+    def laporp():
+        global devicetype
         if product[0:7] == "MacBook":
             devicetype = "laptop"
         else:
@@ -19,7 +20,7 @@ if os.name != "nt":
         return devicetype
 
     def macos():
-        devicetype = "none"
+        global product, devicetype, bigicon, ver
         ver = os.popen("sw_vers -productVersion").read()
         product = os.popen("sysctl -n hw.model").read()
         bigicon = "none"
@@ -29,8 +30,7 @@ if os.name != "nt":
             bigicon = "bigslurp"
         except KeyError:
             print("Unsupported MacOS version")
-        laporp(product)
-        return product, devicetype, bigicon, ver
+        laporp()
     # this is staying
     def iUnity():
         # this is to check wether the user is actually using unity
