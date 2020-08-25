@@ -414,7 +414,7 @@ if diskline:
     diskline = '\n'.join(diskline)
 # return to default line
 elif not diskline:
-    diskline = getcpuinfo()
+    diskline = getcpuinfo(cpuline)
 if memline:
     memline = memline[0]
 
