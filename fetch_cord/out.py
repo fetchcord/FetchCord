@@ -258,6 +258,7 @@ if os.name != "nt":
 def get_win_gpu():
     global gpuinfo, gpuvendor
     gpuinfo = ""
+    gpuvendor = ""
     if nvidiagpuline:
         try:
             gpuinfo += "GPU: " +  nvidiagpuline[0]
