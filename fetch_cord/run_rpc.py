@@ -12,7 +12,7 @@ from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, getcpuinfo, cpu
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
     from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, termfontline, \
-        dewmid, termline, lapordesk, hostline, resline, themeline
+        dewmid, termline, lapordesk, hostline, resline, themeline, diskline, batteryline
 elif os.name == "nt":
     from fetch_cord.out import moboline
     from fetch_cord.testing import moboid
@@ -41,7 +41,7 @@ def main():
     if os.name == "nt":
         wandowz()
     else:
-        loonix(memline, packagesline, i, cpuinfo)
+        loonix(memline, packagesline, i, cpuinfo, batteryline, diskline)
 
 def first_connect():
     try:
@@ -156,14 +156,14 @@ def cycle0(packagesline):
 # cycle
 
 
-def cycle1(memline, cpuinfo):
+def cycle1(memline, cpuinfo, diskline):
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=cpuinfo,
+               state=diskline,
                details=memline[0],
                large_image="big",
                large_text=cpuinfo,
@@ -209,7 +209,7 @@ def cycle2():
     rpc_tryclear(RPC)
 
 
-def cycle3():
+def cycle3(batteryline):
     # if not then forget it
     if hostline:
         if args.debug:
@@ -219,7 +219,7 @@ def cycle3():
         rpc_tryconnect(RPC)
         rpc_tryupdate(RPC,
                 state=resline,
-                details=hostline[0],
+                details=batteryline,
                 large_image="big",
                 large_text=hostline[0],
                 small_image=lapordesk,
@@ -236,7 +236,7 @@ def cycle3():
     # back from whence you came
         i = 1
     else:
-        loonix(memline, packagesline, i, cpuinfo)
+        loonix(memline, packagesline, i, cpuinfo, batteryline, diskline)
     rpc_tryclear(RPC)
 
 
@@ -298,13 +298,13 @@ def w_cycle1():
         time.sleep(30)
     rpc_tryclear(RPC)
 
-def check_change(memline, packagesline, cpuinfo):
+def check_change(memline, packagesline, cpuinfo, batteryline, diskline):
     neofetchwin = False
     if os.name == "nt":
         neofetchwin = os.popen("neofetch --noart").read()
     else:
         try:
-            baseinfo = exec_bash("neofetch --stdout --config none --cpu_temp C")
+            baseinfo = exec_bash("neofetch --stdout")
         except BashError as e:
             print("Could not run neofetch, is neofetch installed? %s" % str(e))
     mem = "Memory:"
@@ -313,6 +313,10 @@ def check_change(memline, packagesline, cpuinfo):
     packagesline = []
     cpu = "CPU:"
     cpuline = []
+    battery = "Battery"
+    batteryline = []
+    disk = "Disk:"
+    diskline = []
     if neofetchwin:
         filepath = "tmp.txt"
         with open(filepath, 'w') as f:
@@ -334,6 +338,10 @@ def check_change(memline, packagesline, cpuinfo):
                     packagesline.append(line.rstrip('\n'))
                 if line.find(cpu) != -1:
                     cpuline.append(line.rstrip('\n'))
+                if line.find(battery) != -1:
+                    batteryline.append(line.rstrip('\n'))
+                if line.find(disk) != -1:
+                    diskline.append(line.rstrip('\n'))
 
     try:
         if os.path.isfile(filepath):
@@ -342,31 +350,39 @@ def check_change(memline, packagesline, cpuinfo):
         pass
     i = 1
     cpuinfo = getcpuinfo(cpuline)
-    return loonix(memline, packagesline, i, cpuinfo)
+    if batteryline:
+        batteryline = ' '.join(batteryline)
+    else:
+        batteryline = lapordesk
+    if diskline:
+        diskline = '\n'.join(diskline)
+    else:
+        diskline = cpuinfo
+    return loonix(memline, packagesline, i, cpuinfo, batteryline, diskline)
 
-def loonix(memline, packagesline, i, cpuinfo):
+def loonix(memline, packagesline, i, cpuinfo, batteryline, diskline):
     try:
         if i == 0:
             first_connect()
-        while i < 5:
+        while i < 3:
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0(packagesline)
             if not args.nohardware:
-                cycle1(memline, cpuinfo)
+                cycle1(memline, cpuinfo, diskline)
             if not args.noshell:
                 cycle2()
             if not args.nohost and sysosid.lower() != "macos":
-                cycle3()
+                cycle3(batteryline)
             if sysosid.lower() == "macos":
                 runmac()
             if args.pause_cycle:
                 pause()
             i += 1
-        if not args.nohardware and not args.nodistro:
-            check_change(memline, packagesline, cpuinfo)
+        if not args.nohardware or not args.nodistro or not args.nohost:
+            check_change(memline, packagesline, cpuinfo, batteryline, diskline)
         else:
             i = 1
-            loonix(memline, packagesline, i, cpuinfo)
+            loonix(memline, packagesline, i, cpuinfo, batteryline, diskline)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")

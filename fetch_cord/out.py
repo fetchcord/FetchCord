@@ -38,8 +38,7 @@ else:
         except BashError as e:
             print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
 
-    # use default neofetch output, ignoring user config
-    baseinfo = exec_bash("neofetch --stdout --config none --cpu_temp C")
+    baseinfo = exec_bash("neofetch --stdout")
 # make lists
 cpu = "CPU:"
 cpuline = []
@@ -59,6 +58,8 @@ termfont = "Terminal Font:"
 termfontline = []
 wm = "WM:"
 wmline = []
+disk  =  "Disk"
+diskline = []
 de = "DE:"
 deline = []
 shell = "Shell:"
@@ -79,6 +80,9 @@ res = "Resolution:"
 resline = []
 theme = "Theme:"
 themeline = []
+battery = "Battery"
+batteryline = []
+
 if neofetchwin:
     nvidiagpu = "NVIDIA"
     radgpu = "Radeon"
@@ -150,6 +154,11 @@ elif not neofetchwin:
                 memline.append(line.rstrip('\n'))
             if line.find(theme) != -1:
                 themeline.append(line.rstrip('\n'))
+            if line.find(disk) != -1:
+                diskline.append(line.rstrip('\n'))
+            if line.find(battery) != -1:
+                batteryline.append(line.rstrip('\n'))
+
 try:
     if os.path.isfile(filepath):
         os.remove(filepath)
@@ -200,10 +209,13 @@ if os.name != "nt":
             sys.exit(1)
 
         for a in range(len(amdgpurenderlist)):
-            gpuinfo += amdgpurenderlist[a]
+            if nvidiagpuline:
+                gpuinfo += '\n' + amdgpurenderlist[a]
+            else:
+                gpuinfo += amdgpurenderlist[a]
         gpuvendor += "AMD"
 
-    elif amdgpurenderlist == [] and not primeoffload:
+    elif not amdgpurenderlist and not primeoffload:
         try:
             for a in range(len(amdgpuline)):
                 gpuinfo += amdgpuline[a]
@@ -213,7 +225,10 @@ if os.name != "nt":
 
     if intelgpuline and not primeoffload:
         try:
-            gpuinfo += intelgpuline[0]
+            if amdgpuline or nvidiagpuline:
+                gpuinfo += '\n' + intelgpuline[0]
+            else:
+                gpuinfo += intelgpuline[0]
             gpuvendor += intelgpuline[0].split()[1]
         except IndexError:
             pass
@@ -351,7 +366,15 @@ if os.name != "nt":
         memline = ["N/A"]
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
-
+if diskline:
+    diskline = '\n'.join(diskline)
+# return to default line
+elif not diskline:
+    diskline = cpuinfo
+if batteryline:
+    batteryline = ' '.join(batteryline)
+elif not batteryline:
+    batteryline = lapordesk
 
 if args.debug:
     print("----out.py----\n")
@@ -387,5 +410,9 @@ if args.debug:
     print("\n----OS INFO----\n")
     print("sysosline: %s" % sysosline)
     print("sysosid: %s" % sysosid)
+    if diskline != cpuinfo:
+        print("diskline: %s" % diskline)
+    if batteryline != lapordesk:
+        print("batteryline: %s" % batteryline)
     if os.name != "nt":
         print("packagesline item 0: %s" % packagesline[0])
