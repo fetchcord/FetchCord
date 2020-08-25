@@ -189,6 +189,11 @@ if os.name != "nt":
         for n in range(len(nvidiagpuline)):
             gpuinfo += nvidiagpuline[n]
         gpuvendor += "NVIDIA"
+        try:
+            gputemp = exec_bash("nvidia-smi | awk '{print $3}' | xargs | awk '{print $7}' | sed 's/C/°C/;s/^/[/;s/$/]/'")
+            gpuinfo += gputemp
+        except BashError:
+            pass
 
     if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeoffload:
         try:
