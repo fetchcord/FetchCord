@@ -4,7 +4,7 @@ while true; do
 	if [ ! -z "$pid" ]; then
 		kill -15 $pid
 	fi
-	fetchcord --terminal=st --termfont="Joy Pixels" --time 120 &
+	fetchcord &
 	/opt/Discord/Discord &
 	if [ $? -eq 0 ]; then
 		exit
