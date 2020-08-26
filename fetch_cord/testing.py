@@ -91,10 +91,11 @@ def get_host():
         hostid = hostid.split()[1]
     return hostid
 
-hostid = get_host()
+
 
 if os.name != "nt" and hostline:
     get_host()
+    hostid = get_host()
 
 elif os.name == "nt" and moboline:
     if moboline:
