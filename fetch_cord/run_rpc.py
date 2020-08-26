@@ -287,7 +287,7 @@ def check_change(loop):
         batteryline = '\n'.join(batteryline)
     elif os.name != "nt" and hostline:
         batteryline = hostline
-    else:
+    elif os.name != "nt" and not hostline:
         batteryline = lapordesk
     if diskline:
         diskline = '\n'.join(diskline)
