@@ -69,22 +69,34 @@ if os.name != "nt":
 
 args = parse_args()
 
-hostid = ""
-if os.name != "nt":
-    if hostline:
-        hostsplit = hostline[0].split()
-        hostid = []
-        for line in range(len(hostsplit)):
-            if hostsplit[line] in hostlist:
-                hostid.append(hostsplit[line].rstrip('\n'))
-        try:
-            hostid = hostid[0]
-        except IndexError:
-            hostid = ""
-            pass
 
-moboid = ""
-if os.name == "nt":
+def get_host():
+    hostsplit = hostline[0].split()
+    hostid = []
+    for line in range(len(hostsplit)):
+        if hostsplit[line] in hostlist:
+            hostid.append(hostsplit[line].rstrip('\n'))
+    try:
+        hostid = hostid[0]
+    except IndexError:
+        hostid = []
+        pass
+    # try to get MacBook hostid
+    if not hostid:
+        hostjoin = ' '.join(hostline)
+        for numsplit in range(len(hostjoin)):
+            if not hostjoin[numsplit].isdigit():
+                hostid.append(hostjoin[numsplit])
+        hostid = ''.join(hostid)
+        hostid = hostid.split()[1]
+    return hostid
+
+hostid = get_host()
+
+if os.name != "nt" and hostline:
+    get_host()
+
+elif os.name == "nt" and moboline:
     if moboline:
         mobosplit = moboline[0].split()
         moboid = []
@@ -97,20 +109,15 @@ if os.name == "nt":
             moboid = ""
             pass
 
-if args.terminal:
-    if args.terminal in terminallist:
-        termid = args.terminal
-        termline[0] = "Terminal: %s" % args.terminal
-    else:
-        print("\nInvalid terminal, only %s are supported.\n"
-              "Please make a github issue if you would like to have your terminal added.\n"
-              "https://github.com/MrPotatoBobx/FetchCord" % terminallist)
-        sys.exit(1)
+if args.terminal and args.terminal in terminallist:
+    termid = args.terminal
+    termline[0] = "Terminal: %s" % args.terminal
+elif args.terminal and args.termninal not in terminallist:
+    print("\nInvalid terminal, only %s are supported.\n"
+            "Please make a github issue if you would like to have your terminal added.\n"
+            "https://github.com/MrPotatoBobx/FetchCord" % terminallist)
+    sys.exit(1)
 
-
-    if args.debug:
-        print("hostsplit: %s" % hostsplit)
-        print("hostid: %s" % hostid)
 
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
 if os.name != "nt":

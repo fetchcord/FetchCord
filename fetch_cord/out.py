@@ -169,17 +169,16 @@ def neofetch(loop):
                     hostline.append(line.rstrip('\n'))
                 if line.find(res) != -1:
                     resline.append(line.rstrip('\n'))
-                if line.find(mem) != -1:
-                    if args.memtype == "gb":
-                        memgb = line.rstrip('\n')
-                        memgb = memgb.split()
-                        used = float(memgb[1].replace("MiB", ""))
-                        total = float(memgb[3].replace("MiB", ""))
-                        memline.append(
-                                "Memory: " + str(round(used / 1024, 2)) + "GiB / " + str(
-                                    round(total / 1024,2)) + "GiB")
-                    else:
-                         memline.append(line.rstrip('\n'))
+                if line.find(mem) != -1 and args.memtype == "gb":
+                    memgb = line.rstrip('\n')
+                    memgb = memgb.split()
+                    used = float(memgb[1].replace("MiB", ""))
+                    total = float(memgb[3].replace("MiB", ""))
+                    memline.append(
+                            "Memory: " + str(round(used / 1024, 2)) + "GiB / " + str(
+                                round(total / 1024,2)) + "GiB")
+                elif line.find(mem) != -1:
+                    memline.append(line.rstrip('\n'))
                 if line.find(theme) != -1:
                     themeline.append(line.rstrip('\n'))
                 if line.find(disk) != -1:
@@ -207,6 +206,7 @@ def get_gpu(loop):
         for i in os.listdir(batpath):
             if i.startswith("BAT"):
                 laptop = True
+                break
         if laptop and nvidiagpuline:
             if args.debug and loop == 0:
                 print("laptop: %s" % laptop)
@@ -216,7 +216,6 @@ def get_gpu(loop):
                 pass
 
     gpuinfo = ""
-    get_gpuinfo = ""
     amdgpurenderlist = []
     gpuvendor = ""
     if nvidiagpuline:
@@ -235,14 +234,13 @@ def get_gpu(loop):
             for i in range(len(amdgpuline)):
                 # assume DRI_PRIME=0 is the intel GPU
                 if laptop and intelgpuline:
-                    i = i + 1
+                    i += 1
                 env_prime = "env DRI_PRIME=%s" % i
                 amdgpurender = "GPU: " + \
                     exec_bash(
                         "%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
                 if i != -1:
                     amdgpurenderlist.append(amdgpurender)
-            amdgpuvendor = "AMD"
         except BashError as e:
             print("ERROR: Could not run glxinfo [%s]" % str(e))
             sys.exit(1)
@@ -258,7 +256,7 @@ def get_gpu(loop):
         try:
             for a in range(len(amdgpuline)):
                 gpuinfo += amdgpuline[a]
-            gpuvendor += amdgpuline[0].split()[1]
+            gpuvendor += "AMD"
         except IndexError:
             pass
 
@@ -268,8 +266,9 @@ def get_gpu(loop):
                 gpuinfo += '\n' + intelgpuline[0]
             else:
                 gpuinfo += intelgpuline[0]
-                if sysosid.lower() == "macos" and "Radeon" in intelgpuline[0].split():
-                    gpuvendor += "AMD"
+            # macOS does not split GPUs in neofetch
+            if sysosid.lower() == "macos" and "Radeon" in intelgpuline[0].split():
+                gpuvendor += "AMD"
             gpuvendor += intelgpuline[0].split()[1]
         except IndexError:
             pass
@@ -328,13 +327,13 @@ def getcpuinfo(cpuline):
     global cpumodel, cpuvendor, cpuinfo
     if os.name != "nt":
         cpusplit = cpuline[0].split()[:-2]
-        s=' '.join(cpusplit)
-        cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1) + ' ' + cpuline[0].split()[-1]
+        cpujoin=' '.join(cpusplit)
+        cpuinfo = cpujoin + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1) + ' ' + cpuline[0].split()[-1]
     else:
         cpusplit = cpuline[0].split()[:-1]
-        s=' '.join(cpusplit)
+        cpujoin=' '.join(cpusplit)
         # I fucking hate you intel
-        cpuinfo = s + ' ' + cpuline[0].split()[-1].replace(
+        cpuinfo = cpujoin + ' ' + cpuline[0].split()[-1].replace(
                 "0", "", 1).replace("Core(TM)2", "Core 2").replace("Intel(R)", "Intel").replace("Core(TM)", "Core")
     cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
     cpumodel = ""

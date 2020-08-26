@@ -24,10 +24,9 @@ args = parse_args()
 
 
 def main():
-    if os.name != "nt":
-        if hostline == "" and args.nodistro and args.noshell and args.nohardware:
-            print("ERROR: no hostline is available!")
-            sys.exit(1)
+    if os.name != "nt" and not hostline and args.nodistro and args.noshell and args.nohardware:
+        print("ERROR: no hostline is available!")
+        sys.exit(1)
     # printing info with debug switch
     if args.debug:
         print("----run_rpc----\n")
@@ -236,8 +235,8 @@ def cycle3():
         else:
             time.sleep(30)
     # back from whence you came
-        loop = 1
     else:
+        loop = 1
         loonix(loop)
     rpc_tryclear(RPC)
 
@@ -251,7 +250,7 @@ def pause():
         time.sleep(30)
 
 
-def w_cycle0():
+def windows():
     if args.debug:
         print("w_cycle 0")
     client_id = appid
@@ -275,30 +274,6 @@ def w_cycle0():
         time.sleep(30)
     rpc_tryclear(RPC)
 
-
-def w_cycle1():
-    if args.debug:
-        print("w_cycle 1")
-    client_id = cpuappid
-    RPC = Presence(client_id)
-    rpc_tryconnect(RPC)
-    rpc_tryupdate(RPC,
-               state=diskline,
-               details=gpuinfo,
-               large_image="big",
-               large_text=cpuinfo,
-               small_image=gpuid,
-               small_text=gpuinfo,
-               start=start_time)
-    if args.debug:
-        print("appid: %s" % client_id)
-    if args.time:
-        custom_time()
-    elif args.nodistro:
-        time.sleep(9999)
-    else:
-        time.sleep(30)
-    rpc_tryclear(RPC)
 
 def check_change(loop):
     neofetch(loop)
@@ -360,9 +335,9 @@ def wandowz(loop):
             first_connect()
         while loop < 3:
             if not args.nodistro:
-                w_cycle0()
+                windows()
             if not args.nohardware:
-                w_cycle1()
+                cycle1()
             loop += 1
         if not args.nohardware:
             loop = 1
