@@ -252,7 +252,7 @@ def get_gpu(loop):
                 gpuinfo += amdgpurenderlist[a]
         gpuvendor += "AMD"
 
-    elif not amdgpurenderlist and not primeoffload:
+    elif amdgpuline and not amdgpurenderlist and not primeoffload:
         try:
             for a in range(len(amdgpuline)):
                 gpuinfo += amdgpuline[a]
@@ -269,7 +269,7 @@ def get_gpu(loop):
             # macOS does not split GPUs in neofetch
             if sysosid.lower() == "macos" and "Radeon" in intelgpuline[0].split():
                 gpuvendor += "AMD"
-            gpuvendor += intelgpuline[0].split()[1]
+            gpuvendor += "Intel"
         except IndexError:
             pass
     return gpuinfo
@@ -410,7 +410,7 @@ if os.name != "nt":
         resline = resline[0]
     kernelid = kernelline[0].split()[1]
     if not themeline:
-        themeline = ["N/A"]
+        themeline = "N/A"
     else:
         themeline = '\n'.join(themeline)
     if not memline:
