@@ -555,6 +555,20 @@ if os.name != "nt":
     gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
     gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload, sysosid)
 
+    dewmid = get_dewm(deline, wmline)
+    deid = get_deid(deline)
+    wmid = get_wmid(wmline)
+
+    lapordesk = set_laptop(laptop)
+    batteryline = check_batteryline(batteryline, lapordesk)
+
+    themeline = check_theme(themeline)
+    fontline = check_fontline(fontline)
+    termid = check_termid(termline)
+    shellid = shell_line[0].split()[1]
+
+    resline = check_res(resline)
+
 else:
     get_win_gpu()
 
@@ -571,30 +585,12 @@ if not moboline:
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = get_long_os(sysosline)
 
-dewmid = get_dewm(deline, wmline)
-deid = get_deid(deline)
-wmid = get_wmid(wmline)
-
-
-
-lapordesk = set_laptop(laptop)
-batteryline = check_batteryline(batteryline, lapordesk)
 
 cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
 cpumodel = get_cpumodel(cpuline, cpuvendor)
 cpuinfo = get_cpuinfo(cpuline)
 memline = check_memline(memline)
 diskline = check_diskline(diskline)
-
-resline = check_res(resline)
-
-themeline = check_theme(themeline)
-fontline = check_fontline(fontline)
-termid = check_termid(termline)
-shellid = shell_line[0].split()[1]
-
-
-
 
 
 if args.debug:
