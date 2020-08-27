@@ -1,6 +1,7 @@
 from fetch_cord.bash import exec_bash, BashError
 import sys
 import os
+import re
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
 from fetch_cord.debugger import run_debug
@@ -373,34 +374,31 @@ def get_win_gpu():
 def get_cpuinfo(cpuline):
     if os.name != "nt":
         cpusplit = cpuline[0].split()[:-2]
-        cpujoin=' '.join(cpusplit)
-        cpuinfo = cpujoin + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1) + ' ' + cpuline[0].split()[-1]
+        cpuinfo = ' '.join([cpusplit[0], cpuline[0].split()[-2].replace("0G", "G", 1), cpuline[0].split()[-1]])
+
     else:
-        cpusplit = cpuline[0].split()[:-1]
-        cpujoin=' '.join(cpusplit)
-        # I fucking hate you intel
-        cpuinfo = cpujoin + ' ' + cpuline[0].split()[-1].replace(
-                "0", "", 1).replace("Core(TM)2", "Core 2").replace("Intel(R)", "Intel").replace("Core(TM)", "Core")
+        cpuinfo = ' '.join(cpuline)
+        cpuinfo = re.sub(r"\((.+)\)", "", cpuinfo)
     return cpuinfo
 
 
 def get_cpumodel(cpuline, cpuvendor):
     if cpuvendor == "Intel":
         if os.name != "nt":
-            cpumodel = cpuline[0].replace(
-                '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
+            cpumodel = ' '.join([cpuline[0].replace(
+                '-', ' ').split()[1], cpuline[0].replace('-', ' ').split()[2]])
             if cpumodel == "Intel Core":
                 cpumodel = cpuline[0].split()[1:5]
                 cpumodel = ' '.join(cpumodel)
         else:
-            cpumodel = cpuline[0].replace(
-                '-', ' ').split()[1].replace("Intel(R)", "Intel") + ' ' + cpuline[0].replace('-', ' ').split()[3]
+            cpumodel = ' '.join([cpuline[0].replace(
+                '-', ' ').split()[1], cpuline[0].replace('-', ' ').split()[3]])
             if cpumodel == "Intel 2" or cpumodel == "Intel Solo":
                 cpumodel = cpuline[0].split()[1:5]
                 cpumodel = ' '.join(cpumodel)
 
     elif cpuvendor == "AMD":
-        cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
+        cpumodel = ' '.join([cpuline[0].split()[2], cpuline[0].split()[3]])
     # fuck you intel
     elif cpuvendor == "Pentium":
         cpumodel = cpuline[0].split()[1]
