@@ -38,6 +38,18 @@ def XDG_Symlink(home):
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
         return
 
+def check_neofetchwin():
+    try:
+        neofetchwin = subprocess.run(["neofetch", "--stdout"], check=True)
+    except subprocess.CalledProcessError:
+        # must be neofetch-win
+        pass
+    try:
+        neofetchwin = subprocess.run(["neofetch", "--noart"], check=True)
+    except FileNotFoundError:
+        print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+        sys.exit(1)
+    return neofetchwin
 
 def check_neofetchwin():
     try:
@@ -568,10 +580,8 @@ else:
     primeoffload = False
 
 if os.name != "nt":
-    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, \
-            nvidiagpuline, intelgpuline, primeoffload)
-    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,\
-            nvidiagpuline, intelgpuline, primeoffload, sysosid)
+    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
+    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload, sysosid)
 
     dewmid = get_dewm(deline, wmline)
     deid = get_deid(deline)
