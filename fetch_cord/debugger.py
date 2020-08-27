@@ -3,11 +3,10 @@ import sys
 
 def run_debug():
     from fetch_cord.out import gpuinfo, cpuvendor, cpumodel, cpuinfo, cpuline, memline,\
-            sysosid, sysosline, gpuvendor
+            sysosid, sysosline, gpuvendor, diskline
     if os.name != "nt":
         from fetch_cord.out import deid, wmid, wmline, hostline, fontline, lapordesk, batteryline, \
-            termid,\
-            diskline, packagesline, termline, themeline, memline
+            termid, packagesline, termline, themeline
 
     print("----out.py----\n")
     print("----DE/WM----")
