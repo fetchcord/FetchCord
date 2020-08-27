@@ -1,0 +1,13 @@
+aaron@aaron-pc 
+-------------- 
+OS: Linux Mint 20 x86_64 
+Host: HP Laptop 14-dk1xxx 
+Kernel: 5.8.1-050801-generic 
+Uptime: 4 hours, 1 min 
+Packages: 2492 (dpkg) 
+Shell: bash 5.0.17 
+DE: Cinnamon
+Terminal: gnome-terminal 
+CPU: AMD Ryzen 3 3250U (4) 3.600GHz
+GPU: AMD Vega 3 Graphics
+Memory: 2744MiB / 9938MiB
