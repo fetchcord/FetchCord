@@ -5,49 +5,55 @@ from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
 if os.name != "nt":
     from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline
+
 elif os.name == "nt":
     from fetch_cord.out import moboline
 
 # macOS hardwawre
 
-if os.name != "nt":
-    def laporp():
-        global devicetype
-        if product[0:7] == "MacBook":
-            devicetype = "laptop"
-        else:
-            devicetype = "desktop"
-        return devicetype
+def laporp(product):
+    if product[0:7] == "MacBook":
+        devicetype = "laptop"
+    else:
+        devicetype = "desktop"
+    return devicetype
 
-    def macos():
-        global product, devicetype, bigicon, ver
-        ver = os.popen("sw_vers -productVersion").read()
-        product = os.popen("sysctl -n hw.model").read()
-        bigicon = "none"
-        try:
-            bigicon = versions[ver[0:5]]
-        except KeyError:
-            bigicon = "bigslurp"
-            print("Unsupported MacOS version")
-        laporp()
+def get_ver():
+    return os.popen("sw_vers -productVersion").read()
+
+def get_product():
+    return os.popen("sysctl -n hw.model").read()
+
+def get_icon(ver):
+    try:
+        bigicon = versions[ver[0:5]]
+    except KeyError:
+        bigicon = "bigslurp"
+        print("Unsupported MacOS version")
+    return bigicon
     # this is staying
-    def iUnity():
-        # this is to check wether the user is actually using unity
-        # or using unity as an xdg value to fix issues with electron apps
-        if wmid.lower() == "compiz":
-            desktopid = "unity"
-        else:
-            desktopid = wmid
-        return desktopid
+def iUnity(wmid):
+    # this is to check wether the user is actually using unity
+    # or using unity as an xdg value to fix issues with electron apps
+    if wmid.lower() == "compiz":
+        desktopid = "unity"
+    else:
+        desktopid = wmid
+    return desktopid
+def get_infos():
+    try:
+        import importlib.resources as pkg_resources
+    except ImportError:
+        # Try backported to PY<37 `importlib_resources`.
+        import importlib_resources as pkg_resources
+    import fetch_cord.ressources as ressources
 
-try:
-    import importlib.resources as pkg_resources
-except ImportError:
-    # Try backported to PY<37 `importlib_resources`.
-    import importlib_resources as pkg_resources
-import fetch_cord.ressources as ressources
-with pkg_resources.open_text(ressources, 'infos.json') as f:
-    infos = json.load(f)
+    with pkg_resources.open_text(ressources, 'infos.json') as f:
+        infos = json.load(f)
+
+    return infos
+
+infos = get_infos()
 
 amdcpus = infos["amdcpus"]
 intelcpus = infos["intelcpus"]
@@ -64,28 +70,35 @@ hostlist = infos["hostlist"]
 terminallist = infos["terminallist"]
 
 # desktops
-if os.name != "nt":
-    desktops["unity"] = iUnity()
+if os.name != "nt" and deid == "unity":
+    iUnity(wmid)
 
 args = parse_args()
 
-hostid = ""
-if os.name != "nt":
-    if hostline:
-        hostsplit = hostline[0].split()
-        hostid = []
-        for line in range(len(hostsplit)):
-            if hostsplit[line] in hostlist:
-                hostid.append(hostsplit[line].rstrip('\n'))
-        try:
-            hostid = hostid[0]
-        except IndexError:
-            hostid = ""
-            pass
 
-moboid = ""
-if os.name == "nt":
-    if moboline:
+def get_host():
+    hostsplit = hostline[0].split()
+    hostid = []
+    for line in range(len(hostsplit)):
+        if hostsplit[line] in hostlist:
+            hostid.append(hostsplit[line].rstrip('\n'))
+    try:
+        hostid = hostid[0]
+    except IndexError:
+        hostid = []
+        pass
+    # try to get MacBook hostid
+    if not hostid:
+        hostjoin = ' '.join(hostline)
+        for numsplit in range(len(hostjoin)):
+            if not hostjoin[numsplit].isdigit():
+                hostid.append(hostjoin[numsplit])
+        hostid = ''.join(hostid)
+        hostid = hostid.split()[1]
+    return hostid
+
+
+def get_mobo(moboline):
         mobosplit = moboline[0].split()
         moboid = []
         for line in range(len(mobosplit)):
@@ -96,21 +109,17 @@ if os.name == "nt":
         except IndexError:
             moboid = ""
             pass
+        return moboid
 
-if args.terminal:
-    if args.terminal in terminallist:
-        termid = args.terminal
-        termline[0] = "Terminal: %s" % args.terminal
-    else:
-        print("\nInvalid terminal, only %s are supported.\n"
-              "Please make a github issue if you would like to have your terminal added.\n"
-              "https://github.com/MrPotatoBobx/FetchCord" % terminallist)
-        sys.exit(1)
+if args.terminal and args.terminal in terminallist:
+    termid = args.terminal
+    termline[0] = "Terminal: %s" % args.terminal
+elif args.terminal and args.termninal not in terminallist:
+    print("\nInvalid terminal, only %s are supported.\n"
+            "Please make a github issue if you would like to have your terminal added.\n"
+            "https://github.com/MrPotatoBobx/FetchCord" % terminallist)
+    sys.exit(1)
 
-
-    if args.debug:
-        print("hostsplit: %s" % hostsplit)
-        print("hostid: %s" % hostid)
 
 # bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
 if os.name != "nt":
@@ -122,31 +131,35 @@ if os.name != "nt":
 
 
     try:
-        shell = [s for s in shells if shellid in s]
+        shell = shellid.lower()
     except KeyError:
         print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
         shell = "unknown"
 
-    try:
-        if sysosid.lower():
-            hostappid = hosts[hostid.lower()]
-    except KeyError:
-        print("Unknown Host, contact us on github to resolve this.(Keyerror)")
-        hostappid = "742887089179197462"
 
-    try:
-        if deid != "N/A":
-            desktopid = desktops[deid.lower()]
-    except KeyError:
-        print("Unsupported De contact us on github to resolve this.(Keyerror)")
-        desktopid = 'unknown'
+def get_hostappid(hosts):
+    return hosts[hostid.lower()]
 
-    try:
-        if deid == "N/A":
-            desktopid = windowmanagers[wmid.lower()]
-    except KeyError:
-        print("Unsupported Wm contact us on github to resolve this.(Keyerror)")
+
+def get_moboid(motherboards):
+    return motherboards[moboid.lower()]
+
+
+def get_desktopid(deid, wmid):
+
+    deid = deid.lower()
+    wmid = wmid.lower()
+
+    if deid != "n/a" and deid in desktops:
+        desktopid = deid
+
+    elif deid == "n/a" and wmid in windowmanagers:
+        desktopid = wmid
+    else:
+        print("Unknown DE/WM, contact us on github to resolve this.")
         desktopid = 'unknown'
+    return desktopid
+
 
 try:
     appid = distros[sysosid.lower()]
@@ -165,21 +178,48 @@ except KeyError:
     print("unknown CPU, contact us on github to resolve this.(Keyerror)")
     cpuappid = '742887089179197462'
 
-try:
-    gpuid = gpus[gpuvendor.lower()]
-except KeyError:
-    print("Unknown GPU, contact us on github to resolve this.(Keyerror)")
-    gpuid = 'unknown'
+def get_gpuid(gpuvendor):
+    gpuvendor = gpuvendor.lower()
+    if gpuvendor in gpus:
+        gpuid = gpuvendor
+    else:
+        print("Unknown GPU, contact us on github to resolve this.")
+        gpuid = 'unknown'
+    return gpuid
 
-if os.name == "nt":
+if sysosid.lower() == "macos":
+    devicetype = "N/A"
+    bigicon = "unknown"
+    ver = get_ver()
+    get_icon(ver)
+    product = get_product()
+    laporp(product)
+
+gpuid = get_gpuid(gpuvendor)
+
+moboid = "Motherboard: N/A"
+hostid = "Host: N/A"
+if os.name != "nt" and hostline:
+    hostid = get_host()
+
+
+elif os.name == "nt" and moboline:
+    moboid = get_mobo(moboline)
+
+if os.name != "nt":
+    desktopid = get_desktopid(deid, wmid)
     try:
-        moboid = motherboards[moboid.lower()]
+        hostappid = get_hostappid(hosts)
     except KeyError:
-        print("Unknown Host, contact us on github to resolve this problem.(Keyerror)")
-        moboid = 'unknown'
+        print("Unknown Host, contact us on github to resolve this.(Keyerror)")
+        hostappid = "742887089179197462"
 
-elif sysosid.lower() == "macos":
-    macos()
+elif os.name == "nt":
+    try:
+        moboid = get_moboid(motherboards)
+    except KeyError:
+        print("Unknown Motherboard, contact us on github to resolve this.(Keyerror)")
+        moboid = "unknown"
 
 
 if args.debug:

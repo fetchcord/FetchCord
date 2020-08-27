@@ -16,18 +16,18 @@
         "pentium": "741203845706940467",
         "intel core 2 duo": "746527640382603375"
     },
-    "gpus": {
-        "intel": "intel",
-        "intel(r)": "intel",
-        "nvidia": "nvidia",
-        "amd": "amd",
-        "vmware": "vmware",
-        "virtio": "virtio",
-        "nvidiaintel": "nvidia-intel",
-        "nvidiaamd": "nvidia-amd",
-        "amdintel": "amd-intel",
-        "nvidiaamdintel": "nvidia-amd-intel"
-    },
+    "gpus": [
+        "intel",
+        "nvidia",
+        "amd",
+        "vmware",
+        "virtio",
+        "nvidiaintel",
+        "nvidiaamd",
+        "amdintel",
+        "nvidiaamdintel",
+	"cirrus"
+    ],
     "distros": {
         "ubuntu": "740434138036699178",
         "opensuseleap": "740156532137787433",
@@ -61,28 +61,29 @@
         "10.14": "mojave",
         "10.15": "catalina"
     },
-    "windowmanagers": {
-        "dwm": "dwm",
-        "i3": "i3",
-        "awesome": "awesome",
-        "enlightenment": "enlightenment",
-        "bspwm": "bspwm",
-        "xmonad": "xmonad",
-        "sway": "sway",
-        "openbox": "opebox"
-    },
-    "desktops": {
-        "kde": "kde",
-        "plasma": "kde",
-        "xfce": "xfce",
-        "budgie": "budgie",
-        "gnome": "gnome",
-        "deepin": "deepin",
-        "cinnamon": "cinnamon",
-        "mate": "mate",
-        "aero": "aero",
-        "pantheon": "pantheon"
-    },
+    "windowmanagers": [
+        "dwm",
+        "i3",
+        "awesome",
+        "enlightenment",
+        "bspwm",
+        "xmonad",
+        "sway",
+        "openbox",
+	"herbstluftwm"
+    ],
+    "desktops": [
+        "kde",
+        "plasma",
+        "xfce",
+        "budgie",
+        "gnome",
+        "deepin",
+        "cinnamon",
+        "mate",
+        "aero",
+        "pantheon"
+    ],
     "terminals": {
         "st": "741280043220861030",
         "kitty": "741285676250824725",
@@ -96,6 +97,7 @@
         "xfce4-terminal": "744332423072055296",
         "apple_terminal": "744950796298354689",
         "lxterminal": "745701997503840380",
+	"yakuake": "741286819676553258",
         "mate-terminal": "746531413360377856"
     },
     "shells": [
@@ -115,7 +117,9 @@
         "acer": "744326890512318544",
         "thinkpad": "744326223412461630",
         "lenovo": "744326223412461630",
-        "gigabyte": "746447043190456561"
+        "gigabyte": "746447043190456561",
+	"macbookair,": "748290608787095694",
+	"aspire": "744326890512318544"
     },
     "motherboards": {
         "inspiron": "dell",
@@ -132,6 +136,7 @@
     },
     "hostlist": [
         "Acer",
+	"Aspire",
         "TUF",
         "HP",
         "ThinkPad",
