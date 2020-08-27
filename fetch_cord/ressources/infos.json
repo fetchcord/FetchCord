@@ -69,7 +69,8 @@
         "bspwm": "bspwm",
         "xmonad": "xmonad",
         "sway": "sway",
-        "openbox": "opebox"
+        "openbox": "opebox",
+	"herbstluftwm": "herbsluftwm"
     },
     "desktops": {
         "kde": "kde",
@@ -117,7 +118,8 @@
         "thinkpad": "744326223412461630",
         "lenovo": "744326223412461630",
         "gigabyte": "746447043190456561",
-	"macbookair,": "748290608787095694"
+	"macbookair,": "748290608787095694",
+	"aspire": "744326890512318544"
     },
     "motherboards": {
         "inspiron": "dell",
@@ -134,6 +136,7 @@
     },
     "hostlist": [
         "Acer",
+	"Aspire",
         "TUF",
         "HP",
         "ThinkPad",
