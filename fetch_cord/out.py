@@ -29,7 +29,7 @@ except AttributeError:
 
 loop = 0
 
-def XDG_Symlink():
+def XDG_Symlink(home):
     try:
         print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
         exec_bash(
@@ -65,7 +65,7 @@ def neofetch(loop):
         package_path = os.path.isdir("/usr/bin/discord")
         manual_install_path = os.path.isdir("/opt/Discord")
         if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
-            XDG_Symlink()
+            XDG_Symlink(home)
 
         baseinfo = exec_bash("neofetch --stdout")
 
