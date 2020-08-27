@@ -11,44 +11,49 @@ elif os.name == "nt":
 
 # macOS hardwawre
 
-if os.name != "nt":
-    def laporp():
-        global devicetype
-        if product[0:7] == "MacBook":
-            devicetype = "laptop"
-        else:
-            devicetype = "desktop"
-        return devicetype
+def laporp(product):
+    if product[0:7] == "MacBook":
+        devicetype = "laptop"
+    else:
+        devicetype = "desktop"
+    return devicetype
 
-    def macos():
-        global product, devicetype, bigicon, ver
-        ver = os.popen("sw_vers -productVersion").read()
-        product = os.popen("sysctl -n hw.model").read()
-        bigicon = "none"
-        try:
-            bigicon = versions[ver[0:5]]
-        except KeyError:
-            bigicon = "bigslurp"
-            print("Unsupported MacOS version")
-        laporp()
+def get_ver():
+    return os.popen("sw_vers -productVersion").read()
+
+def get_product():
+    return os.popen("sysctl -n hw.model").read()
+
+def get_icon(ver):
+    try:
+        bigicon = versions[ver[0:5]]
+    except KeyError:
+        bigicon = "bigslurp"
+        print("Unsupported MacOS version")
+    return bigicon
     # this is staying
-    def iUnity():
-        # this is to check wether the user is actually using unity
-        # or using unity as an xdg value to fix issues with electron apps
-        if wmid.lower() == "compiz":
-            desktopid = "unity"
-        else:
-            desktopid = wmid
-        return desktopid
+def iUnity(wmid):
+    # this is to check wether the user is actually using unity
+    # or using unity as an xdg value to fix issues with electron apps
+    if wmid.lower() == "compiz":
+        desktopid = "unity"
+    else:
+        desktopid = wmid
+    return desktopid
+def get_infos():
+    try:
+        import importlib.resources as pkg_resources
+    except ImportError:
+        # Try backported to PY<37 `importlib_resources`.
+        import importlib_resources as pkg_resources
+    import fetch_cord.ressources as ressources
 
-try:
-    import importlib.resources as pkg_resources
-except ImportError:
-    # Try backported to PY<37 `importlib_resources`.
-    import importlib_resources as pkg_resources
-import fetch_cord.ressources as ressources
-with pkg_resources.open_text(ressources, 'infos.json') as f:
-    infos = json.load(f)
+    with pkg_resources.open_text(ressources, 'infos.json') as f:
+        infos = json.load(f)
+
+    return infos
+
+infos = get_infos()
 
 amdcpus = infos["amdcpus"]
 intelcpus = infos["intelcpus"]
@@ -65,8 +70,8 @@ hostlist = infos["hostlist"]
 terminallist = infos["terminallist"]
 
 # desktops
-#if os.name != "nt":
-#    desktops["unity"] = iUnity()
+if os.name != "nt" and deid == "unity":
+    iUnity(wmid)
 
 args = parse_args()
 
@@ -93,13 +98,7 @@ def get_host():
     return hostid
 
 
-
-if os.name != "nt" and hostline:
-    get_host()
-    hostid = get_host()
-
-elif os.name == "nt" and moboline:
-    if moboline:
+def get_mobo(moboline):
         mobosplit = moboline[0].split()
         moboid = []
         for line in range(len(mobosplit)):
@@ -110,6 +109,7 @@ elif os.name == "nt" and moboline:
         except IndexError:
             moboid = ""
             pass
+        return moboid
 
 if args.terminal and args.terminal in terminallist:
     termid = args.terminal
@@ -136,11 +136,9 @@ if os.name != "nt":
         print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
         shell = "unknown"
 
-    try:
-        hostappid = hosts[hostid.lower()]
-    except KeyError:
-        print("Unknown Host, contact us on github to resolve this.(Keyerror)")
-        hostappid = "742887089179197462"
+
+def get_hostappid(hosts):
+    return hosts[hostid.lower()]
 
 def get_desktopid(deid, wmid):
 
@@ -191,11 +189,29 @@ if os.name == "nt":
         print("Unknown Host, contact us on github to resolve this problem.(Keyerror)")
         moboid = 'unknown'
 
-elif sysosid.lower() == "macos":
-    macos()
+
+if sysosid.lower() == "macos":
+    ver = get_ver()
+    get_icon(ver)
+    product = get_product()
+    laporp(product)
 
 gpuid = get_gpuid(gpuvendor)
-desktopid = get_desktopid(deid, wmid)
+
+
+if os.name != "nt" and hostline:
+    hostid = get_host()
+
+elif os.name == "nt" and moboline:
+    moboid = get_mobo(moboline)
+
+if os.name != "nt":
+    desktopid = get_desktopid(deid, wmid)
+    try:
+        hostappid = get_hostappid(hosts)
+    except KeyError:
+        print("Unknown Host, contact us on github to resolve this.(Keyerror)")
+        hostappid = "742887089179197462"
 
 if args.debug:
     print("\n----testing.py----")
