@@ -29,7 +29,7 @@ except AttributeError:
 
 loop = 0
 
-def XDG_Symlink():
+def XDG_Symlink(home):
     try:
         print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
         exec_bash(
@@ -38,8 +38,6 @@ def XDG_Symlink():
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
         return
 
-def check_neofetchwin():
-    return os.popen("neofetch --noart").read()
 
 def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
@@ -48,14 +46,14 @@ def neofetch(loop):
             cirrusgpuline
     neofetchwin = False
     if os.name == "nt":
-        neofetchwin = check_neofetchwin()
+        neofetchwin = os.popen("neofetch --noart").read()
     else:
         home = os.getenv('HOME')
         flatpak_discord_path = os.path.isdir("%s/.var/app/com.discordapp.Discord" % home)
         package_path = os.path.isdir("/usr/bin/discord")
         manual_install_path = os.path.isdir("/opt/Discord")
         if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
-            XDG_Symlink()
+            XDG_Symlink(home)
 
         baseinfo = exec_bash("neofetch --stdout")
 
@@ -553,8 +551,10 @@ else:
     primeoffload = False
 
 if os.name != "nt":
-    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
-    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload, sysosid)
+    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, \
+            nvidiagpuline, intelgpuline, primeoffload)
+    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,\
+            nvidiagpuline, intelgpuline, primeoffload, sysosid)
 
     dewmid = get_dewm(deline, wmline)
     deid = get_deid(deline)
