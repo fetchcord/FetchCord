@@ -2,13 +2,13 @@ from fetch_cord.bash import exec_bash, BashError
 import sys
 import os
 import re
+import subprocess
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
 from fetch_cord.debugger import run_debug
 
 
 args = parse_args()
-
 
 if args.update:
     update()
@@ -38,6 +38,18 @@ def XDG_Symlink(home):
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
         return
 
+def check_neofetchwin():
+    try:
+        neofetchwin = subprocess.run(["neofetch", "--stdout"], check=True)
+    except subprocess.CalledProcessError:
+        # must be neofetch-win
+        pass
+    try:
+        neofetchwin = subprocess.run(["neofetch", "--noart"], check=True)
+    except FileNotFoundError:
+        print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+        sys.exit(1)
+    return neofetchwin
 
 def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
@@ -46,7 +58,7 @@ def neofetch(loop):
             cirrusgpuline
     neofetchwin = False
     if os.name == "nt":
-        neofetchwin = os.popen("neofetch --noart").read()
+        neofetchwin = check_neofetchwin()
     else:
         home = os.getenv('HOME')
         flatpak_discord_path = os.path.isdir("%s/.var/app/com.discordapp.Discord" % home)
@@ -551,10 +563,8 @@ else:
     primeoffload = False
 
 if os.name != "nt":
-    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, \
-            nvidiagpuline, intelgpuline, primeoffload)
-    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,\
-            nvidiagpuline, intelgpuline, primeoffload, sysosid)
+    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
+    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload, sysosid)
 
     dewmid = get_dewm(deline, wmline)
     deid = get_deid(deline)
@@ -582,6 +592,10 @@ if not shell_line:
     shell_line = "Shell: N/A"
 if not moboline:
     moboline = "Motherboard: N/A"
+if not gpuinfo:
+    gpuinfo = "GPU: N/A"
+if not termline:
+    termline = ["Terminal: N/A"]
 
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = get_long_os(sysosline)
