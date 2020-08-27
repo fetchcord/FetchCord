@@ -376,8 +376,8 @@ def get_win_gpu():
 
 def get_cpuinfo(cpuline):
     if os.name != "nt":
-        cpusplit = cpuline[0].split()[:-2]
-        cpuinfo = ' '.join([cpusplit[0], cpuline[0].split()[-2].replace("0G", "G", 1), cpuline[0].split()[-1]])
+        cpuinfo = ' '.join([' '.join(cpuline[0].split()[:-2]), cpuline[0].split()[-2].replace(
+            "0G", "G", 1), cpuline[0].split()[-1]])
 
     else:
         cpuinfo = ' '.join(cpuline)
