@@ -29,6 +29,18 @@ except AttributeError:
 
 loop = 0
 
+def XDG_Symlink():
+    try:
+        print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
+        exec_bash(
+                "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
+    except BashError as e:
+        print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
+        return
+
+def check_neofetchwin():
+    return os.popen("neofetch --noart").read()
+
 def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
             vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
@@ -36,18 +48,19 @@ def neofetch(loop):
             cirrusgpuline
     neofetchwin = False
     if os.name == "nt":
-        neofetchwin = os.popen("neofetch --noart").read()
+        neofetchwin = check_neofetchwin()
+        print(neofetchwin)
     else:
         home = os.getenv('HOME')
-        if loop == 0 and os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
-            try:
-                print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
-                exec_bash(
-                    "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
-            except BashError as e:
-                print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
+        flatpak_discord_path = os.path.isdir("%s/.var/app/com.discordapp.Discord" % home)
+        package_path = os.path.isdir("/usr/bin/discord")
+        manual_install_path = os.path.isdir("/opt/Discord")
+        if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
+            XDG_Symlink()
 
         baseinfo = exec_bash("neofetch --stdout")
+
+
     # make lists
     cpu = "CPU:"
     cpuline = []
@@ -210,6 +223,7 @@ def check_laptop():
     for i in os.listdir(batpath):
         if i.startswith("BAT"):
             return True
+    return False
 
 
 def check_primeoffload(laptop, loop):
@@ -288,7 +302,7 @@ def get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiag
         gpuinfo = get_nvidia_gpu(nvidiagpuline, loop)
 
     if amdgpurenderlist and not primeoffload and sysosid.lower() != "macos":
-        gpuinfo += get_amdgpu(amdgpuline, nvidiagpuline)
+        gpuinfo += get_amdgpu(amdgpurenderlist, nvidiagpuline)
 
     elif amdgpuline and not amdgpurenderlist and not primeoffload:
         gpuinfo += get_amdgpu_no_render(amdgpuline)
