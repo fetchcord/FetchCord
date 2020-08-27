@@ -49,7 +49,6 @@ def neofetch(loop):
     neofetchwin = False
     if os.name == "nt":
         neofetchwin = check_neofetchwin()
-        print(neofetchwin)
     else:
         home = os.getenv('HOME')
         flatpak_discord_path = os.path.isdir("%s/.var/app/com.discordapp.Discord" % home)
@@ -301,6 +300,7 @@ def get_intelgpu(intelgpuline, primeoffload):
 
 
 def get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload):
+    gpuinfo = ""
     if nvidiagpuline:
         gpuinfo = get_nvidia_gpu(nvidiagpuline, loop)
 
@@ -327,6 +327,8 @@ def get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiag
 
 def get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline,\
         amdgpuline, nvidiagpuline, intelgpuline, primeoffload, sysosid):
+
+    gpuvendor = ""
 
     if nvidiagpuline:
         gpuvendor = "NVIDIA"
@@ -511,7 +513,7 @@ def check_memline(memline):
 
 def check_batteryline(batteryline, lapordesk):
     if batteryline:
-        batteryline = batteryline[0]
+        batteryline = '\n'.join(batteryline)
     else:
         batteryline = lapordesk
 
@@ -538,6 +540,8 @@ sysosid = sysosline[0].split()[1]
 # I don't know if macOS has the same path linux does to check power_supply
 if sysosid.lower() != "macos" and os.name != "nt":
     laptop = check_laptop()
+else:
+    laptop = False
 
 gpuinfo = ""
 amdgpurenderlist = []
@@ -545,8 +549,10 @@ gpuvendor = ""
 
 if amdgpuline and os.name != "nt":
     amdgpurenderlist = get_amdgpurender(amdgpuline, intelgpuline, laptop)
-
-primeoffload = check_primeoffload(laptop, loop)
+if sysosid.lower() not in ["windows", "macos"]:
+    primeoffload = check_primeoffload(laptop, loop)
+else:
+    primeoffload = False
 
 if os.name != "nt":
     gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
@@ -566,7 +572,7 @@ if not moboline:
     moboline = "Motherboard: N/A"
 
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
-    get_long_os(sysosline)
+    sysosid = get_long_os(sysosline)
 
 dewmid = get_dewm(deline, wmline)
 deid = get_deid(deline)
