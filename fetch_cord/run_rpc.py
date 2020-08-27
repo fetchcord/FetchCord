@@ -8,16 +8,17 @@ import psutil
 from fetch_cord.args import parse_args
 from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
-from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, getcpuinfo, cpuinfo, run_debug, \
+from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, cpuinfo, \
         neofetch, diskline
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
-    from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, fontline, \
-        dewmid, termline, lapordesk, hostline, resline, themeline, batteryline, \
-        get_gpu, cpuline
+    from fetch_cord.out import packagesline, shellid, kernelline, shell_line, fontline, \
+        termline, lapordesk, hostline, resline, themeline, batteryline, \
+        gpuinfo, dewmid
 elif os.name == "nt":
     from fetch_cord.out import moboline
     from fetch_cord.testing import moboid
+
 
 uptime = psutil.boot_time()
 args = parse_args()
@@ -276,24 +277,21 @@ def windows():
 
 
 def check_change(loop):
+
     neofetch(loop)
-    from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, cpuline, nvidiagpuline
+
+    from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, nvidiagpuline, \
+            cpuinfo, lapordesk
+
     global memline, diskline, batteryline, packagesline, cpuinfo, gpuinfo
-    cpuinfo = getcpuinfo(cpuline)
+
+    batteryline = batteryline[0]
+
     if os.name != "nt" and nvidiagpuline and sysosid.lower() != "macos":
-        gpuinfo = get_gpu(loop)
-    memline = memline[0]
-    if batteryline and os.name != "nt":
-        batteryline = '\n'.join(batteryline)
-    elif os.name != "nt" and hostline:
-        batteryline = hostline
-    elif os.name != "nt" and not hostline:
-        batteryline = lapordesk
-    if diskline:
-        diskline = '\n'.join(diskline)
-    else:
-        diskline = cpuinfo
+        from fetch_cord.out import gpuinfo
+
     loop = 1
+
     if os.name != "nt":
         return loonix(loop)
     else:

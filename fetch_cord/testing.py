@@ -5,6 +5,7 @@ from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
 if os.name != "nt":
     from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline
+
 elif os.name == "nt":
     from fetch_cord.out import moboline
 
