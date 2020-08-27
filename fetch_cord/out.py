@@ -2,13 +2,13 @@ from fetch_cord.bash import exec_bash, BashError
 import sys
 import os
 import re
+import subprocess
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
 from fetch_cord.debugger import run_debug
 
 
 args = parse_args()
-
 
 if args.update:
     update()
@@ -40,7 +40,17 @@ def XDG_Symlink(home):
 
 
 def check_neofetchwin():
-    return os.popen("neofetch --noart").read()
+    try:
+        neofetchwin = subprocess.run(["neofetch", "--stdout"], check=True)
+    except subprocess.CalledProcessError:
+        # must be neofetch-win
+        pass
+    try:
+        neofetchwin = subprocess.run(["neofetch", "--noart"], check=True)
+    except FileNotFoundError:
+        print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+        sys.exit(1)
+    return neofetchwin
 
 
 def neofetch(loop):
@@ -590,7 +600,9 @@ if not shell_line:
 if not moboline:
     moboline = "Motherboard: N/A"
 if not gpuinfo:
-    gpuline = "GPU: N/A"
+    gpuinfo = "GPU: N/A"
+if not termline:
+    termline = ["Terminal: N/A"]
 
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = get_long_os(sysosline)

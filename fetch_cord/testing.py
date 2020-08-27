@@ -222,30 +222,6 @@ elif os.name == "nt":
         print("Unknown Motherboard, contact us on github to resolve this.(Keyerror)")
         moboid = "unknown"
 
-if sysosid.lower() == "macos":
-    devicetype = "N/A"
-    bigicon = "unknown"
-    ver = get_ver()
-    get_icon(ver)
-    product = get_product()
-    laporp(product)
-
-gpuid = get_gpuid(gpuvendor)
-
-
-if os.name != "nt" and hostline:
-    hostid = get_host()
-
-elif os.name == "nt" and moboline:
-    moboid = get_mobo(moboline)
-
-if os.name != "nt":
-    desktopid = get_desktopid(deid, wmid)
-    try:
-        hostappid = get_hostappid(hosts)
-    except KeyError:
-        print("Unknown Host, contact us on github to resolve this.(Keyerror)")
-        hostappid = "742887089179197462"
 
 if args.debug:
     print("\n----testing.py----")
