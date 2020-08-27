@@ -280,16 +280,20 @@ def check_change(loop):
 
     neofetch(loop)
 
-    from fetch_cord.out import check_memline, diskline, batteryline, packagesline, cpuinfo, nvidiagpuline, \
-            get_cpuinfo, lapordesk, memline, check_diskline, check_batteryline, cpuline
+    from fetch_cord.out import check_memline, diskline, cpuinfo, nvidiagpuline, \
+            get_cpuinfo, memline, check_diskline, cpuline
+    if os.name != "nt":
+        from fetch_cord.out import lapordesk, batteryline, packagesline, check_batteryline
 
     global packagesline, cpuinfo, gpuinfo, memline, diskline, batteryline
 
     memline = check_memline(memline)
     diskline = check_diskline(diskline)
-    batteryline = check_batteryline(batteryline, lapordesk)
     cpuinfo = get_cpuinfo(cpuline)
-    packagesline = packagesline
+    if os.name != "nt":
+        batteryline = check_batteryline(batteryline, lapordesk)
+        packagesline = packagesline
+    cpuinfo = get_cpuinfo(cpuline)
 
     if os.name != "nt" and nvidiagpuline and sysosid.lower() != "macos":
         from fetch_cord.out import gpuinfo

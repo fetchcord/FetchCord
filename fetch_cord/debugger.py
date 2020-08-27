@@ -2,9 +2,12 @@ import os
 import sys
 
 def run_debug():
-    from fetch_cord.out import deid, wmid, wmline, hostline, fontline, lapordesk, batteryline, nvidiagpuline, intelgpuline, \
-        amdgpurenderlist, termid, gpuinfo, gpuvendor, cpuvendor, cpumodel, cpuinfo, cpuline, sysosid,\
-        sysosline, diskline, packagesline, termline, themeline, memline
+    from fetch_cord.out import gpuinfo, cpuvendor, cpumodel, cpuinfo, cpuline, memline,\
+            sysosid, sysosline, gpuvendor, diskline
+    if os.name != "nt":
+        from fetch_cord.out import deid, wmid, wmline, hostline, fontline, lapordesk, batteryline, \
+            termid, packagesline, termline, themeline
+
     print("----out.py----\n")
     print("----DE/WM----")
     if os.name != "nt":
@@ -25,12 +28,6 @@ def run_debug():
             if batteryline != lapordesk:
                 print("batteryline: %s" % batteryline)
     print("\n----GPU INFO----\n")
-    try:
-        print("amdgpurenderlist: %s" % amdgpurenderlist)
-    except NameError:
-        pass
-    print("nvidiagpuline: %s" % nvidiagpuline)
-    print("intelgpuline: %s" % intelgpuline)
     print("gpuinfo: %s" % gpuinfo)
     print("gpuvendor: %s" % gpuvendor)
     print("\n----CPU INFO----\n")

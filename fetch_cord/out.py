@@ -29,7 +29,7 @@ except AttributeError:
 
 loop = 0
 
-def XDG_Symlink():
+def XDG_Symlink(home):
     try:
         print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
         exec_bash(
@@ -38,8 +38,10 @@ def XDG_Symlink():
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
         return
 
+
 def check_neofetchwin():
     return os.popen("neofetch --noart").read()
+
 
 def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
@@ -55,7 +57,7 @@ def neofetch(loop):
         package_path = os.path.isdir("/usr/bin/discord")
         manual_install_path = os.path.isdir("/opt/Discord")
         if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
-            XDG_Symlink()
+            XDG_Symlink(home)
 
         baseinfo = exec_bash("neofetch --stdout")
 
@@ -412,6 +414,7 @@ def get_cpumodel(cpuline, cpuvendor):
         else:
             cpumodel = ' '.join([cpuline[0].replace(
                 '-', ' ').split()[1], cpuline[0].replace('-', ' ').split()[3]])
+            cpumodel = re.sub(r"\((.+)\)", "", cpumodel)
             if cpumodel == "Intel 2" or cpumodel == "Intel Solo":
                 cpumodel = cpuline[0].split()[1:5]
                 cpumodel = ' '.join(cpumodel)
@@ -555,8 +558,24 @@ else:
     primeoffload = False
 
 if os.name != "nt":
-    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
-    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload, sysosid)
+    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, \
+            nvidiagpuline, intelgpuline, primeoffload)
+    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,\
+            nvidiagpuline, intelgpuline, primeoffload, sysosid)
+
+    dewmid = get_dewm(deline, wmline)
+    deid = get_deid(deline)
+    wmid = get_wmid(wmline)
+
+    lapordesk = set_laptop(laptop)
+    batteryline = check_batteryline(batteryline, lapordesk)
+
+    themeline = check_theme(themeline)
+    fontline = check_fontline(fontline)
+    termid = check_termid(termline)
+    shellid = shell_line[0].split()[1]
+
+    resline = check_res(resline)
 
 else:
     get_win_gpu()
@@ -570,34 +589,17 @@ if not shell_line:
     shell_line = "Shell: N/A"
 if not moboline:
     moboline = "Motherboard: N/A"
+if not gpuinfo:
+    gpuline = "GPU: N/A"
 
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = get_long_os(sysosline)
-
-dewmid = get_dewm(deline, wmline)
-deid = get_deid(deline)
-wmid = get_wmid(wmline)
-
-
-
-lapordesk = set_laptop(laptop)
-batteryline = check_batteryline(batteryline, lapordesk)
 
 cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
 cpumodel = get_cpumodel(cpuline, cpuvendor)
 cpuinfo = get_cpuinfo(cpuline)
 memline = check_memline(memline)
 diskline = check_diskline(diskline)
-
-resline = check_res(resline)
-
-themeline = check_theme(themeline)
-fontline = check_fontline(fontline)
-termid = check_termid(termline)
-shellid = shell_line[0].split()[1]
-
-
-
 
 
 if args.debug:
