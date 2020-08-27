@@ -3,6 +3,7 @@ import sys
 import os
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
+from fetch_cord.debugger import run_debug
 
 
 args = parse_args()
@@ -198,87 +199,131 @@ def neofetch(loop):
     return (memline, packagesline, diskline, batteryline, cpuline)
 neofetch(loop)
 
-sysosid = sysosline[0].split()[1]
-def get_gpu(loop):
-    global gpuinfo, gpuvendor, primeoffload, laptop, amdgpurenderlist, amdgpurender
-    primeoffload = False
-    if sysosid.lower() != "macos" and os.name != "nt":
-        # only show the GPU in use with optimus, show both if prime render offload
-        batpath = "/sys/class/power_supply"
-        laptop = False
-        for i in os.listdir(batpath):
-            if i.startswith("BAT"):
-                laptop = True
-                break
-        if laptop and nvidiagpuline:
-            if args.debug and loop == 0:
-                print("laptop: %s" % laptop)
-            try:
-                primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
-            except BashError:
-                pass
 
-    gpuinfo = ""
-    amdgpurenderlist = []
-    gpuvendor = ""
-    if nvidiagpuline:
+# TODO: move this shit to it's own file
+def check_laptop():
+
+    batpath = "/sys/class/power_supply"
+    for i in os.listdir(batpath):
+        if i.startswith("BAT"):
+            return True
+
+
+def check_primeoffload(laptop, loop):
+    # only show the GPU in use with optimus, show both if prime render offload
+    primeoffload = False
+    if args.debug and loop == 0:
+        print("laptop: %s" % laptop)
+    try:
+        primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
+        return True
+    except BashError:
+        return False
+
+
+def get_nvidia_gpu(nvidiagpuline, loop):
         for n in range(len(nvidiagpuline)):
-            gpuinfo += nvidiagpuline[n]
-        gpuvendor += "NVIDIA"
+            nvidiagpuinfo = nvidiagpuline[n]
         try:
             gputemp = exec_bash("nvidia-smi | awk '{print $3}' | xargs | awk '{print $7}' | sed 's/C/°C/;s/^/[/;s/$/]/'")
-            gpuinfo += gputemp
+            nvidiagpuinfo += gputemp
         except BashError:
             pass
+        return nvidiagpuinfo
 
-    if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeoffload:
-        try:
-            # amd GPUs
-            for i in range(len(amdgpuline)):
-                # assume DRI_PRIME=0 is the intel GPU
-                if laptop and intelgpuline:
-                    i += 1
-                env_prime = "env DRI_PRIME=%s" % i
-                amdgpurender = "GPU: " + \
-                    exec_bash(
-                        "%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
-                if i != -1:
-                    amdgpurenderlist.append(amdgpurender)
-        except BashError as e:
-            print("ERROR: Could not run glxinfo [%s]" % str(e))
-            sys.exit(1)
 
-        for a in range(len(amdgpurenderlist)):
-            if nvidiagpuline:
-                gpuinfo += '\n' + amdgpurenderlist[a]
-            else:
-                gpuinfo += amdgpurenderlist[a]
-        gpuvendor += "AMD"
+def get_amdgpurender(amdgpuline, intelgpuline, laptop):
+    amdgpurenderlist = []
+    try:
+        # amd GPUs
+        for i in range(len(amdgpuline)):
+            # assume DRI_PRIME=0 is the intel GPU
+            if laptop and intelgpuline:
+                i += 1
+            env_prime = "env DRI_PRIME=%s" % i
+            amdgpurender = "GPU: " + \
+                exec_bash(
+                    "%s glxinfo | grep \"OpenGL renderer string:\" |\
+                            sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
+            if i != -1:
+                amdgpurenderlist.append(amdgpurender)
+    except BashError as e:
+        print("ERROR: Could not run glxinfo [%s]" % str(e))
+        sys.exit(1)
+    return amdgpurenderlist
+
+def get_amdgpu(amdgpurenderlist, nvidiagpuline):
+
+    for a in range(len(amdgpurenderlist)):
+        if nvidiagpuline:
+            amdgpuinfo = '\n' + amdgpurenderlist[a]
+        else:
+            amdgpuinfo = amdgpurenderlist[a]
+
+    return amdgpuinfo
+
+def get_amdgpu_no_render(amdgpuline):
+    for a in range(len(amdgpuline)):
+        amdgpuinfo = amdgpuline[a]
+
+    return amdgpuinfo
+
+
+
+def get_intelgpu(intelgpuline, primeoffload):
+
+    if amdgpuline or nvidiagpuline:
+        intelgpuinfo = '\n' + intelgpuline[0]
+    else:
+        intelgpuinfo = intelgpuline[0]
+
+    return intelgpuinfo
+
+
+def get_gpuinfo(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload):
+    if nvidiagpuline:
+        primeoffload = check_primeoffload(laptop, loop)
+        gpuinfo = get_nvidia_gpu(nvidiagpuline, loop)
+
+    if amdgpurenderlist and not primeoffload and sysosid.lower() != "macos":
+        gpuinfo += get_amdgpu(amdgpuline, nvidiagpuline)
 
     elif amdgpuline and not amdgpurenderlist and not primeoffload:
-        try:
-            for a in range(len(amdgpuline)):
-                gpuinfo += amdgpuline[a]
-            gpuvendor += "AMD"
-        except IndexError:
-            pass
+        gpuinfo += get_amdgpu_no_render(amdgpuline)
 
     if intelgpuline and not primeoffload:
-        try:
-            if amdgpuline or nvidiagpuline:
-                gpuinfo += '\n' + intelgpuline[0]
-            else:
-                gpuinfo += intelgpuline[0]
-            # macOS does not split GPUs in neofetch
-            if sysosid.lower() == "macos" and "Radeon" in intelgpuline[0].split():
-                gpuvendor += "AMD"
-            gpuvendor += "Intel"
-        except IndexError:
-            pass
+        gpuinfo += get_intelgpu(intelgpuline, primeoffload)
+
+    if vmwaregpuline:
+        gpuinfo = vmwaregpuline[0]
+
+    if virtiogpuline:
+        gpuinfo = virtiogpuline[0]
+
     return gpuinfo
 
-if os.name != "nt":
-    get_gpu(loop)
+
+def get_gpu_vendors(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload):
+
+    if nvidiagpuline:
+        gpuvendor = "NVIDIA"
+
+    if amdgpuline and not primeoffload:
+        gpuvendor += "AMD"
+
+    if intelgpuline and not primeoffload:
+        if sysosid.lower() == "macos" and "Radeon" in intelgpuline[0].split():
+            gpuvendor += "AMD"
+        gpuvendor += "Intel"
+
+    if vmwaregpuline:
+        gpuvendor = "vmware"
+
+    if virtiogpuline:
+        gpuvendor = "virtio"
+
+    return gpuvendor
+
 
 def get_win_gpu():
     global gpuinfo, gpuvendor
@@ -316,18 +361,8 @@ def get_win_gpu():
         except IndexError:
             pass
 
-if os.name == "nt":
-    get_win_gpu()
 
-if vmwaregpuline:
-    gpuinfo = vmwaregpuline[0]
-    gpuvendor = vmwaregpuline[0].split()[1]
-if virtiogpuline:
-    gpuinfo = virtiogpuline[0]
-    gpuvendor = virtiogpuline[0].split()[2:3].join()
-
-def getcpuinfo(cpuline):
-    global cpumodel, cpuvendor, cpuinfo
+def get_cpuinfo(cpuline):
     if os.name != "nt":
         cpusplit = cpuline[0].split()[:-2]
         cpujoin=' '.join(cpusplit)
@@ -338,8 +373,10 @@ def getcpuinfo(cpuline):
         # I fucking hate you intel
         cpuinfo = cpujoin + ' ' + cpuline[0].split()[-1].replace(
                 "0", "", 1).replace("Core(TM)2", "Core 2").replace("Intel(R)", "Intel").replace("Core(TM)", "Core")
-    cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
-    cpumodel = ""
+    return cpuinfo
+
+
+def get_cpumodel(cpuline, cpuvendor):
     if cpuvendor == "Intel":
         if os.name != "nt":
             cpumodel = cpuline[0].replace(
@@ -359,26 +396,18 @@ def getcpuinfo(cpuline):
     # fuck you intel
     elif cpuvendor == "Pentium":
         cpumodel = cpuline[0].split()[1]
-    return cpuinfo
+    return cpumodel
 
-getcpuinfo(cpuline)
-
-if os.name != "nt":
-    # linux shit
-    if wmline:
-        wmid = wmline[0].split()[1]
+def check_termid(termline):
+    if termline:
+        termid = termline[0].split()[1]
     else:
-        wmid = "N/A"
-    termid = ""
-    try:
-        if termline:
-            termid = termline[0].split()[1]
-        else:
-            termid = "N/A"
-            termline = ["N/A"]
-    except IndexError:
-        pass
-    shellid = shell_line[0].split()[1]
+        termid = "N/A"
+
+    return termid
+
+
+def check_fontline(fontline):
     if fontline:
         fontline = '\n'.join(fontline)
     if fontline and args.termfont:
@@ -386,10 +415,28 @@ if os.name != "nt":
             fontline)
     elif not fontline:
         fontline = "Terminal Font: N/A\nFont: N/A"
+
+    return fontline
+
+
+def get_wmid(wmline):
+    if wmline:
+        wmid = wmline[0].split()[1]
+    else:
+        wmid = "N/A"
+    return wmid
+
+
+def get_deid(deline):
     if deline:
         deid = deline[0].split()[1]
     else:
         deid = "N/A"
+
+    return deid
+
+
+def get_dewm(deline, wmline):
     dewmid = ""
     if deline and wmline:
         dewmid = deline[0] + ' ' + wmline[0]
@@ -397,83 +444,133 @@ if os.name != "nt":
         dewmid = deline[0]
     elif wmline and not deline:
         dewmid = wmline[0]
-    lapordesk = ""
-    if not hostline:
-        hostline = ""
-    try:
-        if laptop and sysosid.lower() != 'macos':
-            lapordesk = "laptop"
-        else:
-            lapordesk = "desktop"
-    except NameError:
-        pass
+    else:
+        dewmid = "N/A"
+
+    return dewmid
+
+
+def set_laptop(laptop):
+    if laptop and sysosid.lower() != 'macos':
+        lapordesk = "laptop"
+    else:
+        lapordesk = "desktop"
+
+    return lapordesk
+
+
+def check_res(resline):
     if not resline:
         resline = "Resolution: N/A"
     else:
         resline = resline[0]
-    kernelid = kernelline[0].split()[1]
+
+    return resline
+
+
+def check_theme(themeline):
     if not themeline:
         themeline = "N/A"
     else:
         themeline = '\n'.join(themeline)
-    if not memline:
-        memline = ["Memory: N/A"]
-    if batteryline:
-        batteryline = ' '.join(batteryline)
-    elif not batteryline:
-        batteryline = lapordesk
-if sysosid.lower() in ['windows', 'linux', 'opensuse']:
-    sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
-if diskline:
-    diskline = '\n'.join(diskline)
-# return to default line
-elif not diskline:
-    diskline = getcpuinfo(cpuline)
-if memline:
-    memline = memline[0]
 
-def run_debug():
-    print("----out.py----\n")
-    print("----DE/WM----")
-    if os.name != "nt":
-        print("deid: %s" % deid)
-        print("wmid: %s" % wmid)
-        try:
-            print("wmline item 0: %s" % wmline[0])
-        except IndexError:
-            pass
-        print("\n----TERMINAL----\n")
-        print("fontline: %s" % fontline)
-        print("termid: %s" % termid)
-        print("termline item 0: %s" % termline[0])
-        print("themeline: %s" % themeline)
-        if hostline:
-            print("\n----HOST INFO----\n")
-            print("hostline: %s" % hostline)
-            if batteryline != lapordesk:
-                print("batteryline: %s" % batteryline)
-    print("\n----GPU INFO----\n")
-    try:
-        print("amdgpurenderlist: %s" % amdgpurenderlist)
-        print("amdgpurender: %s" % amdgpurender)
-    except NameError:
-        pass
-    print("nvidiagpuline: %s" % nvidiagpuline)
-    print("intelgpuline: %s" % intelgpuline)
-    print("gpuinfo: %s" % gpuinfo)
-    print("gpuvendor: %s" % gpuvendor)
-    print("\n----CPU INFO----\n")
-    print("cpuvendor: %s" % cpuvendor)
-    print("cpumodel: %s" % cpumodel)
-    print("cpuinfo: %s" % cpuinfo)
-    print("cpuline item 0: %s" % cpuline[0])
-    print("memline: %s" % memline)
-    print("\n----OS INFO----\n")
-    print("sysosline: %s" % sysosline)
-    print("sysosid: %s" % sysosid)
-    if diskline != cpuinfo:
-        print("diskline: %s" % diskline)
-    if os.name != "nt":
-        print("packagesline item 0: %s" % packagesline[0])
+    return themeline
+
+
+def check_memline(memline):
+    if memline:
+        memline == memline[0]
+    if not memline:
+        memline == "N/A"
+
+    return memline
+
+
+def check_batteryline(batteryline, lapordesk):
+    if batteryline:
+        batteryline = batteryline[0]
+    else:
+        batteryline = laptop
+
+    return batteryline
+
+
+def get_long_os(sysosline):
+
+    sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
+
+    return sysosid
+
+def check_diskline(diskline):
+    if diskline:
+        diskline = '\n'.join(diskline)
+    # return to default line
+    elif not diskline:
+        diskline = getcpuinfo(cpuline)
+
+    return diskline
+
+sysosid = sysosline[0].split()[1]
+
+# I don't know if macOS has the same path linux does to check power_supply
+if sysosid.lower() != "macos" and os.name != "nt":
+    laptop = check_laptop()
+
+gpuinfo = ""
+amdgpurenderlist = []
+gpuvendor = ""
+
+if amdgpuline and os.name != "nt":
+    amdgpurenderlist = get_amdgpurender(amdgpuline, intelgpuline, laptop)
+
+if nvidiagpuline and laptop:
+    primeoffload = check_primeoffload(laptop, loop)
+
+if os.name != "nt":
+    gpuinfo = get_gpuinfo(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
+    gpuvendor = get_gpu_vendors(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
+
+else:
+    get_win_gpu()
+
+
+if not hostline:
+    hostline = "Host: N/A"
+if not kernelline:
+    kernelline = "Kernel: N/A"
+if not shell_line:
+    shell_line = "Shell: N/A"
+if not moboline:
+    moboline = "Motherboard: N/A"
+
+if sysosid.lower() in ['windows', 'linux', 'opensuse']:
+    get_long_os(sysosline)
+
+dewmid = get_dewm(deline, wmline)
+deid = get_deid(deline)
+wmid = get_wmid(wmline)
+
+
+
+lapordesk = set_laptop(laptop)
+batteryline = check_batteryline(batteryline, lapordesk)
+
+cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
+cpumodel = get_cpumodel(cpuline, cpuvendor)
+cpuinfo = get_cpuinfo(cpuline)
+memline = check_memline(memline)
+diskline = check_diskline(diskline)
+
+resline = check_res(resline)
+
+themeline = check_theme(themeline)
+fontline = check_fontline(fontline)
+termid = check_termid(termline)
+shellid = shell_line[0].split()[1]
+
+
+
+
+
 if args.debug:
     run_debug()
