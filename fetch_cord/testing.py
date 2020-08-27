@@ -191,6 +191,8 @@ if os.name == "nt":
 
 
 if sysosid.lower() == "macos":
+    devicetype = "N/A"
+    bigicon = "unknown"
     ver = get_ver()
     get_icon(ver)
     product = get_product()
