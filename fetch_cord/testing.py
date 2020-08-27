@@ -65,8 +65,8 @@ hostlist = infos["hostlist"]
 terminallist = infos["terminallist"]
 
 # desktops
-if os.name != "nt":
-    desktops["unity"] = iUnity()
+#if os.name != "nt":
+#    desktops["unity"] = iUnity()
 
 args = parse_args()
 
@@ -131,31 +131,32 @@ if os.name != "nt":
 
 
     try:
-        shell = [s for s in shells if shellid in s]
+        shell = shellid.lower()
     except KeyError:
         print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
         shell = "unknown"
 
     try:
-        if sysosid.lower():
-            hostappid = hosts[hostid.lower()]
+        hostappid = hosts[hostid.lower()]
     except KeyError:
         print("Unknown Host, contact us on github to resolve this.(Keyerror)")
         hostappid = "742887089179197462"
 
-    try:
-        if deid != "N/A":
-            desktopid = desktops[deid.lower()]
-    except KeyError:
-        print("Unsupported De contact us on github to resolve this.(Keyerror)")
-        desktopid = 'unknown'
+def get_desktopid(deid, wmid):
 
-    try:
-        if deid == "N/A":
-            desktopid = windowmanagers[wmid.lower()]
-    except KeyError:
-        print("Unsupported Wm contact us on github to resolve this.(Keyerror)")
+    deid = deid.lower()
+    wmid = wmid.lower()
+
+    if deid != "n/a" and deid in desktops:
+        desktopid = deid
+
+    elif deid == "n/a" and wmid in windowmanagers:
+        desktopid = wmid
+    else:
+        print("Unknown DE/WM, contact us on github to resolve this.")
         desktopid = 'unknown'
+    return desktopid
+
 
 try:
     appid = distros[sysosid.lower()]
@@ -174,11 +175,14 @@ except KeyError:
     print("unknown CPU, contact us on github to resolve this.(Keyerror)")
     cpuappid = '742887089179197462'
 
-try:
-    gpuid = gpus[gpuvendor.lower()]
-except KeyError:
-    print("Unknown GPU, contact us on github to resolve this.(Keyerror)")
-    gpuid = 'unknown'
+def get_gpuid(gpuvendor):
+    gpuvendor = gpuvendor.lower()
+    if gpuvendor in gpus:
+        gpuid = gpuvendor
+    else:
+        print("Unknown GPU, contact us on github to resolve this.")
+        gpuid = 'unknown'
+    return gpuid
 
 if os.name == "nt":
     try:
@@ -190,6 +194,8 @@ if os.name == "nt":
 elif sysosid.lower() == "macos":
     macos()
 
+gpuid = get_gpuid(gpuvendor)
+desktopid = get_desktopid(deid, wmid)
 
 if args.debug:
     print("\n----testing.py----")

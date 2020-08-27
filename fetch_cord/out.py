@@ -31,7 +31,8 @@ loop = 0
 def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
             vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
-            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline
+            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
+            cirrusgpuline
     neofetchwin = False
     if os.name == "nt":
         neofetchwin = os.popen("neofetch --noart").read()
@@ -59,6 +60,8 @@ def neofetch(loop):
     vmwaregpuline = []
     virtiogpu = "GPU: 00:02.0 Red"
     virtiogpuline = []
+    cirrusgpu = "GPU: 00:02.0 Cirrus"
+    cirrusgpuline = []
     term = "Terminal:"
     termline = []
     font = "Font:"
@@ -189,6 +192,8 @@ def neofetch(loop):
                     diskline.append(line.rstrip('\n'))
                 if line.find(battery) != -1:
                     batteryline.append(line.rstrip('\n'))
+                if line.find(cirrusgpu) != -1:
+                    cirrusgpuline.append(line.rstrip('\n'))
 
     try:
         if os.path.isfile(filepath) and not args.config:
@@ -280,9 +285,8 @@ def get_intelgpu(intelgpuline, primeoffload):
     return intelgpuinfo
 
 
-def get_gpuinfo(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload):
+def get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload):
     if nvidiagpuline:
-        primeoffload = check_primeoffload(laptop, loop)
         gpuinfo = get_nvidia_gpu(nvidiagpuline, loop)
 
     if amdgpurenderlist and not primeoffload and sysosid.lower() != "macos":
@@ -300,10 +304,14 @@ def get_gpuinfo(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgp
     if virtiogpuline:
         gpuinfo = virtiogpuline[0]
 
+    if cirrusgpuline:
+        gpuinfo = cirrusgpuline[0]
+
     return gpuinfo
 
 
-def get_gpu_vendors(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload):
+def get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline,\
+        amdgpuline, nvidiagpuline, intelgpuline, primeoffload, sysosid):
 
     if nvidiagpuline:
         gpuvendor = "NVIDIA"
@@ -321,6 +329,9 @@ def get_gpu_vendors(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, int
 
     if virtiogpuline:
         gpuvendor = "virtio"
+
+    if cirrusgpuline:
+        gpuvendor = "cirrus"
 
     return gpuvendor
 
@@ -470,7 +481,7 @@ def check_res(resline):
 
 def check_theme(themeline):
     if not themeline:
-        themeline = "N/A"
+        themeline = "Theme: N/A"
     else:
         themeline = '\n'.join(themeline)
 
@@ -479,9 +490,9 @@ def check_theme(themeline):
 
 def check_memline(memline):
     if memline:
-        memline == memline[0]
+        memline = memline[0]
     if not memline:
-        memline == "N/A"
+        memline = "Memory: N/A"
 
     return memline
 
@@ -490,7 +501,7 @@ def check_batteryline(batteryline, lapordesk):
     if batteryline:
         batteryline = batteryline[0]
     else:
-        batteryline = laptop
+        batteryline = lapordesk
 
     return batteryline
 
@@ -506,7 +517,7 @@ def check_diskline(diskline):
         diskline = '\n'.join(diskline)
     # return to default line
     elif not diskline:
-        diskline = getcpuinfo(cpuline)
+        diskline = cpuinfo
 
     return diskline
 
@@ -523,12 +534,11 @@ gpuvendor = ""
 if amdgpuline and os.name != "nt":
     amdgpurenderlist = get_amdgpurender(amdgpuline, intelgpuline, laptop)
 
-if nvidiagpuline and laptop:
-    primeoffload = check_primeoffload(laptop, loop)
+primeoffload = check_primeoffload(laptop, loop)
 
 if os.name != "nt":
-    gpuinfo = get_gpuinfo(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
-    gpuvendor = get_gpu_vendors(vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
+    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload)
+    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline, intelgpuline, primeoffload, sysosid)
 
 else:
     get_win_gpu()
