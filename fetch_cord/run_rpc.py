@@ -11,12 +11,12 @@ from fetch_cord.testing import gpuid, cpuappid, appid
 from fetch_cord.debugger import run_rpc_debug
 from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, cpuinfo, \
         neofetch, diskline, neofetchwin, baseinfo
-if os.name != "nt":
+if baseinfo:
     from fetch_cord.testing import desktopid, termappid, hostappid, shellid
     from fetch_cord.out import packagesline, kernelline, shell_line, fontline, \
         termline, lapordesk, hostline, resline, themeline, batteryline, \
         gpuinfo, dewmid
-elif os.name == "nt":
+elif neofetchwin:
     from fetch_cord.out import moboline, check_neofetchwin
     from fetch_cord.testing import moboid
 
@@ -24,10 +24,10 @@ elif os.name == "nt":
 uptime = psutil.boot_time()
 args = parse_args()
 
-if os.name == "nt":
-    neofetchwin = check_neofetchwin()
-else:
-    neofetchwin = False
+# if os.name == "nt":
+#     neofetchwin = check_neofetchwin()
+# else:
+#     neofetchwin = False
 
 def main():
     if os.name != "nt" and not hostline and args.nodistro and args.noshell and args.nohardware:

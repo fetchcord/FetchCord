@@ -4,10 +4,10 @@ from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid, neofetchwin, baseinfo
 from fetch_cord.debugger import test_debug
-if os.name != "nt":
+if baseinfo:
     from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline
 
-elif os.name == "nt":
+elif neofetchwin:
     from fetch_cord.out import moboline
 
 # macOS hardwawre
