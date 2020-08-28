@@ -189,9 +189,9 @@ if sysosid.lower() == "macos":
     devicetype = "N/A"
     bigicon = "unknown"
     ver = get_ver()
-    get_icon(ver)
+    bigicon = get_icon(ver)
     product = get_product()
-    laporp(product)
+    devicetype = laporp(product)
 
 gpuid = get_gpuid(gpuvendor)
 
