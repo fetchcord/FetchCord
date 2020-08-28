@@ -109,7 +109,7 @@ def get_mobo(moboline):
         try:
             moboid = moboid[0]
         except IndexError:
-            moboid = ""
+            moboid = "N/A"
             pass
         return moboid
 
@@ -202,9 +202,6 @@ if sysosid.lower() == "macos":
     laporp(product)
 
 gpuid = get_gpuid(gpuvendor)
-
-moboid = "Motherboard: N/A"
-hostid = "Host: N/A"
 
 
 if os.name != "nt":
