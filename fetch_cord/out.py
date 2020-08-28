@@ -42,7 +42,7 @@ def XDG_Symlink(home):
         return
 
 def check_neofetch_scoop():
-    return subprocess.run(["neofetch", "--stdout"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
+    return subprocess.run(["neofetch", "--stdout"], encoding="utf-8", stdout=subprocess.PIPE, shell=True).stdout
 
 def check_neofetchwin():
     return subprocess.run(["neofetch", "--noart"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
@@ -60,7 +60,7 @@ def neofetch(loop):
         except (FileNotFoundError, subprocess.CalledProcessError) as e:
             pass
 
-        if neofetchwin == False:
+        if not neofetchwin:
             try:
                 baseinfo = check_neofetch_scoop()
             except (FileNotFoundError, subprocess.CalledProcessError) as e:
@@ -171,7 +171,7 @@ def neofetch(loop):
                     break
 
     elif not neofetchwin:
-        filepath = "/tmp/out.txt"
+        filepath = "tmp.txt"
         with open(filepath, 'w') as f:
             print(baseinfo, file=f)
         with open(filepath, "rt") as f:
