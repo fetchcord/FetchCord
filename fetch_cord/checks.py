@@ -315,7 +315,7 @@ def get_long_os(sysosline):
 
     return sysosid
 
-def check_diskline(diskline):
+def check_diskline(diskline, cpuinfo):
     if diskline:
         diskline = '\n'.join(diskline)
     # return to default line

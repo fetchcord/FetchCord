@@ -297,7 +297,7 @@ def check_change(loop):
 
     loop = 1
 
-    if not check_neofetchwin():
+    if not neofetchwin:
         return loonix(loop)
     else:
         return wandowz(loop)

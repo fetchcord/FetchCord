@@ -299,7 +299,7 @@ cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
 cpumodel = get_cpumodel(cpuline, cpuvendor)
 cpuinfo = get_cpuinfo(cpuline)
 memline = check_memline(memline)
-diskline = check_diskline(diskline)
+diskline = check_diskline(diskline, cpuinfo)
 
 
 if args.debug:
