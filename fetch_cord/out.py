@@ -247,7 +247,6 @@ if sysosid.lower() != "macos" and os.name != "nt":
 else:
     laptop = False
 
-gpuinfo = ""
 amdgpurenderlist = []
 gpuvendor = ""
 
@@ -260,8 +259,6 @@ if not shell_line:
     shell_line = "Shell: N/A"
 if not moboline:
     moboline = "Motherboard: N/A"
-if gpuinfo == "":
-    gpuinfo = "GPU: N/A"
 if not termline:
     termline = "Terminal: N/A"
 if not packagesline:
