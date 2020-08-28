@@ -27,8 +27,5 @@ def parse_args():
                         help="Extra cycle that pauses for 30 seconds or custom time using --time argument.")
     parser.add_argument('--memtype', metavar='TYPE', action='store',
                         help="Show Memory in GiB or MiB. Valid vaules are 'gb', 'mb'")
-    parser.add_argument('--config', metavar='PATH', action='store',
-                        help="Use custom neofetch dump.")
-
 
     return parser.parse_args()

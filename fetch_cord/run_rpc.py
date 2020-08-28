@@ -324,7 +324,7 @@ def loonix(loop):
             if args.pause_cycle:
                 pause()
             loop += 1
-        if not args.nohardware or not args.nodistro or not args.nohost and not args.config:
+        if not args.nohardware or not args.nodistro or not args.nohost:
             loop = 1
             check_change(loop)
         else:

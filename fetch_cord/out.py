@@ -172,11 +172,8 @@ def neofetch(loop):
 
     elif not neofetchwin:
         filepath = "/tmp/out.txt"
-        if args.config:
-            filepath = args.config
-        if not args.config:
-            with open(filepath, 'w') as f:
-                print(baseinfo, file=f)
+        with open(filepath, 'w') as f:
+            print(baseinfo, file=f)
         with open(filepath, "rt") as f:
             for line in f:
                 if line.find(cpu) != -1:
@@ -231,7 +228,7 @@ def neofetch(loop):
                     cirrusgpuline.append(line.rstrip('\n'))
 
     try:
-        if os.path.isfile(filepath) and not args.config:
+        if os.path.isfile(filepath):
             os.remove(filepath)
     except FileNotFoundError:
         pass
