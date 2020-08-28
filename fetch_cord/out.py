@@ -307,8 +307,8 @@ if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = get_long_os(sysosline)
 
 cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
-cpumodel = get_cpumodel(cpuline, cpuvendor)
-cpuinfo = get_cpuinfo(cpuline)
+cpumodel = get_cpumodel(cpuline, cpuvendor, baseinfo)
+cpuinfo = get_cpuinfo(cpuline, baseinfo)
 memline = check_memline(memline)
 diskline = check_diskline(diskline, cpuinfo)
 

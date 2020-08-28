@@ -176,12 +176,12 @@ def get_win_gpu(nvidiagpuline, radgpuline, intelgpuline):
             gpuvendor += "Intel"
         except IndexError:
             pass
-    
+
     return gpuinfo, gpuvendor
 
 
-def get_cpuinfo(cpuline):
-    if os.name != "nt":
+def get_cpuinfo(cpuline, baseinfo):
+    if os.name != "nt" or baseinfo:
         cpuinfo = ' '.join([' '.join(cpuline[0].split()[:-2]), cpuline[0].split()[-2].replace(
             "0G", "G", 1), cpuline[0].split()[-1]])
 
@@ -191,9 +191,9 @@ def get_cpuinfo(cpuline):
     return cpuinfo
 
 
-def get_cpumodel(cpuline, cpuvendor):
+def get_cpumodel(cpuline, cpuvendor, baseinfo):
     if cpuvendor == "Intel":
-        if os.name != "nt":
+        if os.name != "nt" or baseinfo:
             cpumodel = ' '.join([cpuline[0].replace(
                 '-', ' ').split()[1], cpuline[0].replace('-', ' ').split()[2]])
             if cpumodel == "Intel Core":

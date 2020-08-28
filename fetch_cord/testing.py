@@ -197,7 +197,7 @@ gpuid = get_gpuid(gpuvendor)
 
 
 if os.name != "nt" or baseinfo:
-    shell = get_shell_id(shells, shellid)
+    shellid = get_shell_id(shells, shellid)
     desktopid = get_desktopid(deid, wmid)
     try:
         hostappid = get_hostappid(hosts)
