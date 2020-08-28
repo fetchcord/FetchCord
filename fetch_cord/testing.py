@@ -202,13 +202,13 @@ if sysosid.lower() == "macos":
     laporp(product)
 
 gpuid = get_gpuid(gpuvendor)
-shell = get_shell_id(shells, shellid)
 
 moboid = "Motherboard: N/A"
 hostid = "Host: N/A"
 
 
 if os.name != "nt":
+    shell = get_shell_id(shells, shellid)
     desktopid = get_desktopid(deid, wmid)
     try:
         hostid = get_host_or_mobo(motherboards, hosts)

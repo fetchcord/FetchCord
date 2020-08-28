@@ -285,7 +285,7 @@ def check_change(loop):
     global packagesline, cpuinfo, gpuinfo, memline, diskline, batteryline
 
     memline = check_memline(memline)
-    diskline = check_diskline(diskline)
+    diskline = check_diskline(diskline, cpuinfo)
     if os.name != "nt":
         batteryline = check_batteryline(batteryline, lapordesk)
         packagesline = packagesline
