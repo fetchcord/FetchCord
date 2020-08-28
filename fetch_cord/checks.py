@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 from fetch_cord.bash import exec_bash, BashError
 from fetch_cord.args import parse_args
 
@@ -141,8 +142,7 @@ def get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline,\
     return gpuvendor
 
 
-def get_win_gpu():
-    global gpuinfo, gpuvendor
+def get_win_gpu(nvidiagpuline, radgpuline, intelgpuline):
     gpuinfo = ""
     gpuvendor = ""
     if nvidiagpuline:
@@ -176,6 +176,8 @@ def get_win_gpu():
             gpuvendor += "Intel"
         except IndexError:
             pass
+    
+    return gpuinfo, gpuvendor
 
 
 def get_cpuinfo(cpuline):
