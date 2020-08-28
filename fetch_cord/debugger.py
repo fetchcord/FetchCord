@@ -64,7 +64,7 @@ def test_debug(gpuvendor, cpumodel, hostid, moboid, moboline = "N/A", deid = "N/
     print("\n----CPU INFO----\n")
     print("cpumodel: %s\n" % cpumodel)
 
-def run_rpc_debug(uptime, appid, cpuappid, termappid, packagesline, hostline, hostappid):
+def run_rpc_debug(uptime, appid, cpuappid, hostappid = "N/A", hostline = "N/A",packagesline = "N/A", termappid="N/A"):
         print("----run_rpc----\n")
         print("uptime in epoch: %s" % uptime)
         print("cpuid: %s" % appid)

@@ -10,7 +10,7 @@ from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
 from fetch_cord.debugger import run_rpc_debug
 from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, cpuinfo, \
-        neofetch, diskline
+        neofetch, diskline, neofetchwin, baseinfo
 if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid
     from fetch_cord.out import packagesline, shellid, kernelline, shell_line, fontline, \
@@ -35,7 +35,10 @@ def main():
         sys.exit(1)
     # printing info with debug switch
     if args.debug:
-        run_rpc_debug(uptime, appid, cpuappid, termappid, packagesline, hostline, hostappid)
+        if baseinfo:
+            run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid, termappid=termappid, packagesline=packagesline, hostline=hostline, hostappid=hostappid)
+        else:
+            run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid)
     loop = 0
     if neofetchwin:
         wandowz(loop)
