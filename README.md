@@ -112,11 +112,17 @@ To run Fetchcord run `fetchcord`
 On Linux you can use the neofetch config file to:
 
 Show disk usage
+
 Battery level
+
 CPU temp
+
 Current CPU speed
+
 Font
+
 Theme
+
 And more
 
 default config path should be `~/.config/neofetch/config.conf`
