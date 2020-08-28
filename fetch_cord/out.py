@@ -279,10 +279,7 @@ if os.name != "nt" or baseinfo:
     themeline = check_theme(themeline)
     fontline = check_fontline(fontline)
     termid = check_termid(termline)
-    if not shel_lline:
-        shellid = "N/A"
-    else:
-        shellid = shell_line[0].split()[1]
+    shellid = shell_line[0].split()[1]
 
     resline = check_res(resline)
 
