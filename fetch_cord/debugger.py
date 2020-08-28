@@ -44,3 +44,34 @@ def run_debug():
     if os.name != "nt":
         print("packagesline item 0: %s" % packagesline[0])
 
+
+def test_debug(deid, wmid, termid, shellid, moboid, gpuvendor, cpumodel, hostid):
+    print("\n----testing.py----")
+    if os.name != "nt":
+        print("----DE/WM----\n")
+        print("deid: %s" % deid)
+        print("wmid: %s" % wmid)
+        print("\n----TERMINAL/SHELL----\n")
+        print("termid: %s" % termid)
+        print("shellid: %s" % shellid)
+        print("\n----HOST INFO----\n")
+        print("hostid: %s" % hostid)
+    elif os.name == "nt":
+        print("moboid: %s" % moboid)
+        print("moboline: %s" % moboline)
+    print("\n----GPU INFO----\n")
+    print("gpuvendor: %s" % gpuvendor)
+    print("\n----CPU INFO----\n")
+    print("cpumodel: %s\n" % cpumodel)
+
+def run_rpc_debug(uptime, appid, cpuappid, termappid, packagesline, hostline, hostappid):
+        print("----run_rpc----\n")
+        print("uptime in epoch: %s" % uptime)
+        print("cpuid: %s" % appid)
+        print("cpuappid: %s" % cpuappid)
+        if os.name != "nt":
+            print("termappid: %s" % termappid)
+            if hostline:
+                print("hostappid: %s" % hostappid)
+            print(packagesline[0])
+
