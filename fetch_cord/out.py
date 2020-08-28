@@ -52,7 +52,7 @@ def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
             vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
             deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
-            cirrusgpuline
+            cirrusgpuline, baseinfo
     neofetchwin = False
     if os.name == "nt":
         try:
@@ -237,6 +237,9 @@ def neofetch(loop):
         pass
 
     return (memline, packagesline, diskline, batteryline, cpuline)
+
+baseinfo = False
+neofetchwin = False
 neofetch(loop)
 
 sysosid = sysosline[0].split()[1]
@@ -258,7 +261,7 @@ if sysosid.lower() not in ["windows", "macos"]:
     primeoffload = check_primeoffload(laptop, loop)
 else:
     primeoffload = False
-    
+
 
 if os.name != "nt" or baseinfo:
     gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
