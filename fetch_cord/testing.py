@@ -245,5 +245,20 @@ except KeyError:
     print("unknown CPU, contact us on github to resolve this.(Keyerror)")
     cpuappid = '742887089179197462'
 
+if not deid:
+    deid = "N/A"
+
+if not wmid:
+    wmid = "N/A"
+
+if not termid:
+    termid = "N/A"
+
+if not shellid:
+    shellid = "N/A"
+
+if not hostid:
+    hostid = "N/A"
+
 if args.debug:
     test_debug(deid, wmid, termid, shellid, moboid, gpuvendor, cpumodel, hostid)

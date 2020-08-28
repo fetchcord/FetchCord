@@ -47,19 +47,6 @@ def check_neofetch_scoop():
 def check_neofetchwin():
     return subprocess.run(["neofetch", "--noart"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
 
-def check_neofetchwin():
-    try:
-        neofetchwin = subprocess.run(["neofetch", "--stdout"], check=True)
-    except subprocess.CalledProcessError:
-        # must be neofetch-win
-        pass
-    try:
-        neofetchwin = subprocess.run(["neofetch", "--noart"], check=True)
-    except FileNotFoundError:
-        print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
-        sys.exit(1)
-    return neofetchwin
-
 
 def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
@@ -272,7 +259,9 @@ if sysosid.lower() not in ["windows", "macos"]:
 else:
     primeoffload = False
 
-if os.name != "nt":
+baseinfo = check_neofetch_scoop()
+
+if os.name != "nt" or baseinfo:
     gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
             intelgpuline, primeoffload, amdgpurenderlist, sysosid, loop)
     gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,\
@@ -288,12 +277,19 @@ if os.name != "nt":
     themeline = check_theme(themeline)
     fontline = check_fontline(fontline)
     termid = check_termid(termline)
-    shellid = shell_line[0].split()[1]
+    if not shel_lline:
+        shellid = "N/A"
+    else:
+        shellid = shell_line[0].split()[1]
 
     resline = check_res(resline)
 
-else:
+elif neofetchwin and os.name == "nt":
     gpuinfo, gpuvendor = get_win_gpu(nvidiagpuline, radgpuline, intelgpuline)
+    deid = False
+    wmid = False
+    termid = False
+
 
 
 if not hostline:
@@ -307,7 +303,9 @@ if not moboline:
 if not gpuinfo:
     gpuinfo = "GPU: N/A"
 if not termline:
-    termline = ["Terminal: N/A"]
+    termline = "Terminal: N/A"
+if not packagesline:
+    packagesline= "Packages: N/A"
 
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = get_long_os(sysosline)
