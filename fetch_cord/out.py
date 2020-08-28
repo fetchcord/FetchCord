@@ -57,13 +57,13 @@ def neofetch(loop):
     if os.name == "nt":
         try:
             neofetchwin = check_neofetchwin()
-        except subprocess.CalledProcessError:
+        except (FileNotFoundError, subprocess.CalledProcessError) as e:
             pass
 
-        if not neofetchwin:
+        if neofetchwin == False:
             try:
                 baseinfo = check_neofetch_scoop()
-            except FileNotFoundError:
+            except (FileNotFoundError, subprocess.CalledProcessError) as e:
                 print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
                 sys.exit(1)
 
@@ -258,8 +258,7 @@ if sysosid.lower() not in ["windows", "macos"]:
     primeoffload = check_primeoffload(laptop, loop)
 else:
     primeoffload = False
-
-baseinfo = check_neofetch_scoop()
+    
 
 if os.name != "nt" or baseinfo:
     gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
