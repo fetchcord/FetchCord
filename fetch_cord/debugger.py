@@ -45,7 +45,7 @@ def run_debug():
         print("packagesline item 0: %s" % packagesline[0])
 
 
-def test_debug(deid, wmid, termid, shellid, moboid, gpuvendor, cpumodel, hostid):
+def test_debug(gpuvendor, cpumodel, hostid, moboid, moboline = "N/A", deid = "N/A", wmid = "N/A", termid = "N/A", shellid = "N/A"):
     print("\n----testing.py----")
     if os.name != "nt":
         print("----DE/WM----\n")

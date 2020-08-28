@@ -262,4 +262,7 @@ if not hostid:
     hostid = "N/A"
 
 if args.debug:
-    test_debug(deid, wmid, termid, shellid, moboid, gpuvendor, cpumodel, hostid)
+    if baseinfo:
+        test_debug(deid=deid, wmid=wmid, termid=termid, shellid=shellid, moboid=moboid, gpuvendor=gpuvendor, cpumodel=cpumodel, hostid=hostid)
+    else:
+        test_debug(moboline=moboline, moboid=moboid, gpuvendor=gpuvendor, cpumodel=cpumodel, hostid=hostid)
