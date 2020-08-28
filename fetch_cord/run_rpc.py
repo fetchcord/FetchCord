@@ -315,14 +315,14 @@ def loonix(loop):
         while loop < 3:
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0()
+            if sysosid.lower() == "macos":
+                runmac()
             if not args.nohardware:
                 cycle1()
             if not args.noshell:
                 cycle2()
             if not args.nohost and sysosid.lower() != "macos":
                 cycle3()
-            if sysosid.lower() == "macos":
-                runmac()
             if args.pause_cycle:
                 pause()
             loop += 1
