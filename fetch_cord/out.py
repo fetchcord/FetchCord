@@ -273,11 +273,14 @@ else:
     primeoffload = False
 
 
-if os.name != "nt" or baseinfo:
+if baseinfo:
     gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
             intelgpuline, primeoffload, amdgpurenderlist, sysosid, loop)
     gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,\
             nvidiagpuline, intelgpuline, primeoffload, sysosid)
+
+    if gpuinfo == "":
+        gpuinfo = "GPU: N/A"
 
     dewmid = get_dewm(deline, wmline)
     deid = get_deid(deline)
@@ -293,7 +296,7 @@ if os.name != "nt" or baseinfo:
 
     resline = check_res(resline)
 
-elif neofetchwin and os.name == "nt":
+elif neofetchwin:
     gpuinfo, gpuvendor = get_win_gpu(nvidiagpuline, radgpuline, intelgpuline)
     deid = False
     wmid = False
