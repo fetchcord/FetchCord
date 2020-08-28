@@ -187,10 +187,10 @@ def get_gpuid(gpuvendor):
 
 def get_host_or_mobo(motherboards, hosts):
     if os.name != "nt" and hostline:
-        return get_host(hosts)
+        return get_host(hostlist)
 
     elif os.name == "nt" and moboline:
-        return get_mobo(moboline)
+        return get_mobo(moboline, hostlist)
 
 
 if sysosid.lower() == "macos":
@@ -222,6 +222,7 @@ if os.name != "nt" or baseinfo:
 if os.name == "nt" and neofetchwin:
     try:
         moboid = get_host_or_mobo(motherboards, hosts)
+        moboid = get_moboid(motherboards)
     except KeyError:
         print("Unknown Motherboard, contact us on github to resolve this.(Keyerror)")
         moboid = "unknown"
