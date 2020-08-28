@@ -8,7 +8,7 @@ from fetch_cord.update import update
 from fetch_cord.debugger import run_debug
 from fetch_cord.checks import get_amdgpurender, check_primeoffload, get_gpuinfo, get_gpu_vendors, get_dewm, get_deid,\
         get_wmid, set_laptop, check_batteryline, check_theme, check_fontline, check_termid, check_res, get_win_gpu,\
-        get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop
+        get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop, get_long_os
 
 
 args = parse_args()
@@ -42,10 +42,10 @@ def XDG_Symlink(home):
         return
 
 def check_neofetch_scoop():
-    return subprocess.run(["neofetch", "--stdout"], check=True)
+    return subprocess.run(["neofetch", "--stdout"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
 
 def check_neofetchwin():
-    return subprocess.run(["neofetch", "--noart"], check=True)
+    return subprocess.run(["neofetch", "--noart"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
 
 def check_neofetchwin():
     try:
@@ -72,11 +72,13 @@ def neofetch(loop):
             neofetchwin = check_neofetchwin()
         except subprocess.CalledProcessError:
             pass
-        try:
-            baseinfo = check_neofetch_scoop()
-        except FileNotFoundError:
-            print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
-            sys.exit(1)
+
+        if not neofetchwin:
+            try:
+                baseinfo = check_neofetch_scoop()
+            except FileNotFoundError:
+                print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+                sys.exit(1)
 
     else:
         home = os.getenv('HOME')
@@ -145,9 +147,9 @@ def neofetch(loop):
         intelgpu = "Intel"
         radgpuline = []
         filepath = "tmp.txt"
+
         with open(filepath, 'w') as f:
             print(neofetchwin, file=f)
-
 
         with open(filepath, 'rt') as f:
             lines = f.readlines()
@@ -250,7 +252,6 @@ def neofetch(loop):
     return (memline, packagesline, diskline, batteryline, cpuline)
 neofetch(loop)
 
-
 sysosid = sysosline[0].split()[1]
 
 # I don't know if macOS has the same path linux does to check power_supply
@@ -292,7 +293,7 @@ if os.name != "nt":
     resline = check_res(resline)
 
 else:
-    get_win_gpu()
+    gpuinfo, gpuvendor = get_win_gpu(nvidiagpuline, radgpuline, intelgpuline)
 
 
 if not hostline:
