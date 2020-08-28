@@ -76,7 +76,7 @@ def get_amdgpu_no_render(amdgpuline):
 
 
 
-def get_intelgpu(intelgpuline, primeoffload):
+def get_intelgpu(intelgpuline, amdgpuline, nvidiagpuline):
 
     if amdgpuline or nvidiagpuline:
         intelgpuinfo = '\n' + intelgpuline[0]
@@ -99,7 +99,7 @@ def get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiag
         gpuinfo += get_amdgpu_no_render(amdgpuline)
 
     if intelgpuline and not primeoffload:
-        gpuinfo += get_intelgpu(intelgpuline, primeoffload)
+        gpuinfo += get_intelgpu(intelgpuline, amdgpuline, nvidiagpuline)
 
     if vmwaregpuline:
         gpuinfo = vmwaregpuline[0]

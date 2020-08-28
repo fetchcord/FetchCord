@@ -67,7 +67,7 @@ def neofetch(loop):
     else:
         home = os.getenv('HOME')
         flatpak_discord_path = os.path.isdir("%s/.var/app/com.discordapp.Discord" % home)
-        package_path = os.path.isdir("/usr/bin/discord")
+        package_path = os.path.isfile("/usr/bin/discord")
         manual_install_path = os.path.isdir("/opt/Discord")
         if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
             XDG_Symlink(home)
