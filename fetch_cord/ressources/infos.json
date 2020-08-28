@@ -124,7 +124,7 @@
         "gigabyte": "746447043190456561",
 	"macbookair,": "748290608787095694",
 	"aspire": "744326890512318544",
-	"HVM": "749014556604497972"
+	"hvm": "749014556604497972"
     },
     "motherboards": {
         "inspiron": "dell",
@@ -151,7 +151,8 @@
         "G3",
         "Asus",
         "ASUSTeK",
-        "Gigabyte"
+        "Gigabyte",
+	"HVM"
     ],
     "terminallist": [
         "st",
