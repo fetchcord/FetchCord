@@ -25,7 +25,7 @@ def run_debug():
         if hostline:
             print("\n----HOST INFO----\n")
             print("hostline: %s" % hostline)
-            if batteryline != lapordesk:
+            if batteryline != hostline[0]:
                 print("batteryline: %s" % batteryline)
     print("\n----GPU INFO----\n")
     print("gpuinfo: %s" % gpuinfo)
