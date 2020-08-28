@@ -271,7 +271,7 @@ if os.name != "nt" or baseinfo:
     wmid = get_wmid(wmline)
 
     lapordesk = set_laptop(laptop, sysosid)
-    batteryline = check_batteryline(batteryline, lapordesk, hostline)
+    batteryline = check_batteryline(batteryline, hostline)
 
     themeline = check_theme(themeline)
     fontline = check_fontline(fontline)

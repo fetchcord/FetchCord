@@ -302,11 +302,11 @@ def check_memline(memline):
     return memline
 
 
-def check_batteryline(batteryline, lapordesk):
+def check_batteryline(batteryline, hostline):
     if batteryline:
         batteryline = '\n'.join(batteryline)
     else:
-        batteryline = lapordesk
+        batteryline = hostline
 
     return batteryline
 
