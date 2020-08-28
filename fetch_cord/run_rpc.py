@@ -282,8 +282,8 @@ def check_change(loop):
 
     from fetch_cord.out import check_memline, diskline, cpuinfo, nvidiagpuline, \
             get_cpuinfo, memline, check_diskline, cpuline
-    if os.name != "nt":
-        from fetch_cord.out import lapordesk, batteryline, packagesline, check_batteryline
+    if os.name != "nt" or baseinfo:
+        from fetch_cord.out import lapordesk, batteryline, packagesline, check_batteryline, hostline
 
     global packagesline, cpuinfo, gpuinfo, memline, diskline, batteryline
 
@@ -291,11 +291,11 @@ def check_change(loop):
     cpuinfo = get_cpuinfo(cpuline)
     diskline = check_diskline(diskline, cpuinfo)
     if os.name != "nt":
-        batteryline = check_batteryline(batteryline, lapordesk)
+        batteryline = check_batteryline(batteryline, hostline)
         packagesline = packagesline
     cpuinfo = get_cpuinfo(cpuline)
 
-    if os.name != "nt" and nvidiagpuline and sysosid.lower() != "macos":
+    if os.name != "nt" or baseinfo and nvidiagpuline and sysosid.lower() != "macos":
         from fetch_cord.out import gpuinfo
         gpuinfo = gpuinfo
 
