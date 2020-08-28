@@ -255,8 +255,8 @@ if baseinfo:
     if not shellid:
         shellid = "N/A"
 
-if not hostid:
-    hostid = "N/A"
+    if not hostid:
+        hostid = "N/A"
 
 if args.debug:
     if baseinfo:
