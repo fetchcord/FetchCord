@@ -109,7 +109,7 @@ def get_mobo(moboline):
         try:
             moboid = moboid[0]
         except IndexError:
-            moboid = ""
+            moboid = "N/A"
             pass
         return moboid
 
