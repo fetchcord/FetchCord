@@ -260,7 +260,7 @@ if not shell_line:
     shell_line = "Shell: N/A"
 if not moboline:
     moboline = "Motherboard: N/A"
-if not gpuinfo:
+if gpuinfo == "":
     gpuinfo = "GPU: N/A"
 if not termline:
     termline = "Terminal: N/A"
