@@ -28,6 +28,7 @@
     - [Running on (gnu/)linux](#run)
     - [Running on MacOS](#run-1)
     - [Running on Windows](#run-2)
+- [**Configuration**](#Configuration)
 - [**Arguments**](#arguments)
 
 + [**Examples**](#examples)
@@ -53,6 +54,8 @@
 - [x] Add Windows support.
 
 - [x] Detect Window Manager/Desktop Environment version
+
+- [x] Periodic polling of info such as package count, RAM usage, etc.
 
 
 ### To-Do
@@ -99,9 +102,24 @@ simply run `fetchcord`
 
 ## Installing on Windows
 
-To install fetchcord on Windows run `python -m pip install fetchcord neofetch-win`.
+To install fetchcord on Windows run `python -m pip install fetchcord neofetch-win`. Alternatively, you can use the nefetch package from scoop as well (show more info at the expense of possible GPU detection, for now).
+
 ### Run
 To run Fetchcord run `fetchcord`
+
+### Configuration
+
+On Linux you can use the neofetch config file to:
+
+Show disk usage
+Battery level
+CPU temp
+Current CPU speed
+Font
+Theme
+And more
+
+default config path should be `~/.config/neofetch/config.conf`
 
 ## Arguments
 --nodistro, Don't show distro info.
@@ -123,6 +141,8 @@ To run Fetchcord run `fetchcord`
 --update, Update database of distros, hardware, etc.
 
 --debug, For debug logs.
+
+--memtype, use GB or MB to show RAM.
 
 -h or --help, shows this information above.
 ## Examples
