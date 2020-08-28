@@ -2,7 +2,7 @@
 import os, sys, json
 from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
-from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
+from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid, neofetchwin, baseinfo
 from fetch_cord.debugger import test_debug
 if os.name != "nt":
     from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline
@@ -245,17 +245,18 @@ except KeyError:
     print("unknown CPU, contact us on github to resolve this.(Keyerror)")
     cpuappid = '742887089179197462'
 
-if not deid:
-    deid = "N/A"
+if baseinfo:
+    if not deid:
+        deid = "N/A"
 
-if not wmid:
-    wmid = "N/A"
+    if not wmid:
+        wmid = "N/A"
 
-if not termid:
-    termid = "N/A"
+    if not termid:
+        termid = "N/A"
 
-if not shellid:
-    shellid = "N/A"
+    if not shellid:
+        shellid = "N/A"
 
 if not hostid:
     hostid = "N/A"
