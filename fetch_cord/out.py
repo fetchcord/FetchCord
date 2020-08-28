@@ -52,7 +52,7 @@ def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
             vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
             deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
-            cirrusgpuline, baseinfo
+            cirrusgpuline, baseinfo, neofetchwin
     neofetchwin = False
     if os.name == "nt":
         try:
