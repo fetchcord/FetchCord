@@ -3,6 +3,7 @@ import os, sys, json
 from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
+from fetch_cord.debugger import test_debug
 if os.name != "nt":
     from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline
 
@@ -40,6 +41,7 @@ def iUnity(wmid):
     else:
         desktopid = wmid
     return desktopid
+
 def get_infos():
     try:
         import importlib.resources as pkg_resources
@@ -76,7 +78,7 @@ if os.name != "nt" and deid == "unity":
 args = parse_args()
 
 
-def get_host():
+def get_host(hosts):
     hostsplit = hostline[0].split()
     hostid = []
     for line in range(len(hostsplit)):
@@ -114,6 +116,7 @@ def get_mobo(moboline):
 if args.terminal and args.terminal in terminallist:
     termid = args.terminal
     termline[0] = "Terminal: %s" % args.terminal
+
 elif args.terminal and args.termninal not in terminallist:
     print("\nInvalid terminal, only %s are supported.\n"
             "Please make a github issue if you would like to have your terminal added.\n"
@@ -121,20 +124,18 @@ elif args.terminal and args.termninal not in terminallist:
     sys.exit(1)
 
 
-# bunch of try except blocks to catch keyerrors and tell the enduser that thier distro/others arent supported
-if os.name != "nt":
-    try:
-        termappid = terminals[termid.lower()]
-    except KeyError:
-        print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
-        termappid = '745691250186911796'
+def get_termappid(terminals, termid):
+    return terminals[termid.lower()]
 
 
-    try:
-        shell = shellid.lower()
-    except KeyError:
-        print("Unsupported Shell, contact us on guthub to resolve this.(Keyerror)")
+def get_shell_id(shells, shellid):
+    shellid = shellid.lower()
+    if shellid in shells:
+        shell = shellid
+    else:
+        print("Unknown shell, contact us on github to resolve this.")
         shell = "unknown"
+    return shell
 
 
 def get_hostappid(hosts):
@@ -160,23 +161,19 @@ def get_desktopid(deid, wmid):
         desktopid = 'unknown'
     return desktopid
 
+def get_appid(distros, sysosid):
+    return distros[sysosid.lower()]
 
-try:
-    appid = distros[sysosid.lower()]
-except KeyError:
-    print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
-    appid = '742993278143692821'
 
-try:
+def get_cpuappid(cpuvendor, cpumodel, amdcpus, intelcpus):
     if cpuvendor == "AMD":
         cpuappid = amdcpus[cpumodel.lower()]
     elif cpuvendor in ["Intel", "Intel(R)", "Pentium"]:
         cpuappid = intelcpus[cpumodel.lower()]
     else:
         cpuappid = '742887089179197462'
-except KeyError:
-    print("unknown CPU, contact us on github to resolve this.(Keyerror)")
-    cpuappid = '742887089179197462'
+    return cpuappid
+
 
 def get_gpuid(gpuvendor):
     gpuvendor = gpuvendor.lower()
@@ -188,6 +185,14 @@ def get_gpuid(gpuvendor):
     return gpuid
 
 
+def get_host_or_mobo(motherboards, hosts):
+    if os.name != "nt" and hostline:
+        return get_host(hosts)
+
+    elif os.name == "nt" and moboline:
+        return get_mobo(moboline)
+
+
 if sysosid.lower() == "macos":
     devicetype = "N/A"
     bigicon = "unknown"
@@ -197,47 +202,48 @@ if sysosid.lower() == "macos":
     laporp(product)
 
 gpuid = get_gpuid(gpuvendor)
+shell = get_shell_id(shells, shellid)
 
 moboid = "Motherboard: N/A"
 hostid = "Host: N/A"
-if os.name != "nt" and hostline:
-    hostid = get_host()
 
-
-elif os.name == "nt" and moboline:
-    moboid = get_mobo(moboline)
 
 if os.name != "nt":
     desktopid = get_desktopid(deid, wmid)
     try:
+        hostid = get_host_or_mobo(motherboards, hosts)
         hostappid = get_hostappid(hosts)
     except KeyError:
         print("Unknown Host, contact us on github to resolve this.(Keyerror)")
         hostappid = "742887089179197462"
-
-elif os.name == "nt":
     try:
-        moboid = get_moboid(motherboards)
+        termappid = get_termappid(terminals, termid)
     except KeyError:
-        print("Unknown Motherboard, contact us on github to resolve this.(Keyerror)")
-        moboid = "unknown"
+        print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
+        termappid = '745691250186911796'
 
+try:
+    moboid = get_host_or_mobo(motherboards, hosts)
+except KeyError:
+    print("Unknown Motherboard, contact us on github to resolve this.(Keyerror)")
+    moboid = "unknown"
+
+#try:
+#    hostid = get_host_or_mobo(motherboards, hosts)
+#except KeyError:
+#    hostid = ""
+
+try:
+    appid = get_appid(distros, sysosid)
+except KeyError:
+    print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
+    appid = '742993278143692821'
+
+try:
+    cpuappid = get_cpuappid(cpuvendor, cpumodel, amdcpus, intelcpus)
+except KeyError:
+    print("unknown CPU, contact us on github to resolve this.(Keyerror)")
+    cpuappid = '742887089179197462'
 
 if args.debug:
-    print("\n----testing.py----")
-    if os.name != "nt":
-        print("----DE/WM----\n")
-        print("deid: %s" % deid)
-        print("wmid: %s" % wmid)
-        print("\n----TERMINAL/SHELL----\n")
-        print("termid: %s" % termid)
-        print("shellid: %s" % shellid)
-        print("\n----HOST INFO----\n")
-        print("hostid: %s" % hostid)
-    elif os.name == "nt":
-        print("moboid: %s" % moboid)
-        print("moboline: %s" % moboline)
-    print("\n----GPU INFO----\n")
-    print("gpuvendor: %s" % gpuvendor)
-    print("\n----CPU INFO----\n")
-    print("cpumodel: %s\n" % cpumodel)
+    test_debug(deid, wmid, termid, shellid, moboid, gpuvendor, cpumodel, hostid)

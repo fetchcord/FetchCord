@@ -8,6 +8,7 @@ import psutil
 from fetch_cord.args import parse_args
 from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
+from fetch_cord.debugger import run_rpc_debug
 from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, cpuinfo, \
         neofetch, diskline
 if os.name != "nt":
@@ -16,13 +17,17 @@ if os.name != "nt":
         termline, lapordesk, hostline, resline, themeline, batteryline, \
         gpuinfo, dewmid
 elif os.name == "nt":
-    from fetch_cord.out import moboline
+    from fetch_cord.out import moboline, check_neofetchwin
     from fetch_cord.testing import moboid
 
 
 uptime = psutil.boot_time()
 args = parse_args()
 
+if os.name == "nt":
+    neofetchwin = check_neofetchwin()
+else:
+    neofetchwin = False
 
 def main():
     if os.name != "nt" and not hostline and args.nodistro and args.noshell and args.nohardware:
@@ -30,17 +35,9 @@ def main():
         sys.exit(1)
     # printing info with debug switch
     if args.debug:
-        print("----run_rpc----\n")
-        print("uptime in epoch: %s" % uptime)
-        print("cpuid: %s" % appid)
-        print("cpuappid: %s" % cpuappid)
-        if os.name != "nt":
-            print("termappid: %s" % termappid)
-            if hostline:
-                print("hostappid: %s" % hostappid)
-            print(packagesline[0])
+        run_rpc_debug(uptime, appid, cpuappid, termappid, packagesline, hostline, hostappid)
     loop = 0
-    if os.name == "nt":
+    if neofetchwin:
         wandowz(loop)
     else:
         loonix(loop)
@@ -301,7 +298,7 @@ def check_change(loop):
 
     loop = 1
 
-    if os.name != "nt":
+    if not neofetchwin:
         return loonix(loop)
     else:
         return wandowz(loop)
