@@ -139,11 +139,11 @@ def get_shell_id(shells, shellid):
 
 
 def get_hostappid(hosts):
-    return hosts[hostid.lower()]
+    return hosts[get_host(hostlist).lower()]
 
 
 def get_moboid(motherboards):
-    return motherboards[moboid.lower()]
+    return motherboards[get_mobo(moboline, hostlist).lower()]
 
 
 def get_desktopid(deid, wmid):
@@ -185,14 +185,6 @@ def get_gpuid(gpuvendor):
     return gpuid
 
 
-def get_host_or_mobo(motherboards, hosts):
-    if os.name != "nt" and hostline:
-        return get_host(hostlist)
-
-    elif os.name == "nt" and moboline:
-        return get_mobo(moboline, hostlist)
-
-
 if sysosid.lower() == "macos":
     devicetype = "N/A"
     bigicon = "unknown"
@@ -208,7 +200,6 @@ if os.name != "nt" or baseinfo:
     shell = get_shell_id(shells, shellid)
     desktopid = get_desktopid(deid, wmid)
     try:
-        hostid = get_host_or_mobo(motherboards, hosts)
         hostappid = get_hostappid(hosts)
     except KeyError:
         print("Unknown Host, contact us on github to resolve this.(Keyerror)")
@@ -221,7 +212,6 @@ if os.name != "nt" or baseinfo:
 
 if os.name == "nt" and neofetchwin:
     try:
-        moboid = get_host_or_mobo(motherboards, hosts)
         moboid = get_moboid(motherboards)
     except KeyError:
         print("Unknown Motherboard, contact us on github to resolve this.(Keyerror)")
@@ -253,6 +243,7 @@ if baseinfo:
     if not shellid:
         shellid = "N/A"
 
+    hostid = get_host(hostlist)
     if not hostid:
         hostid = "N/A"
 
