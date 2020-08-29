@@ -251,20 +251,6 @@ amdgpurenderlist = []
 gpuvendor = ""
 
 
-if not hostline:
-    hostline = ["Host: N/A"]
-if not kernelline:
-    kernelline = "Kernel: N/A"
-if not shell_line:
-    shell_line = "Shell: N/A"
-if not moboline:
-    moboline = "Motherboard: N/A"
-if not termline:
-    termline = "Terminal: N/A"
-if not packagesline:
-    packagesline= "Packages: N/A"
-
-
 if amdgpuline and os.name != "nt":
     amdgpurenderlist = get_amdgpurender(amdgpuline, intelgpuline, laptop)
 if sysosid.lower() not in ["windows", "macos"]:
@@ -282,6 +268,21 @@ if baseinfo:
     if gpuinfo == "":
         gpuinfo = "GPU: N/A"
 
+    if not hostline:
+        hostline = ["Host: N/A"]
+
+    if not kernelline:
+        kernelline = "Kernel: N/A"
+
+    if not shell_line:
+        shell_line = "Shell: N/A"
+
+    if not termline:
+        termline = "Terminal: N/A"
+
+    if not packagesline:
+        packagesline= "Packages: N/A"
+
     dewmid = get_dewm(deline, wmline)
     deid = get_deid(deline)
     wmid = get_wmid(wmline)
@@ -297,10 +298,14 @@ if baseinfo:
     resline = check_res(resline)
 
 elif neofetchwin:
+
+    if not moboline:
+        moboline = "Motherboard: N/A"
     gpuinfo, gpuvendor = get_win_gpu(nvidiagpuline, radgpuline, intelgpuline)
     deid = False
     wmid = False
     termid = False
+    hostline = False
 
 
 

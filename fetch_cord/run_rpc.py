@@ -10,11 +10,11 @@ from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
 from fetch_cord.debugger import run_rpc_debug
 from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, cpuinfo, \
-        neofetch, diskline, neofetchwin, baseinfo
+        neofetch, diskline, neofetchwin, baseinfo, hostline
 if baseinfo:
     from fetch_cord.testing import desktopid, termappid, hostappid, shellid
     from fetch_cord.out import packagesline, kernelline, shell_line, fontline, \
-        termline, lapordesk, hostline, resline, themeline, batteryline, \
+        termline, lapordesk, resline, themeline, batteryline, \
         gpuinfo, dewmid
 elif neofetchwin:
     from fetch_cord.out import moboline, check_neofetchwin
@@ -26,7 +26,7 @@ args = parse_args()
 
 
 def main():
-    if not hostline and args.nodistro and args.noshell and args.nohardware:
+    if baseinfo and not hostline and args.nodistro and args.noshell and args.nohardware:
         print("ERROR: no hostline is available!")
         sys.exit(1)
     # printing info with debug switch
