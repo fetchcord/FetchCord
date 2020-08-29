@@ -32,7 +32,8 @@ def get_nvidia_gpu(nvidiagpuline, loop):
         for n in range(len(nvidiagpuline)):
             nvidiagpuinfo = nvidiagpuline[n]
         try:
-            gputemp = exec_bash("nvidia-smi | awk '{print $3}' | xargs | awk '{print $7}' | sed 's/C/°C/;s/^/[/;s/$/]/'")
+            gputemp = exec_bash("nvidia-smi -q | awk '/GPU Current Temp/{print $5}'\
+                    | sed 's/^/[/;s/$/°C]/'")
             nvidiagpuinfo += gputemp
         except BashError:
             pass
