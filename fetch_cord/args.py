@@ -13,6 +13,8 @@ def parse_args():
                         help="Don't show shell/terminal info.")
     parser.add_argument('--nohost', action='store_true',
                         help="Don't show host info.")
+    parser.add_argument('--noconfig', action='store_true',
+                        help="Disable neofetch custom config. Enable if you have an incompatible custom configuration.")
     parser.add_argument('--time', '-t', metavar='TIME', action='store',
                         help="Set custom time in seconds for cycles. Default is 30 seconds")
     parser.add_argument('--terminal', metavar='TERMINAL', action='store',

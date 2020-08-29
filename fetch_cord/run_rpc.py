@@ -392,7 +392,7 @@ def loonix(config, loop):
             check_change(config, loop)
         else:
             loop = 1
-            loonix(loop, gpuinfo)
+            loonix(loop)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")
