@@ -91,6 +91,7 @@ def get_host(hostlist):
         pass
     # try to get MacBook hostid
     if not hostid:
+        hostid = []
         hostjoin = ' '.join(hostline)
         for numsplit in range(len(hostjoin)):
             if not hostjoin[numsplit].isdigit():

@@ -209,7 +209,7 @@ def cycle2():
 
 def cycle3():
     # if not then forget it
-    if hostline:
+    if hostline != ["Host: N/A"]:
         if args.debug:
             print("cycle 3")
         client_id = hostappid
