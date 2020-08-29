@@ -306,9 +306,13 @@ def check_change(loop):
 
 def loonix(loop):
     try:
+        if args.poll_rate:
+            rate = int(args.poll_rate)
+        else:
+            rate = 3
         if loop == 0:
             first_connect()
-        while loop < 3:
+        while loop < rate:
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0()
             if sysosid.lower() == "macos":

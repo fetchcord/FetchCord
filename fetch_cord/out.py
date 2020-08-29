@@ -3,6 +3,7 @@ import sys
 import os
 import re
 import subprocess
+import fetch_cord.__init__ as __init__
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
 from fetch_cord.debugger import run_debug
@@ -15,6 +16,10 @@ args = parse_args()
 
 if args.update:
     update()
+
+if args.version:
+    print("FetchCord version:", __init__.VERSION)
+    sys.exit(0)
 
 
 if args.time:

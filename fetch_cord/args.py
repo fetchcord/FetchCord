@@ -21,11 +21,15 @@ def parse_args():
                         help="Set ustom Terminal Font (useful if neofetch can't get it).")
     parser.add_argument('--update', action='store_true',
                         help="Update database of distros, hardware, etc.")
-    parser.add_argument('--debug', action='store_true',
+    parser.add_argument('--debug', '-d', action='store_true',
                         help="Enable debugging.")
-    parser.add_argument('--pause-cycle', action='store_true',
+    parser.add_argument('--pause-cycle', '-p', action='store_true',
                         help="Extra cycle that pauses for 30 seconds or custom time using --time argument.")
-    parser.add_argument('--memtype', metavar='TYPE', action='store',
+    parser.add_argument('--memtype', '-m', metavar='TYPE', action='store',
                         help="Show Memory in GiB or MiB. Valid vaules are 'gb', 'mb'")
+    parser.add_argument('--poll-rate', '-r', metavar='RATE', action='store',
+                        help="Set info polling rate.")
+    parser.add_argument('--version', '-v', action='store_true',
+                        help="Print FetchCord Version.")
 
     return parser.parse_args()
