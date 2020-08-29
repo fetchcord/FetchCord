@@ -181,7 +181,7 @@ def get_win_gpu(nvidiagpuline, radgpuline, intelgpuline):
 
 
 def get_cpuinfo(cpuline, baseinfo):
-    if os.name != "nt" or baseinfo:
+    if baseinfo:
         cpuinfo = ' '.join([' '.join(cpuline[0].split()[:-2]), cpuline[0].split()[-2].replace(
             "0G", "G", 1), cpuline[0].split()[-1]])
 
@@ -193,7 +193,7 @@ def get_cpuinfo(cpuline, baseinfo):
 
 def get_cpumodel(cpuline, cpuvendor, baseinfo):
     if cpuvendor == "Intel":
-        if os.name != "nt" or baseinfo:
+        if baseinfo:
             cpumodel = ' '.join([cpuline[0].replace(
                 '-', ' ').split()[1], cpuline[0].replace('-', ' ').split()[2]])
             if cpumodel == "Intel Core":

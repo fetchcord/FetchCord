@@ -85,7 +85,8 @@
         "cinnamon",
         "mate",
         "aero",
-        "pantheon"
+        "pantheon",
+	"explorer"
     ],
     "terminals": {
         "st": "741280043220861030",

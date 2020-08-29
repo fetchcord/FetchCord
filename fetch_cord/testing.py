@@ -196,7 +196,7 @@ if sysosid.lower() == "macos":
 gpuid = get_gpuid(gpuvendor)
 
 
-if os.name != "nt" or baseinfo:
+if baseinfo:
     shellid = get_shell_id(shells, shellid)
     desktopid = get_desktopid(deid, wmid)
     try:
@@ -210,7 +210,7 @@ if os.name != "nt" or baseinfo:
         print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
         termappid = '745691250186911796'
 
-if os.name == "nt" and neofetchwin:
+if neofetchwin:
     try:
         moboid = get_moboid(motherboards)
     except KeyError:

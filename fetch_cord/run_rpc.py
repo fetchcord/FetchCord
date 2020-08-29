@@ -24,13 +24,9 @@ elif neofetchwin:
 uptime = psutil.boot_time()
 args = parse_args()
 
-# if os.name == "nt":
-#     neofetchwin = check_neofetchwin()
-# else:
-#     neofetchwin = False
 
 def main():
-    if os.name != "nt" and not hostline and args.nodistro and args.noshell and args.nohardware:
+    if not hostline and args.nodistro and args.noshell and args.nohardware:
         print("ERROR: no hostline is available!")
         sys.exit(1)
     # printing info with debug switch
@@ -283,7 +279,7 @@ def check_change(loop):
     from fetch_cord.out import diskline, nvidiagpuline, \
             memline, cpuline, gpuinfo
     from fetch_cord.checks import get_cpuinfo, check_diskline, check_batteryline, check_memline
-    if os.name != "nt" or baseinfo:
+    if baseinfo:
         from fetch_cord.checks import check_batteryline
         from fetch_cord.out import lapordesk, batteryline, packagesline, check_batteryline, get_gpuinfo, cirrusgpuline, virtiogpuline, vmwaregpuline, intelgpuline, amdgpuline, primeoffload, sysosid, amdgpurenderlist
 
@@ -292,11 +288,11 @@ def check_change(loop):
     memline = check_memline(memline)
     cpuinfo = get_cpuinfo(cpuline, baseinfo)
     diskline = check_diskline(diskline, cpuinfo)
-    if os.name != "nt" or baseinfo:
+    if baseinfo:
         batteryline = check_batteryline(batteryline, hostline)
         packagesline = packagesline
 
-    if os.name != "nt" or baseinfo and nvidiagpuline and sysosid.lower() != "macos":
+    if baseinfo and nvidiagpuline and sysosid.lower() != "macos":
         from fetch_cord.out import gpuinfo
         gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
         intelgpuline, primeoffload, amdgpurenderlist,sysosid, loop)
