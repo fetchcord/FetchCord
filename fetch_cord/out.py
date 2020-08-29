@@ -272,16 +272,13 @@ if baseinfo:
         hostline = ["Host: N/A"]
 
     if not kernelline:
-        kernelline = "Kernel: N/A"
+        kernelline = ["Kernel: N/A"]
 
     if not shell_line:
-        shell_line = "Shell: N/A"
-
-    if not termline:
-        termline = "Terminal: N/A"
+        shell_line = ["Shell: N/A"]
 
     if not packagesline:
-        packagesline= "Packages: N/A"
+        packagesline= ["Packages: N/A"]
 
     dewmid = get_dewm(deline, wmline)
     deid = get_deid(deline)
@@ -292,7 +289,12 @@ if baseinfo:
 
     themeline = check_theme(themeline)
     fontline = check_fontline(fontline)
+
     termid = check_termid(termline)
+
+    if not termline:
+        termline = ["Terminal: N/A"]
+
     shellid = shell_line[0].split()[1]
 
     resline = check_res(resline)

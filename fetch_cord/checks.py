@@ -307,7 +307,7 @@ def check_batteryline(batteryline, hostline):
     if batteryline:
         batteryline = '\n'.join(batteryline)
     else:
-        batteryline = hostline[0]
+        batteryline = ' '.join(hostline)
 
     return batteryline
 
