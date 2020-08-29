@@ -6,6 +6,7 @@ import os
 import psutil
 # import info about system
 from fetch_cord.args import parse_args
+from fetch_cord.config import ConfigError, load_config
 from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
 from fetch_cord.debugger import run_rpc_debug
@@ -219,14 +220,14 @@ def cycle1(config):
 def cycle2(config):
     top_line = config["cycle_2"]["top_line"]
     if top_line == "termfont":
-        top_line = termfont
+        top_line = ' '.join(termline)
     else:
-        top_line = shell
+        top_line = shellid
     bottom_line = config["cycle_2"]["bottom_line"]
     if bottom_line == "termfont":
-        bottom_line = termfont
+        bottom_line = termline
     else:
-        bottom_line = shell
+        bottom_line = shellid
     if args.debug:
         print("cycle 2")
     client_id = termappid
