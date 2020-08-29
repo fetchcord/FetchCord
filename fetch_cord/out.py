@@ -47,7 +47,7 @@ def XDG_Symlink(home):
         return
 
 def check_neofetch_scoop():
-    return subprocess.run(["neofetch", "--stdout"], encoding="utf-8", stdout=subprocess.PIPE, shell=True).stdout
+    return subprocess.run(["neofetch", "--stdout", "--config none" if args.noconfig else ""], encoding="utf-8", stdout=subprocess.PIPE, shell=(os.name=="nt")).stdout
 
 def check_neofetchwin():
     return subprocess.run(["neofetch", "--noart"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
@@ -80,8 +80,8 @@ def neofetch(loop):
         if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
             XDG_Symlink(home)
         try:
-            baseinfo = exec_bash("neofetch --stdout")
-        except FileNotFoundError:
+            baseinfo = check_neofetch_scoop()
+        except (FileNotFoundError, subprocess.CalledProcessError) as e:
             print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
             sys.exit(1)
 
