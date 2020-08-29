@@ -8,43 +8,40 @@ import psutil
 from fetch_cord.args import parse_args
 from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
-from fetch_cord.config import ConfigError, load_config
-from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, getcpuinfo, cpuinfo, run_debug
-if os.name != "nt":
-    from fetch_cord.testing import desktopid, termappid, hostappid
-    from fetch_cord.out import packagesline, termid, shellid, kernelline, shell_line, fontline, \
-        dewmid, termline, lapordesk, hostline, resline, themeline, diskline, batteryline, \
-        get_gpu, neofetch, cpuline
-elif os.name == "nt":
-    from fetch_cord.out import moboline
+from fetch_cord.debugger import run_rpc_debug
+from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, cpuinfo, \
+        neofetch, diskline, neofetchwin, baseinfo, hostline
+if baseinfo:
+    from fetch_cord.testing import desktopid, termappid, hostappid, shellid
+    from fetch_cord.out import packagesline, kernelline, shell_line, fontline, \
+        termline, lapordesk, resline, themeline, batteryline, \
+        gpuinfo, dewmid
+elif neofetchwin:
+    from fetch_cord.out import moboline, check_neofetchwin
     from fetch_cord.testing import moboid
+
 
 uptime = psutil.boot_time()
 args = parse_args()
 
 
 def main():
-    if os.name != "nt":
-        if hostline == "" and args.nodistro and args.noshell and args.nohardware:
-            print("ERROR: no hostline is available!")
-            sys.exit(1)
+    if baseinfo and not hostline and args.nodistro and args.noshell and args.nohardware:
+        print("ERROR: no hostline is available!")
+        sys.exit(1)
     # printing info with debug switch
     if args.debug:
-        print("----run_rpc----\n")
-        print("uptime in epoch: %s" % uptime)
-        print("cpuid: %s" % appid)
-        print("cpuappid: %s" % cpuappid)
-        if os.name != "nt":
-            print("termappid: %s" % termappid)
-            if hostline:
-                print("hostappid: %s" % hostappid)
-            print(packagesline[0])
-    i = 0
-    if os.name == "nt":
-        wandowz()
+        if baseinfo:
+            run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid, termappid=termappid, packagesline=packagesline, hostline=hostline, hostappid=hostappid)
+        else:
+            run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid)
+    loop = 0
+    if neofetchwin:
+        wandowz(loop)
     else:
         config = get_config()
-        loonix(config, i, gpuinfo)
+        loonix(config, loop)
+        loonix(loop)
 
 def first_connect():
     try:
@@ -93,7 +90,7 @@ def rpc_tryupdate(RPC, state, details, large_image, large_text, small_image, sma
         pass
 
 
-def runmac(client_id):
+def runmac():
     from fetch_cord.testing import devicetype, product, bigicon, ver
     client_id = '740822755376758944'  # macos appid for discord rpc
     if args.debug:
@@ -138,7 +135,6 @@ def custom_time():
 
 
 def cycle0(config):
-    global RPC
     top_line = config["cycle_0"]["top_line"]
     if top_line == "kernel":
         top_line = kernelline[0]
@@ -179,7 +175,7 @@ def cycle0(config):
 # cycle
 
 
-def cycle1(gpuinfo, config):
+def cycle1(config):
     top_line = config["cycle_1"]["top_line"]
     if top_line == "gpu":
         top_line = gpuinfo
@@ -298,9 +294,9 @@ def cycle3(config):
         else:
             time.sleep(30)
     # back from whence you came
-        i = 1
     else:
-        loonix(cpuinfo, i)
+        loop = 1
+        loonix(loop)
     rpc_tryclear(RPC)
 
 
@@ -313,7 +309,7 @@ def pause():
         time.sleep(30)
 
 
-def w_cycle0():
+def windows():
     if args.debug:
         print("w_cycle 0")
     client_id = appid
@@ -321,7 +317,7 @@ def w_cycle0():
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
                state=sysosline[0],
-               details=memline[0],
+               details=memline,
                large_image="big",
                large_text=sysosline[0],
                small_image=moboid,
@@ -338,70 +334,66 @@ def w_cycle0():
     rpc_tryclear(RPC)
 
 
-def w_cycle1():
-    if args.debug:
-        print("w_cycle 1")
-    client_id = cpuappid
-    RPC = Presence(client_id)
-    rpc_tryconnect(RPC)
-    rpc_tryupdate(RPC,
-               state=cpuinfo,
-               details=gpuinfo,
-               large_image="big",
-               large_text=cpuinfo,
-               small_image=gpuid,
-               small_text=gpuinfo,
-               start=start_time)
-    if args.debug:
-        print("appid: %s" % client_id)
-    if args.time:
-        custom_time()
-    elif args.nodistro:
-        time.sleep(9999)
-    else:
-        time.sleep(30)
-    rpc_tryclear(RPC)
+def check_change(loop):
 
-def check_change(i, gpuinfo):
-    neofetch()
-    from fetch_cord.out import memline, diskline, batteryline, packagesline, cpuinfo, cpuline
-    global memline, diskline, batteryline, packagesline, cpuinfo
-    cpuinfo = getcpuinfo(cpuline)
-    memline = memline[0]
-    batteryline =  '\n'.join(batteryline)
-    diskline =  '\n'.join(diskline)
-    i = 1
-    get_gpuinfo = ""
-    gpuinfo = get_gpu(get_gpuinfo, i)
-    if os.name != "nt":
-        return loonix(i, gpuinfo)
-    else:
-        return wandowz(i)
+    neofetch(loop)
 
-def loonix(config, i, gpuinfo):
+    from fetch_cord.out import diskline, nvidiagpuline, \
+            memline, cpuline, gpuinfo
+    from fetch_cord.checks import get_cpuinfo, check_diskline, check_batteryline, check_memline
+    if baseinfo:
+        from fetch_cord.checks import check_batteryline
+        from fetch_cord.out import lapordesk, batteryline, packagesline, check_batteryline, get_gpuinfo, cirrusgpuline, virtiogpuline, vmwaregpuline, intelgpuline, amdgpuline, primeoffload, sysosid, amdgpurenderlist
+
+    global packagesline, cpuinfo, gpuinfo, memline, diskline, batteryline
+
+    memline = check_memline(memline)
+    cpuinfo = get_cpuinfo(cpuline, baseinfo)
+    diskline = check_diskline(diskline, cpuinfo)
+    if baseinfo:
+        batteryline = check_batteryline(batteryline, hostline)
+        packagesline = packagesline
+
+    if baseinfo and nvidiagpuline and sysosid.lower() != "macos":
+        from fetch_cord.out import gpuinfo
+        gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
+        intelgpuline, primeoffload, amdgpurenderlist,sysosid, loop)
+
+    loop = 1
+
+    if not neofetchwin:
+        return loonix(loop)
+    else:
+        return wandowz(loop)
+
+def loonix(config, loop):
     try:
-        if i == 0:
+        if args.poll_rate:
+            rate = int(args.poll_rate)
+        else:
+            rate = 3
+        if loop == 0:
             first_connect()
-        while i < 3:
+        while loop < rate:
             if not args.nodistro and sysosid.lower() != "macos":
                 cycle0(config)
+            if sysosid.lower() == "macos":
+                runmac()
             if not args.nohardware:
-                cycle1(gpuinfo, config)
+                cycle1(config)
             if not args.noshell:
                 cycle2(config)
             if not args.nohost and sysosid.lower() != "macos":
                 cycle3(config)
-            if sysosid.lower() == "macos":
-                runmac()
             if args.pause_cycle:
                 pause()
-            i += 1
+            loop += 1
         if not args.nohardware or not args.nodistro or not args.nohost:
-            i = 1
-            check_change(i, gpuinfo)
+            loop = 1
+            check_change(loop)
         else:
-            i = 1
-            loonix(config, i, gpuinfo)
+            loop = 1
+            loonix(loop, gpuinfo)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")
@@ -410,22 +402,21 @@ def loonix(config, i, gpuinfo):
             rpc_tryconnect(RPC)
 
 
-def wandowz(i):
+def wandowz(loop):
     try:
-        if i == 0:
+        if loop == 0:
             first_connect()
-        while i < 3:
+        while loop < 3:
             if not args.nodistro:
-                w_cycle0()
+                windows()
             if not args.nohardware:
                 w_cycle1()
-            i += 1
         if not args.nohardware:
-            i = 1
-            check_change(i, gpuinfo)
+            loop = 1
+            check_change(loop)
         else:
-            i = 1
-            wandowz()
+            loop = 1
+            wandowz(loop)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")

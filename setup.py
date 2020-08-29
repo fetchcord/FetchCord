@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 from os.path import dirname, join
 import setuptools
+import fetch_cord.__init__ as __init__
 
 setuptools.setup(
     name='FetchCord',
-    version='2.5.4',
+    version=__init__.VERSION,
     description='grabs information about your Distro and displays it as Discord Rich Presence.',
     long_description=open(
         join(dirname(__file__), 'README.md')).read(),

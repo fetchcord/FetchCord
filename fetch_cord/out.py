@@ -1,15 +1,25 @@
 from fetch_cord.bash import exec_bash, BashError
 import sys
 import os
+import re
+import subprocess
+import fetch_cord.__init__ as __init__
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
+from fetch_cord.debugger import run_debug
+from fetch_cord.checks import get_amdgpurender, check_primeoffload, get_gpuinfo, get_gpu_vendors, get_dewm, get_deid,\
+        get_wmid, set_laptop, check_batteryline, check_theme, check_fontline, check_termid, check_res, get_win_gpu,\
+        get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop, get_long_os
 
 
 args = parse_args()
 
-
 if args.update:
     update()
+
+if args.version:
+    print("FetchCord version:", __init__.VERSION)
+    sys.exit(0)
 
 
 if args.time:
@@ -25,24 +35,58 @@ try:
 except AttributeError:
     pass
 
-def neofetch():
+loop = 0
+
+def XDG_Symlink(home):
+    try:
+        print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
+        exec_bash(
+                "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
+    except BashError as e:
+        print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
+        return
+
+def check_neofetch_scoop():
+    return subprocess.run(["neofetch", "--stdout"], encoding="utf-8", stdout=subprocess.PIPE, shell=True).stdout
+
+def check_neofetchwin():
+    return subprocess.run(["neofetch", "--noart"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
+
+
+def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
             vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
-            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline
+            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
+            cirrusgpuline, baseinfo, neofetchwin
     neofetchwin = False
     if os.name == "nt":
-        neofetchwin = os.popen("neofetch --noart").read()
+        try:
+            neofetchwin = check_neofetchwin()
+        except (FileNotFoundError, subprocess.CalledProcessError) as e:
+            pass
+
+        if not neofetchwin:
+            try:
+                baseinfo = check_neofetch_scoop()
+            except (FileNotFoundError, subprocess.CalledProcessError) as e:
+                print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+                sys.exit(1)
+
     else:
         home = os.getenv('HOME')
-        if os.path.isdir("%s/.var/app/com.discordapp.Discord" % home) and not os.path.isfile("/usr/bin/discord") and not os.path.isdir("/opt/Discord"):
-            try:
-                print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
-                exec_bash(
-                    "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
-            except BashError as e:
-                print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
+        flatpak_discord_path = os.path.isdir("%s/.var/app/com.discordapp.Discord" % home)
+        package_path = os.path.isfile("/usr/bin/discord")
+        manual_install_path = os.path.isdir("/opt/Discord")
+        if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
+            XDG_Symlink(home)
+        try:
+            baseinfo = exec_bash("neofetch --stdout")
+        except FileNotFoundError:
+            print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+            sys.exit(1)
 
-        baseinfo = exec_bash("neofetch --stdout")
+
+
     # make lists
     cpu = "CPU:"
     cpuline = []
@@ -56,6 +100,8 @@ def neofetch():
     vmwaregpuline = []
     virtiogpu = "GPU: 00:02.0 Red"
     virtiogpuline = []
+    cirrusgpu = "GPU: 00:02.0 Cirrus"
+    cirrusgpuline = []
     term = "Terminal:"
     termline = []
     font = "Font:"
@@ -93,10 +139,14 @@ def neofetch():
         intelgpu = "Intel"
         radgpuline = []
         filepath = "tmp.txt"
+
         with open(filepath, 'w') as f:
             print(neofetchwin, file=f)
+
         with open(filepath, 'rt') as f:
-            for line in f:
+            lines = f.readlines()
+            for i in range(len(lines)):
+                line = lines[i]
                 if line.find(cpu) != -1:
                     cpuline.append(line.rstrip('\n'))
                 if line.find(nvidiagpu) != -1:
@@ -115,9 +165,18 @@ def neofetch():
                     moboline.append(line.rstrip('\n'))
                 if line.find(radgpu) != -1:
                     radgpuline.append(line[line.find(radgpu):].rstrip('\n'))
+                if line.find(disk) != -1:
+                    diskline.append(line[line.find(disk):].rstrip('\n'))
+                    i+=1
+                    while(i < len(lines)):
+                        line = lines[i]
+                        if line != "\n":
+                            diskline.append("Disk: "+line.lstrip().rstrip('\n'))
+                        i+=1
+                    break
 
     elif not neofetchwin:
-        filepath = "/tmp/out.txt"
+        filepath = "tmp.txt"
         with open(filepath, 'w') as f:
             print(baseinfo, file=f)
         with open(filepath, "rt") as f:
@@ -154,7 +213,15 @@ def neofetch():
                     hostline.append(line.rstrip('\n'))
                 if line.find(res) != -1:
                     resline.append(line.rstrip('\n'))
-                if line.find(mem) != -1:
+                if line.find(mem) != -1 and args.memtype == "gb":
+                    memgb = line.rstrip('\n')
+                    memgb = memgb.split()
+                    used = float(memgb[1].replace("MiB", ""))
+                    total = float(memgb[3].replace("MiB", ""))
+                    memline.append(
+                            "Memory: " + str(round(used / 1024, 2)) + "GiB / " + str(
+                                round(total / 1024,2)) + "GiB")
+                elif line.find(mem) != -1:
                     memline.append(line.rstrip('\n'))
                 if line.find(theme) != -1:
                     themeline.append(line.rstrip('\n'))
@@ -162,6 +229,8 @@ def neofetch():
                     diskline.append(line.rstrip('\n'))
                 if line.find(battery) != -1:
                     batteryline.append(line.rstrip('\n'))
+                if line.find(cirrusgpu) != -1:
+                    cirrusgpuline.append(line.rstrip('\n'))
 
     try:
         if os.path.isfile(filepath):
@@ -170,277 +239,92 @@ def neofetch():
         pass
 
     return (memline, packagesline, diskline, batteryline, cpuline)
-neofetch()
 
-get_gpuinfo = ""
+baseinfo = False
+neofetchwin = False
+neofetch(loop)
+
 sysosid = sysosline[0].split()[1]
-i = 0
-def get_gpu(get_gpuinfo, i):
-    global gpuinfo, gpuvendor, primeoffload, laptop
+
+# I don't know if macOS has the same path linux does to check power_supply
+if sysosid.lower() != "macos" and os.name != "nt":
+    laptop = check_laptop()
+else:
+    laptop = False
+
+amdgpurenderlist = []
+gpuvendor = ""
+
+
+if amdgpuline and os.name != "nt":
+    amdgpurenderlist = get_amdgpurender(amdgpuline, intelgpuline, laptop)
+if sysosid.lower() not in ["windows", "macos"]:
+    primeoffload = check_primeoffload(laptop, loop)
+else:
     primeoffload = False
-    if sysosid.lower() != "macos" and os.name != "nt":
-        # only show the GPU in use with optimus, show both if prime render offload
-        batpath = "/sys/class/power_supply"
-        laptop = False
-        for i in os.listdir(batpath):
-            if i.startswith("BAT"):
-                laptop = True
-        if laptop and nvidiagpuline:
-            if args.debug and i == 0:
-                print("laptop: %s" % laptop)
-            try:
-                primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
-            except BashError:
-                pass
 
-    get_gpuinfo = ""
-    gpuinfo = ""
-    get_gpuinfo = ""
-    amdgpurenderlist = []
-    gpuvendor = ""
-    if nvidiagpuline:
-        for n in range(len(nvidiagpuline)):
-            gpuinfo += nvidiagpuline[n]
-        gpuvendor += "NVIDIA"
-    try:
-        gputemp = exec_bash("nvidia-smi | awk '{print $3}' | xargs | awk '{print $7}' | sed 's/C/°C/;s/^/[/;s/$/]/'")
-        gpuinfo += gputemp
-    except BashError:
-            pass
 
-    if amdgpuline and sysosid.lower() not in ['windows', 'macos'] and not primeoffload:
-        try:
-            # amd GPUs
-            for i in range(len(amdgpuline)):
-                # assume DRI_PRIME=0 is the intel GPU
-                if laptop and intelgpuline:
-                    i = i + 1
-                env_prime = "env DRI_PRIME=%s" % i
-                amdgpurender = "GPU: " + \
-                    exec_bash(
-                        "%s glxinfo | grep \"OpenGL renderer string:\" | sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
-                if i != -1:
-                    amdgpurenderlist.append(amdgpurender)
-            amdgpuvendor = "AMD"
-        except BashError as e:
-            print("ERROR: Could not run glxinfo [%s]" % str(e))
-            sys.exit(1)
+if baseinfo:
+    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
+            intelgpuline, primeoffload, amdgpurenderlist, sysosid, loop)
+    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,\
+            nvidiagpuline, intelgpuline, primeoffload, sysosid)
 
-        for a in range(len(amdgpurenderlist)):
-            if nvidiagpuline:
-                gpuinfo += '\n' + amdgpurenderlist[a]
-            else:
-                gpuinfo += amdgpurenderlist[a]
-        gpuvendor += "AMD"
+    if gpuinfo == "":
+        gpuinfo = "GPU: N/A"
 
-    elif not amdgpurenderlist and not primeoffload:
-        try:
-            for a in range(len(amdgpuline)):
-                gpuinfo += amdgpuline[a]
-            gpuvendor += amdgpuline[0].split()[1]
-        except IndexError:
-            pass
-
-    if intelgpuline and not primeoffload:
-        try:
-            if amdgpuline or nvidiagpuline:
-                gpuinfo += '\n' + intelgpuline[0]
-            else:
-                gpuinfo += intelgpuline[0]
-            gpuvendor += intelgpuline[0].split()[1]
-        except IndexError:
-            pass
-    get_gpuinfo = gpuinfo
-    return get_gpuinfo
-
-if os.name != "nt":
-    get_gpu(get_gpuinfo, i)
-
-else: # Cursed windows stuff
-    if nvidiagpuline:
-        try:
-            gpuinfo += "GPU: " +  nvidiagpuline[0]
-            for n in nvidiagpuline[1:]:
-                gpuinfo += "\nGPU: " + n
-
-            gpuvendor += nvidiagpuline[0].split()[0]
-        except IndexError:
-            pass
-    if radgpuline:
-        try:
-            if nvidiagpuline:
-                gpuinfo += "\n"
-            gpuinfo += "GPU: " + radgpuline[0]
-            for r in radgpuline[1:]:
-                gpuinfo += "\nGPU: " + r
-
-            gpuvendor += "AMD"
-        except IndexError:
-            pass
-    if intelgpuline:
-        try:
-            if nvidiagpuline or radgpuline:
-                gpuinfo += "\n"
-            gpuinfo += "GPU: " + intelgpuline[0]
-            for i in intelgpuline[1:]:
-                gpuinfo += "\nGPU: " + i
-
-            gpuvendor += "Intel"
-        except IndexError:
-            pass
-
-if vmwaregpuline:
-    gpuinfo = vmwaregpuline[0]
-    gpuvendor = vmwaregpuline[0].split()[1]
-if virtiogpuline:
-    gpuinfo = virtiogpuline[0]
-    gpuvendor = virtiogpuline[0].split()[2:3].join()
-
-def getcpuinfo(cpuline):
-    global cpumodel, cpuvendor, cpuinfo
-    if os.name != "nt":
-        cpusplit = cpuline[0].split()[:-2]
-        s=' '.join(cpusplit)
-        cpuinfo = s + ' ' + cpuline[0].split()[-2].replace("0G", "G", 1) + ' ' + cpuline[0].split()[-1]
-    else:
-        cpusplit = cpuline[0].split()[:-1]
-        s=' '.join(cpusplit)
-        # I fucking hate you intel
-        cpuinfo = s + ' ' + cpuline[0].split()[-1].replace(
-                "0", "", 1).replace("Core(TM)2", "Core 2").replace("Intel(R)", "Intel").replace("Core(TM)", "Core")
-    cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
-    cpumodel = ""
-    if cpuvendor == "Intel":
-        if os.name != "nt":
-            cpumodel = cpuline[0].replace(
-                '-', ' ').split()[1] + ' ' + cpuline[0].replace('-', ' ').split()[2]
-            if cpumodel == "Intel Core":
-                cpumodel = cpuline[0].split()[1:5]
-                cpumodel = ' '.join(cpumodel)
-        else:
-            cpumodel = cpuline[0].replace(
-                '-', ' ').split()[1].replace("Intel(R)", "Intel") + ' ' + cpuline[0].replace('-', ' ').split()[3]
-            if cpumodel == "Intel 2" or cpumodel == "Intel Solo":
-                cpumodel = cpuline[0].split()[1:5]
-                cpumodel = ' '.join(cpumodel)
-
-    elif cpuvendor == "AMD":
-        cpumodel = cpuline[0].split()[2] + ' ' + cpuline[0].split()[3]
-    # fuck you intel
-    elif cpuvendor == "Pentium":
-        cpumodel = cpuline[0].split()[1]
-    return cpuinfo
-
-getcpuinfo(cpuline)
-
-if os.name != "nt":
-    # linux shit
-    if wmline:
-        wmid = wmline[0].split()[1]
-    else:
-        wmid = "N/A"
-    termid = ""
-    try:
-        if termline:
-            termid = termline[0].split()[1]
-        else:
-            termid = "N/A"
-            termline = ["N/A"]
-    except IndexError:
-        pass
-    shellid = shell_line[0].split()[1]
-    if fontline:
-        fontline = '\n'.join(fontline)
-    if fontline and args.termfont:
-        print("Custom terminal font not set because a terminal font already exists, %s" %
-            fontline)
-    elif not fontline:
-        fontline = "Terminal Font: N/A\nFont: N/A"
-    if deline:
-        deid = deline[0].split()[1]
-    else:
-        deid = "N/A"
-    dewmid = ""
-    if deline and wmline:
-        dewmid = deline[0] + ' ' + wmline[0]
-    elif deline and not wmline:
-        dewmid = deline[0]
-    elif wmline and not deline:
-        dewmid = wmline[0]
-    lapordesk = ""
     if not hostline:
-        hostline = ""
-    try:
-        if laptop and sysosid.lower() != 'macos':
-            lapordesk = "laptop"
-        else:
-            lapordesk = "desktop"
-    except NameError:
-        pass
-    if not resline:
-        resline = "Resolution: N/A"
-    else:
-        resline = resline[0]
-    kernelid = kernelline[0].split()[1]
-    if not themeline:
-        themeline = ["N/A"]
-    else:
-        themeline = '\n'.join(themeline)
-    if not memline:
-        memline = ["N/A"]
-if sysosid.lower() in ['windows', 'linux', 'opensuse']:
-    sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
-if diskline:
-    diskline = '\n'.join(diskline)
-# return to default line
-elif not diskline:
-    diskline = cpuinfo
-if batteryline:
-    batteryline = ' '.join(batteryline)
-elif not batteryline:
-    batteryline = lapordesk
-if memline:
-    memline = memline[0]
+        hostline = ["Host: N/A"]
 
-def run_debug():
-    print("----out.py----\n")
-    print("----DE/WM----")
-    if os.name != "nt":
-        print("deid: %s" % deid)
-        print("wmid: %s" % wmid)
-        try:
-            print("wmline item 0: %s" % wmline[0])
-        except IndexError:
-            pass
-        print("\n----TERMINAL----\n")
-        print("fontline: %s" % fontline)
-        print("termid: %s" % termid)
-        print("termline item 0: %s" % termline[0])
-        print("themeline: %s" % themeline)
-    print("\n----GPU INFO----\n")
-    try:
-        print("amdgpurenderlist: %s" % amdgpurenderlist)
-        print("amdgpurender: %s" % amdgpurender)
-    except NameError:
-        pass
-    print("nvidiagpuline: %s" % nvidiagpuline)
-    print("intelgpuline: %s" % intelgpuline)
-    print("gpuinfo: %s" % gpuinfo)
-    print("gpuvendor: %s" % gpuvendor)
-    print("\n----CPU INFO----\n")
-    print("cpuvendor: %s" % cpuvendor)
-    print("cpumodel: %s" % cpumodel)
-    print("cpuinfo: %s" % cpuinfo)
-    print("cpuline item 0: %s" % cpuline[0])
-    print("memline: %s" % memline)
-    print("\n----OS INFO----\n")
-    print("sysosline: %s" % sysosline)
-    print("sysosid: %s" % sysosid)
-    if diskline != cpuinfo:
-        print("diskline: %s" % diskline)
-    if batteryline != lapordesk:
-        print("batteryline: %s" % batteryline)
-    if os.name != "nt":
-        print("packagesline item 0: %s" % packagesline[0])
+    if not kernelline:
+        kernelline = ["Kernel: N/A"]
+
+    if not shell_line:
+        shell_line = ["Shell: N/A"]
+
+    if not packagesline:
+        packagesline= ["Packages: N/A"]
+
+    dewmid = get_dewm(deline, wmline)
+    deid = get_deid(deline)
+    wmid = get_wmid(wmline)
+
+    lapordesk = set_laptop(laptop, sysosid)
+    batteryline = check_batteryline(batteryline, hostline)
+
+    themeline = check_theme(themeline)
+    fontline = check_fontline(fontline)
+
+    termid = check_termid(termline)
+
+    if not termline:
+        termline = ["Terminal: N/A"]
+
+    shellid = shell_line[0].split()[1]
+
+    resline = check_res(resline)
+
+elif neofetchwin:
+
+    if not moboline:
+        moboline = "Motherboard: N/A"
+    gpuinfo, gpuvendor = get_win_gpu(nvidiagpuline, radgpuline, intelgpuline)
+    deid = False
+    wmid = False
+    termid = False
+    hostline = False
+
+
+
+if sysosid.lower() in ['windows', 'linux', 'opensuse']:
+    sysosid = get_long_os(sysosline)
+
+cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
+cpumodel = get_cpumodel(cpuline, cpuvendor, baseinfo)
+cpuinfo = get_cpuinfo(cpuline, baseinfo)
+memline = check_memline(memline)
+diskline = check_diskline(diskline, cpuinfo)
+
+
 if args.debug:
     run_debug()
