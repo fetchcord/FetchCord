@@ -85,7 +85,7 @@ def get_host(hostlist):
         if hostsplit[line] in hostlist:
             hostid.append(hostsplit[line].rstrip('\n'))
     try:
-        hostid = hostid[0]
+        hostid = ' '.join(hostid)
     except IndexError:
         hostid = []
         pass
