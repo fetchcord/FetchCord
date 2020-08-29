@@ -54,10 +54,7 @@ def check_neofetchwin():
 
 
 def neofetch(loop):
-    global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
-            vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
-            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
-            cirrusgpuline, baseinfo, neofetchwin
+
     neofetchwin = False
     if os.name == "nt":
         try:
@@ -238,11 +235,21 @@ def neofetch(loop):
     except FileNotFoundError:
         pass
 
-    return (memline, packagesline, diskline, batteryline, cpuline)
+    if not neofetchwin:
+        radgpuline = False
+
+    return cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
+            vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
+            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
+            cirrusgpuline, baseinfo, neofetchwin
 
 baseinfo = False
 neofetchwin = False
-neofetch(loop)
+
+cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
+            vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
+            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
+            cirrusgpuline, baseinfo, neofetchwin = neofetch(loop)
 
 sysosid = sysosline[0].split()[1]
 

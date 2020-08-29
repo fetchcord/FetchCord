@@ -335,7 +335,7 @@ def windows():
     rpc_tryclear(RPC)
 
 
-def check_change(loop):
+def check_change(config, loop):
 
     neofetch(loop)
 
@@ -345,8 +345,6 @@ def check_change(loop):
     if baseinfo:
         from fetch_cord.checks import check_batteryline
         from fetch_cord.out import lapordesk, batteryline, packagesline, check_batteryline, get_gpuinfo, cirrusgpuline, virtiogpuline, vmwaregpuline, intelgpuline, amdgpuline, primeoffload, sysosid, amdgpurenderlist
-
-    global packagesline, cpuinfo, gpuinfo, memline, diskline, batteryline
 
     memline = check_memline(memline)
     cpuinfo = get_cpuinfo(cpuline, baseinfo)
@@ -363,7 +361,7 @@ def check_change(loop):
     loop = 1
 
     if not neofetchwin:
-        return loonix(loop)
+        return loonix(config, loop)
     else:
         return wandowz(loop)
 
@@ -391,7 +389,7 @@ def loonix(config, loop):
             loop += 1
         if not args.nohardware or not args.nodistro or not args.nohost:
             loop = 1
-            check_change(loop)
+            check_change(config, loop)
         else:
             loop = 1
             loonix(loop, gpuinfo)
@@ -399,7 +397,7 @@ def loonix(config, loop):
         if KeyboardInterrupt:
             print("Closing connection.")
             sys.exit(0)
-        else:
+        elif ConnectionResetError:
             rpc_tryconnect(RPC)
 
 
@@ -422,5 +420,5 @@ def wandowz(loop):
         if KeyboardInterrupt:
             print("Closing connection.")
             sys.exit(0)
-        else:
+        if ConnectionResetError:
             rpc_tryconnect(RPC)
