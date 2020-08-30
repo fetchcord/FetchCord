@@ -8,22 +8,22 @@
 
 	"cycle_1":
 	{
-		"top_line": ["single_word", ["cpu", "gpu", "memline"], false],
-		"bottom_line": ["single_word", ["cpu", "gpu", "memline"], false],
+		"top_line": ["single_word", ["cpu", "gpu", "mem", "disk"], false],
+		"bottom_line": ["single_word", ["cpu", "gpu", "mem", "disk"], false],
 		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
 	},
 
 	"cycle_2":
 	{
-		"top_line": ["single_word", ["termfont", "shell"], false],
-		"bottom_line": ["single_word", ["termfont", "shell"], false],
+		"top_line": ["single_word", ["termfont", "shell", "theme"], false],
+		"bottom_line": ["single_word", ["termfont", "shell", "theme"], false],
 		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
 	},
 
 	"cycle_3":
 	{
-		"top_line": ["single_word", ["resline", "batteryline"], false],
-		"bottom_line": ["single_word", ["resline", "batteryline"], false],
+		"top_line": ["single_word", ["resolution", "battery", "host"], false],
+		"bottom_line": ["single_word", ["resolution", "battery"], false],
 		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
 	}
 }

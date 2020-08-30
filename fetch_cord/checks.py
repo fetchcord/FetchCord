@@ -16,11 +16,9 @@ def check_laptop():
     return False
 
 
-def check_primeoffload(laptop, loop):
+def check_primeoffload():
     # only show the GPU in use with optimus, show both if prime render offload
     primeoffload = False
-    if args.debug and loop == 0:
-        print("laptop: %s" % laptop)
     try:
         primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
         return True
@@ -28,120 +26,98 @@ def check_primeoffload(laptop, loop):
         return False
 
 
-def get_nvidia_gpu(nvidiagpuline, loop):
-        for n in range(len(nvidiagpuline)):
-            nvidiagpuinfo = nvidiagpuline[n]
-        try:
-            gputemp = exec_bash("nvidia-smi -q | awk '/GPU Current Temp/{print $5}'\
+def nvidia_gpu_temp(gpuline):
+
+    try:
+        gputemp = exec_bash("nvidia-smi -q | awk '/GPU Current Temp/{print $5}'\
                     | sed 's/^/[/;s/$/°C]/'")
-            nvidiagpuinfo += gputemp
-        except BashError:
-            pass
-        return nvidiagpuinfo
+        for t in range(len(gpuline)):
+            if "NVIDIA" in gpuline[t].split():
+                nvidiagpu = gpuline[t] + gputemp
+    except BashError:
+        pass
+    print(nvidiagpu)
+
+    return nvidiagpu
 
 
-def get_amdgpurender(amdgpuline, intelgpuline, laptop):
+def get_amdgpurender(gpuline, laptop):
     amdgpurenderlist = []
     try:
         # amd GPUs
-        for i in range(len(amdgpuline)):
+        for i in range(len(gpuline)):
             # assume DRI_PRIME=0 is the intel GPU
-            if laptop and intelgpuline:
+            if laptop and "Intel" in gpuline[i].split():
                 i += 1
             env_prime = "env DRI_PRIME=%s" % i
-            amdgpurender = "GPU: " + \
-                exec_bash(
-                    "%s glxinfo | grep \"OpenGL renderer string:\" |\
+            if "AMD" in gpuline[i].split():
+                amdgpurender = "GPU: " + \
+                    exec_bash(
+                        "%s glxinfo | grep \"OpenGL renderer string:\" |\
                             sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
-            if i != -1:
-                amdgpurenderlist.append(amdgpurender)
+                if i != -1:
+                    amdgpurenderlist.append(amdgpurender)
     except BashError as e:
         print("ERROR: Could not run glxinfo [%s]" % str(e))
         sys.exit(1)
     return amdgpurenderlist
 
-def get_amdgpu(amdgpurenderlist, nvidiagpuline):
 
+def get_amdgpu(amdgpurenderlist, gpuline):
+    amdgpuline= ""
     for a in range(len(amdgpurenderlist)):
-        if nvidiagpuline:
-            amdgpuinfo = '\n' + amdgpurenderlist[a]
-        else:
-            amdgpuinfo = amdgpurenderlist[a]
-
-    return amdgpuinfo
-
-def get_amdgpu_no_render(amdgpuline):
-    for a in range(len(amdgpuline)):
-        amdgpuinfo = amdgpuline[a]
-
-    return amdgpuinfo
+        if "AMD" not in gpuline[a]:
+            amdgpuline += gpuline[a]
+        amdgpuline += amdgpurenderlist[a]
+    return amdgpuline
 
 
+def strip_prime(primeoffload, gpuline):
+    prime = []
+    for p in range(len(gpuline)):
+        if "NVIDIA" in gpuline[p].split() and primeoffload:
 
-def get_intelgpu(intelgpuline, amdgpuline, nvidiagpuline):
+            prime = gpuline[p]
+    return nvidia_gpu_temp(gpuline)
 
-    if amdgpuline or nvidiagpuline:
-        intelgpuinfo = '\n' + intelgpuline[0]
-    else:
-        intelgpuinfo = intelgpuline[0]
-
-    return intelgpuinfo
-
-
-def get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
-        intelgpuline, primeoffload, amdgpurenderlist,sysosid, loop):
+def get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist):
     gpuinfo = ""
-    if nvidiagpuline:
-        gpuinfo = get_nvidia_gpu(nvidiagpuline, loop)
-
-    if amdgpurenderlist and not primeoffload and sysosid.lower() != "macos":
-        gpuinfo += get_amdgpu(amdgpurenderlist, nvidiagpuline)
-
-    elif amdgpuline and not amdgpurenderlist and not primeoffload:
-        gpuinfo += get_amdgpu_no_render(amdgpuline)
-
-    if intelgpuline and not primeoffload:
-        gpuinfo += get_intelgpu(intelgpuline, amdgpuline, nvidiagpuline)
-
-    if vmwaregpuline:
-        gpuinfo = vmwaregpuline[0]
-
-    if virtiogpuline:
-        gpuinfo = virtiogpuline[0]
-
-    if cirrusgpuline:
-        gpuinfo = cirrusgpuline[0]
-
+    if primeoffload and laptop:
+        gpuinfo += strip_prime(primeoffload, gpuline)
+    if sysosid.lower() not in ["macos", "windows"] and not primeoffload:
+        gpuinfo += get_amdgpu(amdgpurenderlist, gpuline)
+    for line in range(len(gpuline)):
+        if "NVIDIA" in gpuline[line].split() and not primeoffload:
+            gpuinfo += nvidia_gpu_temp(gpuline)
     return gpuinfo
 
 
-def get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline,\
-        amdgpuline, nvidiagpuline, intelgpuline, primeoffload, sysosid):
+
+def get_gpu_vendors(gpuline, primeoffload, sysosid):
 
     gpuvendor = ""
+    gpujoin = '\n'.join(gpuline)
+    if "NVIDIA" in gpujoin.split():
+        gpuvendor += "NVIDIA"
 
-    if nvidiagpuline:
-        gpuvendor = "NVIDIA"
-
-    if amdgpuline and not primeoffload:
+    if "AMD" in gpujoin.split() and not primeoffload:
         gpuvendor += "AMD"
 
-    if intelgpuline and not primeoffload:
-        if sysosid.lower() == "macos" and "Radeon" in intelgpuline[0].split():
+    if "Intel" in gpujoin.split() and not primeoffload:
+        if sysosid.lower() == "macos" and "Radeon" in gpuline[line].split():
             gpuvendor += "AMD"
         gpuvendor += "Intel"
 
-    if vmwaregpuline:
+    if "VMWare" in gpujoin.split():
         gpuvendor = "vmware"
 
-    if virtiogpuline:
+    if "Red Hat" in gpujoin.split():
         gpuvendor = "virtio"
 
-    if cirrusgpuline:
+    if "Cirrus" in gpujoin.split():
         gpuvendor = "cirrus"
 
     return gpuvendor
-
 
 def get_win_gpu(nvidiagpuline, radgpuline, intelgpuline):
     gpuinfo = ""
@@ -296,7 +272,7 @@ def check_theme(themeline):
 
 def check_memline(memline):
     if memline:
-        memline = memline[0]
+        memline = ''.join(memline)
     if not memline:
         memline = "Memory: N/A"
 

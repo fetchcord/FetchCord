@@ -10,13 +10,13 @@ from fetch_cord.config import ConfigError, load_config
 from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
 from fetch_cord.debugger import run_rpc_debug
-from fetch_cord.out import gpuinfo, sysosline, sysosid, memline, cpuinfo, \
-        neofetch, diskline, neofetchwin, baseinfo, hostline
+from fetch_cord.out import sysosline, sysosid, memline, cpuinfo, \
+        neofetch, diskline, neofetchwin, baseinfo, hostline, gpuinfo
 if baseinfo:
     from fetch_cord.testing import desktopid, termappid, hostappid, shellid
     from fetch_cord.out import packagesline, kernelline, shell_line, fontline, \
         termline, lapordesk, resline, themeline, batteryline, \
-        gpuinfo, dewmid
+        dewmid
 elif neofetchwin:
     from fetch_cord.out import moboline, check_neofetchwin
     from fetch_cord.testing import moboid
@@ -41,8 +41,7 @@ def main():
         wandowz(loop)
     else:
         config = get_config()
-        loonix(config, loop)
-        loonix(loop)
+        loonix(config, loop, gpuinfo, memline, cpuinfo, diskline, batteryline, packagesline)
 
 def first_connect():
     try:
@@ -135,7 +134,7 @@ def custom_time():
 # cycle
 
 
-def cycle0(config):
+def cycle0(config, packagesline):
     top_line = config["cycle_0"]["top_line"]
     if top_line == "kernel":
         top_line = kernelline[0]
@@ -176,7 +175,7 @@ def cycle0(config):
 # cycle
 
 
-def cycle1(config):
+def cycle1(config, gpuinfo, cpuinfo, memline, diskline):
     top_line = config["cycle_1"]["top_line"]
     if top_line == "gpu":
         top_line = gpuinfo
@@ -257,7 +256,7 @@ def cycle2(config):
     rpc_tryclear(RPC)
 
 
-def cycle3(config):
+def cycle3(config, batteryline):
     # if not then forget it
     if hostline:
         top_line = config["cycle_3"]["top_line"]
@@ -297,7 +296,7 @@ def cycle3(config):
     # back from whence you came
     else:
         loop = 1
-        loonix(loop)
+        loonix(config, loop, gpuinfo, memline, cpuinfo, diskline, batteryline, packagesline)
     rpc_tryclear(RPC)
 
 
@@ -337,35 +336,35 @@ def windows():
 
 def check_change(config, loop):
 
-    neofetch(loop)
+    cpuline, gpuline, termline, fontline, wmline, radgpuline, \
+            shell_line, kernelline, sysosline, moboline, \
+            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
+            baseinfo, neofetchwin = neofetch(loop)
 
-    from fetch_cord.out import diskline, nvidiagpuline, \
-            memline, cpuline, gpuinfo
-    from fetch_cord.checks import get_cpuinfo, check_diskline, check_batteryline, check_memline
+    from fetch_cord.checks import get_cpuinfo, check_diskline, check_batteryline, check_memline, get_gpuinfo
     if baseinfo:
         from fetch_cord.checks import check_batteryline
-        from fetch_cord.out import lapordesk, batteryline, packagesline, check_batteryline, get_gpuinfo, cirrusgpuline, virtiogpuline, vmwaregpuline, intelgpuline, amdgpuline, primeoffload, sysosid, amdgpurenderlist
+        from fetch_cord.out import primeoffload, sysosid, amdgpurenderlist, laptop, primeoffload
 
-    memline = check_memline(memline)
     cpuinfo = get_cpuinfo(cpuline, baseinfo)
-    diskline = check_diskline(diskline, cpuinfo)
+    diskline = cpuinfo
+    batteryline = hostline
+    memline = check_memline(memline)
     if baseinfo:
         batteryline = check_batteryline(batteryline, hostline)
         packagesline = packagesline
-
-    if baseinfo and nvidiagpuline and sysosid.lower() != "macos":
-        from fetch_cord.out import gpuinfo
-        gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
-        intelgpuline, primeoffload, amdgpurenderlist,sysosid, loop)
+        diskline = check_diskline(diskline, cpuinfo)
+        if primeoffload and laptop and sysosid.lower() != "macos":
+            gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist)
 
     loop = 1
 
     if not neofetchwin:
-        return loonix(config, loop)
+        return loonix(config, loop, gpuinfo, memline,  cpuinfo, diskline, batteryline, packagesline)
     else:
         return wandowz(loop)
 
-def loonix(config, loop):
+def loonix(config, loop, gpuinfo, memline, cpuinfo, diskline, batteryline, pacakgesline):
     try:
         if args.poll_rate:
             rate = int(args.poll_rate)
@@ -375,15 +374,15 @@ def loonix(config, loop):
             first_connect()
         while loop < rate:
             if not args.nodistro and sysosid.lower() != "macos":
-                cycle0(config)
+                cycle0(config, pacakgesline)
             if sysosid.lower() == "macos":
                 runmac()
             if not args.nohardware:
-                cycle1(config)
+                cycle1(config, gpuinfo, cpuinfo, memline, diskline)
             if not args.noshell:
                 cycle2(config)
             if not args.nohost and sysosid.lower() != "macos":
-                cycle3(config)
+                cycle3(config, batteryline)
             if args.pause_cycle:
                 pause()
             loop += 1

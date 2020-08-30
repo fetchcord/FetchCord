@@ -7,9 +7,10 @@ import fetch_cord.__init__ as __init__
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
 from fetch_cord.debugger import run_debug
-from fetch_cord.checks import get_amdgpurender, check_primeoffload, get_gpuinfo, get_gpu_vendors, get_dewm, get_deid,\
-        get_wmid, set_laptop, check_batteryline, check_theme, check_fontline, check_termid, check_res, get_win_gpu,\
-        get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop, get_long_os
+from fetch_cord.checks import get_amdgpurender, check_primeoffload, get_gpu_vendors, get_dewm, get_deid,\
+        get_wmid, set_laptop, check_batteryline, check_theme, check_fontline, check_termid, check_res,\
+        get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop, get_long_os, nvidia_gpu_temp,\
+        strip_prime, get_gpuinfo
 
 
 args = parse_args()
@@ -87,18 +88,8 @@ def neofetch(loop):
     # make lists
     cpu = "CPU:"
     cpuline = []
-    nvidiagpu = "GPU: NVIDIA"
-    nvidiagpuline = []
-    amdgpu = "GPU: AMD"
-    amdgpuline = []
-    intelgpu = "GPU: Intel"
-    intelgpuline = []
-    vmwaregpu = "GPU: VMware"
-    vmwaregpuline = []
-    virtiogpu = "GPU: 00:02.0 Red"
-    virtiogpuline = []
-    cirrusgpu = "GPU: 00:02.0 Cirrus"
-    cirrusgpuline = []
+    gpu = "GPU:"
+    gpuline = []
     term = "Terminal:"
     termline = []
     font = "Font:"
@@ -180,16 +171,8 @@ def neofetch(loop):
             for line in f:
                 if line.find(cpu) != -1:
                     cpuline.append(line.rstrip('\n'))
-                if line.find(nvidiagpu) != -1:
-                    nvidiagpuline.append(line.rstrip('\n'))
-                if line.find(amdgpu) != -1:
-                    amdgpuline.append(line.rstrip('\n'))
-                if line.find(intelgpu) != -1:
-                    intelgpuline.append(line.rstrip('\n'))
-                if line.find(vmwaregpu) != -1:
-                    vmwaregpuline.append(line.rstrip('\n'))
-                if line.find(virtiogpu) != -1:
-                    virtiogpuline.append(line.rstrip('\n'))
+                if line.find(gpu) != -1:
+                    gpuline.append(line.rstrip('\n'))
                 if line.find(term) != -1:
                     termline.append(line.rstrip('\n'))
                 if line.find(font) != -1:
@@ -226,8 +209,6 @@ def neofetch(loop):
                     diskline.append(line.rstrip('\n'))
                 if line.find(battery) != -1:
                     batteryline.append(line.rstrip('\n'))
-                if line.find(cirrusgpu) != -1:
-                    cirrusgpuline.append(line.rstrip('\n'))
 
     try:
         if os.path.isfile(filepath):
@@ -238,18 +219,18 @@ def neofetch(loop):
     if not neofetchwin:
         radgpuline = False
 
-    return cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
-            vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
+    return cpuline, gpuline, termline, fontline, wmline, radgpuline, \
+            shell_line, kernelline, sysosline, moboline, \
             deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
-            cirrusgpuline, baseinfo, neofetchwin
+            baseinfo, neofetchwin
 
 baseinfo = False
 neofetchwin = False
 
-cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
-            vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
+cpuline, gpuline, termline, fontline, wmline, radgpuline, \
+            shell_line, kernelline, sysosline, moboline, \
             deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
-            cirrusgpuline, baseinfo, neofetchwin = neofetch(loop)
+            baseinfo, neofetchwin = neofetch(loop)
 
 sysosid = sysosline[0].split()[1]
 
@@ -261,24 +242,20 @@ else:
 
 amdgpurenderlist = []
 gpuvendor = ""
-
-
-if amdgpuline and os.name != "nt":
-    amdgpurenderlist = get_amdgpurender(amdgpuline, intelgpuline, laptop)
+for line in range(len(gpuline)):
+    if "AMD" in gpuline[line].split() and os.name != "nt":
+        amdgpurenderlist = get_amdgpurender(gpuline, laptop)
+        break
 if sysosid.lower() not in ["windows", "macos"]:
-    primeoffload = check_primeoffload(laptop, loop)
+    primeoffload = check_primeoffload()
 else:
     primeoffload = False
 
 
 if baseinfo:
-    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
-            intelgpuline, primeoffload, amdgpurenderlist, sysosid, loop)
-    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,\
-            nvidiagpuline, intelgpuline, primeoffload, sysosid)
-
-    if gpuinfo == "":
-        gpuinfo = "GPU: N/A"
+    gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist)
+#    print(gpuline)
+    gpuvendor = get_gpu_vendors(gpuline, primeoffload, sysosid)
 
     if not hostline:
         hostline = ["Host: N/A"]

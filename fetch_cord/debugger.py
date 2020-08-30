@@ -2,8 +2,8 @@ import os
 import sys
 
 def run_debug():
-    from fetch_cord.out import gpuinfo, cpuvendor, cpumodel, cpuinfo, cpuline, memline,\
-            sysosid, sysosline, gpuvendor, diskline
+    from fetch_cord.out import cpuvendor, cpumodel, cpuinfo, cpuline, memline,\
+            sysosid, sysosline, gpuvendor, diskline, gpuinfo
     if os.name != "nt":
         from fetch_cord.out import deid, wmid, wmline, hostline, fontline, lapordesk, batteryline, \
             termid, packagesline, termline, themeline
