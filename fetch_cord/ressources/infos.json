@@ -15,7 +15,7 @@
         "intel celeron": "742904581360713849",
         "pentium": "741203845706940467",
         "intel core 2 duo": "746527640382603375",
-	"intel xeon": "749011141090607144"
+        "intel xeon": "749011141090607144"
     },
     "gpus": [
         "intel",
@@ -27,7 +27,7 @@
         "nvidiaamd",
         "amdintel",
         "nvidiaamdintel",
-	"cirrus"
+        "cirrus"
     ],
     "distros": {
         "ubuntu": "740434138036699178",
@@ -56,8 +56,8 @@
         "freebsd": "745054697047457822",
         "solus": "745689115944681683",
         "zorin": "745689865798156379",
-	"amazon": "749014983920320583",
-	"bedrock": "749015250904416287"
+        "amazon": "749014983920320583",
+        "bedrock": "749015250904416287"
     },
     "versions": {
         "10.13": "hsierria",
@@ -73,7 +73,7 @@
         "xmonad",
         "sway",
         "openbox",
-	"herbstluftwm"
+        "herbstluftwm"
     ],
     "desktops": [
         "kde",
@@ -86,7 +86,7 @@
         "mate",
         "aero",
         "pantheon",
-	"explorer"
+        "explorer"
     ],
     "terminals": {
         "st": "741280043220861030",
@@ -101,18 +101,18 @@
         "xfce4-terminal": "744332423072055296",
         "apple_terminal": "744950796298354689",
         "lxterminal": "745701997503840380",
-	"yakuake": "741286819676553258",
+        "yakuake": "741286819676553258",
         "mate-terminal": "746531413360377856"
     },
     "shells": [
         "fish",
         "zsh",
         "bash",
-	"tcsh",
+        "tcsh",
         "ruby"
     ],
     "hosts": {
-	"gigabyte aorus": "749061181607772200",
+        "gigabyte aorus": "749061181607772200",
         "inspiron": "743970870631858288",
         "latitude": "743970870631858288",
         "g3": "743970870631858288",
@@ -124,9 +124,10 @@
         "thinkpad": "744326223412461630",
         "lenovo": "744326223412461630",
         "gigabyte": "746447043190456561",
-	"macbookair,": "748290608787095694",
-	"aspire": "744326890512318544",
-	"hvm": "749014556604497972"
+        "macbookair,": "748290608787095694",
+        "macbookpro,": "750016315854553138",
+        "aspire": "744326890512318544",
+        "hvm": "749014556604497972"
     },
     "motherboards": {
         "inspiron": "dell",
@@ -143,8 +144,8 @@
     },
     "hostlist": [
         "Acer",
-	"AORUS",
-	"Aspire",
+        "AORUS",
+        "Aspire",
         "TUF",
         "HP",
         "ThinkPad",
@@ -155,7 +156,7 @@
         "Asus",
         "ASUSTeK",
         "Gigabyte",
-	"HVM"
+        "HVM"
     ],
     "terminallist": [
         "st",

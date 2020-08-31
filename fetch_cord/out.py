@@ -38,11 +38,12 @@ except AttributeError:
 
 loop = 0
 
+
 def XDG_Symlink(home):
     try:
         print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
         exec_bash(
-                "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
+            "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
     except BashError as e:
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
         return
@@ -67,7 +68,6 @@ def check_neofetchwin():
 
 
 def neofetch(loop):
-
     neofetchwin = False
     if os.name == "nt":
         try:
@@ -79,12 +79,14 @@ def neofetch(loop):
             try:
                 baseinfo = check_neofetch_scoop()
             except (FileNotFoundError, subprocess.CalledProcessError) as e:
-                print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+                print(
+                    "ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
                 sys.exit(1)
 
     else:
         home = os.getenv('HOME')
-        flatpak_discord_path = os.path.isdir("%s/.var/app/com.discordapp.Discord" % home)
+        flatpak_discord_path = os.path.isdir(
+            "%s/.var/app/com.discordapp.Discord" % home)
         package_path = os.path.isfile("/usr/bin/discord")
         manual_install_path = os.path.isdir("/opt/Discord")
         default_config = os.path.dirname(__file__) + "/ressources/default.conf"
@@ -92,12 +94,9 @@ def neofetch(loop):
             XDG_Symlink(home)
         try:
             baseinfo = check_neofetch_scoop(default_config)
-            print(os.name)
         except (FileNotFoundError, subprocess.CalledProcessError) as e:
             print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
             sys.exit(1)
-
-
 
     # make lists
     cpu = "CPU:"
@@ -127,7 +126,7 @@ def neofetch(loop):
     packages = "Packages:"
     packagesline = []
     host = "Host:"
-    hostline= []
+    hostline = []
     res = "Resolution:"
     resline = []
     theme = "Theme:"
@@ -161,12 +160,13 @@ def neofetch(loop):
                     gpuline.append(line[line.find(gpu):].rstrip('\n'))
                 if line.find(disk) != -1:
                     diskline.append(line[line.find(disk):].rstrip('\n'))
-                    i+=1
+                    i += 1
                     while(i < len(lines)):
                         line = lines[i]
                         if line != "\n":
-                            diskline.append("Disk: "+line.lstrip().rstrip('\n'))
-                        i+=1
+                            diskline.append(
+                                "Disk: "+line.lstrip().rstrip('\n'))
+                        i += 1
                     break
 
     elif not neofetchwin:
@@ -205,8 +205,8 @@ def neofetch(loop):
                     used = float(memgb[1].replace("MiB", ""))
                     total = float(memgb[3].replace("MiB", ""))
                     memline.append(
-                            "Memory: " + str(round(used / 1024, 2)) + "GiB / " + str(
-                                round(total / 1024,2)) + "GiB")
+                        "Memory: " + str(round(used / 1024, 2)) + "GiB / " + str(
+                            round(total / 1024, 2)) + "GiB")
                 elif line.find(mem) != -1:
                     memline.append(line.rstrip('\n'))
                 if line.find(theme) != -1:
@@ -229,6 +229,7 @@ def neofetch(loop):
             shell_line, kernelline, sysosline, moboline, \
             deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
             baseinfo, neofetchwin
+
 
 baseinfo = False
 neofetchwin = False
@@ -273,7 +274,7 @@ if baseinfo:
         shell_line = ["Shell: N/A"]
 
     if not packagesline:
-        packagesline= ["Packages: N/A"]
+        packagesline = ["Packages: N/A"]
 
     dewmid = get_dewm(deline, wmline)
     deid = get_deid(deline)
@@ -303,7 +304,6 @@ elif neofetchwin:
     wmid = False
     termid = False
     hostline = False
-
 
 
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
