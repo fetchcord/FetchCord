@@ -23,7 +23,7 @@
 + **Installing**
     - [Install on (gnu/)linux](#installing-on-gnulinux)
     - [Install on MacOS](#installing-on-macos)
-    - [Install on Windows](installing-on-windows)
+    - [Install on Windows](#installing-on-windows)
  + **Running**
     - [Running on (gnu/)linux](#run)
     - [Running on MacOS](#run-1)
