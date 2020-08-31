@@ -47,8 +47,20 @@ def XDG_Symlink(home):
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
         return
 
-def check_neofetch_scoop():
-    return subprocess.run(["neofetch", "--stdout", "--config none" if args.noconfig else ""], encoding="utf-8", stdout=subprocess.PIPE, shell=(os.name=="nt")).stdout
+def check_neofetch_scoop(default_config):
+    if args.config_path:
+        return subprocess.run(
+            ["neofetch", "--stdout", "--config=%s" % args.config_path], encoding="utf-8",\
+                    stdout=subprocess.PIPE, shell=(os.name=="nt")).stdout
+
+    elif not args.config_path and not args.noconfig:
+        return subprocess.run(["neofetch", "--stdout", "--config=%s" % default_config],\
+                encoding="utf-8", stdout=subprocess.PIPE, shell=(os.name=="nt")).stdout
+
+    elif args.noconfig:
+        return subprocess.run(
+            ["neofetch", "--stdout", "--config none"], encoding="utf-8",\
+                    stdout=subprocess.PIPE, shell=(os.name=="nt")).stdout
 
 def check_neofetchwin():
     return subprocess.run(["neofetch", "--noart"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
@@ -75,10 +87,12 @@ def neofetch(loop):
         flatpak_discord_path = os.path.isdir("%s/.var/app/com.discordapp.Discord" % home)
         package_path = os.path.isfile("/usr/bin/discord")
         manual_install_path = os.path.isdir("/opt/Discord")
+        default_config = os.path.dirname(__file__) + "/ressources/default.conf"
         if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
             XDG_Symlink(home)
         try:
-            baseinfo = check_neofetch_scoop()
+            baseinfo = check_neofetch_scoop(default_config)
+            print(os.name)
         except (FileNotFoundError, subprocess.CalledProcessError) as e:
             print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
             sys.exit(1)
@@ -96,7 +110,7 @@ def neofetch(loop):
     fontline = []
     wm = "WM:"
     wmline = []
-    disk  =  "Disk"
+    disk  =  "Disk:"
     diskline = []
     de = "DE:"
     deline = []
@@ -118,7 +132,7 @@ def neofetch(loop):
     resline = []
     theme = "Theme:"
     themeline = []
-    battery = "Battery"
+    battery = "Battery:"
     batteryline = []
 
     if neofetchwin:
@@ -137,22 +151,14 @@ def neofetch(loop):
                 line = lines[i]
                 if line.find(cpu) != -1:
                     cpuline.append(line.rstrip('\n'))
-                if line.find(nvidiagpu) != -1:
-                    nvidiagpuline.append(line[line.find(nvidiagpu):].rstrip('\n'))
-                if line.find(amdgpu) != -1:
-                    amdgpuline.append(line.rstrip('\n'))
-                if line.find(intelgpu) != -1 and line.find(cpu) == -1:
-                    intelgpuline.append(line[line.find(intelgpu):].rstrip('\n'))
-                if line.find(vmwaregpu) != -1:
-                    vmwaregpuline.append(line.rstrip('\n'))
                 if line.find(sysos) != -1:
                     sysosline.append(line.rstrip('\n'))
                 if line.find(mem) != -1:
                     memline.append(line.rstrip('\n'))
                 if line.find(mobo) != -1:
                     moboline.append(line.rstrip('\n'))
-                if line.find(radgpu) != -1:
-                    radgpuline.append(line[line.find(radgpu):].rstrip('\n'))
+                if line.find(gpu) != -1:
+                    gpuline.append(line[line.find(gpu):].rstrip('\n'))
                 if line.find(disk) != -1:
                     diskline.append(line[line.find(disk):].rstrip('\n'))
                     i+=1
