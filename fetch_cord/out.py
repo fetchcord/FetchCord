@@ -3,6 +3,13 @@ import sys
 import os
 import re
 import subprocess
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as pkg_resources
+import fetch_cord.ressources as ressources
+
 import fetch_cord.__init__ as __init__
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
@@ -11,7 +18,6 @@ from fetch_cord.checks import get_amdgpurender, check_primeoffload, get_gpu_vend
     get_wmid, set_laptop, check_batteryline, check_theme, check_fontline, check_termid, check_res,\
     get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop, get_long_os, nvidia_gpu_temp,\
     strip_prime, get_gpuinfo
-
 
 args = parse_args()
 
@@ -66,13 +72,6 @@ def check_neofetchwin():
 
 
 def get_default_config():
-    try:
-        import importlib.resources as pkg_resources
-    except ImportError:
-        # Try backported to PY<37 `importlib_resources`.
-        import importlib_resources as pkg_resources
-    import fetch_cord.ressources as ressources
-
     with pkg_resources.path(ressources, 'default.conf') as path:
         return path
 
