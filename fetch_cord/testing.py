@@ -1,5 +1,12 @@
 # import shit as usual
 import os, sys, json
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as pkg_resources
+import fetch_cord.ressources as ressources
+
 from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid, neofetchwin, baseinfo
@@ -43,13 +50,6 @@ def iUnity(wmid):
     return desktopid
 
 def get_infos():
-    try:
-        import importlib.resources as pkg_resources
-    except ImportError:
-        # Try backported to PY<37 `importlib_resources`.
-        import importlib_resources as pkg_resources
-    import fetch_cord.ressources as ressources
-
     with pkg_resources.open_text(ressources, 'infos.json') as f:
         infos = json.load(f)
 

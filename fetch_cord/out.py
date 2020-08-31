@@ -3,15 +3,21 @@ import sys
 import os
 import re
 import subprocess
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as pkg_resources
+import fetch_cord.ressources as ressources
+
 import fetch_cord.__init__ as __init__
 from fetch_cord.args import parse_args
 from fetch_cord.update import update
 from fetch_cord.debugger import run_debug
 from fetch_cord.checks import get_amdgpurender, check_primeoffload, get_gpu_vendors, get_dewm, get_deid,\
-        get_wmid, set_laptop, check_batteryline, check_theme, check_fontline, check_termid, check_res,\
-        get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop, get_long_os, nvidia_gpu_temp,\
-        strip_prime, get_gpuinfo
-
+    get_wmid, set_laptop, check_batteryline, check_theme, check_fontline, check_termid, check_res,\
+    get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop, get_long_os, nvidia_gpu_temp,\
+    strip_prime, get_gpuinfo
 
 args = parse_args()
 
@@ -49,23 +55,27 @@ def XDG_Symlink(home):
         return
 
 def check_neofetch_scoop(default_config):
-    if args.config_path:
-        return subprocess.run(
-            ["neofetch", "--stdout", "--config=%s" % args.config_path], encoding="utf-8",\
-                    stdout=subprocess.PIPE, shell=(os.name=="nt")).stdout
-
-    elif not args.config_path and not args.noconfig:
-        return subprocess.run(["neofetch", "--stdout", "--config=%s" % default_config],\
-                encoding="utf-8", stdout=subprocess.PIPE, shell=(os.name=="nt")).stdout
-
-    elif args.noconfig:
-        return subprocess.run(
-            ["neofetch", "--stdout", "--config none"], encoding="utf-8",\
-                    stdout=subprocess.PIPE, shell=(os.name=="nt")).stdout
+    return subprocess.run(
+        [
+            "neofetch",
+            "--stdout",
+            "--config=%s" % "none" if args.noconfig else (
+                args.config_path if args.config_path else default_config)
+        ],
+        encoding="utf-8",
+        stdout=subprocess.PIPE,
+        shell=(os.name == "nt")
+    ).stdout
 
 def check_neofetchwin():
     return subprocess.run(["neofetch", "--noart"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
 
+
+def get_default_config():
+    with pkg_resources.path(ressources, 'default.conf') as path:
+        return path
+
+    return None
 
 def neofetch(loop):
     neofetchwin = False
@@ -77,7 +87,7 @@ def neofetch(loop):
 
         if not neofetchwin:
             try:
-                baseinfo = check_neofetch_scoop()
+                baseinfo = check_neofetch_scoop(get_default_config())
             except (FileNotFoundError, subprocess.CalledProcessError) as e:
                 print(
                     "ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
@@ -109,7 +119,7 @@ def neofetch(loop):
     fontline = []
     wm = "WM:"
     wmline = []
-    disk  =  "Disk:"
+    disk = "Disk:"
     diskline = []
     de = "DE:"
     deline = []
@@ -226,18 +236,19 @@ def neofetch(loop):
         radgpuline = False
 
     return cpuline, gpuline, termline, fontline, wmline, radgpuline, \
-            shell_line, kernelline, sysosline, moboline, \
-            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
-            baseinfo, neofetchwin
+        shell_line, kernelline, sysosline, moboline, \
+        deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
+        baseinfo, neofetchwin
+
 
 
 baseinfo = False
 neofetchwin = False
 
 cpuline, gpuline, termline, fontline, wmline, radgpuline, \
-            shell_line, kernelline, sysosline, moboline, \
-            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
-            baseinfo, neofetchwin = neofetch(loop)
+    shell_line, kernelline, sysosline, moboline, \
+    deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
+    baseinfo, neofetchwin = neofetch(loop)
 
 sysosid = sysosline[0].split()[1]
 
@@ -260,7 +271,8 @@ else:
 
 
 if baseinfo:
-    gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist)
+    gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop,
+                          sysosid, amdgpurenderlist)
 #    print(gpuline)
     gpuvendor = get_gpu_vendors(gpuline, primeoffload, sysosid)
 
