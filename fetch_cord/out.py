@@ -8,8 +8,8 @@ from fetch_cord.args import parse_args
 from fetch_cord.update import update
 from fetch_cord.debugger import run_debug
 from fetch_cord.checks import get_amdgpurender, check_primeoffload, get_gpuinfo, get_gpu_vendors, get_dewm, get_deid,\
-        get_wmid, set_laptop, check_batteryline, check_theme, check_fontline, check_termid, check_res, get_win_gpu,\
-        get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop, get_long_os
+    get_wmid, set_laptop, check_batteryline, check_theme, check_fontline, check_termid, check_res, get_win_gpu,\
+    get_cpumodel, get_cpuinfo, check_memline, check_diskline, check_laptop, get_long_os
 
 
 args = parse_args()
@@ -37,14 +37,16 @@ except AttributeError:
 
 loop = 0
 
+
 def XDG_Symlink(home):
     try:
         print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
         exec_bash(
-                "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
+            "cd %s/.var && ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0 " % home)
     except BashError as e:
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
         return
+
 
 def check_neofetch_scoop():
     return subprocess.run(["neofetch", "--stdout", "--config none" if args.noconfig else ""], encoding="utf-8", stdout=subprocess.PIPE, shell=(os.name=="nt")).stdout
@@ -55,9 +57,9 @@ def check_neofetchwin():
 
 def neofetch(loop):
     global cpuline, nvidiagpuline, amdgpuline, termline, fontline, wmline, intelgpuline, radgpuline, \
-            vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
-            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
-            cirrusgpuline, baseinfo, neofetchwin
+        vmwaregpuline, virtiogpuline, shell_line, kernelline, sysosline, moboline, \
+        deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
+        cirrusgpuline, baseinfo, neofetchwin
     neofetchwin = False
     if os.name == "nt":
         try:
@@ -69,12 +71,14 @@ def neofetch(loop):
             try:
                 baseinfo = check_neofetch_scoop()
             except (FileNotFoundError, subprocess.CalledProcessError) as e:
-                print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+                print(
+                    "ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
                 sys.exit(1)
 
     else:
         home = os.getenv('HOME')
-        flatpak_discord_path = os.path.isdir("%s/.var/app/com.discordapp.Discord" % home)
+        flatpak_discord_path = os.path.isdir(
+            "%s/.var/app/com.discordapp.Discord" % home)
         package_path = os.path.isfile("/usr/bin/discord")
         manual_install_path = os.path.isdir("/opt/Discord")
         if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
@@ -84,8 +88,6 @@ def neofetch(loop):
         except (FileNotFoundError, subprocess.CalledProcessError) as e:
             print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
             sys.exit(1)
-
-
 
     # make lists
     cpu = "CPU:"
@@ -108,7 +110,7 @@ def neofetch(loop):
     fontline = []
     wm = "WM:"
     wmline = []
-    disk  =  "Disk"
+    disk = "Disk"
     diskline = []
     de = "DE:"
     deline = []
@@ -125,7 +127,7 @@ def neofetch(loop):
     packages = "Packages:"
     packagesline = []
     host = "Host:"
-    hostline= []
+    hostline = []
     res = "Resolution:"
     resline = []
     theme = "Theme:"
@@ -150,11 +152,13 @@ def neofetch(loop):
                 if line.find(cpu) != -1:
                     cpuline.append(line.rstrip('\n'))
                 if line.find(nvidiagpu) != -1:
-                    nvidiagpuline.append(line[line.find(nvidiagpu):].rstrip('\n'))
+                    nvidiagpuline.append(
+                        line[line.find(nvidiagpu):].rstrip('\n'))
                 if line.find(amdgpu) != -1:
                     amdgpuline.append(line.rstrip('\n'))
                 if line.find(intelgpu) != -1 and line.find(cpu) == -1:
-                    intelgpuline.append(line[line.find(intelgpu):].rstrip('\n'))
+                    intelgpuline.append(
+                        line[line.find(intelgpu):].rstrip('\n'))
                 if line.find(vmwaregpu) != -1:
                     vmwaregpuline.append(line.rstrip('\n'))
                 if line.find(sysos) != -1:
@@ -167,12 +171,13 @@ def neofetch(loop):
                     radgpuline.append(line[line.find(radgpu):].rstrip('\n'))
                 if line.find(disk) != -1:
                     diskline.append(line[line.find(disk):].rstrip('\n'))
-                    i+=1
+                    i += 1
                     while(i < len(lines)):
                         line = lines[i]
                         if line != "\n":
-                            diskline.append("Disk: "+line.lstrip().rstrip('\n'))
-                        i+=1
+                            diskline.append(
+                                "Disk: "+line.lstrip().rstrip('\n'))
+                        i += 1
                     break
 
     elif not neofetchwin:
@@ -219,8 +224,8 @@ def neofetch(loop):
                     used = float(memgb[1].replace("MiB", ""))
                     total = float(memgb[3].replace("MiB", ""))
                     memline.append(
-                            "Memory: " + str(round(used / 1024, 2)) + "GiB / " + str(
-                                round(total / 1024,2)) + "GiB")
+                        "Memory: " + str(round(used / 1024, 2)) + "GiB / " + str(
+                            round(total / 1024, 2)) + "GiB")
                 elif line.find(mem) != -1:
                     memline.append(line.rstrip('\n'))
                 if line.find(theme) != -1:
@@ -239,6 +244,7 @@ def neofetch(loop):
         pass
 
     return (memline, packagesline, diskline, batteryline, cpuline)
+
 
 baseinfo = False
 neofetchwin = False
@@ -265,10 +271,10 @@ else:
 
 
 if baseinfo:
-    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,\
-            intelgpuline, primeoffload, amdgpurenderlist, sysosid, loop)
-    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,\
-            nvidiagpuline, intelgpuline, primeoffload, sysosid)
+    gpuinfo = get_gpuinfo(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline, nvidiagpuline,
+                          intelgpuline, primeoffload, amdgpurenderlist, sysosid, loop)
+    gpuvendor = get_gpu_vendors(cirrusgpuline, vmwaregpuline, virtiogpuline, amdgpuline,
+                                nvidiagpuline, intelgpuline, primeoffload, sysosid)
 
     if gpuinfo == "":
         gpuinfo = "GPU: N/A"
@@ -283,7 +289,7 @@ if baseinfo:
         shell_line = ["Shell: N/A"]
 
     if not packagesline:
-        packagesline= ["Packages: N/A"]
+        packagesline = ["Packages: N/A"]
 
     dewmid = get_dewm(deline, wmline)
     deid = get_deid(deline)
@@ -313,7 +319,6 @@ elif neofetchwin:
     wmid = False
     termid = False
     hostline = False
-
 
 
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
