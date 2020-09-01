@@ -244,6 +244,8 @@ def neofetch(loop):
         diskline = ["Disk: N/A"]
     if not batteryline:
         batteryline = ["Battery: N/A"]
+    if not moboline:
+        moboline = ["Motherboard: N/A"]
 
     try:
         if os.path.isfile(filepath):
@@ -261,7 +263,6 @@ cpuline, gpuline, termline, fontline, wmline, radgpuline, \
     deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline = neofetch(loop)
 
 sysosid = sysosline[0].split()[1]
-
 # I don't know if macOS has the same path linux does to check power_supply
 if sysosid.lower() != "macos" and os.name != "nt":
     laptop = check_laptop()
@@ -306,7 +307,7 @@ termline = ''.join(termline)
 sysosline = ''.join(sysosline)
 hostline = ''.join(hostline)
 memline = ''.join(memline)
-
+moboline = ''.join(moboline)
 
 if sysosid.lower() in ['windows', 'linux', 'opensuse']:
     sysosid = get_long_os(sysosline)

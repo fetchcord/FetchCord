@@ -65,14 +65,14 @@ def test_debug(gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid
     print("\n----CPU INFO----\n")
     print("cpumodel: %s\n" % cpumodel)
 
-def run_rpc_debug(uptime, appid, cpuappid, hostappid, hostline, packagesline, termappid):
-        print("----run_rpc----\n")
-        print("uptime in epoch: %s" % uptime)
-        print("cpuid: %s" % appid)
-        print("cpuappid: %s" % cpuappid)
-        if os.name != "nt":
-            print("termappid: %s" % termappid)
-            if hostline:
-                print("hostappid: %s" % hostappid)
-            print(packagesline[0])
+def run_rpc_debug(uptime, appid, cpuappid, hostappid = "N/A", hostline = "N/A", packagesline = "N/A", termappid = "N/A"):
+    print("----run_rpc----\n")
+    print("uptime in epoch: %s" % uptime)
+    print("cpuid: %s" % appid)
+    print("cpuappid: %s" % cpuappid)
+    if os.name != "nt":
+        print("termappid: %s" % termappid)
+        if hostline:
+            print("hostappid: %s" % hostappid)
+        print(packagesline[0])
 
