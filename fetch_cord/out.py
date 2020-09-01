@@ -68,6 +68,11 @@ def check_neofetch_scoop(default_config):
         shell=(os.name == "nt")
     ).stdout
 
+
+def check_neofetchwin():
+    return subprocess.run(["neofetch", "--noart"], check=True, encoding='utf-8', stdout=subprocess.PIPE).stdout
+
+
 def get_default_config():
     with pkg_resources.path(ressources, 'default.conf') as path:
         return path
@@ -75,19 +80,33 @@ def get_default_config():
     return None
 
 def neofetch(loop):
-    home = os.getenv('HOME')
-    flatpak_discord_path = os.path.isdir(
-        "%s/.var/app/com.discordapp.Discord" % home)
-    package_path = os.path.isfile("/usr/bin/discord")
-    manual_install_path = os.path.isdir("/opt/Discord")
-    default_config = ''.join([os.path.dirname(__file__), "/ressources/default.conf"])
-    if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
-        XDG_Symlink(home)
-    try:
-        baseinfo = check_neofetch_scoop(default_config)
-    except (FileNotFoundError, subprocess.CalledProcessError) as e:
-        print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
-        sys.exit(1)
+    if os.name == "nt":
+        try:
+            neofetchwin = check_neofetchwin()
+        except (FileNotFoundError, subprocess.CalledProcessError) as e:
+            pass
+
+        if not neofetchwin:
+            try:
+                baseinfo = check_neofetch_scoop(get_default_config())
+            except (FileNotFoundError, subprocess.CalledProcessError) as e:
+                print(
+                    "ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+                sys.exit(1)
+    else:
+        home = os.getenv('HOME')
+        flatpak_discord_path = os.path.isdir(
+            "%s/.var/app/com.discordapp.Discord" % home)
+        package_path = os.path.isfile("/usr/bin/discord")
+        manual_install_path = os.path.isdir("/opt/Discord")
+        default_config = ''.join([os.path.dirname(__file__), "/ressources/default.conf"])
+        if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
+            XDG_Symlink(home)
+        try:
+            baseinfo = check_neofetch_scoop(default_config)
+        except (FileNotFoundError, subprocess.CalledProcessError) as e:
+            print("ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.")
+            sys.exit(1)
 
     # make lists
     cpu = "CPU:"
@@ -175,7 +194,7 @@ def neofetch(loop):
                 diskline.append(line.rstrip('\n'))
             if line.find(battery) != -1:
                 batteryline.append(line.rstrip('\n'))
-            if os.name == "nt":
+            if neofetchwin:
                 if line.find(nvidiagpu) != -1:
                     gpuline.append('',join(["GPU:",
                         line[line.find(nvidiagpu):]]).rstrip('\n'))
@@ -233,12 +252,12 @@ def neofetch(loop):
         pass
 
     return cpuline, gpuline, termline, fontline, wmline, radgpuline, \
-        shell_line, kernelline, sysosline, moboline, \
+        shell_line, kernelline, sysosline, moboline, neofetchwin,\
         deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline
 
 
 cpuline, gpuline, termline, fontline, wmline, radgpuline, \
-    shell_line, kernelline, sysosline, moboline, \
+    shell_line, kernelline, sysosline, moboline, neofetchwin,\
     deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline = neofetch(loop)
 
 sysosid = sysosline[0].split()[1]
