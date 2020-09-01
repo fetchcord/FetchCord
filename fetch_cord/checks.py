@@ -168,7 +168,6 @@ def set_laptop(laptop, sysosid):
 
 
 def get_long_os(sysosline):
-
-    sysosid = sysosline[0].split()[1] + sysosline[0].split()[2]
+    sysosid = sysosline.split()[1] + sysosline.split()[2]
 
     return sysosid

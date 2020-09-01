@@ -18,7 +18,7 @@ if os.name != "nt":
         termline, lapordesk, resline, themeline, batteryline, \
         dewmid
 elif os.name == "nt":
-    from fetch_cord.out import moboline, check_neofetchwin
+    from fetch_cord.out import moboline
     from fetch_cord.testing import moboid
 
 
@@ -139,7 +139,7 @@ def cycle0(config, packagesline):
     if top_line == "kernel":
         top_line = kernelline
     else:
-        top_line = pacakgesline
+        top_line = packagesline
     bottom_line = config["cycle_0"]["bottom_line"]
     if bottom_line == "kernel":
         bottom_line = kernelline
@@ -403,7 +403,7 @@ def wandowz(loop):
             if not args.nodistro:
                 windows()
             if not args.nohardware:
-                w_cycle1()
+                cycle1()
         if not args.nohardware:
             loop = 1
             check_change(loop)

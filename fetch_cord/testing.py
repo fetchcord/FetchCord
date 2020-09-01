@@ -99,17 +99,17 @@ def get_host(hostlist):
 
 
 def get_mobo(moboline, hostlist):
-        mobosplit = moboline.split()
-        moboid = []
-        for line in range(len(mobosplit)):
-            if mobosplit[line] in hostlist:
-                moboid.append(mobosplit[line].rstrip('\n'))
-        try:
-            moboid = moboid[0]
-        except IndexError:
-            moboid = "N/A"
-            pass
-        return moboid
+    mobosplit = moboline[0].split()
+    moboid = []
+    for line in range(len(mobosplit)):
+        if mobosplit[line] in hostlist:
+            moboid.append(mobosplit[line].rstrip('\n'))
+    try:
+        moboid = moboid[0]
+    except IndexError:
+        moboid = "N/A"
+        pass
+    return moboid
 
 if args.terminal and args.terminal in terminallist:
     termid = args.terminal
