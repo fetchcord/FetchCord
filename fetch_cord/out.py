@@ -320,5 +320,8 @@ cpuinfo = get_cpuinfo(cpuline)
 memline = ''.join(memline)
 diskline = '\n'.join(diskline)
 
+if gpuinfo == "":
+    gpuinfo = "GPU: N/A"
+
 if args.debug:
     run_debug()
