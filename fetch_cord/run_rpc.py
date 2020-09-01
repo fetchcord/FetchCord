@@ -38,7 +38,8 @@ def main():
             run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid)
     loop = 0
     if os.name == "nt":
-        wandowz(loop)
+        config = get_config()
+        wandowz(loop, config)
     else:
         config = get_config()
         loonix(config, loop, gpuinfo, memline, cpuinfo, diskline, batteryline, packagesline)
@@ -357,7 +358,7 @@ def check_change(config, loop):
     if os.name != "nt":
         return loonix(config, loop, gpuinfo, memline,  cpuinfo, diskline, batteryline, packagesline)
     else:
-        return wandowz(loop)
+        return wandowz(loop, config)
 
 def loonix(config, loop, gpuinfo, memline, cpuinfo, diskline, batteryline, pacakgesline):
     try:
@@ -395,7 +396,7 @@ def loonix(config, loop, gpuinfo, memline, cpuinfo, diskline, batteryline, pacak
             rpc_tryconnect(RPC)
 
 
-def wandowz(loop):
+def wandowz(loop, config):
     try:
         if loop == 0:
             first_connect()
@@ -403,13 +404,13 @@ def wandowz(loop):
             if not args.nodistro:
                 windows()
             if not args.nohardware:
-                cycle1()
+                cycle1(config, gpuinfo, cpuinfo, memline, diskline)
         if not args.nohardware:
             loop = 1
             check_change(loop)
         else:
             loop = 1
-            wandowz(loop)
+            wandowz(loop, config)
     except (KeyboardInterrupt, ConnectionResetError):
         if KeyboardInterrupt:
             print("Closing connection.")
