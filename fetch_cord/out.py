@@ -198,7 +198,7 @@ def neofetch(loop):
                 batteryline.append(line.rstrip('\n'))
             if neofetchwin:
                 if line.find(nvidiagpu) != -1:
-                    gpuline.append('',join(["GPU:",
+                    gpuline.append(''.join(["GPU:",
                         line[line.find(nvidiagpu):]]).rstrip('\n'))
                 if line.find(radgpu) != -1:
                     gpuline.append(''.join(["GPU:",  line[line.find(radgpu):]]).rstrip('\n'))
@@ -321,8 +321,7 @@ diskline = '\n'.join(diskline)
 packagesline = ''.join(packagesline)
 batteryline = '\n'.join(batteryline)
 
-
-if gpuinfo == "":
+if gpuinfo.rstrip("\n") == "":
     gpuinfo = "GPU: N/A"
 
 if args.debug:
