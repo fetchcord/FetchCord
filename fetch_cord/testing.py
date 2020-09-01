@@ -11,7 +11,7 @@ from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
 from fetch_cord.debugger import test_debug
-from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline, moboline, neofetchwin
+from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline, moboline, neofetchwin, baseinfo
 
 # macOS hardwawre
 
@@ -197,22 +197,20 @@ if sysosid.lower() == "macos":
     devicetype = laporp(product)
 
 gpuid = get_gpuid(gpuvendor)
-
-
-if os.name != "nt":
+desktopid = get_desktopid(deid, wmid)
+if baseinfo:
     shellid = get_shell_id(shells, shellid)
-    desktopid = get_desktopid(deid, wmid)
     moboid = "N/A"
-    try:
-        hostappid = get_hostappid(hosts)
-    except KeyError:
-        print("Unknown Host, contact us on github to resolve this.(Keyerror)")
-        hostappid = "742887089179197462"
-    try:
-        termappid = get_termappid(terminals, termid)
-    except KeyError:
-        print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
-        termappid = '745691250186911796'
+try:
+    hostappid = get_hostappid(hosts)
+except KeyError:
+    print("Unknown Host, contact us on github to resolve this.(Keyerror)")
+    hostappid = "742887089179197462"
+try:
+    termappid = get_termappid(terminals, termid)
+except KeyError:
+    print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
+    termappid = '745691250186911796'
 
 if neofetchwin:
     try:

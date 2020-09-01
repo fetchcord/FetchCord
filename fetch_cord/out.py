@@ -80,6 +80,7 @@ def get_default_config():
     return None
 
 def neofetch(loop):
+    baseinfo = False
     neofetchwin = False
     if os.name == "nt":
         try:
@@ -150,7 +151,7 @@ def neofetch(loop):
 
     filepath = "tmp.txt"
     with open(filepath, 'w') as f:
-        print(baseinfo, file=f)
+        print(baseinfo if baseinfo else neofetchwin, file=f)
     with open(filepath, "rt") as f:
         lines = f.readlines()
         for i in range(len(lines)):
@@ -212,7 +213,6 @@ def neofetch(loop):
                         i += 1
                     break
 
-
     if not cpuline:
         cpuline = ["CPU: N/A"]
     if not gpuline:
@@ -256,12 +256,12 @@ def neofetch(loop):
 
     return cpuline, gpuline, termline, fontline, wmline, radgpuline, \
         shell_line, kernelline, sysosline, moboline, neofetchwin,\
-        deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline
+        deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline, baseinfo
 
 
 cpuline, gpuline, termline, fontline, wmline, radgpuline, \
     shell_line, kernelline, sysosline, moboline, neofetchwin,\
-    deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline = neofetch(loop)
+    deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline, baseinfo = neofetch(loop)
 
 sysosid = sysosline[0].split()[1]
 # I don't know if macOS has the same path linux does to check power_supply
@@ -276,7 +276,7 @@ for line in range(len(gpuline)):
     if "AMD" in gpuline[line].split() and os.name != "nt":
         amdgpurenderlist = get_amdgpurender(gpuline, laptop)
         break
-if sysosid.lower() not in ["windows", "macos"]:
+if sysosid.lower() not in ["windows", "macos", "n/a"]:
     primeoffload = check_primeoffload()
 else:
     primeoffload = False
