@@ -8,18 +8,11 @@ import psutil
 from fetch_cord.args import parse_args
 from fetch_cord.config import ConfigError, load_config
 from fetch_cord.bash import BashError, exec_bash
-from fetch_cord.testing import gpuid, cpuappid, appid
+from fetch_cord.testing import gpuid, cpuappid, appid, desktopid, termappid, hostappid, shellid
 from fetch_cord.debugger import run_rpc_debug
-from fetch_cord.out import sysosline, sysosid, memline, cpuinfo, \
-        neofetch, diskline, hostline, gpuinfo
-if os.name != "nt":
-    from fetch_cord.testing import desktopid, termappid, hostappid, shellid
-    from fetch_cord.out import packagesline, kernelline, shell_line, fontline, \
-        termline, lapordesk, resline, themeline, batteryline, \
-        dewmid
-elif os.name == "nt":
-    from fetch_cord.out import moboline
-    from fetch_cord.testing import moboid
+from fetch_cord.out import sysosline, sysosid, memline, cpuinfo, neofetch, diskline, hostline,\
+        gpuinfo, packagesline, kernelline,shell_line, fontline, termline, lapordesk, resline, \
+        themeline, batteryline, dewmid, moboline, moboid, neofetchwin
 
 
 uptime = psutil.boot_time()
@@ -27,7 +20,7 @@ args = parse_args()
 
 
 def main():
-    if os.name != "nt" and not hostline and args.nodistro and args.noshell and args.nohardware:
+    if not neofetchwin and not hostline and args.nodistro and args.noshell and args.nohardware:
         print("ERROR: no hostline is available!")
         sys.exit(1)
     # printing info with debug switch
@@ -37,7 +30,7 @@ def main():
         else:
             run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid)
     loop = 0
-    if os.name == "nt":
+    if neofetchwin:
         wandowz(loop)
     else:
         config = get_config()

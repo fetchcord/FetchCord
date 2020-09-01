@@ -80,6 +80,7 @@ def get_default_config():
     return None
 
 def neofetch(loop):
+    neofetchwin = False
     if os.name == "nt":
         try:
             neofetchwin = check_neofetchwin()

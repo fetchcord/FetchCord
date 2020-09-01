@@ -11,7 +11,7 @@ from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
 from fetch_cord.debugger import test_debug
-from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline, moboline
+from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline, moboline, neofetchwin
 
 # macOS hardwawre
 
@@ -35,7 +35,9 @@ def get_icon(ver):
         bigicon = "bigslurp"
         print("Unsupported MacOS version")
     return bigicon
-    # this is staying
+
+
+# this is staying
 def iUnity(wmid):
     # this is to check wether the user is actually using unity
     # or using unity as an xdg value to fix issues with electron apps
@@ -44,6 +46,7 @@ def iUnity(wmid):
     else:
         desktopid = wmid
     return desktopid
+
 
 def get_infos():
     with pkg_resources.open_text(ressources, 'infos.json') as f:
@@ -69,7 +72,7 @@ hostlist = infos["hostlist"]
 terminallist = infos["terminallist"]
 
 # desktops
-if os.name != "nt" and deid == "unity":
+if deid.lower() == "unity":
     iUnity(wmid)
 
 args = parse_args()
@@ -99,7 +102,7 @@ def get_host(hostlist):
 
 
 def get_mobo(moboline, hostlist):
-    mobosplit = moboline[0].split()
+    mobosplit = moboline.split()
     moboid = []
     for line in range(len(mobosplit)):
         if mobosplit[line] in hostlist:
@@ -211,7 +214,7 @@ if os.name != "nt":
         print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
         termappid = '745691250186911796'
 
-if os.name == "nt":
+if neofetchwin:
     try:
         moboid = get_moboid(motherboards)
     except KeyError:
