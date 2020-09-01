@@ -290,10 +290,8 @@ deid = deline[0].split()[1]
 wmid = wmline[0].split()[1]
 
 lapordesk = set_laptop(laptop, sysosid)
-batteryline = '\n'.join(batteryline)
 resline = ''.join(resline)
 
-packagesline = ''.join(packagesline)
 kernelline = ''.join(kernelline)
 
 themeline = ''.join(themeline)
@@ -317,8 +315,12 @@ if sysosid.lower() in ['windows', 'linux', 'opensuse']:
 cpuvendor = cpuline[0].split()[1].replace("Intel(R)", "Intel")
 cpumodel = get_cpumodel(cpuline, cpuvendor)
 cpuinfo = get_cpuinfo(cpuline)
+
 memline = ''.join(memline)
 diskline = '\n'.join(diskline)
+packagesline = ''.join(packagesline)
+batteryline = '\n'.join(batteryline)
+
 
 if gpuinfo == "":
     gpuinfo = "GPU: N/A"

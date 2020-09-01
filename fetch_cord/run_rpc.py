@@ -8,11 +8,11 @@ import psutil
 from fetch_cord.args import parse_args
 from fetch_cord.config import ConfigError, load_config
 from fetch_cord.bash import BashError, exec_bash
-from fetch_cord.testing import gpuid, cpuappid, appid, desktopid, termappid, hostappid, shellid
+from fetch_cord.testing import gpuid, cpuappid, appid, desktopid, termappid, hostappid, shellid, moboid
 from fetch_cord.debugger import run_rpc_debug
 from fetch_cord.out import sysosline, sysosid, memline, cpuinfo, neofetch, diskline, hostline,\
         gpuinfo, packagesline, kernelline,shell_line, fontline, termline, lapordesk, resline, \
-        themeline, batteryline, dewmid, moboline, moboid, neofetchwin
+        themeline, batteryline, dewmid, moboline, neofetchwin
 
 
 uptime = psutil.boot_time()
@@ -331,17 +331,19 @@ def windows():
 def check_change(config, loop):
 
     cpuline, gpuline, termline, fontline, wmline, radgpuline, \
-            shell_line, kernelline, sysosline, moboline, \
+            shell_line, kernelline, sysosline, moboline, neofetchwin,\
             deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline = neofetch(loop)
+
 
     from fetch_cord.checks import get_cpuinfo, get_gpuinfo
     from fetch_cord.out import primeoffload, sysosid, amdgpurenderlist, laptop, primeoffload
 
+    memline = ''.join(memline)
+    packagesline = ''.join(packagesline)
+    batteryline = ''.join(batteryline)
+    diskline = '\n'.join(diskline)
+
     cpuinfo = get_cpuinfo(cpuline)
-    memline = memline[0]
-    batteryline = batteryline[0]
-    diskline = diskline[0]
-    packagesline = packagesline[0]
     for line in range(len(gpuline)):
         if sysosid.lower() != "macos" and "NVIDIA" in gpuline[line]:
             gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist)

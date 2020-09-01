@@ -14,7 +14,7 @@ def run_debug():
         print("deid: %s" % deid)
         print("wmid: %s" % wmid)
         try:
-            print("wmline item 0: %s" % wmline[0])
+            print("wmline item 0: %s" % wmline)
         except IndexError:
             pass
         print("\n----TERMINAL----\n")
@@ -25,7 +25,7 @@ def run_debug():
         if hostline:
             print("\n----HOST INFO----\n")
             print("hostline: %s" % hostline)
-            if batteryline != hostline[0]:
+            if batteryline != hostline:
                 print("batteryline: %s" % batteryline)
             print("resline: %s" % resline)
     print("\n----GPU INFO----\n")
@@ -35,7 +35,7 @@ def run_debug():
     print("cpuvendor: %s" % cpuvendor)
     print("cpumodel: %s" % cpumodel)
     print("cpuinfo: %s" % cpuinfo)
-    print("cpuline item 0: %s" % cpuline[0])
+    print("cpuline item 0: %s" % cpuline)
     print("memline: %s" % memline)
     print("\n----OS INFO----\n")
     print("sysosline: %s" % sysosline)
@@ -74,5 +74,5 @@ def run_rpc_debug(uptime, appid, cpuappid, hostappid = "N/A", hostline = "N/A", 
         print("termappid: %s" % termappid)
         if hostline:
             print("hostappid: %s" % hostappid)
-        print(packagesline[0])
+        print(packagesline)
 
