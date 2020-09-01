@@ -11,13 +11,13 @@ from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid
 from fetch_cord.debugger import run_rpc_debug
 from fetch_cord.out import sysosline, sysosid, memline, cpuinfo, \
-        neofetch, diskline, neofetchwin, baseinfo, hostline, gpuinfo
-if baseinfo:
+        neofetch, diskline, hostline, gpuinfo
+if os.name != "nt":
     from fetch_cord.testing import desktopid, termappid, hostappid, shellid
     from fetch_cord.out import packagesline, kernelline, shell_line, fontline, \
         termline, lapordesk, resline, themeline, batteryline, \
         dewmid
-elif neofetchwin:
+elif os.name == "nt":
     from fetch_cord.out import moboline, check_neofetchwin
     from fetch_cord.testing import moboid
 
@@ -27,17 +27,17 @@ args = parse_args()
 
 
 def main():
-    if baseinfo and not hostline and args.nodistro and args.noshell and args.nohardware:
+    if os.name != "nt" and not hostline and args.nodistro and args.noshell and args.nohardware:
         print("ERROR: no hostline is available!")
         sys.exit(1)
     # printing info with debug switch
     if args.debug:
-        if baseinfo:
+        if os.name != "nt":
             run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid, termappid=termappid, packagesline=packagesline, hostline=hostline, hostappid=hostappid)
         else:
             run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid)
     loop = 0
-    if neofetchwin:
+    if os.name == "nt":
         wandowz(loop)
     else:
         config = get_config()
@@ -104,10 +104,10 @@ def runmac():
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-                state=packagesline[0],  # update state as packages
-                details=kernelline[0],  # update details as kernel
+                state=packagesline,  # update state as packages
+                details=kernelline,  # update details as kernel
                 large_image=bigicon,  # set icon
-                large_text=sysosline[0],  # set large icon text
+                large_text=sysosline,  # set large icon text
                 small_image=devicetype,  # set small image icon
                 small_text=product,  # set small image text
                 start=start_time)
@@ -137,14 +137,14 @@ def custom_time():
 def cycle0(config, packagesline):
     top_line = config["cycle_0"]["top_line"]
     if top_line == "kernel":
-        top_line = kernelline[0]
+        top_line = kernelline
     else:
-        top_line = pacakgesline[0]
+        top_line = pacakgesline
     bottom_line = config["cycle_0"]["bottom_line"]
     if bottom_line == "kernel":
-        bottom_line = kernelline[0]
+        bottom_line = kernelline
     else:
-        bottom_line = packagesline[0]
+        bottom_line = packagesline
     if args.debug:
         print("cycle 0")
     client_id = appid
@@ -154,7 +154,7 @@ def cycle0(config, packagesline):
                state=bottom_line,
                details=top_line,
                large_image="big",
-               large_text=sysosline[0],
+               large_text=sysosline,
                small_image=desktopid,
                small_text=dewmid,
                start=start_time)
@@ -219,14 +219,14 @@ def cycle1(config, gpuinfo, cpuinfo, memline, diskline):
 def cycle2(config):
     top_line = config["cycle_2"]["top_line"]
     if top_line == "termfont":
-        top_line = ' '.join(termline)
+        top_line = termline
     else:
         top_line = shellid
     bottom_line = config["cycle_2"]["bottom_line"]
     if bottom_line == "termfont":
         bottom_line = termline
     else:
-        bottom_line = shellid
+        bottom_line = shell_line
     if args.debug:
         print("cycle 2")
     client_id = termappid
@@ -236,9 +236,9 @@ def cycle2(config):
                state=bottom_line,
                details=top_line,
                large_image="big",
-               large_text=termline[0],
+               large_text=termline,
                small_image=shellid,
-               small_text=shell_line[0],
+               small_text=shell_line,
                start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
@@ -278,7 +278,7 @@ def cycle3(config, batteryline):
                 state=resline,
                 details=batteryline,
                 large_image="big",
-                large_text=hostline[0],
+                large_text=hostline,
                 small_image=lapordesk,
                 small_text=lapordesk,
                 start=start_time)
@@ -316,12 +316,12 @@ def windows():
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=sysosline[0],
+               state=sysosline,
                details=memline,
                large_image="big",
-               large_text=sysosline[0],
+               large_text=sysosline,
                small_image=moboid,
-               small_text=moboline[0],
+               small_text=moboline,
                start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
@@ -338,28 +338,23 @@ def check_change(config, loop):
 
     cpuline, gpuline, termline, fontline, wmline, radgpuline, \
             shell_line, kernelline, sysosline, moboline, \
-            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline,\
-            baseinfo, neofetchwin = neofetch(loop)
+            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline = neofetch(loop)
 
-    from fetch_cord.checks import get_cpuinfo, check_diskline, check_batteryline, check_memline, get_gpuinfo
-    if baseinfo:
-        from fetch_cord.checks import check_batteryline
-        from fetch_cord.out import primeoffload, sysosid, amdgpurenderlist, laptop, primeoffload
+    from fetch_cord.checks import get_cpuinfo, get_gpuinfo
+    from fetch_cord.out import primeoffload, sysosid, amdgpurenderlist, laptop, primeoffload
 
-    cpuinfo = get_cpuinfo(cpuline, baseinfo)
-    diskline = cpuinfo
-    batteryline = hostline
-    memline = check_memline(memline)
-    if baseinfo:
-        batteryline = check_batteryline(batteryline, hostline)
-        packagesline = packagesline
-        diskline = check_diskline(diskline, cpuinfo)
-        if primeoffload and laptop and sysosid.lower() != "macos":
+    cpuinfo = get_cpuinfo(cpuline)
+    memline = memline[0]
+    batteryline = batteryline[0]
+    diskline = diskline[0]
+    packagesline = packagesline[0]
+    for line in range(len(gpuline)):
+        if sysosid.lower() != "macos" and "NVIDIA" in gpuline[line]:
             gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist)
 
     loop = 1
 
-    if not neofetchwin:
+    if os.name != "nt":
         return loonix(config, loop, gpuinfo, memline,  cpuinfo, diskline, batteryline, packagesline)
     else:
         return wandowz(loop)

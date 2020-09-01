@@ -9,13 +9,9 @@ import fetch_cord.ressources as ressources
 
 from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
-from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid, neofetchwin, baseinfo
+from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
 from fetch_cord.debugger import test_debug
-if baseinfo:
-    from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline
-
-elif neofetchwin:
-    from fetch_cord.out import moboline
+from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline, moboline
 
 # macOS hardwawre
 
@@ -60,6 +56,7 @@ infos = get_infos()
 amdcpus = infos["amdcpus"]
 intelcpus = infos["intelcpus"]
 gpus = infos["gpus"]
+multigpus = infos["multigpus"]
 distros = infos["distros"]
 versions = infos["versions"]
 windowmanagers = infos["windowmanagers"]
@@ -79,7 +76,7 @@ args = parse_args()
 
 
 def get_host(hostlist):
-    hostsplit = hostline[0].split()
+    hostsplit = hostline.split()
     hostid = []
     for line in range(len(hostsplit)):
         if hostsplit[line] in hostlist:
@@ -102,7 +99,7 @@ def get_host(hostlist):
 
 
 def get_mobo(moboline, hostlist):
-        mobosplit = moboline[0].split()
+        mobosplit = moboline.split()
         moboid = []
         for line in range(len(mobosplit)):
             if mobosplit[line] in hostlist:
@@ -180,6 +177,8 @@ def get_gpuid(gpuvendor):
     gpuvendor = gpuvendor.lower()
     if gpuvendor in gpus:
         gpuid = gpuvendor
+    elif gpuvendor in multigpus:
+        gpuid = multigpus[gpuvendor.lower()]
     else:
         print("Unknown GPU, contact us on github to resolve this.")
         gpuid = 'unknown'
@@ -197,9 +196,10 @@ if sysosid.lower() == "macos":
 gpuid = get_gpuid(gpuvendor)
 
 
-if baseinfo:
+if os.name != "nt":
     shellid = get_shell_id(shells, shellid)
     desktopid = get_desktopid(deid, wmid)
+    moboid = "N/A"
     try:
         hostappid = get_hostappid(hosts)
     except KeyError:
@@ -211,13 +211,12 @@ if baseinfo:
         print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
         termappid = '745691250186911796'
 
-if neofetchwin:
+if os.name == "nt":
     try:
         moboid = get_moboid(motherboards)
     except KeyError:
         print("Unknown Motherboard, contact us on github to resolve this.(Keyerror)")
         moboid = "unknown"
-
 
 try:
     appid = get_appid(distros, sysosid)
@@ -231,25 +230,7 @@ except KeyError:
     print("unknown CPU, contact us on github to resolve this.(Keyerror)")
     cpuappid = '742887089179197462'
 
-if baseinfo:
-    if not deid:
-        deid = "N/A"
-
-    if not wmid:
-        wmid = "N/A"
-
-    if not termid:
-        termid = "N/A"
-
-    if not shellid:
-        shellid = "N/A"
-
-    hostid = get_host(hostlist)
-    if not hostid:
-        hostid = "N/A"
+hostid = get_host(hostlist)
 
 if args.debug:
-    if baseinfo:
-        test_debug(deid=deid, wmid=wmid, termid=termid, shellid=shellid, moboid="N/A", gpuvendor=gpuvendor, cpumodel=cpumodel, hostid=hostid)
-    else:
-        test_debug(moboline=moboline, moboid=moboid, gpuvendor=gpuvendor, cpumodel=cpumodel, hostid="N/A")
+    test_debug(gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid, shellid)

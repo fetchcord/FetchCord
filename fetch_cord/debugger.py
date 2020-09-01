@@ -3,7 +3,7 @@ import sys
 
 def run_debug():
     from fetch_cord.out import cpuvendor, cpumodel, cpuinfo, cpuline, memline,\
-            sysosid, sysosline, gpuvendor, diskline, gpuinfo
+            sysosid, sysosline, gpuvendor, diskline, gpuinfo, resline
     if os.name != "nt":
         from fetch_cord.out import deid, wmid, wmline, hostline, fontline, lapordesk, batteryline, \
             termid, packagesline, termline, themeline
@@ -20,13 +20,14 @@ def run_debug():
         print("\n----TERMINAL----\n")
         print("fontline: %s" % fontline)
         print("termid: %s" % termid)
-        print("termline item 0: %s" % termline[0])
+        print("termline item 0: %s" % termline)
         print("themeline: %s" % themeline)
         if hostline:
             print("\n----HOST INFO----\n")
             print("hostline: %s" % hostline)
             if batteryline != hostline[0]:
                 print("batteryline: %s" % batteryline)
+            print("resline: %s" % resline)
     print("\n----GPU INFO----\n")
     print("gpuinfo: %s" % gpuinfo)
     print("gpuvendor: %s" % gpuvendor)
@@ -42,10 +43,10 @@ def run_debug():
     if diskline != cpuinfo:
         print("diskline: %s" % diskline)
     if os.name != "nt":
-        print("packagesline item 0: %s" % packagesline[0])
+        print("packagesline item 0: %s" % packagesline)
 
 
-def test_debug(gpuvendor, cpumodel, hostid, moboid, moboline = "N/A", deid = "N/A", wmid = "N/A", termid = "N/A", shellid = "N/A"):
+def test_debug(gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid, shellid):
     print("\n----testing.py----")
     if os.name != "nt":
         print("----DE/WM----\n")
@@ -64,7 +65,7 @@ def test_debug(gpuvendor, cpumodel, hostid, moboid, moboline = "N/A", deid = "N/
     print("\n----CPU INFO----\n")
     print("cpumodel: %s\n" % cpumodel)
 
-def run_rpc_debug(uptime, appid, cpuappid, hostappid = "N/A", hostline = "N/A",packagesline = "N/A", termappid="N/A"):
+def run_rpc_debug(uptime, appid, cpuappid, hostappid, hostline, packagesline, termappid):
         print("----run_rpc----\n")
         print("uptime in epoch: %s" % uptime)
         print("cpuid: %s" % appid)
