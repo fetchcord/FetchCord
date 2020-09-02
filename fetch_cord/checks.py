@@ -28,6 +28,7 @@ def check_primeoffload():
 
 
 def nvidia_gpu_temp(gpuline):
+    nvidiagpu = ""
 
     try:
         gputemp = exec_bash("nvidia-smi -q | awk '/GPU Current Temp/{print $5}'\
@@ -94,7 +95,11 @@ def get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist):
 
     for line in range(len(gpuline)):
         if "NVIDIA" in gpuline[line].split() and not primeoffload:
-            gpuinfo += '\n' + nvidia_gpu_temp(gpuline)
+            try:
+                gpuinfo += '\n' + nvidia_gpu_temp(gpuline[line])
+            except BashError as e:
+                print("Cannot get Nvidia gpu temp: "+e)
+                gpuinfo += '\n' +gpuline[line]
 
     return gpuinfo
 
