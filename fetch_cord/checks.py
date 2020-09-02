@@ -96,7 +96,7 @@ def get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist):
     for line in range(len(gpuline)):
         if "NVIDIA" in gpuline[line].split() and not primeoffload:
             try:
-                gpuinfo += '\n' + nvidia_gpu_temp(gpuline[line])
+                gpuinfo += '\n' + nvidia_gpu_temp(gpuline)
             except BashError as e:
                 print("Cannot get Nvidia gpu temp: "+e)
                 gpuinfo += '\n' +gpuline[line]
@@ -117,13 +117,13 @@ def get_gpu_vendors(gpuline, primeoffload, sysosid):
 
 def get_cpuinfo(cpuline):
 
-    if os.name != "nt":
-        cpuinfo = ' '.join([' '.join(cpuline[0].split()[:-2]), cpuline[0].split()[-2].replace(
-            "0G", "G", 1), cpuline[0].split()[-1]])
-
-    else:
-        cpuinfo = ' '.join(cpuline)
-        cpuinfo = re.sub(r"\((.+)\)", "", cpuinfo)
+#    if os.name != "nt":
+#        cpuinfo = ' '.join([' '.join(cpuline[0].split()[:-2]), cpuline[0].split()[-2].replace(
+#            "00G", "0G", 1), cpuline[0].split()[-1]])
+#
+#    else:
+    cpuinfo = ' '.join(cpuline)
+    cpuinfo = re.sub(r"\((.+)\)", "", cpuinfo)
 
     return cpuinfo
 

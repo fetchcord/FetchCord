@@ -230,14 +230,14 @@ def cycle1(config, gpuinfo, cpuinfo, memline, diskline):
 
 def cycle2(config):
     top_line = config["cycle_2"]["top_line"]
-    if top_line == "termfont":
+    if top_line == "font":
         top_line = termline
     elif top_line == "shell":
         top_line = shellid
     elif top_line == "theme":
         top_line = themeline
     bottom_line = config["cycle_2"]["bottom_line"]
-    if bottom_line == "termfont":
+    if bottom_line == "font":
         bottom_line = termline
     elif bottom_line == "shell":
         bottom_line = shell_line
@@ -368,7 +368,7 @@ def check_change(config, loop):
 
     cpuline, gpuline, termline, fontline, wmline, radgpuline, \
             shell_line, kernelline, sysosline, moboline, neofetchwin,\
-            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline = neofetch(loop)
+            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline, baseinfo = neofetch(loop)
 
 
     from fetch_cord.checks import get_cpuinfo, get_gpuinfo
@@ -380,6 +380,7 @@ def check_change(config, loop):
     diskline = '\n'.join(diskline)
 
     cpuinfo = get_cpuinfo(cpuline)
+    gpuinfo = "GPU: N/A"
     for line in range(len(gpuline)):
         if sysosid.lower() != "macos" and "NVIDIA" in gpuline[line]:
             gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist)
