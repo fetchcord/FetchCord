@@ -139,6 +139,11 @@ def cycle0(config, packagesline):
         bottom_line = kernelline
     else:
         bottom_line = packagesline
+    de_wm_icon = config["cycle_0"]["de_wm_icon"]
+    if de_wm_icon == "on":
+        de_wm_icon=desktopid
+    else:
+        de_wm_icon="off"
     if args.debug:
         print("cycle 0")
     client_id = appid
@@ -149,7 +154,7 @@ def cycle0(config, packagesline):
                details=top_line,
                large_image="big",
                large_text=sysosline,
-               small_image=desktopid,
+               small_image=de_wm_icon,
                small_text=dewmid,
                start=start_time)
     if args.debug:
@@ -173,13 +178,26 @@ def cycle1(config, gpuinfo, cpuinfo, memline, diskline):
     top_line = config["cycle_1"]["top_line"]
     if top_line == "gpu":
         top_line = gpuinfo
-    else:
+    elif top_line == "cpu":
+        top_line = cpuinfo
+    elif top_line == "mem":
         top_line = memline
+    elif top_line == "disk":
+        top_line = diskline
     bottom_line = config["cycle_1"]["bottom_line"]
     if bottom_line == "gpu":
         bottom_line = gpuinfo
-    else:
+    elif bottom_line == "cpu":
+        bottom_line = cpuinfo
+    elif bottom_line == "mem":
         bottom_line = memline
+    elif bottom_line == "disk":
+        bottom_line = diskline
+    gpu_icon = config["cycle_1"]["gpu_icon"]
+    if gpu_icon == "on":
+        gpu_icon=gpuid
+    else:
+        gpu_icon="off"
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
@@ -190,7 +208,7 @@ def cycle1(config, gpuinfo, cpuinfo, memline, diskline):
                details=top_line,
                large_image="big",
                large_text=cpuinfo,
-               small_image=gpuid,
+               small_image=gpu_icon,
                small_text=gpuinfo,
                start=start_time)
     if args.debug:
@@ -214,13 +232,22 @@ def cycle2(config):
     top_line = config["cycle_2"]["top_line"]
     if top_line == "termfont":
         top_line = termline
-    else:
+    elif top_line == "shell":
         top_line = shellid
+    elif top_line == "theme":
+        top_line = themeline
     bottom_line = config["cycle_2"]["bottom_line"]
     if bottom_line == "termfont":
         bottom_line = termline
-    else:
+    elif bottom_line == "shell":
         bottom_line = shell_line
+    elif bottom_line == "theme":
+        bottom_line = themeline
+    shell_icon = config["cycle_2"]["shell_icon"]
+    if shell_icon == "on":
+        shell_icon=shellid
+    else:
+        shell_icon="off"
     if args.debug:
         print("cycle 2")
     client_id = termappid
@@ -231,7 +258,7 @@ def cycle2(config):
                details=top_line,
                large_image="big",
                large_text=termline,
-               small_image=shellid,
+               small_image=shell_icon,
                small_text=shell_line,
                start=start_time)
     if args.debug:
@@ -254,15 +281,24 @@ def cycle3(config, batteryline):
     # if not then forget it
     if hostline:
         top_line = config["cycle_3"]["top_line"]
-        if top_line == "batteryline":
+        if top_line == "battery":
             top_line = batteryline
-        else:
+        elif top_line == "host":
             top_line = hostline
+        elif top_line == "resolution":
+            top_line = resline
         bottom_line = config["cycle_3"]["bottom_line"]
-        if bottom_line == "resline":
+        if bottom_line == "resolution":
             bottom_line = resline
+        elif bottom_line == "host":
+            bottom_line = hostline
+        elif bottom_line == "battery":
+            bottom_line = batteryline
+        lapordesk_icon = config["cycle_3"]["lapordesk_icon"]
+        if lapordesk_icon == "on":
+            lapordesk_icon=lapordesk
         else:
-            bottom_line = lapordesk
+            lapordesk_icon="off"
         if args.debug:
             print("cycle 3")
         client_id = hostappid
@@ -273,7 +309,7 @@ def cycle3(config, batteryline):
                 details=batteryline,
                 large_image="big",
                 large_text=hostline,
-                small_image=lapordesk,
+                small_image=lapordesk_icon,
                 small_text=lapordesk,
                 start=start_time)
         if args.debug:
