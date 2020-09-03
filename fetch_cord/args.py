@@ -35,5 +35,7 @@ def parse_args():
                         help="Print FetchCord Version.")
     parser.add_argument('--config-path', '-c', action='store',
                         help="Specify custom neofetch config path.")
+    parser.add_argument('--fetchcord-config-path', '-fc', action='store',
+                        help="Specify custom fetchcord config path.")
 
     return parser.parse_args()

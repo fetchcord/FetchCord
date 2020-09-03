@@ -10,15 +10,18 @@ except ImportError:
     # Try backported to PY<37 `importlib_resources`.
     import importlib_resources as pkg_resources
 import fetch_cord.ressources as ressources
+from fetch_cord.args import parse_args
 
 class ConfigError(Exception):
     pass
+
+args = parse_args()
 
 def load_config():
     default_config = configparser.ConfigParser()
     with pkg_resources.path(ressources, 'fetch_cord.conf') as path:
         default_config.read_file(open(path))
-        default_config.read(['/etc/fetch_cord.conf', os.path.expanduser('~/fetch_cord.conf')])
+        default_config.read(['/etc/fetch_cord.conf', os.path.expanduser('~/fetch_cord.conf'), args.fetchcord_config_path])
 
         for item in default_config.items():
             print(item)
