@@ -21,8 +21,9 @@ def load_config():
     default_config = configparser.ConfigParser()
     with pkg_resources.path(ressources, 'fetch_cord.conf') as path:
         default_config.read_file(open(path))
-        default_config.read(['/etc/fetch_cord.conf', os.path.expanduser('~/fetch_cord.conf'), args.fetchcord_config_path])
-
+        default_config.read(['/etc/fetch_cord.conf', os.path.expanduser('~/fetch_cord.conf')])
+        if args.fetchcord_config_path != None:
+            default_config.read([args.fetchcord_config_path])
         for item in default_config.items():
             print(item)
 
