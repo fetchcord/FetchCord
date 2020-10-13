@@ -158,29 +158,29 @@ def neofetch(loop):
             line = lines[i]
             if line.find(cpu) != -1:
                 cpuline.append(line.rstrip('\n'))
-            if line.find(gpu) != -1:
+            elif line.find(gpu) != -1:
                 gpuline.append(line.rstrip('\n'))
-            if line.find(term) != -1:
+            elif line.find(term) != -1:
                 termline.append(line.rstrip('\n'))
-            if line.find(font) != -1:
+            elif line.find(font) != -1:
                 fontline.append(line.rstrip('\n'))
-            if line.find(de) != -1:
+            elif line.find(de) != -1:
                 deline.append(line.rstrip('\n'))
-            if line.find(wm) != -1:
+            elif line.find(wm) != -1:
                 wmline.append(line.rstrip('\n'))
-            if line.find(shell) != -1:
+            elif line.find(shell) != -1:
                 shell_line.append(line.rstrip('\n'))
-            if line.find(packages) != -1:
+            elif line.find(packages) != -1:
                 packagesline.append(line.rstrip('\n'))
-            if line.find(kernel) != -1:
+            elif line.find(kernel) != -1:
                 kernelline.append(line.rstrip('\n'))
-            if line.find(sysos) != -1:
+            elif line.find(sysos) != -1:
                 sysosline.append(line.rstrip('\n'))
-            if line.find(host) != -1:
+            elif line.find(host) != -1:
                 hostline.append(line.rstrip('\n'))
-            if line.find(res) != -1:
+            elif line.find(res) != -1:
                 resline.append(line.rstrip('\n'))
-            if line.find(mem) != -1 and args.memtype == "gb":
+            elif line.find(mem) != -1 and args.memtype == "gb":
                     memgb = line.rstrip('\n')
                     memgb = memgb.split()
                     used = float(memgb[1].replace("MiB", ""))
@@ -190,18 +190,18 @@ def neofetch(loop):
                             round(total / 1024, 2)), "GiB"]))
             elif line.find(mem) != -1:
                 memline.append(line.rstrip('\n'))
-            if line.find(theme) != -1:
+            elif line.find(theme) != -1:
                 themeline.append(line.rstrip('\n'))
-            if line.find(disk) != -1 and os.name != "nt":
+            elif line.find(disk) != -1 and os.name != "nt":
                 diskline.append(line.rstrip('\n'))
-            if line.find(battery) != -1:
+            elif line.find(battery) != -1:
                 batteryline.append(line.rstrip('\n'))
-            if neofetchwin:
+            elif neofetchwin:
                 if line.find(nvidiagpu) != -1:
-                    gpuline.append(''.join(["GPU:",
+                    gpuline.append(''.join(["GPU: ",
                         line[line.find(nvidiagpu):]]).rstrip('\n'))
                 if line.find(radgpu) != -1:
-                    gpuline.append(''.join(["GPU:",  line[line.find(radgpu):]]).rstrip('\n'))
+                    gpuline.append(''.join(["GPU: ",  line[line.find(radgpu):]]).rstrip('\n'))
                 if line.find(disk) != -1:
                     diskline.append(line[line.find(disk):].rstrip('\n'))
                     i += 1
@@ -284,6 +284,13 @@ else:
 gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop,
                         sysosid, amdgpurenderlist)
 gpuvendor = get_gpu_vendors(gpuline, primeoffload, sysosid)
+gpuvendor = gpuvendor.replace('Radeon', 'amd')
+if gpuvendor.count('amd') > 1:
+    gpuvendor = 'amd' + gpuvendor.replace('amd', '')
+if gpuvendor.count('intel') > 1:
+    gpuvendor = 'intel' + gpuvendor.replace('intel', '')
+if gpuvendor.count('nvidia') > 1:
+    gpuvendor = 'nvidia' + gpuvendor.replace('nvidia', '')
 
 dewmid = '\n'.join(deline + wmline)
 deid = deline[0].split()[1]
