@@ -92,6 +92,8 @@ def get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist):
 
     if sysosid.lower() not in ["macos", "windows"] and not primeoffload:
         gpuinfo += get_amdgpu(amdgpurenderlist, gpuline)
+    elif sysosid.lower() == "windows":
+        gpuinfo += '\n'.join(gpuline)
 
     for line in range(len(gpuline)):
         if "NVIDIA" in gpuline[line].split() and not primeoffload:
