@@ -55,6 +55,7 @@ def XDG_Symlink(home):
         print("Could not symlink XDG_RUNTIME_DIR Error: %s" % str(e))
         return
 
+
 def check_neofetch_scoop(default_config):
     return subprocess.run(
         [
@@ -79,6 +80,7 @@ def get_default_config():
 
     return None
 
+
 def neofetch(loop):
     baseinfo = False
     neofetchwin = False
@@ -101,7 +103,8 @@ def neofetch(loop):
             "%s/.var/app/com.discordapp.Discord" % home)
         package_path = os.path.isfile("/usr/bin/discord")
         manual_install_path = os.path.isdir("/opt/Discord")
-        default_config = ''.join([os.path.dirname(__file__), "/ressources/default.conf"])
+        default_config = ''.join(
+            [os.path.dirname(__file__), "/ressources/default.conf"])
         if loop == 0 and flatpak_discord_path and not package_path and not manual_install_path:
             XDG_Symlink(home)
         try:
@@ -181,13 +184,13 @@ def neofetch(loop):
             elif line.find(res) != -1:
                 resline.append(line.rstrip('\n'))
             elif line.find(mem) != -1 and args.memtype == "gb":
-                    memgb = line.rstrip('\n')
-                    memgb = memgb.split()
-                    used = float(memgb[1].replace("MiB", ""))
-                    total = float(memgb[3].replace("MiB", ""))
-                    memline.append(' '.join(
-                        ["Memory:", str(round(used / 1024, 2)), "GiB /", str(
-                            round(total / 1024, 2)), "GiB"]))
+                memgb = line.rstrip('\n')
+                memgb = memgb.split()
+                used = float(memgb[1].replace("MiB", ""))
+                total = float(memgb[3].replace("MiB", ""))
+                memline.append(' '.join(
+                    ["Memory:", str(round(used / 1024, 2)), "GiB /", str(
+                        round(total / 1024, 2)), "GiB"]))
             elif line.find(mem) != -1:
                 memline.append(line.rstrip('\n'))
             elif line.find(theme) != -1:
@@ -196,12 +199,15 @@ def neofetch(loop):
                 diskline.append(line.rstrip('\n'))
             elif line.find(battery) != -1:
                 batteryline.append(line.rstrip('\n'))
+            elif line.find(mobo) != -1:
+                moboline.append(line.rstrip('\n'))
             elif neofetchwin:
                 if line.find(nvidiagpu) != -1:
                     gpuline.append(''.join(["GPU: ",
-                        line[line.find(nvidiagpu):]]).rstrip('\n'))
+                                            line[line.find(nvidiagpu):]]).rstrip('\n'))
                 if line.find(radgpu) != -1:
-                    gpuline.append(''.join(["GPU: ",  line[line.find(radgpu):]]).rstrip('\n'))
+                    gpuline.append(
+                        ''.join(["GPU: ",  line[line.find(radgpu):]]).rstrip('\n'))
                 if line.find(disk) != -1:
                     diskline.append(line[line.find(disk):].rstrip('\n'))
                     i += 1
@@ -261,7 +267,8 @@ def neofetch(loop):
 
 cpuline, gpuline, termline, fontline, wmline, radgpuline, \
     shell_line, kernelline, sysosline, moboline, neofetchwin,\
-    deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline, baseinfo = neofetch(loop)
+    deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline, baseinfo = neofetch(
+        loop)
 
 sysosid = sysosline[0].split()[1]
 # I don't know if macOS has the same path linux does to check power_supply
@@ -282,7 +289,7 @@ else:
     primeoffload = False
 
 gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop,
-                        sysosid, amdgpurenderlist)
+                      sysosid, amdgpurenderlist)
 gpuvendor = get_gpu_vendors(gpuline, primeoffload, sysosid)
 gpuvendor = gpuvendor.replace('Radeon', 'amd')
 if gpuvendor.count('amd') > 1:
