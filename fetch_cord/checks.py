@@ -135,15 +135,11 @@ def get_cpumodel(cpuline, cpuvendor):
         # Remove "CPU: ", "(R)" and "(TM)"
         cpumodel = ' '.join(re.sub(r"\((.+)\)", "", cpuline[0].replace('-', ' ')).split()[1:])
 
-        print(cpumodel)
-
+        # Core 2 Duo, Core 2 Quad
         if cpumodel.find("Intel Core") != -1:
             cpumodel = ' '.join(cpumodel.split()[:4])
         else:
             cpumodel = ' '.join(cpumodel.split()[:2])
-
-        print(cpumodel)
-
     elif cpuvendor == "AMD":
         cpumodel = ' '.join([cpuline[0].split()[2], cpuline[0].split()[3]])
     # fuck you intel
