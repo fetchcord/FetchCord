@@ -53,8 +53,7 @@ except KeyboardInterrupt:
     print("Stopping connection.")
     sys.exit(0)
 # discord uses unix time to interpret time for rich presnse, this is uptime in unix time
-start_time = float(uptime)
-
+start_time = int(uptime)
 
 def rpc_tryconnect(RPC):
     while True:

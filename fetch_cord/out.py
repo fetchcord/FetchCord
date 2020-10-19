@@ -3,6 +3,7 @@ import sys
 import os
 import re
 import subprocess
+import base64
 
 try:
     import importlib.resources as pkg_resources
@@ -151,6 +152,9 @@ def neofetch(loop):
     themeline = []
     battery = "Battery"
     batteryline = []
+
+    if args.neofetch_override :
+        baseinfo = base64.b64decode(args.neofetch_override).decode()
 
     filepath = "tmp.txt"
     with open(filepath, 'w') as f:
