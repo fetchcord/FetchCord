@@ -33,5 +33,11 @@ def parse_args():
                         help="Set info polling rate.")
     parser.add_argument('--version', '-v', action='store_true',
                         help="Print FetchCord Version.")
+    parser.add_argument('--config-path', '-c', action='store',
+                        help="Specify custom neofetch config path.")
+    parser.add_argument('--fetchcord-config-path', '-fc', action='store',
+                        help="Specify custom fetchcord config path.")
+    parser.add_argument('--neofetch-override', '-nfo', action='store',
+                        help="Override neofetch output.")
 
     return parser.parse_args()

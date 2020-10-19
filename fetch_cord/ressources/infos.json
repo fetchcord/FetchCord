@@ -23,12 +23,16 @@
         "amd",
         "vmware",
         "virtio",
-        "nvidiaintel",
-        "nvidiaamd",
-        "amdintel",
-        "nvidiaamdintel",
         "cirrus"
     ],
+    "multigpus": {
+	"amdnvidia": "nvidiaamd",
+	"nvidiaamd": "nvidiaamd",
+	"intelnvidia": "nvidiaintel",
+	"nvidiaintel": "nvidiaintel",
+	"intelamd": "amdintel",
+	"amdintel": "amdintel"
+    },
     "distros": {
         "ubuntu": "740434138036699178",
         "opensuseleap": "740156532137787433",

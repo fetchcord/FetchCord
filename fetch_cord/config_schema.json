@@ -1,0 +1,33 @@
+{
+	"cycle_0":
+	{
+		"top_line": ["single_word", ["kernel", "packages"], false],
+		"bottom_line": ["single_word", ["kernel", "packages"], false],
+		"de_wm_icon": ["single_word", ["on", "off"], true],
+		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
+	},
+
+	"cycle_1":
+	{
+		"top_line": ["single_word", ["cpu", "gpu", "mem", "disk"], false],
+		"bottom_line": ["single_word", ["cpu", "gpu", "mem", "disk"], false],
+		"gpu_icon": ["single_word", ["on", "off"], true],
+		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
+	},
+
+	"cycle_2":
+	{
+		"top_line": ["single_word", ["font", "shell", "theme"], false],
+		"bottom_line": ["single_word", ["font", "shell", "theme"], false],
+		"shell_icon": ["single_word", ["on", "off"], true],
+		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
+	},
+
+	"cycle_3":
+	{
+		"top_line": ["single_word", ["resolution", "battery", "host"], false],
+		"bottom_line": ["single_word", ["resolution", "battery", "host"], false],
+		"lapordesk_icon": ["single_word", ["on", "off"], true],
+		"time": ["single_word", ["15", "30", "45", "60", "75", "90", "105", "120", "240", "480"], false]
+	}
+}

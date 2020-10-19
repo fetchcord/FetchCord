@@ -18,5 +18,9 @@ def exec_bash(command):
         raise BashError(
             "Failed to execute '%s' :\n%s" % (
                 command, out))
+    except FileNotFoundError as e:
+        raise BashError(
+            "BASH not installed on your computer..."
+        )
 
     return out

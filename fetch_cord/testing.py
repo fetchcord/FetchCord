@@ -1,14 +1,17 @@
 # import shit as usual
 import os, sys, json
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as pkg_resources
+import fetch_cord.ressources as ressources
+
 from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
-from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid, neofetchwin, baseinfo
+from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
 from fetch_cord.debugger import test_debug
-if baseinfo:
-    from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline
-
-elif neofetchwin:
-    from fetch_cord.out import moboline
+from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline, moboline, neofetchwin, baseinfo
 
 # macOS hardwawre
 
@@ -32,7 +35,9 @@ def get_icon(ver):
         bigicon = "bigslurp"
         print("Unsupported MacOS version")
     return bigicon
-    # this is staying
+
+
+# this is staying
 def iUnity(wmid):
     # this is to check wether the user is actually using unity
     # or using unity as an xdg value to fix issues with electron apps
@@ -42,14 +47,8 @@ def iUnity(wmid):
         desktopid = wmid
     return desktopid
 
-def get_infos():
-    try:
-        import importlib.resources as pkg_resources
-    except ImportError:
-        # Try backported to PY<37 `importlib_resources`.
-        import importlib_resources as pkg_resources
-    import fetch_cord.ressources as ressources
 
+def get_infos():
     with pkg_resources.open_text(ressources, 'infos.json') as f:
         infos = json.load(f)
 
@@ -60,6 +59,7 @@ infos = get_infos()
 amdcpus = infos["amdcpus"]
 intelcpus = infos["intelcpus"]
 gpus = infos["gpus"]
+multigpus = infos["multigpus"]
 distros = infos["distros"]
 versions = infos["versions"]
 windowmanagers = infos["windowmanagers"]
@@ -72,14 +72,14 @@ hostlist = infos["hostlist"]
 terminallist = infos["terminallist"]
 
 # desktops
-if os.name != "nt" and deid == "unity":
+if deid.lower() == "unity":
     iUnity(wmid)
 
 args = parse_args()
 
 
 def get_host(hostlist):
-    hostsplit = hostline[0].split()
+    hostsplit = hostline.split()
     hostid = []
     for line in range(len(hostsplit)):
         if hostsplit[line] in hostlist:
@@ -102,17 +102,17 @@ def get_host(hostlist):
 
 
 def get_mobo(moboline, hostlist):
-        mobosplit = moboline[0].split()
-        moboid = []
-        for line in range(len(mobosplit)):
-            if mobosplit[line] in hostlist:
-                moboid.append(mobosplit[line].rstrip('\n'))
-        try:
-            moboid = moboid[0]
-        except IndexError:
-            moboid = "N/A"
-            pass
-        return moboid
+    mobosplit = moboline.split()
+    moboid = []
+    for line in range(len(mobosplit)):
+        if mobosplit[line] in hostlist:
+            moboid.append(mobosplit[line].rstrip('\n'))
+    try:
+        moboid = moboid[0]
+    except IndexError:
+        moboid = "N/A"
+        pass
+    return moboid
 
 if args.terminal and args.terminal in terminallist:
     termid = args.terminal
@@ -180,6 +180,8 @@ def get_gpuid(gpuvendor):
     gpuvendor = gpuvendor.lower()
     if gpuvendor in gpus:
         gpuid = gpuvendor
+    elif gpuvendor in multigpus:
+        gpuid = multigpus[gpuvendor.lower()]
     else:
         print("Unknown GPU, contact us on github to resolve this.")
         gpuid = 'unknown'
@@ -195,21 +197,20 @@ if sysosid.lower() == "macos":
     devicetype = laporp(product)
 
 gpuid = get_gpuid(gpuvendor)
-
-
+desktopid = get_desktopid(deid, wmid)
 if baseinfo:
     shellid = get_shell_id(shells, shellid)
-    desktopid = get_desktopid(deid, wmid)
-    try:
-        hostappid = get_hostappid(hosts)
-    except KeyError:
-        print("Unknown Host, contact us on github to resolve this.(Keyerror)")
-        hostappid = "742887089179197462"
-    try:
-        termappid = get_termappid(terminals, termid)
-    except KeyError:
-        print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
-        termappid = '745691250186911796'
+    moboid = "N/A"
+try:
+    hostappid = get_hostappid(hosts)
+except KeyError:
+    print("Unknown Host, contact us on github to resolve this.(Keyerror)")
+    hostappid = "742887089179197462"
+try:
+    termappid = get_termappid(terminals, termid)
+except KeyError:
+    print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
+    termappid = '745691250186911796'
 
 if neofetchwin:
     try:
@@ -217,7 +218,6 @@ if neofetchwin:
     except KeyError:
         print("Unknown Motherboard, contact us on github to resolve this.(Keyerror)")
         moboid = "unknown"
-
 
 try:
     appid = get_appid(distros, sysosid)
@@ -231,25 +231,7 @@ except KeyError:
     print("unknown CPU, contact us on github to resolve this.(Keyerror)")
     cpuappid = '742887089179197462'
 
-if baseinfo:
-    if not deid:
-        deid = "N/A"
-
-    if not wmid:
-        wmid = "N/A"
-
-    if not termid:
-        termid = "N/A"
-
-    if not shellid:
-        shellid = "N/A"
-
-    hostid = get_host(hostlist)
-    if not hostid:
-        hostid = "N/A"
+hostid = get_host(hostlist)
 
 if args.debug:
-    if baseinfo:
-        test_debug(deid=deid, wmid=wmid, termid=termid, shellid=shellid, moboid="N/A", gpuvendor=gpuvendor, cpumodel=cpumodel, hostid=hostid)
-    else:
-        test_debug(moboline=moboline, moboid=moboid, gpuvendor=gpuvendor, cpumodel=cpumodel, hostid="N/A")
+    test_debug(gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid, shellid)
