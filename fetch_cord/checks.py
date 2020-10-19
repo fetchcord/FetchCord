@@ -21,7 +21,8 @@ def check_primeoffload():
     # only show the GPU in use with optimus, show both if prime render offload
     primeoffload = False
     try:
-        primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
+        primeoffload = exec_bash(
+            "xrandr --listproviders | grep -o \"NVIDIA-0\"")
         return True
     except BashError:
         return False
@@ -66,7 +67,7 @@ def get_amdgpurender(gpuline, laptop):
 
 
 def get_amdgpu(amdgpurenderlist, gpuline):
-    amdgpuline= ""
+    amdgpuline = ""
     for a in range(len(amdgpurenderlist)):
         if "AMD" not in gpuline[a]:
             amdgpuline += gpuline[a]
@@ -101,7 +102,7 @@ def get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist):
                 gpuinfo += '\n' + nvidia_gpu_temp(gpuline)
             except BashError as e:
                 print("Cannot get Nvidia gpu temp: "+e)
-                gpuinfo += '\n' +gpuline[line]
+                gpuinfo += '\n' + gpuline[line]
 
     return gpuinfo
 
@@ -119,11 +120,11 @@ def get_gpu_vendors(gpuline, primeoffload, sysosid):
 
 def get_cpuinfo(cpuline):
 
-#    if os.name != "nt":
-#        cpuinfo = ' '.join([' '.join(cpuline[0].split()[:-2]), cpuline[0].split()[-2].replace(
-#            "00G", "0G", 1), cpuline[0].split()[-1]])
-#
-#    else:
+    #    if os.name != "nt":
+    #        cpuinfo = ' '.join([' '.join(cpuline[0].split()[:-2]), cpuline[0].split()[-2].replace(
+    #            "00G", "0G", 1), cpuline[0].split()[-1]])
+    #
+    #    else:
     cpuinfo = ' '.join(cpuline)
     cpuinfo = re.sub(r"\((.+)\)", "", cpuinfo)
 
@@ -133,7 +134,8 @@ def get_cpuinfo(cpuline):
 def get_cpumodel(cpuline, cpuvendor):
     if cpuvendor == "Intel":
         # Remove "CPU: ", "(R)" and "(TM)"
-        cpumodel = ' '.join(re.sub(r"\((.+)\)", "", cpuline[0].replace('-', ' ')).split()[1:])
+        cpumodel = ' '.join(
+            re.sub(r"\((.+)\)", "", cpuline[0].replace('-', ' ')).split()[1:])
 
         # Core 2 Duo, Core 2 Quad
         if cpumodel.find("Intel Core") != -1:
@@ -153,7 +155,7 @@ def get_cpumodel(cpuline, cpuvendor):
 def check_fontline(fontline):
     if fontline and args.termfont:
         print("Custom terminal font not set because a terminal font already exists, %s" %
-            fontline)
+              fontline)
 
     return fontline
 
