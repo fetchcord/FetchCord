@@ -11,8 +11,8 @@ from fetch_cord.bash import BashError, exec_bash
 from fetch_cord.testing import gpuid, cpuappid, appid, desktopid, termappid, hostappid, shellid, moboid
 from fetch_cord.debugger import run_rpc_debug
 from fetch_cord.out import sysosline, sysosid, memline, cpuinfo, neofetch, diskline, hostline,\
-        gpuinfo, packagesline, kernelline,shell_line, fontline, termline, lapordesk, resline, \
-        themeline, batteryline, dewmid, moboline, neofetchwin
+    gpuinfo, packagesline, kernelline, shell_line, fontline, termline, lapordesk, resline, \
+    themeline, batteryline, dewmid, moboline, neofetchwin
 
 
 uptime = psutil.boot_time()
@@ -26,7 +26,8 @@ def main():
     # printing info with debug switch
     if args.debug:
         if os.name != "nt":
-            run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid, termappid=termappid, packagesline=packagesline, hostline=hostline, hostappid=hostappid)
+            run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid, termappid=termappid,
+                          packagesline=packagesline, hostline=hostline, hostappid=hostappid)
         else:
             run_rpc_debug(uptime=uptime, appid=appid, cpuappid=cpuappid)
     loop = 0
@@ -35,7 +36,9 @@ def main():
         wandowz(loop, config)
     else:
         config = get_config()
-        loonix(config, loop, gpuinfo, memline, cpuinfo, diskline, batteryline, packagesline)
+        loonix(config, loop, gpuinfo, memline, cpuinfo,
+               diskline, batteryline, packagesline)
+
 
 def first_connect():
     try:
@@ -46,6 +49,7 @@ def first_connect():
     except ConnectionRefusedError:
         rpc_tryconnect(RPC)
 
+
 print("Connecting")
 try:
     time.sleep(5)
@@ -54,6 +58,7 @@ except KeyboardInterrupt:
     sys.exit(0)
 # discord uses unix time to interpret time for rich presnse, this is uptime in unix time
 start_time = int(uptime)
+
 
 def rpc_tryconnect(RPC):
     while True:
@@ -65,7 +70,6 @@ def rpc_tryconnect(RPC):
             time.sleep(30)
 
 
-
 def rpc_tryclear(RPC):
     try:
         RPC.clear(pid=os.getpid())
@@ -74,10 +78,21 @@ def rpc_tryclear(RPC):
 
 
 def rpc_tryupdate(RPC, state, details, large_image, large_text, small_image, small_text, start):
+
+    # 128 Char limit
+    if state :
+        state = state[:128]
+    if details:
+        details = details[:128]
+    if large_text:
+        large_text = large_text[:128]
+    if small_text:
+        small_text = small_text[:128]
+
     try:
         RPC.update(state=state, details=details, large_image=large_image,
-                    large_text=large_text, small_image=small_image, small_text=small_text,
-                    start=start)
+                   large_text=large_text, small_image=small_image, small_text=small_text,
+                   start=start)
     # ConnectionResetError is here to avoid crashing if Discord is still just starting
     except (ConnectionResetError, exceptions.InvalidID):
         pass
@@ -97,13 +112,13 @@ def runmac():
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-                state=packagesline,  # update state as packages
-                details=kernelline,  # update details as kernel
-                large_image=bigicon,  # set icon
-                large_text=sysosline,  # set large icon text
-                small_image=devicetype,  # set small image icon
-                small_text=product,  # set small image text
-                start=start_time)
+                  state=packagesline,  # update state as packages
+                  details=kernelline,  # update details as kernel
+                  large_image=bigicon,  # set icon
+                  large_text=sysosline,  # set large icon text
+                  small_image=devicetype,  # set small image icon
+                  small_text=product,  # set small image text
+                  start=start_time)
     if args.time:
         custom_time()
     elif args.nohost and args.nohardware and args.noshell:
@@ -112,12 +127,14 @@ def runmac():
         time.sleep(30)
     rpc_tryclear(RPC)
 
+
 def get_config():
     try:
         config = load_config()
     except ConfigError as e:
         print("Error loading config file, using default values." % str(e))
     return config
+
 
 def custom_time():
     ctime = int(args.time)
@@ -140,22 +157,22 @@ def cycle0(config, packagesline):
         bottom_line = packagesline
     de_wm_icon = config["cycle_0"]["de_wm_icon"]
     if de_wm_icon == "on":
-        de_wm_icon=desktopid
+        de_wm_icon = desktopid
     else:
-        de_wm_icon="off"
+        de_wm_icon = "off"
     if args.debug:
         print("cycle 0")
     client_id = appid
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=bottom_line,
-               details=top_line,
-               large_image="big",
-               large_text=sysosline,
-               small_image=de_wm_icon,
-               small_text=dewmid,
-               start=start_time)
+                  state=bottom_line,
+                  details=top_line,
+                  large_image="big",
+                  large_text=sysosline,
+                  small_image=de_wm_icon,
+                  small_text=dewmid,
+                  start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
     config_time = config["cycle_0"]["time"]
@@ -194,22 +211,22 @@ def cycle1(config, gpuinfo, cpuinfo, memline, diskline):
         bottom_line = diskline
     gpu_icon = config["cycle_1"]["gpu_icon"]
     if gpu_icon == "on":
-        gpu_icon=gpuid
+        gpu_icon = gpuid
     else:
-        gpu_icon="off"
+        gpu_icon = "off"
     if args.debug:
         print("cycle 1")
     client_id = cpuappid
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=bottom_line,
-               details=top_line,
-               large_image="big",
-               large_text=cpuinfo,
-               small_image=gpu_icon,
-               small_text=gpuinfo,
-               start=start_time)
+                  state=bottom_line,
+                  details=top_line,
+                  large_image="big",
+                  large_text=cpuinfo,
+                  small_image=gpu_icon,
+                  small_text=gpuinfo,
+                  start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
     config_time = config["cycle_1"]["time"]
@@ -244,22 +261,22 @@ def cycle2(config):
         bottom_line = themeline
     shell_icon = config["cycle_2"]["shell_icon"]
     if shell_icon == "on":
-        shell_icon=shellid
+        shell_icon = shellid
     else:
-        shell_icon="off"
+        shell_icon = "off"
     if args.debug:
         print("cycle 2")
     client_id = termappid
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=bottom_line,
-               details=top_line,
-               large_image="big",
-               large_text=termline,
-               small_image=shell_icon,
-               small_text=shell_line,
-               start=start_time)
+                  state=bottom_line,
+                  details=top_line,
+                  large_image="big",
+                  large_text=termline,
+                  small_image=shell_icon,
+                  small_text=shell_line,
+                  start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
 
@@ -295,22 +312,22 @@ def cycle3(config, batteryline):
             bottom_line = batteryline
         lapordesk_icon = config["cycle_3"]["lapordesk_icon"]
         if lapordesk_icon == "on":
-            lapordesk_icon=lapordesk
+            lapordesk_icon = lapordesk
         else:
-            lapordesk_icon="off"
+            lapordesk_icon = "off"
         if args.debug:
             print("cycle 3")
         client_id = hostappid
         RPC = Presence(client_id)
         rpc_tryconnect(RPC)
         rpc_tryupdate(RPC,
-                state=resline,
-                details=batteryline,
-                large_image="big",
-                large_text=hostline,
-                small_image=lapordesk_icon,
-                small_text=lapordesk,
-                start=start_time)
+                      state=resline,
+                      details=batteryline,
+                      large_image="big",
+                      large_text=hostline,
+                      small_image=lapordesk_icon,
+                      small_text=lapordesk,
+                      start=start_time)
         if args.debug:
             print("appid: %s" % client_id)
         config_time = config["cycle_3"]["time"]
@@ -325,7 +342,8 @@ def cycle3(config, batteryline):
     # back from whence you came
     else:
         loop = 1
-        loonix(config, loop, gpuinfo, memline, cpuinfo, diskline, batteryline, packagesline)
+        loonix(config, loop, gpuinfo, memline, cpuinfo,
+               diskline, batteryline, packagesline)
     rpc_tryclear(RPC)
 
 
@@ -345,13 +363,13 @@ def windows():
     RPC = Presence(client_id)
     rpc_tryconnect(RPC)
     rpc_tryupdate(RPC,
-               state=sysosline,
-               details=memline,
-               large_image="big",
-               large_text=sysosline,
-               small_image=moboid,
-               small_text=moboline,
-               start=start_time)
+                  state=sysosline,
+                  details=memline,
+                  large_image="big",
+                  large_text=sysosline,
+                  small_image=moboid,
+                  small_text=moboline,
+                  start=start_time)
     if args.debug:
         print("appid: %s" % client_id)
     if args.time:
@@ -366,9 +384,9 @@ def windows():
 def check_change(config, loop):
 
     cpuline, gpuline, termline, fontline, wmline, radgpuline, \
-            shell_line, kernelline, sysosline, moboline, neofetchwin,\
-            deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline, baseinfo = neofetch(loop)
-
+        shell_line, kernelline, sysosline, moboline, neofetchwin,\
+        deline, batteryline, resline, themeline, hostline, memline, packagesline, diskline, baseinfo = neofetch(
+            loop)
 
     from fetch_cord.checks import get_cpuinfo, get_gpuinfo
     from fetch_cord.out import primeoffload, sysosid, amdgpurenderlist, laptop, primeoffload
@@ -382,7 +400,8 @@ def check_change(config, loop):
     gpuinfo = "GPU: N/A"
     for line in range(len(gpuline)):
         if sysosid.lower() != "macos" and "NVIDIA" in gpuline[line]:
-            gpuinfo = get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist)
+            gpuinfo = get_gpuinfo(primeoffload, gpuline,
+                                  laptop, sysosid, amdgpurenderlist)
 
     loop = 1
 
@@ -390,6 +409,7 @@ def check_change(config, loop):
         return loonix(config, loop, gpuinfo, memline,  cpuinfo, diskline, batteryline, packagesline)
     else:
         return wandowz(loop, config)
+
 
 def loonix(config, loop, gpuinfo, memline, cpuinfo, diskline, batteryline, pacakgesline):
     try:
