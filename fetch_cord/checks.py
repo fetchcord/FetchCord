@@ -131,19 +131,18 @@ def get_cpuinfo(cpuline):
 
 
 def get_cpumodel(cpuline, cpuvendor):
-
     if cpuvendor == "Intel":
-        if os.name != "nt":
-            cpumodel = ' '.join(cpuline[0].replace('-', ' ').split()[1:3])
-            if cpumodel == "Intel Core":
-                cpumodel = cpuline[0].split()[1:5]
-                cpumodel = ' '.join(cpumodel)
+        # Remove "CPU: ", "(R)" and "(TM)"
+        cpumodel = ' '.join(re.sub(r"\((.+)\)", "", cpuline[0].replace('-', ' ')).split()[1:])
+
+        print(cpumodel)
+
+        if cpumodel.find("Intel Core") != -1:
+            cpumodel = ' '.join(cpumodel.split()[:4])
         else:
-            cpumodel = ' '.join(cpuline[0].replace('-', ' ').split()[1:3])
-            cpumodel = re.sub(r"\((.+)\)", "", cpumodel)
-            if cpumodel == "Intel 2" or cpumodel == "Intel Solo":
-                cpumodel = cpuline[0].split()[1:5]
-                cpumodel = ' '.join(cpumodel)
+            cpumodel = ' '.join(cpumodel.split()[:2])
+
+        print(cpumodel)
 
     elif cpuvendor == "AMD":
         cpumodel = ' '.join([cpuline[0].split()[2], cpuline[0].split()[3]])
