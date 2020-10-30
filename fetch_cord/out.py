@@ -182,7 +182,7 @@ def neofetch(loop):
             elif line.find(kernel) != -1:
                 kernelline.append(line.rstrip('\n'))
             elif line.find(sysos) != -1:
-                sysosline.append(line.rstrip('\n'))
+                sysosline.append(line.rstrip('\n').rstrip(" "))
             elif line.find(host) != -1:
                 hostline.append(line.rstrip('\n'))
             elif line.find(res) != -1:
@@ -243,6 +243,10 @@ def neofetch(loop):
         kernelline = ["Kernel: N/A"]
     if not sysosline:
         sysosline = ["OS: N/A"]
+    else:
+        for i in range(len(sysosline)):
+            if sysosline[i] == "OS:":
+                sysosline[i] = "OS: N/A"
     if not hostline:
         hostline = ["Host: N/A"]
     if not resline:
