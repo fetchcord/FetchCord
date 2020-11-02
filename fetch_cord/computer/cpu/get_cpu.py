@@ -1,0 +1,21 @@
+from typing import List
+
+from .Cpu_amd import Cpu_amd
+from .Cpu_intel import Cpu_intel
+
+def get_cpu(os: str, line: List, value: str, key: str):
+    """
+    Append the CPU info from the given neofetch line to the CPU list
+
+    Parameters
+    ----------
+    value : str
+        Neofetch extracted line
+    """
+
+    vendor = value.split()[1].replace('Intel(R)', 'Intel')
+
+    if vendor == 'Intel' or vendor == 'Pentium':
+        line.append(Cpu_intel(os, value))
+    elif vendor.find('AMD') != -1:
+        line.append(Cpu_amd(os, value))

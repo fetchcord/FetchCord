@@ -1,9 +1,10 @@
 from abc import ABCMeta, abstractmethod
+
 from ..Peripheral_interface import Peripherical_interface
 
 class Cpu_interface(Peripherical_interface, metaclass=ABCMeta):
     vendor: str
-    model: str
+    _model: str
 
     @property
     def model(self) -> str:

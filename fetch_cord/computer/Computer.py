@@ -2,42 +2,105 @@ from sys import platform, exit
 from typing import Dict, List
 from ..run_command import run_command
 from ..args import parse_args
-from .cpu import Cpu_intel
-from .cpu import Cpu_amd
+
+from .cpu.get_cpu import get_cpu
+from .cpu.Cpu_interface import Cpu_interface
 
 args = parse_args()
 
 
 class Computer:
     parseMap: Dict
+    componentMap: Dict
 
+    os: str
     neofetchwin: bool
     neofetch: bool
     values: str
 
-    componentMap: Dict
-    os: str
-    osinfo: str
-    cpulist: List
-    disklist: List[str]
-    memory: str
-    motherboard: str
+
+    @property
+    def memory(self) -> List[str]:
+        return self.get_component("Memory:")
+
+    @property
+    def osinfo(self) -> List[str]:
+        return self.get_component("OS:")
+
+    @property
+    def motherboard(self) -> List[str]:
+        return self.get_component("Motherboard:")
+    
+    @property
+    def host(self) -> List[str]:
+        return self.get_component("Host:")
+
+    @property
+    def cpu(self) -> List[Cpu_interface]:
+        return self.get_component("CPU:")
+
+    @property
+    def disks(self) -> List[str]:
+        return self.get_component("Disk")
+
+    @property
+    def resolution(self) -> List[str]:
+        return self.get_component("Resolution:")
+    
+    @property
+    def theme(self) -> List[str]:
+        return self.get_component("Theme:")
+
+    @property
+    def kernel(self) -> List[str]:
+        return self.get_component("Kernel:")
+
+    @property
+    def packages(self) -> List[str]:
+        return self.get_component("Packages:")
+    
+    @property
+    def shell(self) -> List[str]:
+        return self.get_component("Shell:")
+
+    @property
+    def terminal(self) -> List[str]:
+        return self.get_component("Terminal:")
+
+    @property
+    def wm(self) -> List[str]:
+        return self.get_component("WM:")
+    
+    @property
+    def font(self) -> List[str]:
+        return self.get_component("Font:")
+
+    @property
+    def de(self) -> List[str]:
+        return self.get_component("DE:")
 
     def __init__(self):
         super().__init__()
 
         self.parseMap = {
-            'CPU:': self.get_cpu,
+            'CPU:': get_cpu,
             'Disk': self.get_disk,
             'Memory:': self.get_memory,
-            'OS:': self.get_os,
-            'Motherboard:': self.get_mobo
+            'OS:': self.get,
+            'Motherboard:': self.get,
+            'Host:': self.get,
+            'Resolution:': self.get,
+            'Theme:': self.get,
+            'Kernel:': self.get,
+            'Packages:': self.get,
+            'Shell:': self.get,
+            'Terminal:': self.get,
+            'Font:': self.get,
+            'DE:': self.get,
+            'WM:': self.get
         }
-        self.cpulist = []
-        self.disklist = []
-        self.memory = ""
-        self.osinfo = ""
-        self.motherboard = ""
+
+        self.componentMap = {}
 
         self.detect_os()
         self.neofetchwin, self.neofetch, self.values = self.detect_neofetch()
@@ -48,7 +111,9 @@ class Computer:
         for i in range(len(lines)):
             line = lines[i]
             for key, detectedFunction in [ (key, value) for key, value in self.parseMap.items() if key in line]:
-                detectedFunction(line.rstrip('\n'), key)
+                if key not in self.componentMap:
+                    self.componentMap[key] = []
+                detectedFunction(self.os, self.componentMap[key], line.rstrip('\n'), key)
 
     def detect_os(self) -> str:
         if platform == 'linux' or platform == 'linux2':
@@ -90,25 +155,7 @@ class Computer:
         return (
             neofetchwin, neofetch, values)
 
-    def get_cpu(self, value: str, key: str):
-        """
-        Append the CPU info from the given neofetch line to the CPU list
-
-        Parameters
-        ----------
-        value : str
-            Neofetch extracted line
-        """
-
-        vendor = value.split()[1].replace('Intel(R)', 'Intel')
-
-        if vendor == 'Intel' or vendor == 'Pentium':
-            self.cpulist.append(Cpu_intel.Cpu_intel(self.os, value))
-        else:
-            if vendor.find('AMD') != -1:
-                self.cpulist.append(Cpu_amd.Cpu_amd(self.os, value))
-
-    def get_disk(self, value: str, key: str):
+    def get_disk(self, os: str, line: List, value: str, key: str):
         """
         Append the Disk info from the given neofetch line to the Disk list
 
@@ -117,9 +164,10 @@ class Computer:
         value : str
             Neofetch extracted line
         """
-        self.disklist.append(value[value.find(key)+len(key)+2:])
 
-    def get_memory(self, value: str, key: str):
+        line.append(value[value.find(key)+len(key)+2:])
+
+    def get_memory(self, os: str, line: List, value: str, key: str):
         """
         Get the memory info from the given neofetch line
 
@@ -134,30 +182,35 @@ class Computer:
             used = float(memgb[1].replace("MiB", ""))
             total = float(memgb[3].replace("MiB", ""))
 
-            self.memory = ' '.join([str(round(used / 1024, 2)), "GiB /", str(round(total / 1024, 2)), "GiB"])
+            line.append(' '.join([str(round(used / 1024, 2)), "GiB /", str(round(total / 1024, 2)), "GiB"]))
         else:
-            self.memory = value[value.find(key)+len(key)+1:]
-
-    def get_os(self, value: str, key: str):
+            line.append(value[value.find(key)+len(key)+1:])
+    
+    def get(self, os: str, line: List, value: str, key: str, valueOffset: int = 1):
         """
-        Get the os info from the given neofetch line
+        Get the info from the given neofetch line
 
         Parameters
         ----------
+        os: str
+            Detected OS ("windows", "linux" or "macos")
+        line: List
+            List who will contains the values
         value : str
             Neofetch extracted line
+        key : str
+            Key for the dict
+        valueOffset: int
+            Offset for extracting the value without the key (default : 1)
         """
 
-        self.osinfo = value[value.find(key)+len(key)+1:]
+        line.append(value[value.find(key)+len(key)+valueOffset:])
 
-    def get_mobo(self, value: str, key: str):
-        """
-        Get the mobo info from the given neofetch line
+    def get_component(self, key: str):
+        try:
+            return self.componentMap[key]
+        except KeyError as err:
+            print("[KeyError]: ", end="")
+            print(err)
 
-        Parameters
-        ----------
-        value : str
-            Neofetch extracted line
-        """
-
-        self.motherboard = value[value.find(key)+len(key)+1:]
+            return []
