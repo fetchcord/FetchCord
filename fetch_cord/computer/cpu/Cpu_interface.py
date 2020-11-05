@@ -14,9 +14,9 @@ class Cpu_interface(Peripherical_interface, metaclass=ABCMeta):
     @abstractmethod
     def model(self, value: str):
         raise NotImplementedError
-
+    
     @property
-    def temp(self) -> str:
+    def temp(self) -> float:
         try:
             self._temp = self.get_temp()
         except NotImplementedError as e:
@@ -30,7 +30,7 @@ class Cpu_interface(Peripherical_interface, metaclass=ABCMeta):
             return self._temp
 
     @temp.setter
-    def temp(self, value: str):
+    def temp(self, value: float):
         self._temp = value
 
     def __init__(self, os, vendor, model):
@@ -39,5 +39,5 @@ class Cpu_interface(Peripherical_interface, metaclass=ABCMeta):
         self.model = model
 
     @abstractmethod
-    def get_temp(self) -> str:
+    def get_temp(self) -> float:
         raise NotImplementedError
