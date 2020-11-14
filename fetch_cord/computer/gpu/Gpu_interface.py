@@ -1,9 +1,10 @@
 from abc import ABCMeta, abstractmethod
-from typing import Dict
+from typing import List, TypeVar, Dict
 
 from ..Peripheral_interface import Peripherical_interface
 
-class Cpu_interface(Peripherical_interface, metaclass=ABCMeta):
+
+class Gpu_interface(Peripherical_interface, metaclass=ABCMeta):
     vendor: str
     _model: str
 
@@ -15,7 +16,7 @@ class Cpu_interface(Peripherical_interface, metaclass=ABCMeta):
     @abstractmethod
     def model(self, value: str):
         raise NotImplementedError
-    
+
     @property
     def temp(self) -> float:
         try:
@@ -43,8 +44,20 @@ class Cpu_interface(Peripherical_interface, metaclass=ABCMeta):
     def get_temp(self) -> float:
         raise NotImplementedError
 
-    def get_id(self, cpu_list: Dict[str, str]) -> str:
-        if self.model.lower() in cpu_list[self.vendor]:
-            return cpu_list[self.vendor][self.model.lower()]
-        else:
-            return cpu_list["unknown"]
+
+GpuType = TypeVar('GpuType', bound='Gpu_interface')
+
+
+def get_gpuid(gpu_ids: Dict[str, str], gpus: List[GpuType]):
+    vendors = []
+    for i in range(len(gpus)):
+        if gpus[i].model.split()[0] not in vendors:
+            vendors.append(gpus[i].model.split()[0])
+
+    gpuvendor = ''.join(vendors).lower()
+
+    if gpuvendor in gpu_ids:
+        return gpuvendor
+    else:
+        print("Unknown GPU, contact us on github to resolve this.")
+        return 'unknown'

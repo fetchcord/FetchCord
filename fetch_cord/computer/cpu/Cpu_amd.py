@@ -1,4 +1,4 @@
-from typing import overload
+from typing import Dict, overload
 from psutil import sensors_temperatures
 
 from .Cpu_interface import Cpu_interface
@@ -34,4 +34,4 @@ class Cpu_amd(Cpu_interface):
             
             raise Exception("No valid sensor found.")
         else:
-            raise NotImplementedError('Unkown OS, no CPU temperature report.')
+            raise NotImplementedError('Unknown OS, no CPU temperature report.')

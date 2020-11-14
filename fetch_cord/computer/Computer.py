@@ -1,10 +1,15 @@
+
+import os
 from sys import platform, exit
 from typing import Dict, List
 from ..run_command import run_command
 from ..args import parse_args
 
+from .get_infos import get_infos
 from .cpu.get_cpu import get_cpu
 from .cpu.Cpu_interface import Cpu_interface
+from .gpu.get_gpu import get_gpu
+from .gpu.Gpu_interface import Gpu_interface, get_gpuid
 
 args = parse_args()
 
@@ -13,77 +18,200 @@ class Computer:
     parseMap: Dict
     componentMap: Dict
 
+    idsMap: Dict
+
     os: str
-    neofetchwin: bool
-    neofetch: bool
+    neofetchwin: bool = False
+    neofetch: bool = False
     values: str
-
-
-    @property
-    def memory(self) -> List[str]:
-        return self.get_component("Memory:")
+    laptop: bool = False
 
     @property
-    def osinfo(self) -> List[str]:
-        return self.get_component("OS:")
+    def memory(self) -> str:
+        return self.get_component_line("Memory:")
 
     @property
-    def motherboard(self) -> List[str]:
-        return self.get_component("Motherboard:")
-    
-    @property
-    def host(self) -> List[str]:
-        return self.get_component("Host:")
+    def osinfo(self) -> str:
+        return self.get_component_line("OS:")
 
     @property
-    def cpu(self) -> List[Cpu_interface]:
-        return self.get_component("CPU:")
+    def osinfoid(self) -> str:
+        component = self.get_component_line("OS:")
+        component = (component.split()[1] + component.split()[2]).lower()
+        component_list = self.idsMap[self.idsMap["map"]["OS:"]]
+
+        for comp, id in component_list.items():
+            if component.find(comp.lower()) >= 0:
+                return id
+
+        print("Unknown {}, contact us on github to resolve this.".format(
+            self.idsMap["map"]["OS:"]))
+
+        return component_list["unknown"]
 
     @property
-    def disks(self) -> List[str]:
-        return self.get_component("Disk")
+    def motherboard(self) -> str:
+        return self.get_component_line("Motherboard:")
 
     @property
-    def resolution(self) -> List[str]:
-        return self.get_component("Resolution:")
-    
-    @property
-    def theme(self) -> List[str]:
-        return self.get_component("Theme:")
+    def motherboardid(self) -> str:
+        return self.get_component_idkey("Motherboard:")
 
     @property
-    def kernel(self) -> List[str]:
-        return self.get_component("Kernel:")
+    def host(self) -> str:
+        return self.get_component_line("Host:")
 
     @property
-    def packages(self) -> List[str]:
-        return self.get_component("Packages:")
-    
-    @property
-    def shell(self) -> List[str]:
-        return self.get_component("Shell:")
+    def hostid(self) -> str:
+        hostsplit = self.host.split()
+        host_list: Dict[str, str] = self.idsMap[self.idsMap["map"]["Host:"]]
+
+        for line in hostsplit:
+            if line in host_list:
+                return line
+
+        # try to get MacBook hostid
+        hostid = []
+        hostjoin = ' '.join(self.host)
+        for numsplit in range(len(hostjoin)):
+            if not hostjoin[numsplit].isdigit():
+                hostid.append(hostjoin[numsplit])
+        hostid = ''.join(hostid)
+        hostid = hostid.split()[1]
+
+        if hostid in host_list:
+            return host_list[hostid]
+        else:
+            return host_list["unknown"]
 
     @property
-    def terminal(self) -> List[str]:
-        return self.get_component("Terminal:")
+    def hostappid(self) -> str:
+        return self.get_component_id("Host:")
 
     @property
-    def wm(self) -> List[str]:
-        return self.get_component("WM:")
-    
-    @property
-    def font(self) -> List[str]:
-        return self.get_component("Font:")
+    def cpu(self) -> str:
+        key = "CPU:"
+        cpus: List[Cpu_interface] = self.get_component(key)
+        temp = []
+        for cpu in cpus:
+            temp.append(cpu.model)
+
+        return '\n'.join(temp) if len(cpus) > 0 else '{} N/A'.format(key)
 
     @property
-    def de(self) -> List[str]:
-        return self.get_component("DE:")
+    def cpuid(self) -> str:
+        temp: List[Cpu_interface] = self.get_component("CPU:")
+
+        if len(temp) == 0:
+            return self.idsMap[self.idsMap["map"]["CPU:"]]["unknown"]
+        else:
+            return temp[0].get_id(self.idsMap[self.idsMap["map"]["CPU:"]])
+
+    @property
+    def gpu(self) -> str:
+        key = "GPU:"
+        gpus: List[Gpu_interface] = self.get_component(key)
+        temp = []
+        for gpu in gpus:
+            temp.append(gpu.model)
+
+        return '\n'.join(temp) if len(gpus) > 0 else '{} N/A'.format(key)
+
+    @property
+    def gpuid(self) -> str:
+        return get_gpuid(self.idsMap[self.idsMap["map"]["GPU:"]], self.get_component("GPU:"))
+
+    @property
+    def disks(self) -> str:
+        return self.get_component_line("Disk")
+
+    @property
+    def resolution(self) -> str:
+        return self.get_component_line("Resolution:")
+
+    @property
+    def theme(self) -> str:
+        return self.get_component_line("Theme:")
+
+    @property
+    def kernel(self) -> str:
+        return self.get_component_line("Kernel:")
+
+    @property
+    def packages(self) -> str:
+        return self.get_component_line("Packages:")
+
+    @property
+    def shell(self) -> str:
+        return self.get_component_line("Shell:")
+
+    @property
+    def shellid(self) -> str:
+        return self.get_component_id("Shell:")
+
+    @property
+    def terminal(self) -> str:
+        return self.get_component_line("Terminal:")
+
+    @property
+    def terminalid(self) -> str:
+        return self.get_component_id("Terminal:")
+
+    @property
+    def wm(self) -> str:
+        return self.get_component_line("WM:")
+
+    @property
+    def wmid(self) -> str:
+        return self.get_component_line("WM:").split()[0]
+
+    @property
+    def font(self) -> str:
+        return self.get_component_line("Font:")
+
+    @property
+    def de(self) -> str:
+        return self.get_component_line("DE:")
+
+    @property
+    def deid(self) -> str:
+        return self.get_component_line("DE:").split()[0]
+
+    @property
+    def dewmid(self) -> str:
+        return '\n'.join(self.get_component_line("DE:")+self.get_component_line("WM:"))
+
+    @property
+    def desktopid(self) -> str:
+        deid = self.deid.lower()
+        wmid = self.wmid.lower()
+
+        if deid != "n/a" and deid in self.idsMap[self.idsMap["map"]["DE:"]]:
+            return deid
+
+        elif deid == "n/a" and wmid in self.idsMap[self.idsMap["map"]["WM:"]]:
+            return wmid
+        else:
+            print("Unknown DE/WM, contact us on github to resolve this.")
+            return 'unknown'
+
+    @property
+    def battery(self) -> str:
+        return self.get_component_line("Battery:")
+
+    @property
+    def lapordesk(self) -> str:
+        if self.laptop and self.os != "macos":
+            return "laptop"
+        else:
+            return "desktop"
 
     def __init__(self):
         super().__init__()
 
         self.parseMap = {
             'CPU:': get_cpu,
+            'GPU:': get_gpu,
             'Disk': self.get_disk,
             'Memory:': self.get_memory,
             'OS:': self.get,
@@ -97,23 +225,36 @@ class Computer:
             'Terminal:': self.get,
             'Font:': self.get,
             'DE:': self.get,
-            'WM:': self.get
+            'WM:': self.get,
+            'Battery:': self.get
         }
 
         self.componentMap = {}
+        self.idsMap = get_infos()
 
         self.detect_os()
+        self.detect_laptop()
         self.neofetchwin, self.neofetch, self.values = self.detect_neofetch()
         self.neofetch_parser(self.values)
+
+    def updateMap(self):
+        self.clearMap()
+        self.neofetchwin, self.neofetch, self.values = self.detect_neofetch()
+        self.neofetch_parser(self.values)
+
+    def clearMap(self):
+        for key in self.componentMap.keys():
+            del self.componentMap[key][:]
 
     def neofetch_parser(self, values: str):
         lines = values.split('\n')
         for i in range(len(lines)):
             line = lines[i]
-            for key, detectedFunction in [ (key, value) for key, value in self.parseMap.items() if key in line]:
+            for key, detectedFunction in [(key, value) for key, value in self.parseMap.items() if key in line]:
                 if key not in self.componentMap:
                     self.componentMap[key] = []
-                detectedFunction(self.os, self.componentMap[key], line.rstrip('\n'), key)
+                detectedFunction(
+                    self.os, self.componentMap[key], line.rstrip('\n'), key)
 
     def detect_os(self) -> str:
         if platform == 'linux' or platform == 'linux2':
@@ -126,6 +267,17 @@ class Computer:
             raise Exception('Not a supported OS !')
 
         return self.os
+
+    def detect_laptop(self) -> bool:
+        if self.os != 'linux':
+            self.laptop = False
+        else:
+            for i in os.listdir('/sys/class/power_supply'):
+                if i.startswith("BAT"):
+                    self.laptop = True
+                    break
+
+        return self.laptop
 
     def detect_neofetch(self):
         neofetchwin = False
@@ -182,10 +334,11 @@ class Computer:
             used = float(memgb[1].replace("MiB", ""))
             total = float(memgb[3].replace("MiB", ""))
 
-            line.append(' '.join([str(round(used / 1024, 2)), "GiB /", str(round(total / 1024, 2)), "GiB"]))
+            line.append(' '.join(
+                [str(round(used / 1024, 2)), "GiB /", str(round(total / 1024, 2)), "GiB"]))
         else:
             line.append(value[value.find(key)+len(key)+1:])
-    
+
     def get(self, os: str, line: List, value: str, key: str, valueOffset: int = 1):
         """
         Get the info from the given neofetch line
@@ -207,6 +360,12 @@ class Computer:
         line.append(value[value.find(key)+len(key)+valueOffset:])
 
     def get_component(self, key: str):
+        """
+        Get component info from map
+
+        Args:
+            key (str): component key in map
+        """
         try:
             return self.componentMap[key]
         except KeyError as err:
@@ -214,3 +373,39 @@ class Computer:
             print(err)
 
             return []
+
+    def get_component_line(self, key: str) -> str:
+        try:
+            values = self.componentMap[key]
+            return '\n'.join(values) if len(values) > 0 else '{} N/A'.format(key)
+        except KeyError as err:
+            print("[KeyError]: ", end="")
+            print(err)
+
+            return "{} N/A".format(key)
+
+    def get_component_id(self, key: str) -> str:
+        component = self.get_component_line(key).lower()
+        component_list = self.idsMap[self.idsMap["map"][key]]
+
+        for comp, id in component_list.items():
+            if component.find(comp.lower()) >= 0:
+                return id
+
+        print("Unknown {}, contact us on github to resolve this.".format(
+            self.idsMap["map"][key]))
+
+        return component_list["unknown"]
+
+    def get_component_idkey(self, key: str) -> str:
+        component = self.get_component_line(key).lower()
+        component_list = self.idsMap[self.idsMap["map"][key]]
+
+        for comp, _ in component_list.items():
+            if component.find(comp.lower()) >= 0:
+                return comp
+
+        print("Unknown {}, contact us on github to resolve this.".format(
+            self.idsMap["map"][key]))
+
+        return component_list["unknown"]

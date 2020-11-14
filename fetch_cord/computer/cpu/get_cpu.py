@@ -13,9 +13,9 @@ def get_cpu(os: str, line: List, value: str, key: str):
         Neofetch extracted line
     """
 
-    vendor = value.split()[1].replace('Intel(R)', 'Intel')
+    vendor = value.replace(key, '').lstrip('').replace('Intel(R)', 'Intel')
 
-    if vendor == 'Intel' or vendor == 'Pentium':
+    if vendor.find('Intel') != -1 or vendor.find('Pentium') != -1:
         line.append(Cpu_intel(os, value))
     elif vendor.find('AMD') != -1:
         line.append(Cpu_amd(os, value))

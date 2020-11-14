@@ -67,6 +67,16 @@ class TestFetchCordComputer(unittest.TestCase):
                 print('Detected CPU Temp : ' + str(cpu.temp) + "°c")
     
     @ordered
+    def test_detected_gpu(self):
+        """Test detected GPU"""
+
+        if len(self.pc.gpu) == 0 or self.pc.gpu == ["N/A"]:
+            print('No GPU detected !')
+        else:
+            for gpu in self.pc.gpu:
+                print('Detected GPU : ' + gpu.model)
+
+    @ordered
     def test_detected_disks(self):
         """Test detected disks"""
 
