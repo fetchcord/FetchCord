@@ -1,6 +1,7 @@
 from __future__ import annotations
-from psutil import sensors_temperatures
-
+import os
+if os.name != "nt":
+    from psutil import sensors_temperatures
 from .Cpu_interface import Cpu_interface
 
 CPU_VENDOR = "amd"
