@@ -11,6 +11,7 @@ class Cpu_intel(Cpu_interface):
 
     @Cpu_interface.model.setter
     def model(self, value: str):
+        self.info = value
         if value.split()[1].replace("Intel(R)", "Intel") == "Pentium":
             self._model = value.split()[1]
         else:

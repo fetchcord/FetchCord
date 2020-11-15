@@ -34,7 +34,7 @@ def run_debug(computer: Computer):
     if cpu:
         print("cpuvendor: %s" % cpu[0].vendor)
         print("cpumodel: %s" % cpu[0].model)
-    print("cpuinfo: %s" % computer.cpuid)
+        print("cpuinfo: %s" % cpu[0].info)
     print("cpuline item 0: %s" % computer.cpu)
     print("memline: %s" % computer.memory)
     print("\n----OS INFO----\n")

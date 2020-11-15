@@ -99,7 +99,7 @@ class Computer:
         cpus: List[Cpu_interface] = self.get_component(key)
         temp = []
         for cpu in cpus:
-            temp.append(cpu.model)
+            temp.append(cpu.info)
 
         return "\n".join(temp) if len(cpus) > 0 else "{} N/A".format(key)
 

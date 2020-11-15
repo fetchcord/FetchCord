@@ -1,5 +1,6 @@
 from __future__ import annotations
 import os
+
 if os.name != "nt":
     from psutil import sensors_temperatures
 from .Cpu_interface import Cpu_interface
@@ -13,6 +14,7 @@ class Cpu_amd(Cpu_interface):
 
     @Cpu_interface.model.setter
     def model(self, value: str):
+        self.info = value
         self._model = " ".join([value.split()[2], value.split()[3]])
 
     def get_temp(self) -> float:
