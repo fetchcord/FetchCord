@@ -14,7 +14,7 @@ class Cpu_amd(Cpu_interface):
 
     @Cpu_interface.model.setter
     def model(self, value: str):
-        self.info = value.split()[1:]
+        self.info = " ".join(value.split()[1:])
         self._model = " ".join([value.split()[2], value.split()[3]])
 
     def get_temp(self) -> float:
