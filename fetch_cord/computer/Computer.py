@@ -37,7 +37,7 @@ class Computer:
     @property
     def osinfoid(self) -> str:
         component = self.get_component_line("OS:")
-        component = (component.split()[1] + component.split()[2]).lower()
+        component = (component.split()[0] + component.split()[1]).lower()
         component_list = self.idsMap[self.idsMap["map"]["OS:"]]
 
         for comp, id in component_list.items():

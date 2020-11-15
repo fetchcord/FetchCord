@@ -50,7 +50,7 @@ class Run_rpc:
             while True:
                 for i in range(len(self.loops_indexes)):
                     if loop == self.poll_rate:
-                        self.update(self, computer)
+                        self.update(computer)
                         loop = 0
                     try:
                         client_id, func = self.loops[self.loops_indexes[i]]
@@ -61,6 +61,7 @@ class Run_rpc:
                             self.try_connect(self.loops_indexes[i])
 
                         func(self, self.loops_indexes[i], computer)
+                        loop += 1
                     except ConnectionResetError:
                         self.try_connect(self.loops_indexes[i])
         except KeyboardInterrupt:
@@ -179,7 +180,7 @@ def runmac(run: Run_rpc, key: str, computer: Computer):
         time.sleep(9999)
     else:
         time.sleep(30)
-    run.try_clear(key)
+    #run.try_clear(key)
 
 
 def custom_time():
@@ -224,7 +225,7 @@ def cycle0(run: Run_rpc, key: str, computer: Computer):
         time.sleep(int(config_time))
     else:
         time.sleep(30)
-    run.try_clear(key)
+    #run.try_clear(key)
 
 
 def cycle1(run: Run_rpc, key: str, computer: Computer):
@@ -274,7 +275,7 @@ def cycle1(run: Run_rpc, key: str, computer: Computer):
         time.sleep(int(config_time))
     else:
         time.sleep(30)
-    run.try_clear(key)
+    # run.try_clear(key)
 
 
 def cycle2(run: Run_rpc, key: str, computer: Computer):
@@ -322,7 +323,7 @@ def cycle2(run: Run_rpc, key: str, computer: Computer):
         time.sleep(int(config_time))
     else:
         time.sleep(30)
-    run.try_clear(key)
+    #run.try_clear(key)
 
 
 def cycle3(run: Run_rpc, key: str, computer: Computer):
@@ -370,10 +371,11 @@ def cycle3(run: Run_rpc, key: str, computer: Computer):
         else:
             time.sleep(30)
     # back from whence you came
+    #run.try_clear(key)
+
+
+def pause(run: Run_rpc, key: str, computer: Computer):
     run.try_clear(key)
-
-
-def pause():
     if args.debug:
         print("pause_cycle")
     if args.time:
@@ -403,7 +405,7 @@ def windows(run: Run_rpc, key: str, computer: Computer):
         time.sleep(9999)
     else:
         time.sleep(30)
-    run.try_clear(key)
+    #run.try_clear(key)
 
 
 def check_change(computer: Computer):
