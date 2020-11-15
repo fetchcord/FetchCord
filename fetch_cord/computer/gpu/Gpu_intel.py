@@ -1,5 +1,5 @@
+from __future__ import annotations
 from .Gpu_interface import Gpu_interface
-import re
 
 GPU_VENDOR = "intel"
 

@@ -26,7 +26,7 @@ setuptools.setup(
     python_requires=">=3.6",
     entry_points={
         "console_scripts": [
-            "fetchcord=fetch_cord.run_rpc:main",
+            "fetchcord=fetch_cord.__main__:main",
         ]
     },
 )

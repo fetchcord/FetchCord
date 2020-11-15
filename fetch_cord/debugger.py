@@ -1,112 +1,82 @@
-import os
-import sys
+from __future__ import annotations
+from typing import List
+
+from .computer.Computer import Computer
+from .computer.cpu.Cpu_interface import Cpu_interface
 
 
-def run_debug():
-    from fetch_cord.out import (
-        cpuvendor,
-        cpumodel,
-        cpuinfo,
-        cpuline,
-        memline,
-        sysosid,
-        sysosline,
-        gpuvendor,
-        diskline,
-        gpuinfo,
-        resline,
-    )
-
-    if os.name != "nt":
-        from fetch_cord.out import (
-            deid,
-            wmid,
-            wmline,
-            hostline,
-            fontline,
-            lapordesk,
-            batteryline,
-            termid,
-            packagesline,
-            termline,
-            themeline,
-        )
-
+def run_debug(computer: Computer):
     print("----out.py----\n")
     print("----DE/WM----")
-    if os.name != "nt":
-        print("deid: %s" % deid)
-        print("wmid: %s" % wmid)
+    if computer.os != "windows":
+        print("deid: %s" % computer.deid)
+        print("wmid: %s" % computer.wmid)
         try:
-            print("wmline item 0: %s" % wmline)
+            print("wmline item 0: %s" % computer.wm)
         except IndexError:
             pass
         print("\n----TERMINAL----\n")
-        print("fontline: %s" % fontline)
-        print("termid: %s" % termid)
-        print("termline item 0: %s" % termline)
-        print("themeline: %s" % themeline)
-        if hostline:
+        print("fontline: %s" % computer.font)
+        print("termid: %s" % computer.terminalid)
+        print("termline item 0: %s" % computer.terminal)
+        print("themeline: %s" % computer.theme)
+        if computer.host != "Host: N/A":
             print("\n----HOST INFO----\n")
-            print("hostline: %s" % hostline)
-            if batteryline != hostline:
-                print("batteryline: %s" % batteryline)
-            print("resline: %s" % resline)
+            print("hostline: %s" % computer.host)
+            if computer.battery != computer.host:
+                print("batteryline: %s" % computer.battery)
+            print("resline: %s" % computer.resolution)
     print("\n----GPU INFO----\n")
-    print("gpuinfo: %s" % gpuinfo)
-    print("gpuvendor: %s" % gpuvendor)
+    print("gpuinfo: %s" % computer.gpu)
+    print("gpuvendor: %s" % computer.gpuid)
     print("\n----CPU INFO----\n")
-    print("cpuvendor: %s" % cpuvendor)
-    print("cpumodel: %s" % cpumodel)
-    print("cpuinfo: %s" % cpuinfo)
-    print("cpuline item 0: %s" % cpuline)
-    print("memline: %s" % memline)
+    cpu: List[Cpu_interface] = computer.get_component("CPU:")
+    if cpu:
+        print("cpuvendor: %s" % cpu[0].vendor)
+        print("cpumodel: %s" % cpu[0].model)
+    print("cpuinfo: %s" % computer.cpuid)
+    print("cpuline item 0: %s" % computer.cpu)
+    print("memline: %s" % computer.memory)
     print("\n----OS INFO----\n")
-    print("sysosline: %s" % sysosline)
-    print("sysosid: %s" % sysosid)
-    if diskline != cpuinfo:
-        print("diskline: %s" % diskline)
-    if os.name != "nt":
-        print("packagesline item 0: %s" % packagesline)
+    print("sysosline: %s" % computer.osinfo)
+    print("sysosid: %s" % computer.osinfoid)
+    print("diskline: %s" % computer.disks)
+    if computer.os != "windows":
+        print("packagesline item 0: %s" % computer.packages)
 
 
-def test_debug(
-    gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid, shellid
-):
+def test_debug(computer: Computer):
     print("\n----testing.py----")
-    if os.name != "nt":
+    if computer.os != "windows":
         print("----DE/WM----\n")
-        print("deid: %s" % deid)
-        print("wmid: %s" % wmid)
+        print("deid: %s" % computer.deid)
+        print("wmid: %s" % computer.wmid)
         print("\n----TERMINAL/SHELL----\n")
-        print("termid: %s" % termid)
-        print("shellid: %s" % shellid)
+        print("termid: %s" % computer.terminalid)
+        print("shellid: %s" % computer.shellid)
         print("\n----HOST INFO----\n")
-        print("hostid: %s" % hostid)
-    elif os.name == "nt":
-        print("moboid: %s" % moboid)
-        print("moboline: %s" % moboline)
+        print("hostid: %s" % computer.hostid)
+    else:
+        print("moboid: %s" % computer.motherboardid)
+        print("moboline: %s" % computer.motherboard)
     print("\n----GPU INFO----\n")
-    print("gpuvendor: %s" % gpuvendor)
+    print("gpuvendor: %s" % computer.gpuid)
     print("\n----CPU INFO----\n")
-    print("cpumodel: %s\n" % cpumodel)
+    cpu = computer.get_component("CPU:")
+    if cpu:
+        print("cpumodel: %s\n" % cpu[0].model)
 
 
-def run_rpc_debug(
-    uptime,
-    appid,
-    cpuappid,
-    hostappid="N/A",
-    hostline="N/A",
-    packagesline="N/A",
-    termappid="N/A",
-):
+def run_rpc_debug(computer: Computer):
     print("----run_rpc----\n")
-    print("uptime in epoch: %s" % uptime)
-    print("cpuid: %s" % appid)
-    print("cpuappid: %s" % cpuappid)
-    if os.name != "nt":
-        print("termappid: %s" % termappid)
-        if hostline:
-            print("hostappid: %s" % hostappid)
-        print(packagesline)
+    print("uptime in epoch: %s" % computer.uptime)
+    print("cpuid: %s" % computer.osinfoid)
+    print("cpuappid: %s" % computer.cpuid)
+    if computer.os != "windows":
+        print("termappid: %s" % computer.terminalid)
+        if computer.host != "Host: N/A":
+            print("hostappid: %s" % computer.hostappid)
+        print(computer.packages)
+
+    run_debug(computer)
+    test_debug(computer)

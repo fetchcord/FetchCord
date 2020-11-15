@@ -1,3 +1,4 @@
+from __future__ import annotations
 import argparse
 
 
@@ -38,7 +39,7 @@ def parse_args():
         "--termfont",
         metavar="TERMFONT",
         action="store",
-        help="Set ustom Terminal Font (useful if neofetch can't get it).",
+        help="Set custom Terminal Font (useful if neofetch can't get it).",
     )
     parser.add_argument(
         "--update",

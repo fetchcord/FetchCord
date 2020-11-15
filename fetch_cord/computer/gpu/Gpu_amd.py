@@ -1,5 +1,9 @@
-from .Gpu_interface import Gpu_interface
-import re
+from __future__ import annotations
+from fetch_cord.run_command import BashError, exec_bash
+from typing import List
+import sys
+
+from .Gpu_interface import Gpu_interface, GpuType
 
 GPU_VENDOR = "amd"
 
@@ -27,3 +31,25 @@ class Gpu_amd(Gpu_interface):
             )
         else:
             raise NotImplementedError("Unknown OS, no GPU temperature report.")
+
+    def get_amdgpurender(self, gpu_list: List[GpuType], laptop: bool) -> str:
+        try:
+            for i in range(len(gpu_list)):
+                # assume DRI_PRIME=0 is the intel GPU
+                if laptop and "intel" == gpu_list[i].vendor.lower():
+                    i += 1
+                if (
+                    laptop
+                    and "amd" == gpu_list[i].vendor.lower()
+                    and gpu_list[i].model != self.model
+                ):
+                    i += 1
+
+                env_prime = "DRI_PRIME=%s" % i
+                return exec_bash(
+                    "%s glxinfo | grep \"OpenGL renderer string:\" |sed 's/^.*: //;s/[(][^)]*[)]//g'"
+                    % env_prime
+                )
+        except BashError as e:
+            print("ERROR: Could not run glxinfo [%s]" % str(e))
+            sys.exit(1)

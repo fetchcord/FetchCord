@@ -8,7 +8,8 @@
         "Shell:": "shell",
         "OS:": "distro",
         "DE:": "desktop",
-        "WM:": "windowmanager"
+        "WM:": "windowmanager",
+        "Version:": "version"
     },
     "gpu": {
         "amd": "amd",
@@ -145,7 +146,7 @@
         "openbox": "openbox",
         "herbstluftwm": "herbstluftwm"
     },
-    "versions": {
+    "version": {
         "10.13": "hsierria",
         "10.14": "mojave",
         "10.15": "catalina"

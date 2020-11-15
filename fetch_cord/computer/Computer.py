@@ -1,29 +1,32 @@
-import os
+from __future__ import annotations
 from sys import platform, exit
-from typing import Dict, List
+import sys
+from typing import Callable, Dict, List
+import psutil, os
+
 from ..run_command import run_command
 from ..args import parse_args
-
-from .get_infos import get_infos
+from .flatpak import enableFlatpak
+from .resources import get_infos, get_default_config
 from .cpu.get_cpu import get_cpu
 from .cpu.Cpu_interface import Cpu_interface
 from .gpu.get_gpu import get_gpu
-from .gpu.Gpu_interface import Gpu_interface, get_gpuid
+from .gpu.Gpu_interface import GpuType, get_gpuid
 
 args = parse_args()
 
 
 class Computer:
-    parseMap: Dict
-    componentMap: Dict
-
-    idsMap: Dict
+    parseMap: Dict[str, Callable]
+    componentMap: Dict[str, List] = {}
+    idsMap: Dict[str, Dict]
 
     os: str
     neofetchwin: bool = False
     neofetch: bool = False
     values: str
     laptop: bool = False
+    uptime: float
 
     @property
     def memory(self) -> str:
@@ -112,10 +115,13 @@ class Computer:
     @property
     def gpu(self) -> str:
         key = "GPU:"
-        gpus: List[Gpu_interface] = self.get_component(key)
+        gpus: List[GpuType] = self.get_component(key)
         temp = []
         for gpu in gpus:
-            temp.append(gpu.model)
+            if gpu.vendor == "amd" and self.os == "linux":
+                temp.append(gpu.get_amdgpurender(gpus, self.laptop).rstrip().lstrip())
+            else:
+                temp.append(gpu.model.lstrip().rstrip())
 
         return "\n".join(temp) if len(gpus) > 0 else "{} N/A".format(key)
 
@@ -192,6 +198,12 @@ class Computer:
         deid = self.deid.lower()
         wmid = self.wmid.lower()
 
+        if deid == "unity":
+            if wmid == "compiz":
+                return "unity"
+            else:
+                return wmid
+
         if deid != "n/a" and deid in self.idsMap[self.idsMap["map"]["DE:"]]:
             return deid
 
@@ -203,7 +215,10 @@ class Computer:
 
     @property
     def battery(self) -> str:
-        return self.get_component_line("Battery:")
+        if self.laptop:
+            return self.get_component_line("Battery:")
+        else:
+            return "{} N/A".format("Battery:")
 
     @property
     def lapordesk(self) -> str:
@@ -211,6 +226,29 @@ class Computer:
             return "laptop"
         else:
             return "desktop"
+
+    @property
+    def version(self) -> str:
+        return os.popen("sw_vers -productVersion").read()
+
+    @property
+    def product(self) -> str:
+        return os.popen("sysctl -n hw.model").read()
+
+    @property
+    def devicetype(self) -> str:
+        if self.product[0:7] == "MacBook":
+            return "laptop"
+        else:
+            return "desktop"
+
+    @property
+    def bigicon(self) -> str:
+        try:
+            return self.idsMap[self.idsMap["map"]["Version:"]][self.version[0:5]]
+        except KeyError:
+            print("Unsupported MacOS version")
+            return "bigslurp"
 
     def __init__(self):
         super().__init__()
@@ -235,20 +273,56 @@ class Computer:
             "Battery:": self.get,
         }
 
-        self.componentMap = {}
         self.idsMap = get_infos()
+        self.uptime = psutil.boot_time()
 
         self.detect_os()
         self.detect_laptop()
+
+        self.fetch_values()
+
+    def fetch_values(self):
         self.neofetchwin, self.neofetch, self.values = self.detect_neofetch()
         self.neofetch_parser(self.values)
 
+        if not bool(self.componentMap):
+            args.config_path = ""
+            args.noconfig = False
+
+            self.neofetchwin, self.neofetch, self.values = self.detect_neofetch()
+            self.neofetch_parser(self.values)
+
+        terminallist = self.idsMap[self.idsMap["map"]["Terminal:"]]
+        if args.terminal and args.terminal in terminallist:
+            self.componentMap["Terminal:"] = [args.terminal]
+        elif args.terminal and args.terminal not in terminallist:
+            print(
+                "\nInvalid terminal, only %s are supported.\n"
+                "Please make a github issue if you would like to have your terminal added.\n"
+                "https://github.com/MrPotatoBobx/FetchCord" % terminallist
+            )
+            sys.exit(1)
+
+        if self.get_component("Font:", True) and args.termfont:
+            print(
+                "Custom terminal font not set because a terminal font already exists, %s"
+                % self.font
+            )
+        elif not self.get_component("Font:", True) and args.termfont:
+            self.componentMap["Font:"] = [args.termfont]
+
     def updateMap(self):
+        """
+        Clear the components values and fetch new ones
+        """
         self.clearMap()
         self.neofetchwin, self.neofetch, self.values = self.detect_neofetch()
         self.neofetch_parser(self.values)
 
     def clearMap(self):
+        """
+        Clear the components values
+        """
         for key in self.componentMap.keys():
             del self.componentMap[key][:]
 
@@ -301,9 +375,22 @@ class Computer:
             else:
                 neofetchwin = True
         elif not neofetchwin:
+            if self.os == "linux":
+                enableFlatpak()
+
+            default_config = get_default_config()
+
             try:
                 values = run_command(
-                    ["neofetch", "--stdout", "--config none" if args.noconfig else ""],
+                    [
+                        "neofetch",
+                        "--stdout",
+                        "--config=%s" % "none"
+                        if args.noconfig
+                        else (
+                            args.config_path if args.config_path else (default_config)
+                        ),
+                    ],
                     shell=(self.os == "windows"),
                 )
             except Exception:
@@ -375,7 +462,7 @@ class Computer:
 
         line.append(value[value.find(key) + len(key) + valueOffset :])
 
-    def get_component(self, key: str):
+    def get_component(self, key: str, quiet: bool = False):
         """
         Get component info from map
 
@@ -385,8 +472,8 @@ class Computer:
         try:
             return self.componentMap[key]
         except KeyError as err:
-            print("[KeyError]: ", end="")
-            print(err)
+            if quiet:
+                print("[KeyError]: {}".format(err), end="")
 
             return []
 

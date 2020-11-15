@@ -1,29 +1,26 @@
-import os
-import shutil
-from pathlib import Path
-import copy
-import json
-import configparser
+from __future__ import annotations
 
 try:
     import importlib.resources as pkg_resources
 except ImportError:
     # Try backported to PY<37 `importlib_resources`.
     import importlib_resources as pkg_resources
-import fetch_cord.ressources as ressources
-from fetch_cord.args import parse_args
+import os, copy, json, configparser
+
+from . import resources as fc_resources
+from .args import parse_args
+
+
+args = parse_args()
 
 
 class ConfigError(Exception):
     pass
 
 
-args = parse_args()
-
-
 def load_config():
     default_config = configparser.ConfigParser()
-    with pkg_resources.path(ressources, "fetch_cord.conf") as path:
+    with pkg_resources.path(fc_resources, "fetch_cord.conf") as path:
         default_config.read_file(open(path))
         default_config.read(
             ["/etc/fetch_cord.conf", os.path.expanduser("~/fetch_cord.conf")]
@@ -142,6 +139,8 @@ def _parsed_config_to_dict(config):
 
 
 def _validate_option(schema_option_info, config_option_value):
+    valid = False
+    msg = "error"
 
     parameter_type = schema_option_info[0]
 

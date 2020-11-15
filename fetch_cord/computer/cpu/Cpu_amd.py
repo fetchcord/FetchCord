@@ -1,4 +1,4 @@
-from typing import Dict, overload
+from __future__ import annotations
 from psutil import sensors_temperatures
 
 from .Cpu_interface import Cpu_interface
