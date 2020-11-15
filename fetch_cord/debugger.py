@@ -1,12 +1,36 @@
 import os
 import sys
 
+
 def run_debug():
-    from fetch_cord.out import cpuvendor, cpumodel, cpuinfo, cpuline, memline,\
-            sysosid, sysosline, gpuvendor, diskline, gpuinfo, resline
+    from fetch_cord.out import (
+        cpuvendor,
+        cpumodel,
+        cpuinfo,
+        cpuline,
+        memline,
+        sysosid,
+        sysosline,
+        gpuvendor,
+        diskline,
+        gpuinfo,
+        resline,
+    )
+
     if os.name != "nt":
-        from fetch_cord.out import deid, wmid, wmline, hostline, fontline, lapordesk, batteryline, \
-            termid, packagesline, termline, themeline
+        from fetch_cord.out import (
+            deid,
+            wmid,
+            wmline,
+            hostline,
+            fontline,
+            lapordesk,
+            batteryline,
+            termid,
+            packagesline,
+            termline,
+            themeline,
+        )
 
     print("----out.py----\n")
     print("----DE/WM----")
@@ -46,7 +70,9 @@ def run_debug():
         print("packagesline item 0: %s" % packagesline)
 
 
-def test_debug(gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid, shellid):
+def test_debug(
+    gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid, shellid
+):
     print("\n----testing.py----")
     if os.name != "nt":
         print("----DE/WM----\n")
@@ -65,7 +91,16 @@ def test_debug(gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid
     print("\n----CPU INFO----\n")
     print("cpumodel: %s\n" % cpumodel)
 
-def run_rpc_debug(uptime, appid, cpuappid, hostappid = "N/A", hostline = "N/A", packagesline = "N/A", termappid = "N/A"):
+
+def run_rpc_debug(
+    uptime,
+    appid,
+    cpuappid,
+    hostappid="N/A",
+    hostline="N/A",
+    packagesline="N/A",
+    termappid="N/A",
+):
     print("----run_rpc----\n")
     print("uptime in epoch: %s" % uptime)
     print("cpuid: %s" % appid)
@@ -75,4 +110,3 @@ def run_rpc_debug(uptime, appid, cpuappid, hostappid = "N/A", hostline = "N/A", 
         if hostline:
             print("hostappid: %s" % hostappid)
         print(packagesline)
-

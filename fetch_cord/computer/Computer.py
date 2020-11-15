@@ -1,4 +1,3 @@
-
 import os
 from sys import platform, exit
 from typing import Dict, List
@@ -44,8 +43,11 @@ class Computer:
             if component.find(comp.lower()) >= 0:
                 return id
 
-        print("Unknown {}, contact us on github to resolve this.".format(
-            self.idsMap["map"]["OS:"]))
+        print(
+            "Unknown {}, contact us on github to resolve this.".format(
+                self.idsMap["map"]["OS:"]
+            )
+        )
 
         return component_list["unknown"]
 
@@ -72,11 +74,11 @@ class Computer:
 
         # try to get MacBook hostid
         hostid = []
-        hostjoin = ' '.join(self.host)
+        hostjoin = " ".join(self.host)
         for numsplit in range(len(hostjoin)):
             if not hostjoin[numsplit].isdigit():
                 hostid.append(hostjoin[numsplit])
-        hostid = ''.join(hostid)
+        hostid = "".join(hostid)
         hostid = hostid.split()[1]
 
         if hostid in host_list:
@@ -96,7 +98,7 @@ class Computer:
         for cpu in cpus:
             temp.append(cpu.model)
 
-        return '\n'.join(temp) if len(cpus) > 0 else '{} N/A'.format(key)
+        return "\n".join(temp) if len(cpus) > 0 else "{} N/A".format(key)
 
     @property
     def cpuid(self) -> str:
@@ -115,11 +117,13 @@ class Computer:
         for gpu in gpus:
             temp.append(gpu.model)
 
-        return '\n'.join(temp) if len(gpus) > 0 else '{} N/A'.format(key)
+        return "\n".join(temp) if len(gpus) > 0 else "{} N/A".format(key)
 
     @property
     def gpuid(self) -> str:
-        return get_gpuid(self.idsMap[self.idsMap["map"]["GPU:"]], self.get_component("GPU:"))
+        return get_gpuid(
+            self.idsMap[self.idsMap["map"]["GPU:"]], self.get_component("GPU:")
+        )
 
     @property
     def disks(self) -> str:
@@ -179,7 +183,9 @@ class Computer:
 
     @property
     def dewmid(self) -> str:
-        return '\n'.join(self.get_component_line("DE:")+self.get_component_line("WM:"))
+        return "\n".join(
+            self.get_component_line("DE:") + self.get_component_line("WM:")
+        )
 
     @property
     def desktopid(self) -> str:
@@ -193,7 +199,7 @@ class Computer:
             return wmid
         else:
             print("Unknown DE/WM, contact us on github to resolve this.")
-            return 'unknown'
+            return "unknown"
 
     @property
     def battery(self) -> str:
@@ -210,23 +216,23 @@ class Computer:
         super().__init__()
 
         self.parseMap = {
-            'CPU:': get_cpu,
-            'GPU:': get_gpu,
-            'Disk': self.get_disk,
-            'Memory:': self.get_memory,
-            'OS:': self.get,
-            'Motherboard:': self.get,
-            'Host:': self.get,
-            'Resolution:': self.get,
-            'Theme:': self.get,
-            'Kernel:': self.get,
-            'Packages:': self.get,
-            'Shell:': self.get,
-            'Terminal:': self.get,
-            'Font:': self.get,
-            'DE:': self.get,
-            'WM:': self.get,
-            'Battery:': self.get
+            "CPU:": get_cpu,
+            "GPU:": get_gpu,
+            "Disk": self.get_disk,
+            "Memory:": self.get_memory,
+            "OS:": self.get,
+            "Motherboard:": self.get,
+            "Host:": self.get,
+            "Resolution:": self.get,
+            "Theme:": self.get,
+            "Kernel:": self.get,
+            "Packages:": self.get,
+            "Shell:": self.get,
+            "Terminal:": self.get,
+            "Font:": self.get,
+            "DE:": self.get,
+            "WM:": self.get,
+            "Battery:": self.get,
         }
 
         self.componentMap = {}
@@ -247,32 +253,35 @@ class Computer:
             del self.componentMap[key][:]
 
     def neofetch_parser(self, values: str):
-        lines = values.split('\n')
+        lines = values.split("\n")
         for i in range(len(lines)):
             line = lines[i]
-            for key, detectedFunction in [(key, value) for key, value in self.parseMap.items() if key in line]:
+            for key, detectedFunction in [
+                (key, value) for key, value in self.parseMap.items() if key in line
+            ]:
                 if key not in self.componentMap:
                     self.componentMap[key] = []
                 detectedFunction(
-                    self.os, self.componentMap[key], line.rstrip('\n'), key)
+                    self.os, self.componentMap[key], line.rstrip("\n"), key
+                )
 
     def detect_os(self) -> str:
-        if platform == 'linux' or platform == 'linux2':
-            self.os = 'linux'
-        elif platform == 'darwin':
-            self.os = 'macos'
-        elif platform == 'win32':
-            self.os = 'windows'
+        if platform == "linux" or platform == "linux2":
+            self.os = "linux"
+        elif platform == "darwin":
+            self.os = "macos"
+        elif platform == "win32":
+            self.os = "windows"
         else:
-            raise Exception('Not a supported OS !')
+            raise Exception("Not a supported OS !")
 
         return self.os
 
     def detect_laptop(self) -> bool:
-        if self.os != 'linux':
+        if self.os != "linux":
             self.laptop = False
         else:
-            for i in os.listdir('/sys/class/power_supply'):
+            for i in os.listdir("/sys/class/power_supply"):
                 if i.startswith("BAT"):
                     self.laptop = True
                     break
@@ -284,28 +293,27 @@ class Computer:
         neofetch = False
         values = None
 
-        if self.os == 'windows':
+        if self.os == "windows":
             try:
-                values = run_command(['neofetch', '--noart'])
+                values = run_command(["neofetch", "--noart"])
             except Exception:
                 pass
             else:
                 neofetchwin = True
         elif not neofetchwin:
             try:
-                values = run_command([
-                    'neofetch',
-                    '--stdout',
-                    '--config none' if args.noconfig else ''],
-                    shell=(self.os == 'windows'))
+                values = run_command(
+                    ["neofetch", "--stdout", "--config none" if args.noconfig else ""],
+                    shell=(self.os == "windows"),
+                )
             except Exception:
                 print(
-                    'ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH.')
+                    "ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH."
+                )
                 exit(1)
             else:
                 neofetch = True
-        return (
-            neofetchwin, neofetch, values)
+        return (neofetchwin, neofetch, values)
 
     def get_disk(self, os: str, line: List, value: str, key: str):
         """
@@ -317,7 +325,7 @@ class Computer:
             Neofetch extracted line
         """
 
-        line.append(value[value.find(key)+len(key)+2:])
+        line.append(value[value.find(key) + len(key) + 2 :])
 
     def get_memory(self, os: str, line: List, value: str, key: str):
         """
@@ -334,10 +342,18 @@ class Computer:
             used = float(memgb[1].replace("MiB", ""))
             total = float(memgb[3].replace("MiB", ""))
 
-            line.append(' '.join(
-                [str(round(used / 1024, 2)), "GiB /", str(round(total / 1024, 2)), "GiB"]))
+            line.append(
+                " ".join(
+                    [
+                        str(round(used / 1024, 2)),
+                        "GiB /",
+                        str(round(total / 1024, 2)),
+                        "GiB",
+                    ]
+                )
+            )
         else:
-            line.append(value[value.find(key)+len(key)+1:])
+            line.append(value[value.find(key) + len(key) + 1 :])
 
     def get(self, os: str, line: List, value: str, key: str, valueOffset: int = 1):
         """
@@ -357,7 +373,7 @@ class Computer:
             Offset for extracting the value without the key (default : 1)
         """
 
-        line.append(value[value.find(key)+len(key)+valueOffset:])
+        line.append(value[value.find(key) + len(key) + valueOffset :])
 
     def get_component(self, key: str):
         """
@@ -377,7 +393,7 @@ class Computer:
     def get_component_line(self, key: str) -> str:
         try:
             values = self.componentMap[key]
-            return '\n'.join(values) if len(values) > 0 else '{} N/A'.format(key)
+            return "\n".join(values) if len(values) > 0 else "{} N/A".format(key)
         except KeyError as err:
             print("[KeyError]: ", end="")
             print(err)
@@ -392,8 +408,11 @@ class Computer:
             if component.find(comp.lower()) >= 0:
                 return id
 
-        print("Unknown {}, contact us on github to resolve this.".format(
-            self.idsMap["map"][key]))
+        print(
+            "Unknown {}, contact us on github to resolve this.".format(
+                self.idsMap["map"][key]
+            )
+        )
 
         return component_list["unknown"]
 
@@ -405,7 +424,10 @@ class Computer:
             if component.find(comp.lower()) >= 0:
                 return comp
 
-        print("Unknown {}, contact us on github to resolve this.".format(
-            self.idsMap["map"][key]))
+        print(
+            "Unknown {}, contact us on github to resolve this.".format(
+                self.idsMap["map"][key]
+            )
+        )
 
         return component_list["unknown"]

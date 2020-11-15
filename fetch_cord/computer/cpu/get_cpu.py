@@ -3,6 +3,7 @@ from typing import List
 from .Cpu_amd import Cpu_amd
 from .Cpu_intel import Cpu_intel
 
+
 def get_cpu(os: str, line: List, value: str, key: str):
     """
     Append the CPU info from the given neofetch line to the CPU list
@@ -13,9 +14,9 @@ def get_cpu(os: str, line: List, value: str, key: str):
         Neofetch extracted line
     """
 
-    vendor = value.replace(key, '').lstrip('').replace('Intel(R)', 'Intel')
+    vendor = value.replace(key, "").lstrip("").replace("Intel(R)", "Intel")
 
-    if vendor.find('Intel') != -1 or vendor.find('Pentium') != -1:
+    if vendor.find("Intel") != -1 or vendor.find("Pentium") != -1:
         line.append(Cpu_intel(os, value))
-    elif vendor.find('AMD') != -1:
+    elif vendor.find("AMD") != -1:
         line.append(Cpu_amd(os, value))

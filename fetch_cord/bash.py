@@ -8,19 +8,16 @@ class BashError(Exception):
 def exec_bash(command):
 
     try:
-        out = subprocess.check_output(
-            ["bash", "-c", command],
-            stderr=subprocess.STDOUT
-        ).decode("utf8").strip()
+        out = (
+            subprocess.check_output(["bash", "-c", command], stderr=subprocess.STDOUT)
+            .decode("utf8")
+            .strip()
+        )
 
     except subprocess.CalledProcessError as e:
         out = e.stdout.decode("utf8")
-        raise BashError(
-            "Failed to execute '%s' :\n%s" % (
-                command, out))
+        raise BashError("Failed to execute '%s' :\n%s" % (command, out))
     except FileNotFoundError as e:
-        raise BashError(
-            "BASH not installed on your computer..."
-        )
+        raise BashError("BASH not installed on your computer...")
 
     return out

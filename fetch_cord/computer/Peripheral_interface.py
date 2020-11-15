@@ -1,5 +1,5 @@
-import subprocess
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+
 
 class Peripherical_interface(metaclass=ABCMeta):
     os: str

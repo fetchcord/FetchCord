@@ -5,6 +5,7 @@ import time
 import sys
 import os
 import psutil
+
 # import info about system
 from .args import parse_args
 from .config import ConfigError, load_config
@@ -37,7 +38,9 @@ class Run_rpc:
 
         # self.try_connect()
 
-    def set_loop(self, loops: Dict, loops_indexes: Dict, update: Callable, poll_rate: int = 3):
+    def set_loop(
+        self, loops: Dict, loops_indexes: Dict, update: Callable, poll_rate: int = 3
+    ):
         self.loops = loops
         self.loops_indexes = loops_indexes
 
@@ -56,8 +59,7 @@ class Run_rpc:
                         client_id, func = self.loops[self.loops_indexes[i]]
 
                         if self.loops_indexes[i] not in self.rpcs:
-                            self.rpcs[self.loops_indexes[i]
-                                      ] = Presence(client_id)
+                            self.rpcs[self.loops_indexes[i]] = Presence(client_id)
                             self.try_connect(self.loops_indexes[i])
 
                         func(self, self.loops_indexes[i], computer)
@@ -75,7 +77,8 @@ class Run_rpc:
                 break
             except ConnectionRefusedError:
                 print(
-                    "RPC connection refused (is Discord open?); trying again in 30 seconds")
+                    "RPC connection refused (is Discord open?); trying again in 30 seconds"
+                )
                 time.sleep(30)
 
     def try_clear(self, key: str):
@@ -84,11 +87,27 @@ class Run_rpc:
         except exceptions.InvalidID:
             pass
 
-    def try_update(self, key: str, state, details, large_image, large_text, small_image, small_text, start):
+    def try_update(
+        self,
+        key: str,
+        state,
+        details,
+        large_image,
+        large_text,
+        small_image,
+        small_text,
+        start,
+    ):
         try:
-            self.rpcs[key].update(state=state, details=details, large_image=large_image,
-                                  large_text=large_text, small_image=small_image, small_text=small_text,
-                                  start=start)
+            self.rpcs[key].update(
+                state=state,
+                details=details,
+                large_image=large_image,
+                large_text=large_text,
+                small_image=small_image,
+                small_text=small_text,
+                start=start,
+            )
         # ConnectionResetError is here to avoid crashing if Discord is still just starting
         except (ConnectionResetError, exceptions.InvalidID):
             pass
@@ -97,17 +116,31 @@ class Run_rpc:
 def main():
     computer: Computer = Computer()
 
-    if not computer.neofetchwin and computer.host == "Host: N/A" and args.nodistro and args.noshell and args.nohardware:
+    if (
+        not computer.neofetchwin
+        and computer.host == "Host: N/A"
+        and args.nodistro
+        and args.noshell
+        and args.nohardware
+    ):
         print("ERROR: no hostline is available!")
         sys.exit(1)
     # printing info with debug switch
     if args.debug:
         if os.name != "nt":
-            run_rpc_debug(uptime=uptime, appid=computer.osinfoid, cpuappid=computer.cpuid, termappid=computer.terminalid,
-                          packagesline=computer.packages, hostline=computer.host, hostappid=computer.hostappid)
+            run_rpc_debug(
+                uptime=uptime,
+                appid=computer.osinfoid,
+                cpuappid=computer.cpuid,
+                termappid=computer.terminalid,
+                packagesline=computer.packages,
+                hostline=computer.host,
+                hostappid=computer.hostappid,
+            )
         else:
-            run_rpc_debug(uptime=uptime, appid=computer.osinfoid,
-                          cpuappid=computer.cpuid)
+            run_rpc_debug(
+                uptime=uptime, appid=computer.osinfoid, cpuappid=computer.cpuid
+            )
 
     run: Run_rpc = Run_rpc()
 
@@ -123,8 +156,12 @@ def main():
             loops["cycle1"] = (computer.cpuid, cycle1)
             loops_indexes[len(loops_indexes)] = "cycle1"
 
-        run.set_loop(loops, loops_indexes, check_change, int(
-            args.poll_rate) if args.poll_rate else 3)
+        run.set_loop(
+            loops,
+            loops_indexes,
+            check_change,
+            int(args.poll_rate) if args.poll_rate else 3,
+        )
         run.run_loop(computer)
     else:
         # loonix
@@ -150,13 +187,18 @@ def main():
             loops["pause"] = ("", pause)
             loops_indexes[len(loops_indexes)] = "pause"
 
-        run.set_loop(loops, loops_indexes, check_change, int(
-            args.poll_rate) if args.poll_rate else 3)
+        run.set_loop(
+            loops,
+            loops_indexes,
+            check_change,
+            int(args.poll_rate) if args.poll_rate else 3,
+        )
         run.run_loop(computer)
 
 
 def runmac(run: Run_rpc, key: str, computer: Computer):
     from fetch_cord.testing import devicetype, product, bigicon, ver
+
     if args.debug:
         print("runmac")
         print("devicetype: %s" % devicetype)
@@ -166,21 +208,23 @@ def runmac(run: Run_rpc, key: str, computer: Computer):
         print("uptime: %s" % uptime)
         # print("client_id: %s" % run.rpcs[key].client_id)
 
-    run.try_update(key,
-                   state=computer.packages,  # update state as packages
-                   details=computer.kernel,  # update details as kernel
-                   large_image=bigicon,  # set icon
-                   large_text=computer.osinfo,  # set large icon text
-                   small_image=devicetype,  # set small image icon
-                   small_text=product,  # set small image text
-                   start=start_time)
+    run.try_update(
+        key,
+        state=computer.packages,  # update state as packages
+        details=computer.kernel,  # update details as kernel
+        large_image=bigicon,  # set icon
+        large_text=computer.osinfo,  # set large icon text
+        small_image=devicetype,  # set small image icon
+        small_text=product,  # set small image text
+        start=start_time,
+    )
     if args.time:
         custom_time()
     elif args.nohost and args.nohardware and args.noshell:
         time.sleep(9999)
     else:
         time.sleep(30)
-    #run.try_clear(key)
+    # run.try_clear(key)
 
 
 def custom_time():
@@ -206,14 +250,16 @@ def cycle0(run: Run_rpc, key: str, computer: Computer):
         de_wm_icon = "off"
     if args.debug:
         print("cycle 0")
-    run.try_update(key,
-                   state=bottom_line,
-                   details=top_line,
-                   large_image="big",
-                   large_text=computer.osinfo,
-                   small_image=de_wm_icon,
-                   small_text=computer.dewmid,
-                   start=start_time)
+    run.try_update(
+        key,
+        state=bottom_line,
+        details=top_line,
+        large_image="big",
+        large_text=computer.osinfo,
+        small_image=de_wm_icon,
+        small_text=computer.dewmid,
+        start=start_time,
+    )
     # if args.debug:
     #     print("appid: %s" % run.rpcs[key].client_id)
     config_time = run.config["cycle_0"]["time"]
@@ -225,7 +271,7 @@ def cycle0(run: Run_rpc, key: str, computer: Computer):
         time.sleep(int(config_time))
     else:
         time.sleep(30)
-    #run.try_clear(key)
+    # run.try_clear(key)
 
 
 def cycle1(run: Run_rpc, key: str, computer: Computer):
@@ -263,7 +309,8 @@ def cycle1(run: Run_rpc, key: str, computer: Computer):
         large_text=computer.cpu,
         small_image=gpu_icon,
         small_text=computer.gpu,
-        start=start_time)
+        start=start_time,
+    )
     # if args.debug:
     #     print("appid: %s" % client_id)
     config_time = run.config["cycle_1"]["time"]
@@ -309,7 +356,8 @@ def cycle2(run: Run_rpc, key: str, computer: Computer):
         large_text=computer.terminal,
         small_image=shell_icon,
         small_text=computer.shell,
-        start=start_time)
+        start=start_time,
+    )
     # if args.debug:
     #     print("appid: %s" % client_id)
 
@@ -323,12 +371,12 @@ def cycle2(run: Run_rpc, key: str, computer: Computer):
         time.sleep(int(config_time))
     else:
         time.sleep(30)
-    #run.try_clear(key)
+    # run.try_clear(key)
 
 
 def cycle3(run: Run_rpc, key: str, computer: Computer):
     # if not then forget it
-    if computer.host != 'Host: N/A':
+    if computer.host != "Host: N/A":
         top_line = run.config["cycle_3"]["top_line"]
         if top_line == "battery":
             top_line = computer.battery
@@ -351,14 +399,16 @@ def cycle3(run: Run_rpc, key: str, computer: Computer):
         if args.debug:
             print("cycle 3")
 
-        run.try_update(key,
-                       state=computer.resolution,
-                       details=computer.battery,
-                       large_image="big",
-                       large_text=computer.host,
-                       small_image=lapordesk_icon,
-                       small_text=computer.lapordesk,
-                       start=start_time)
+        run.try_update(
+            key,
+            state=computer.resolution,
+            details=computer.battery,
+            large_image="big",
+            large_text=computer.host,
+            small_image=lapordesk_icon,
+            small_text=computer.lapordesk,
+            start=start_time,
+        )
         # if args.debug:
         #     print("appid: %s" % client_id)
         config_time = run.config["cycle_3"]["time"]
@@ -371,7 +421,7 @@ def cycle3(run: Run_rpc, key: str, computer: Computer):
         else:
             time.sleep(30)
     # back from whence you came
-    #run.try_clear(key)
+    # run.try_clear(key)
 
 
 def pause(run: Run_rpc, key: str, computer: Computer):
@@ -389,14 +439,16 @@ def windows(run: Run_rpc, key: str, computer: Computer):
         print("w_cycle 0")
 
     run.try_connect(key)
-    run.try_update(key,
-                   state=computer.osinfo,
-                   details=computer.memory,
-                   large_image="big",
-                   large_text=computer.osinfo,
-                   small_image=computer.motherboardid,
-                   small_text=computer.motherboard,
-                   start=start_time)
+    run.try_update(
+        key,
+        state=computer.osinfo,
+        details=computer.memory,
+        large_image="big",
+        large_text=computer.osinfo,
+        small_image=computer.motherboardid,
+        small_text=computer.motherboard,
+        start=start_time,
+    )
     # if args.debug:
     #     print("appid: %s" % client_id)
     if args.time:
@@ -405,7 +457,7 @@ def windows(run: Run_rpc, key: str, computer: Computer):
         time.sleep(9999)
     else:
         time.sleep(30)
-    #run.try_clear(key)
+    # run.try_clear(key)
 
 
 def check_change(computer: Computer):

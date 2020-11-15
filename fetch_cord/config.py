@@ -4,6 +4,7 @@ from pathlib import Path
 import copy
 import json
 import configparser
+
 try:
     import importlib.resources as pkg_resources
 except ImportError:
@@ -12,16 +13,21 @@ except ImportError:
 import fetch_cord.ressources as ressources
 from fetch_cord.args import parse_args
 
+
 class ConfigError(Exception):
     pass
 
+
 args = parse_args()
+
 
 def load_config():
     default_config = configparser.ConfigParser()
-    with pkg_resources.path(ressources, 'fetch_cord.conf') as path:
+    with pkg_resources.path(ressources, "fetch_cord.conf") as path:
         default_config.read_file(open(path))
-        default_config.read(['/etc/fetch_cord.conf', os.path.expanduser('~/fetch_cord.conf')])
+        default_config.read(
+            ["/etc/fetch_cord.conf", os.path.expanduser("~/fetch_cord.conf")]
+        )
         if args.fetchcord_config_path != None:
             default_config.read([args.fetchcord_config_path])
         for item in default_config.items():
@@ -55,6 +61,7 @@ def load_config():
 
 #     return corrected_config
 
+
 def _validate_config(config, fallback_config=None):
 
     folder_path = os.path.dirname(os.path.abspath(__file__))
@@ -74,15 +81,25 @@ def _validate_config(config, fallback_config=None):
         for option in schema[section].keys():
 
             if option not in config[section].keys():
-                raise ConfigError("Cannot find option \"%s\" in section [%s]" % (option, section))
+                raise ConfigError(
+                    'Cannot find option "%s" in section [%s]' % (option, section)
+                )
 
-            valid, msg = _validate_option(schema[section][option], config[section][option])
+            valid, msg = _validate_option(
+                schema[section][option], config[section][option]
+            )
 
             if not valid:
-                error_msg = "Config parsing : error in option \"%s\" in section [%s] : %s" % (option, section, msg)
+                error_msg = (
+                    'Config parsing : error in option "%s" in section [%s] : %s'
+                    % (option, section, msg)
+                )
                 if fallback_config is not None:
                     print(error_msg)
-                    print("Falling back to default value \"%s\"", fallback_config[section][option])
+                    print(
+                        'Falling back to default value "%s"',
+                        fallback_config[section][option],
+                    )
                     corrected_config[section][option] = fallback_config[section][option]
 
                 else:
@@ -97,10 +114,15 @@ def _validate_config(config, fallback_config=None):
 
         for option in config[section].keys():
             if option not in schema[section].keys():
-                print("Config parsing : unknown option \"%s\" in section [%s]. Ignoring.", option, section)
+                print(
+                    'Config parsing : unknown option "%s" in section [%s]. Ignoring.',
+                    option,
+                    section,
+                )
                 del corrected_config[section][option]
 
     return corrected_config
+
 
 def _parsed_config_to_dict(config):
 
@@ -147,7 +169,7 @@ def _validate_multi_words(schema_option_info, config_option_value):
 
     values = config_option_value.replace(" ", "").split(",")
 
-    if values == ['']:
+    if values == [""]:
         if not can_be_blank:
             msg = "at least one parameter required"
             return False, msg
@@ -155,10 +177,11 @@ def _validate_multi_words(schema_option_info, config_option_value):
     else:
         for val in values:
             if val not in allowed_values:
-                msg = "invalid value \"%s\"" % val
+                msg = 'invalid value "%s"' % val
                 return False, msg
 
     return True, None
+
 
 def _validate_single_word(schema_option_info, config_option_value):
 
@@ -174,10 +197,11 @@ def _validate_single_word(schema_option_info, config_option_value):
 
     else:
         if val not in allowed_values:
-            msg = "invalid value \"%s\"" % val
+            msg = 'invalid value "%s"' % val
             return False, msg
 
     return True, None
+
 
 def _validate_integer(schema_option_info, config_option_value):
 
@@ -201,4 +225,3 @@ def _validate_integer(schema_option_info, config_option_value):
             return False, msg
 
     return True, None
-

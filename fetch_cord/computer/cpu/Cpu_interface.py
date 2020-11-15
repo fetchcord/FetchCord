@@ -3,6 +3,7 @@ from typing import Dict
 
 from ..Peripheral_interface import Peripherical_interface
 
+
 class Cpu_interface(Peripherical_interface, metaclass=ABCMeta):
     vendor: str
     _model: str
@@ -15,7 +16,7 @@ class Cpu_interface(Peripherical_interface, metaclass=ABCMeta):
     @abstractmethod
     def model(self, value: str):
         raise NotImplementedError
-    
+
     @property
     def temp(self) -> float:
         try:

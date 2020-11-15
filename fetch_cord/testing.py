@@ -1,5 +1,6 @@
 # import shit as usual
 import os, sys, json
+
 try:
     import importlib.resources as pkg_resources
 except ImportError:
@@ -11,9 +12,21 @@ from fetch_cord.args import parse_args
 from fetch_cord.bash import exec_bash
 from fetch_cord.out import cpumodel, cpuvendor, gpuvendor, sysosid
 from fetch_cord.debugger import test_debug
-from fetch_cord.out import wmid, deid, termid, shellid, sysosid, hostline, termline, moboline, neofetchwin, baseinfo
+from fetch_cord.out import (
+    wmid,
+    deid,
+    termid,
+    shellid,
+    sysosid,
+    hostline,
+    termline,
+    moboline,
+    neofetchwin,
+    baseinfo,
+)
 
 # macOS hardwawre
+
 
 def laporp(product):
     if product[0:7] == "MacBook":
@@ -22,11 +35,14 @@ def laporp(product):
         devicetype = "desktop"
     return devicetype
 
+
 def get_ver():
     return os.popen("sw_vers -productVersion").read()
 
+
 def get_product():
     return os.popen("sysctl -n hw.model").read()
+
 
 def get_icon(ver):
     try:
@@ -49,10 +65,11 @@ def iUnity(wmid):
 
 
 def get_infos():
-    with pkg_resources.open_text(ressources, 'infos.json') as f:
+    with pkg_resources.open_text(ressources, "infos.json") as f:
         infos = json.load(f)
 
     return infos
+
 
 infos = get_infos()
 
@@ -66,8 +83,8 @@ windowmanagers = infos["windowmanagers"]
 desktops = infos["desktops"]
 terminals = infos["terminals"]
 shells = infos["shells"]
-hosts= infos["hosts"]
-motherboards= infos["motherboards"]
+hosts = infos["hosts"]
+motherboards = infos["motherboards"]
 hostlist = infos["hostlist"]
 terminallist = infos["terminallist"]
 
@@ -83,20 +100,20 @@ def get_host(hostlist):
     hostid = []
     for line in range(len(hostsplit)):
         if hostsplit[line] in hostlist:
-            hostid.append(hostsplit[line].rstrip('\n'))
+            hostid.append(hostsplit[line].rstrip("\n"))
     try:
-        hostid = ' '.join(hostid)
+        hostid = " ".join(hostid)
     except IndexError:
         hostid = []
         pass
     # try to get MacBook hostid
     if not hostid:
         hostid = []
-        hostjoin = ' '.join(hostline)
+        hostjoin = " ".join(hostline)
         for numsplit in range(len(hostjoin)):
             if not hostjoin[numsplit].isdigit():
                 hostid.append(hostjoin[numsplit])
-        hostid = ''.join(hostid)
+        hostid = "".join(hostid)
         hostid = hostid.split()[1]
     return hostid
 
@@ -106,7 +123,7 @@ def get_mobo(moboline, hostlist):
     moboid = []
     for line in range(len(mobosplit)):
         if mobosplit[line] in hostlist:
-            moboid.append(mobosplit[line].rstrip('\n'))
+            moboid.append(mobosplit[line].rstrip("\n"))
     try:
         moboid = moboid[0]
     except IndexError:
@@ -114,14 +131,17 @@ def get_mobo(moboline, hostlist):
         pass
     return moboid
 
+
 if args.terminal and args.terminal in terminallist:
     termid = args.terminal
     termline[0] = "Terminal: %s" % args.terminal
 
 elif args.terminal and args.termninal not in terminallist:
-    print("\nInvalid terminal, only %s are supported.\n"
-            "Please make a github issue if you would like to have your terminal added.\n"
-            "https://github.com/MrPotatoBobx/FetchCord" % terminallist)
+    print(
+        "\nInvalid terminal, only %s are supported.\n"
+        "Please make a github issue if you would like to have your terminal added.\n"
+        "https://github.com/MrPotatoBobx/FetchCord" % terminallist
+    )
     sys.exit(1)
 
 
@@ -159,8 +179,9 @@ def get_desktopid(deid, wmid):
         desktopid = wmid
     else:
         print("Unknown DE/WM, contact us on github to resolve this.")
-        desktopid = 'unknown'
+        desktopid = "unknown"
     return desktopid
+
 
 def get_appid(distros, sysosid):
     return distros[sysosid.lower()]
@@ -172,7 +193,7 @@ def get_cpuappid(cpuvendor, cpumodel, amdcpus, intelcpus):
     elif cpuvendor in ["Intel", "Intel(R)", "Pentium"]:
         cpuappid = intelcpus[cpumodel.lower()]
     else:
-        cpuappid = '742887089179197462'
+        cpuappid = "742887089179197462"
     return cpuappid
 
 
@@ -184,7 +205,7 @@ def get_gpuid(gpuvendor):
         gpuid = multigpus[gpuvendor.lower()]
     else:
         print("Unknown GPU, contact us on github to resolve this.")
-        gpuid = 'unknown'
+        gpuid = "unknown"
     return gpuid
 
 
@@ -210,7 +231,7 @@ try:
     termappid = get_termappid(terminals, termid)
 except KeyError:
     print("Unsupported Terminal. contact us on github to resolve this.(Keyerror)")
-    termappid = '745691250186911796'
+    termappid = "745691250186911796"
 
 if neofetchwin:
     try:
@@ -222,16 +243,20 @@ if neofetchwin:
 try:
     appid = get_appid(distros, sysosid)
 except KeyError:
-    print("Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)")
-    appid = '742993278143692821'
+    print(
+        "Unsupported Distro, contact us on the GitHub page to resolve this.(keyerror)"
+    )
+    appid = "742993278143692821"
 
 try:
     cpuappid = get_cpuappid(cpuvendor, cpumodel, amdcpus, intelcpus)
 except KeyError:
     print("unknown CPU, contact us on github to resolve this.(Keyerror)")
-    cpuappid = '742887089179197462'
+    cpuappid = "742887089179197462"
 
 hostid = get_host(hostlist)
 
 if args.debug:
-    test_debug(gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid, shellid)
+    test_debug(
+        gpuvendor, cpumodel, hostid, moboid, moboline, deid, wmid, termid, shellid
+    )

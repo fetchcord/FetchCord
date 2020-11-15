@@ -1,10 +1,10 @@
 from .Gpu_interface import Gpu_interface
 import re
 
-GPU_VENDOR = 'intel'
+GPU_VENDOR = "intel"
+
 
 class Gpu_intel(Gpu_interface):
-
     def __init__(self, os, model):
         super().__init__(os, GPU_VENDOR, model)
 
@@ -13,11 +13,17 @@ class Gpu_intel(Gpu_interface):
         pass
 
     def get_temp(self):
-        if self.os == 'windows':
-            raise NotImplementedError("Temperature report for Intel GPU's is not supported on Windows yet.")
-        elif self.os == 'macos':
-            raise NotImplementedError("Temperature report for Intel GPU's is not supported on MacOS yet.")
-        elif self.os == 'linux':
-            raise NotImplementedError("Temperature report for Intel GPU's is not supported on Linux yet.")
+        if self.os == "windows":
+            raise NotImplementedError(
+                "Temperature report for Intel GPU's is not supported on Windows yet."
+            )
+        elif self.os == "macos":
+            raise NotImplementedError(
+                "Temperature report for Intel GPU's is not supported on MacOS yet."
+            )
+        elif self.os == "linux":
+            raise NotImplementedError(
+                "Temperature report for Intel GPU's is not supported on Linux yet."
+            )
         else:
-            raise NotImplementedError('Unknown OS, no GPU temperature report.')
+            raise NotImplementedError("Unknown OS, no GPU temperature report.")

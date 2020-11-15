@@ -45,7 +45,7 @@ class Gpu_interface(Peripherical_interface, metaclass=ABCMeta):
         raise NotImplementedError
 
 
-GpuType = TypeVar('GpuType', bound='Gpu_interface')
+GpuType = TypeVar("GpuType", bound="Gpu_interface")
 
 
 def get_gpuid(gpu_ids: Dict[str, str], gpus: List[GpuType]):
@@ -54,10 +54,10 @@ def get_gpuid(gpu_ids: Dict[str, str], gpus: List[GpuType]):
         if gpus[i].model.split()[0] not in vendors:
             vendors.append(gpus[i].model.split()[0])
 
-    gpuvendor = ''.join(vendors).lower()
+    gpuvendor = "".join(vendors).lower()
 
     if gpuvendor in gpu_ids:
         return gpuvendor
     else:
         print("Unknown GPU, contact us on github to resolve this.")
-        return 'unknown'
+        return "unknown"

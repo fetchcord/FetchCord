@@ -21,7 +21,7 @@ def check_primeoffload():
     # only show the GPU in use with optimus, show both if prime render offload
     primeoffload = False
     try:
-        primeoffload = exec_bash("xrandr --listproviders | grep -o \"NVIDIA-0\"")
+        primeoffload = exec_bash('xrandr --listproviders | grep -o "NVIDIA-0"')
         return True
     except BashError:
         return False
@@ -31,8 +31,10 @@ def nvidia_gpu_temp(gpuline):
     nvidiagpu = ""
 
     try:
-        gputemp = exec_bash("nvidia-smi -q | awk '/GPU Current Temp/{print $5}'\
-                    | sed 's/^/[/;s/$/°C]/'")
+        gputemp = exec_bash(
+            "nvidia-smi -q | awk '/GPU Current Temp/{print $5}'\
+                    | sed 's/^/[/;s/$/°C]/'"
+        )
         for t in range(len(gpuline)):
             if "NVIDIA" in gpuline[t].split():
                 nvidiagpu = gpuline[t] + gputemp
@@ -53,10 +55,15 @@ def get_amdgpurender(gpuline, laptop):
                 i += 1
             env_prime = "env DRI_PRIME=%s" % i
             if "AMD" in gpuline[i].split():
-                amdgpurender = "GPU: " + \
-                    exec_bash(
+                amdgpurender = (
+                    "GPU: "
+                    + exec_bash(
                         "%s glxinfo | grep \"OpenGL renderer string:\" |\
-                            sed 's/^.*: //;s/[(][^)]*[)]//g'" % env_prime) + ' '
+                            sed 's/^.*: //;s/[(][^)]*[)]//g'"
+                        % env_prime
+                    )
+                    + " "
+                )
                 if i != -1:
                     amdgpurenderlist.append(amdgpurender)
     except BashError as e:
@@ -66,7 +73,7 @@ def get_amdgpurender(gpuline, laptop):
 
 
 def get_amdgpu(amdgpurenderlist, gpuline):
-    amdgpuline= ""
+    amdgpuline = ""
     for a in range(len(amdgpurenderlist)):
         if "AMD" not in gpuline[a]:
             amdgpuline += gpuline[a]
@@ -96,10 +103,10 @@ def get_gpuinfo(primeoffload, gpuline, laptop, sysosid, amdgpurenderlist):
     for line in range(len(gpuline)):
         if "NVIDIA" in gpuline[line].split() and not primeoffload:
             try:
-                gpuinfo += '\n' + nvidia_gpu_temp(gpuline)
+                gpuinfo += "\n" + nvidia_gpu_temp(gpuline)
             except BashError as e:
-                print("Cannot get Nvidia gpu temp: "+e)
-                gpuinfo += '\n' +gpuline[line]
+                print("Cannot get Nvidia gpu temp: " + e)
+                gpuinfo += "\n" + gpuline[line]
 
     return gpuinfo
 
@@ -110,19 +117,19 @@ def get_gpu_vendors(gpuline, primeoffload, sysosid):
     for vendor in range(len(gpuline)):
         if gpuline[vendor].split() not in gpuvendor:
             gpuvendor.append(gpuline[vendor].split()[1])
-    gpuvendor = ''.join(gpuvendor)
+    gpuvendor = "".join(gpuvendor)
 
     return gpuvendor
 
 
 def get_cpuinfo(cpuline):
 
-#    if os.name != "nt":
-#        cpuinfo = ' '.join([' '.join(cpuline[0].split()[:-2]), cpuline[0].split()[-2].replace(
-#            "00G", "0G", 1), cpuline[0].split()[-1]])
-#
-#    else:
-    cpuinfo = ' '.join(cpuline)
+    #    if os.name != "nt":
+    #        cpuinfo = ' '.join([' '.join(cpuline[0].split()[:-2]), cpuline[0].split()[-2].replace(
+    #            "00G", "0G", 1), cpuline[0].split()[-1]])
+    #
+    #    else:
+    cpuinfo = " ".join(cpuline)
     cpuinfo = re.sub(r"\((.+)\)", "", cpuinfo)
 
     return cpuinfo
@@ -132,21 +139,29 @@ def get_cpumodel(cpuline, cpuvendor):
 
     if cpuvendor == "Intel":
         if os.name != "nt":
-            cpumodel = ' '.join([cpuline[0].replace(
-                '-', ' ').split()[1], cpuline[0].replace('-', ' ').split()[2]])
+            cpumodel = " ".join(
+                [
+                    cpuline[0].replace("-", " ").split()[1],
+                    cpuline[0].replace("-", " ").split()[2],
+                ]
+            )
             if cpumodel == "Intel Core":
                 cpumodel = cpuline[0].split()[1:5]
-                cpumodel = ' '.join(cpumodel)
+                cpumodel = " ".join(cpumodel)
         else:
-            cpumodel = ' '.join([cpuline[0].replace(
-                '-', ' ').split()[1], cpuline[0].replace('-', ' ').split()[3]])
+            cpumodel = " ".join(
+                [
+                    cpuline[0].replace("-", " ").split()[1],
+                    cpuline[0].replace("-", " ").split()[3],
+                ]
+            )
             cpumodel = re.sub(r"\((.+)\)", "", cpumodel)
             if cpumodel == "Intel 2" or cpumodel == "Intel Solo":
                 cpumodel = cpuline[0].split()[1:5]
-                cpumodel = ' '.join(cpumodel)
+                cpumodel = " ".join(cpumodel)
 
     elif cpuvendor == "AMD":
-        cpumodel = ' '.join([cpuline[0].split()[2], cpuline[0].split()[3]])
+        cpumodel = " ".join([cpuline[0].split()[2], cpuline[0].split()[3]])
     # fuck you intel
     elif cpuvendor == "Pentium":
         cpumodel = cpuline[0].split()[1]
@@ -157,14 +172,16 @@ def get_cpumodel(cpuline, cpuvendor):
 
 def check_fontline(fontline):
     if fontline and args.termfont:
-        print("Custom terminal font not set because a terminal font already exists, %s" %
-            fontline)
+        print(
+            "Custom terminal font not set because a terminal font already exists, %s"
+            % fontline
+        )
 
     return fontline
 
 
 def set_laptop(laptop, sysosid):
-    if laptop and sysosid.lower() != 'macos':
+    if laptop and sysosid.lower() != "macos":
         lapordesk = "laptop"
     else:
         lapordesk = "desktop"

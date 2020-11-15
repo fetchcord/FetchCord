@@ -7,8 +7,9 @@ except ImportError:
     import importlib_resources as pkg_resources
 import fetch_cord.ressources as ressources
 
+
 def get_infos():
-    with pkg_resources.open_text(ressources, 'fetchcord_ids.json') as f:
+    with pkg_resources.open_text(ressources, "fetchcord_ids.json") as f:
         infos = json.load(f)
 
     return infos
