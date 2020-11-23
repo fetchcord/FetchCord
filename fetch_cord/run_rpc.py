@@ -29,8 +29,6 @@ class Run_rpc:
         except ConfigError as e:
             print("Error loading config file, using default values." % str(e))
 
-        # self.try_connect()
-
     def set_loop(
         self, loops: Dict, loops_indexes: Dict, update: Callable, poll_rate: int = 3
     ):

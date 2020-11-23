@@ -12,8 +12,14 @@ def get_gpu(os: str, line: List, value: str, key: str):
 
     Parameters
     ----------
+    os : 
+        OS type
+    line : List
+        Component line
     value : str
         Neofetch extracted line
+    key : str
+        Component key
     """
 
     value = value.replace(key, "").lstrip("")

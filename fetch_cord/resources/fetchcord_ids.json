@@ -133,7 +133,8 @@
         "mate": "mate",
         "aero": "aero",
         "pantheon": "pantheon",
-        "explorer": "explorer"
+        "explorer": "explorer",
+        "unknown": "unknown"
     },
     "windowmanager": {
         "dwm": "dwm",
@@ -144,11 +145,13 @@
         "xmonad": "xmonad",
         "sway": "sway",
         "openbox": "openbox",
-        "herbstluftwm": "herbstluftwm"
+        "herbstluftwm": "herbstluftwm",
+        "unknown": "unknown"
     },
     "version": {
         "10.13": "hsierria",
         "10.14": "mojave",
-        "10.15": "catalina"
+        "10.15": "catalina",
+        "unknown": "unknown"
     }
 }

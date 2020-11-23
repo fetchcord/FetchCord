@@ -13,7 +13,7 @@ class BashError(Exception):
     pass
 
 
-def exec_bash(command):
+def exec_bash(command: str):
 
     try:
         out = (

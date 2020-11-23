@@ -11,8 +11,14 @@ def get_cpu(os: str, line: List, value: str, key: str):
 
     Parameters
     ----------
+    os :
+        OS type
+    line : List
+        Component line
     value : str
         Neofetch extracted line
+    key : str
+        Component key
     """
 
     vendor = value.replace(key, "").lstrip("").replace("Intel(R)", "Intel")

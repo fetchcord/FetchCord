@@ -100,8 +100,8 @@ def cycle0(run: Run_rpc, key: str, computer: Computer):
         small_text=computer.dewmid,
         start=computer.uptime,
     )
-    # if args.debug:
-    #     print("appid: %s" % run.rpcs[key].client_id)
+    if args.debug:
+        print("appid: %s" % computer.osinfoid)
     config_time = run.config["cycle_0"]["time"]
     if args.time:
         time.sleep(int(args.time))
@@ -151,8 +151,8 @@ def cycle1(run: Run_rpc, key: str, computer: Computer):
         small_text=computer.gpu,
         start=computer.uptime,
     )
-    # if args.debug:
-    #     print("appid: %s" % client_id)
+    if args.debug:
+        print("appid: %s" % computer.cpuid)
     config_time = run.config["cycle_1"]["time"]
     if args.time:
         time.sleep(int(args.time))
@@ -249,8 +249,8 @@ def cycle3(run: Run_rpc, key: str, computer: Computer):
             small_text=computer.lapordesk,
             start=computer.uptime,
         )
-        # if args.debug:
-        #     print("appid: %s" % client_id)
+        if args.debug:
+            print("appid: %s" % computer.hostappid)
         config_time = run.config["cycle_3"]["time"]
         if args.time:
             time.sleep(int(args.time))
