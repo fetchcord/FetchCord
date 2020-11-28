@@ -21,7 +21,6 @@ def windows(run: Run_rpc, key: str, computer: Computer):
     if args.debug:
         print("w_cycle 0")
 
-    # run.try_connect(key)
     run.try_update(
         key,
         state=computer.osinfo,
@@ -32,8 +31,7 @@ def windows(run: Run_rpc, key: str, computer: Computer):
         small_text=computer.motherboard,
         start=computer.uptime,
     )
-    # if args.debug:
-    #     print("appid: %s" % client_id)
+
     if args.time:
         time.sleep(int(args.time))
     elif args.nohardware:
@@ -51,7 +49,6 @@ def runmac(run: Run_rpc, key: str, computer: Computer):
         print("bigicon: %s" % computer.bigicon)
         print("ver: %s" % computer.version)
         print("uptime: %s" % computer.uptime)
-        # print("client_id: %s" % run.rpcs[key].client_id)
 
     run.try_update(
         key,

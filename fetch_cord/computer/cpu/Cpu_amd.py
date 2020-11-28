@@ -26,7 +26,9 @@ class Cpu_amd(Cpu_interface):
             raise NotImplementedError(
                 "Temperature report for AMD CPU's is not supported on MacOS yet."
             )
-        elif self.os == "linux":
+        elif (
+            self.os == "linux" and os.name != "nt"
+        ):  # os.name comparaison not needed, its just for the linter
             sensors = sensors_temperatures()
             if "k10temp" in sensors:
                 temps = sensors["k10temp"]

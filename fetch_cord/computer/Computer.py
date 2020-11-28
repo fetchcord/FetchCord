@@ -293,9 +293,9 @@ class Computer:
             self.neofetch_parser(self.values)
 
         terminallist = self.idsMap[self.idsMap["map"]["Terminal:"]]
-        if args.terminal and args.terminal in terminallist:
-            self.componentMap["Terminal:"] = [args.terminal]
-        elif args.terminal and args.terminal not in terminallist:
+        if args.terminal and args.terminal.lower() in terminallist:
+            self.componentMap["Terminal:"] = [args.terminal.lower()]
+        elif args.terminal and args.terminal.lower() not in terminallist:
             print(
                 "\nInvalid terminal, only %s are supported.\n"
                 "Please make a github issue if you would like to have your terminal added.\n"
