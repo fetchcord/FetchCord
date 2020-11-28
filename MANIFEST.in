@@ -1,4 +1,4 @@
-include fetch_cord/ressources/*
+include fetch_cord/resources/*
 include fetch_cord/computer/*
 include fetch_cord/computer/gpu/*
 include fetch_cord/computer/cpu/*
