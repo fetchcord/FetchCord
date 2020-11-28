@@ -10,7 +10,7 @@ class Gpu_intel(Gpu_interface):
 
     @Gpu_interface.model.setter
     def model(self, value: str):
-        pass
+        self._model = value
 
     def get_temp(self):
         if self.os == "windows":
