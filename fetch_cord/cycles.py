@@ -21,7 +21,7 @@ def windows(run: Run_rpc, key: str, computer: Computer):
     if args.debug:
         print("w_cycle 0")
 
-    run.try_connect(key)
+    # run.try_connect(key)
     run.try_update(
         key,
         state=computer.osinfo,
@@ -140,7 +140,6 @@ def cycle1(run: Run_rpc, key: str, computer: Computer):
         gpu_icon = "off"
     if args.debug:
         print("cycle 1")
-
     run.try_update(
         key,
         state=bottom_line,

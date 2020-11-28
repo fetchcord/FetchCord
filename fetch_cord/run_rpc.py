@@ -3,7 +3,6 @@ from typing import Callable, Dict
 from pypresence import Presence, exceptions
 import time, sys, os
 
-
 # import info about system
 from .args import parse_args
 from .config import ConfigError, load_config
@@ -49,6 +48,14 @@ class Run_rpc:
                     try:
                         client_id, func = self.loops[self.loops_indexes[i]]
 
+                        if args.debug:
+                            print(self.rpcs)
+                            print(
+                                "{} not in : {}".format(
+                                    self.loops_indexes[i],
+                                    self.loops_indexes[i] not in self.rpcs,
+                                )
+                            )
                         if self.loops_indexes[i] not in self.rpcs:
                             self.rpcs[self.loops_indexes[i]] = Presence(client_id)
                             self.try_connect(self.loops_indexes[i])
@@ -64,6 +71,8 @@ class Run_rpc:
     def try_connect(self, key: str):
         while True:
             try:
+                if args.debug:
+                    print('try_connect(key="{}") on {}'.format(key, self.rpcs[key]))
                 self.rpcs[key].connect()
                 break
             except ConnectionRefusedError:
@@ -74,6 +83,8 @@ class Run_rpc:
 
     def try_clear(self, key: str):
         try:
+            if args.debug:
+                print('try_clear(key="{}") on {}'.format(key, self.rpcs[key]))
             self.rpcs[key].clear(pid=os.getpid())
         except exceptions.InvalidID:
             pass
@@ -90,6 +101,8 @@ class Run_rpc:
         start,
     ):
         try:
+            if args.debug:
+                print('try_update(key="{}") on {}'.format(key, self.rpcs[key]))
             self.rpcs[key].update(
                 state=state,
                 details=details,

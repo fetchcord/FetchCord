@@ -58,7 +58,7 @@ def get_gpuid(gpu_ids: Dict[str, str], gpus: List[GpuType]):
     gpuvendor = "".join(vendors).lower()
 
     if gpuvendor in gpu_ids:
-        return gpuvendor
+        return gpu_ids[gpuvendor]
     else:
         print("Unknown GPU, contact us on github to resolve this.")
         return "unknown"

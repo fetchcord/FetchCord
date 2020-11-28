@@ -13,6 +13,7 @@
     },
     "gpu": {
         "amd": "amd",
+        "radeon": "amd",
         "amdnvidia": "nvidiaamd",
         "amdintel": "amdintel",
         "nvidia": "nvidia",
@@ -24,7 +25,7 @@
         "vmware": "vmware",
         "virtio": "virtio",
         "cirrus": "cirrus",
-        "unknown": "unknown"
+        "unknown": "off"
     },
     "cpu": {
         "amd": {
