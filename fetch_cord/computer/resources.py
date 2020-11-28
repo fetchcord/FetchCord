@@ -7,7 +7,7 @@ except ImportError:
     import importlib_resources as pkg_resources
 import json
 
-from .. import resources as fc_resources
+from .. import ressources as fc_resources
 
 
 def get_infos():

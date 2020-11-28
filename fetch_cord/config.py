@@ -7,7 +7,7 @@ except ImportError:
     import importlib_resources as pkg_resources
 import os, copy, json, configparser
 
-from . import resources as fc_resources
+from . import ressources as fc_resources
 from .args import parse_args
 
 
