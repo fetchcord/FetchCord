@@ -84,9 +84,11 @@ class Run_rpc:
     def try_clear(self, key: str):
         try:
             if args.debug:
-                print('try_clear(key="{}") on {}'.format(key, self.rpcs[key]))
+                print('[key={}] try_clear(pid={} on {}'.format(key, os.getpid(), self.rpcs[key]))
             self.rpcs[key].clear(pid=os.getpid())
         except exceptions.InvalidID:
+            pass
+        except exceptions.ServerError:
             pass
 
     def try_update(

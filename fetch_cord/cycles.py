@@ -87,6 +87,7 @@ def cycle0(run: Run_rpc, key: str, computer: Computer):
         de_wm_icon = "off"
     if args.debug:
         print("cycle 0")
+    
     run.try_update(
         key,
         state=bottom_line,
