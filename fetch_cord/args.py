@@ -82,5 +82,12 @@ def parse_args():
         action="store",
         help="Specify custom fetchcord config path.",
     )
+    parser.add_argument(
+        "--fc-cu",
+        "-fcu",
+        action="store",
+        help="Specify custom fetchcord config path.",
+    )
+
 
     return parser.parse_args()

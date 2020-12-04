@@ -58,7 +58,7 @@ class Run_rpc:
                             )
                         if self.loops_indexes[i] not in self.rpcs:
                             self.rpcs[self.loops_indexes[i]] = Presence(client_id)
-                            self.try_connect(self.loops_indexes[i])
+                        self.try_connect(self.loops_indexes[i])
 
                         func(self, self.loops_indexes[i], computer)
                         loop += 1
@@ -82,14 +82,20 @@ class Run_rpc:
                 time.sleep(30)
 
     def try_clear(self, key: str):
-        try:
-            if args.debug:
-                print('[key={}] try_clear(pid={} on {}'.format(key, os.getpid(), self.rpcs[key]))
-            self.rpcs[key].clear(pid=os.getpid())
-        except exceptions.InvalidID:
-            pass
-        except exceptions.ServerError:
-            pass
+        # try:
+        #     if args.debug:
+        #         print(
+        #             "[key={}] try_clear(pid={} on {}".format(
+        #                 key, os.getpid(), self.rpcs[key]
+        #             )
+        #         )
+        #     self.rpcs[key].clear(pid=os.getpid())
+        # except exceptions.InvalidID:
+        #     pass
+        # except exceptions.ServerError as e:
+        #     print(e)
+        #     pass
+        self.rpcs[key].close()
 
     def try_update(
         self,

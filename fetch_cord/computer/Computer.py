@@ -283,6 +283,7 @@ class Computer:
 
     def fetch_values(self):
         self.neofetchwin, self.neofetch, self.values = self.detect_neofetch()
+
         self.neofetch_parser(self.values)
 
         if not bool(self.componentMap):
@@ -327,6 +328,9 @@ class Computer:
             del self.componentMap[key][:]
 
     def neofetch_parser(self, values: str):
+        if args.fc_cu:
+            with open(args.fc_cu) as f:
+                values = '\n'.join(f.readlines())
         lines = values.split("\n")
         for i in range(len(lines)):
             line = lines[i]
@@ -400,6 +404,7 @@ class Computer:
                 exit(1)
             else:
                 neofetch = True
+
         return (neofetchwin, neofetch, values)
 
     def get_disk(self, os: str, line: List, value: str, key: str):
