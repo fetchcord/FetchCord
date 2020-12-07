@@ -82,6 +82,7 @@ class Run_rpc:
                 time.sleep(30)
 
     def try_clear(self, key: str):
+        # Pypresence clear doesn't work anymore
         # try:
         #     if args.debug:
         #         print(

@@ -43,7 +43,7 @@ class Computer:
         component_list = self.idsMap[self.idsMap["map"]["OS:"]]
 
         for comp, id in component_list.items():
-            if component.find(comp.lower()) >= 0:
+            if component.lower().find(comp.lower()) >= 0:
                 return id
 
         print(

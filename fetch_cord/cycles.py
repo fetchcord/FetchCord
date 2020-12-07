@@ -235,7 +235,6 @@ def cycle3(run: Run_rpc, key: str, computer: Computer):
             lapordesk_icon = "off"
         if args.debug:
             print("cycle 3")
-
         run.try_update(
             key,
             state=computer.resolution,
