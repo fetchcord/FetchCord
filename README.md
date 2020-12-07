@@ -102,7 +102,7 @@ simply run `fetchcord`
 
 ## Installing on Windows
 
-To install fetchcord on Windows run `python -m pip install fetchcord neofetch-win`. Alternatively, you can use the nefetch package from scoop as well (show more info at the expense of possible GPU detection, for now).
+To install fetchcord on Windows run `python -m pip install fetchcord neofetch-win`. Alternatively, you can use the neofetch package from scoop as well (show more info at the expense of possible GPU detection, for now).
 
 ### Run
 To run Fetchcord run `fetchcord`
