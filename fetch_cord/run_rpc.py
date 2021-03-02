@@ -1,7 +1,5 @@
-try:
-    from __future__ import annotations
-except:
-    pass
+#from __future__ import annotations
+
 
 from typing import Callable, Dict
 from pypresence import Presence, exceptions

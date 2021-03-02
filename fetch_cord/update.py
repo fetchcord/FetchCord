@@ -1,7 +1,4 @@
-try:
-    from __future__ import annotations
-except:
-    pass
+#from __future__ import annotations
 
 import urllib.request, sys, os
 

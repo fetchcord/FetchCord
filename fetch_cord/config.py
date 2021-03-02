@@ -1,7 +1,5 @@
-try:
-    from __future__ import annotations
-except:
-    pass
+#from __future__ import annotations
+
 
 try:
     import importlib.resources as pkg_resources

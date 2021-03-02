@@ -1,4 +1,5 @@
-from __future__ import annotations
+#from __future__ import annotations
+
 from typing import List
 
 from .Cpu_amd import Cpu_amd
