@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 from sys import platform, exit
 import sys
 from typing import Callable, Dict, List
@@ -6,6 +7,7 @@ import psutil, os
 
 from ..run_command import run_command
 from ..args import parse_args
+from ..Logger import Logger
 from .flatpak import enableFlatpak
 from .resources import get_infos, get_default_config
 from .cpu.get_cpu import get_cpu
@@ -14,6 +16,12 @@ from .gpu.get_gpu import get_gpu
 from .gpu.Gpu_interface import GpuType, get_gpuid
 
 args = parse_args()
+
+logger = Logger(
+    "fetchcord_computer.log",
+    "fetchcord_computer",
+    logging.DEBUG if args.debug else logging.INFO,
+)
 
 
 class Computer:
@@ -330,7 +338,7 @@ class Computer:
     def neofetch_parser(self, values: str):
         if args.fc_cu:
             with open(args.fc_cu) as f:
-                values = '\n'.join(f.readlines())
+                values = "\n".join(f.readlines())
         lines = values.split("\n")
         for i in range(len(lines)):
             line = lines[i]

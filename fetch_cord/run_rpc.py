@@ -1,4 +1,8 @@
-from __future__ import annotations
+try:
+    from __future__ import annotations
+except:
+    pass
+
 from typing import Callable, Dict
 from pypresence import Presence, exceptions
 import time, sys
