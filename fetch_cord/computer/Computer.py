@@ -3,7 +3,7 @@
 import logging
 from sys import platform, exit
 import sys
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Tuple
 import psutil, os
 
 from ..run_command import exec_bash, run_command
@@ -194,7 +194,9 @@ class Computer:
 
     @property
     def deid(self) -> str:
-        return self.get_component_line("DE:").split()[0]
+        value = self.get_component_line("DE:").split()[0]
+
+        return value if "{} N/A".format("DE:") == value else self.wmid
 
     @property
     def dewmid(self) -> str:
