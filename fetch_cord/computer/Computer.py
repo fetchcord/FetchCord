@@ -196,12 +196,14 @@ class Computer:
     def deid(self) -> str:
         value = self.get_component_line("DE:").split()[0]
 
-        return value if "{} N/A".format("DE:") == value else self.wmid
+        return "n/a" if value == "DE:" else value
 
     @property
     def dewmid(self) -> str:
+        de = self.get_component_line("DE:")
+
         return "\n".join(
-            self.get_component_line("DE:") + self.get_component_line("WM:")
+            ["" if de == "{} N/A".format("DE:") else de, self.get_component_line("WM:")]
         )
 
     @property
@@ -217,7 +219,6 @@ class Computer:
 
         if deid != "n/a" and deid in self.idsMap[self.idsMap["map"]["DE:"]]:
             return deid
-
         elif deid == "n/a" and wmid in self.idsMap[self.idsMap["map"]["WM:"]]:
             return wmid
         else:
