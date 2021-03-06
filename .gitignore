@@ -134,3 +134,4 @@ authkey_pypi
 .DS_Store
 
 fctest.py
+.vscode

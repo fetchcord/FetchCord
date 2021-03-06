@@ -15,7 +15,6 @@ class BashError(Exception):
 
 
 def exec_bash(command: str):
-
     try:
         out = (
             subprocess.check_output(["bash", "-c", command], stderr=subprocess.STDOUT)

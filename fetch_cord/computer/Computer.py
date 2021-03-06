@@ -1,4 +1,4 @@
-#from __future__ import annotations
+# from __future__ import annotations
 
 import logging
 from sys import platform, exit
@@ -6,7 +6,7 @@ import sys
 from typing import Callable, Dict, List
 import psutil, os
 
-from ..run_command import run_command
+from ..run_command import exec_bash, run_command
 from ..args import parse_args
 from ..Logger import Logger
 from .flatpak import enableFlatpak
@@ -225,9 +225,9 @@ class Computer:
     @property
     def battery(self) -> str:
         if self.laptop:
-            return self.get_component_line("Battery:")
+            return self.get_component_line("Battery")
         else:
-            return "{} N/A".format("Battery:")
+            return "{} N/A".format("Battery")
 
     @property
     def lapordesk(self) -> str:
@@ -279,7 +279,7 @@ class Computer:
             "Font:": self.get,
             "DE:": self.get,
             "WM:": self.get,
-            "Battery:": self.get,
+            "Battery": self.get_battery,
         }
 
         self.idsMap = get_infos()
@@ -337,6 +337,8 @@ class Computer:
             del self.componentMap[key][:]
 
     def neofetch_parser(self, values: str):
+        if args.debug:
+            print(values)
         if args.fc_cu:
             with open(args.fc_cu) as f:
                 values = "\n".join(f.readlines())
@@ -394,18 +396,35 @@ class Computer:
             default_config = get_default_config()
 
             try:
-                values = run_command(
-                    [
-                        "neofetch",
-                        "--stdout",
-                        "--config=%s" % "none"
-                        if args.noconfig
-                        else (
-                            args.config_path if args.config_path else (default_config)
-                        ),
-                    ],
-                    shell=(self.os == "windows"),
-                )
+                if self.os == "windows":
+                    values = run_command(
+                        [
+                            "neofetch",
+                            "--config {}".format(
+                                "none"
+                                if args.noconfig
+                                else (
+                                    args.config_path
+                                    if args.config_path
+                                    else (default_config)
+                                )
+                            ),
+                            "--stdout",
+                        ],
+                        shell=(self.os == "windows"),
+                    )
+                else:
+                    values = exec_bash(
+                        "neofetch --config {} --stdout".format(
+                            "none"
+                            if args.noconfig
+                            else (
+                                args.config_path
+                                if args.config_path
+                                else (default_config)
+                            )
+                        )
+                    )
             except Exception:
                 print(
                     "ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH."
@@ -415,6 +434,18 @@ class Computer:
                 neofetch = True
 
         return (neofetchwin, neofetch, values)
+
+    def get_battery(self, os: str, line: List, value: str, key: str):
+        """
+        Append the Battery info from given neofetch line
+
+        Parameters
+        ----------
+        value : str
+            Neofetch extracted line
+        """
+
+        line.append(value[value.find(key) + len(key) + 2 :])
 
     def get_disk(self, os: str, line: List, value: str, key: str):
         """
