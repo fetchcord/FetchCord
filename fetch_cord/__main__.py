@@ -23,6 +23,10 @@ def main():
             systemd_service.install()
         if args.uninstall:
             systemd_service.uninstall()
+        if args.enable:
+            systemd_service.enable()
+        if args.disable:
+            systemd_service.disable()
         if args.start:
             systemd_service.start()
         if args.stop:
