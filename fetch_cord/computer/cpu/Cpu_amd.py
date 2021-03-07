@@ -1,8 +1,9 @@
 #from __future__ import annotations
 
 import os
+from sys import platform
 
-if os.name != "nt":
+if os.name != "nt" and platform != "darwin":
     from psutil import sensors_temperatures
 from .Cpu_interface import Cpu_interface
 

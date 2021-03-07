@@ -1,7 +1,7 @@
-#from __future__ import annotations
+# from __future__ import annotations
 
 from typing import Dict
-import sys
+import sys, os
 
 from .run_rpc import Run_rpc
 from .cycles import cycle0, cycle1, cycle2, cycle3, runmac, windows, pause
@@ -10,6 +10,7 @@ from .args import parse_args
 from .debugger import run_rpc_debug
 from .update import update
 from . import __init__ as __init__
+from .resources import systemd_service
 
 
 def main():
@@ -17,6 +18,17 @@ def main():
 
     if args.update:
         update()
+    if os.name != "nt" and sys.platform != "darwin":
+        if args.install:
+            systemd_service.install()
+        if args.uninstall:
+            systemd_service.uninstall()
+        if args.start:
+            systemd_service.start()
+        if args.stop:
+            systemd_service.stop()
+        if args.status:
+            systemd_service.status()
     if args.version:
         print("FetchCord version:", __init__.VERSION)
         sys.exit(0)

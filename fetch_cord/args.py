@@ -1,4 +1,4 @@
-#from __future__ import annotations
+# from __future__ import annotations
 
 import argparse
 
@@ -43,9 +43,39 @@ def parse_args():
         help="Set custom Terminal Font (useful if neofetch can't get it).",
     )
     parser.add_argument(
+        "--install",
+        action="store_true",
+        help="Install fetchcord as a systemd service (user) and enable it.",
+    )
+    parser.add_argument(
+        "--uninstall",
+        action="store_true",
+        help="Uninstall fetchcord as a systemd service (user).",
+    )
+    parser.add_argument(
+        "--start",
+        action="store_true",
+        help="Start fetchcord systemd service (user).",
+    )
+    parser.add_argument(
+        "--stop",
+        action="store_true",
+        help="Stop fetchcord systemd service (user).",
+    )
+    parser.add_argument(
+        "--status",
+        action="store_true",
+        help="Get fetchcord systemd service status (user).",
+    )
+    parser.add_argument(
         "--update",
         action="store_true",
         help="Update database of distros, hardware, etc.",
+    )
+    parser.add_argument(
+        "--testing",
+        action="store_true",
+        help="Get files from testing branch instead of master.",
     )
     parser.add_argument("--debug", "-d", action="store_true", help="Enable debugging.")
     parser.add_argument(
@@ -89,6 +119,5 @@ def parse_args():
         action="store",
         help="Specify custom fetchcord config path.",
     )
-
 
     return parser.parse_args()
