@@ -53,6 +53,16 @@ def parse_args():
         help="Uninstall fetchcord as a systemd service (user).",
     )
     parser.add_argument(
+        "--enable",
+        action="store_true",
+        help="Enable fetchcord systemd service (user).",
+    )
+    parser.add_argument(
+        "--disable",
+        action="store_true",
+        help="Disable fetchcord systemd service (user).",
+    )
+    parser.add_argument(
         "--start",
         action="store_true",
         help="Start fetchcord systemd service (user).",

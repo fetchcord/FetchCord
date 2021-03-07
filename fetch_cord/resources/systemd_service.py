@@ -1,10 +1,19 @@
 #!/usr/bin/python3
 
+from os import system
 from ..run_command import BashError, exec_bash
 from ..args import parse_args
 import sys
 
 args = parse_args()
+
+
+def systemd_cmd(cmd: str):
+    try:
+        exec_bash(f"systemctl --user {cmd} --now fetchcord")
+    except BashError as err:
+        print(err)
+        sys.exit(1)
 
 
 def install():
@@ -22,33 +31,15 @@ def install():
         print("Error: Failed to download the service file.")
         sys.exit(1)
 
-    try:
-        exec_bash("systemctl --user enable --now fetchcord")
-    except:
-        print("Error: failed to enable systemd service.")
-        sys.exit(1)
+    systemd_cmd("enable")
 
-    try:
-        exec_bash("systemctl --user start --now fetchcord")
-    except:
-        print("Error: failed to start systemd service.")
-        sys.exit(1)
-
-    sys.exit(0)
+    start()
 
 
 def uninstall():
-    try:
-        exec_bash("systemctl --user stop --now fetchcord")
-    except:
-        print("Error: failed to stop systemd service.")
-        sys.exit(1)
+    systemd_cmd("stop")
 
-    try:
-        exec_bash("systemctl --user disable --now fetchcord")
-    except:
-        print("Error: failed to disable systemd service.")
-        sys.exit(1)
+    systemd_cmd("disable")
 
     try:
         exec_bash("rm -f ~/.local/share/systemd/user/fetchcord.service")
@@ -59,28 +50,26 @@ def uninstall():
     sys.exit(0)
 
 
+def enable():
+    systemd_cmd("enable")
+    sys.exit(0)
+
+
+def disable():
+    systemd_cmd("disable")
+    sys.exit(0)
+
+
 def start():
-    try:
-        print(exec_bash("systemctl --user start --now fetchcord"))
-    except BashError as err:
-        print(err)
-        sys.exit(1)
+    systemd_cmd("start")
     sys.exit(0)
 
 
 def stop():
-    try:
-        print(exec_bash("systemctl --user stop --now fetchcord"))
-    except BashError as err:
-        print(err)
-        sys.exit(1)
+    systemd_cmd("stop")
     sys.exit(0)
 
 
 def status():
-    try:
-        print(exec_bash("systemctl --user status --now fetchcord"))
-    except BashError as err:
-        print(err)
-        sys.exit(1)
+    systemd_cmd("status")
     sys.exit(0)
