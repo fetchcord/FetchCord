@@ -10,7 +10,7 @@ args = parse_args()
 
 def systemd_cmd(cmd: str):
     try:
-        exec_bash(f"systemctl --user {cmd} --now fetchcord")
+        print(exec_bash(f"systemctl --user {cmd} --now fetchcord"))
     except BashError as err:
         print(err)
         sys.exit(1)
