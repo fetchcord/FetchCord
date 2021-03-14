@@ -342,9 +342,6 @@ class Computer:
     def neofetch_parser(self, values: str):
         if args.debug:
             print(values)
-        if args.fc_cu:
-            with open(args.fc_cu) as f:
-                values = "\n".join(f.readlines())
         lines = values.split("\n")
         for i in range(len(lines)):
             line = lines[i]
@@ -428,6 +425,10 @@ class Computer:
                             )
                         )
                     )
+                if args.nfco:
+                    with open(args.nfco) as f:
+                        values = "\n".join(f.readlines())
+                
             except Exception:
                 print(
                     "ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH."
