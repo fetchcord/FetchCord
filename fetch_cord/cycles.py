@@ -1,11 +1,20 @@
-from __future__ import annotations
+#from __future__ import annotations
+
 import time
+from typing import Dict
 
 from .computer.Computer import Computer
 from .run_rpc import Run_rpc
 from .args import parse_args
 
 args = parse_args()
+
+
+class Cycles:
+    config: Dict[str, str]
+
+    def __init__(self, config: Dict[str, str]):
+        self.config = config
 
 
 def pause(run: Run_rpc, key: str, computer: Computer):
@@ -87,7 +96,7 @@ def cycle0(run: Run_rpc, key: str, computer: Computer):
         de_wm_icon = "off"
     if args.debug:
         print("cycle 0")
-    
+
     run.try_update(
         key,
         state=bottom_line,

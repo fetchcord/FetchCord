@@ -1,4 +1,6 @@
-from __future__ import annotations
+#from __future__ import annotations
+
+
 from typing import Callable, Dict
 from pypresence import Presence, exceptions
 import time, sys
@@ -15,7 +17,7 @@ class Run_rpc:
     rpcs: Dict[str, Presence]
     config: Dict
 
-    loops: Dict[str, Callable[[Run_rpc, str, Computer], None]]
+    loops: Dict[str, Callable[['Run_rpc', str, Computer], None]] # Cannot use Run_rpc for type hinting unless doing the __future__.annotations import
     loops_indexes: Dict[int, str]
     poll_rate: int
     update: Callable
