@@ -19,6 +19,10 @@ class Cpu_amd(Cpu_interface):
         self.info = " ".join(value.split()[1:])
         self._model = " ".join([value.split()[2], value.split()[3]])
 
+        if self._model.find("APU") != -1:
+            self._model = f"{self._model.split('-')[0]} APU"
+
+
     def get_temp(self) -> float:
         if self.os == "windows":
             raise NotImplementedError(
