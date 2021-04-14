@@ -6,8 +6,16 @@ from ..Peripheral_interface import Peripherical_interface
 
 
 class Gpu_interface(Peripherical_interface, metaclass=ABCMeta):
-    vendor: str
+    _vendor: str
     _model: str
+
+    @property
+    def vendor(self) -> str:
+        return self._vendor
+
+    @vendor.setter
+    def vendor(self, value: str):
+        self._vendor = value
 
     @property
     def model(self) -> str:
@@ -52,8 +60,8 @@ GpuType = TypeVar("GpuType", bound="Gpu_interface")
 def get_gpuid(gpu_ids: Dict[str, str], gpus: List[GpuType]):
     vendors = []
     for i in range(len(gpus)):
-        if gpus[i].model.split()[0] not in vendors:
-            vendors.append(gpus[i].model.split()[0])
+        if gpus[i].vendor not in vendors:
+            vendors.append(gpus[i].vendor)
 
     gpuvendor = "".join(vendors).lower()
 

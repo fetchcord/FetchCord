@@ -22,7 +22,7 @@ def get_gpu(os: str, line: List, value: str, key: str):
         Component key
     """
 
-    value = value.replace(key, "").lstrip("")
+    value = value.replace(key, "").lstrip()
     splitValue = value.split()
 
     for v in splitValue:
@@ -32,6 +32,6 @@ def get_gpu(os: str, line: List, value: str, key: str):
         elif v.upper() in ["NVIDIA", "GEFORCE"]:
             line.append(Gpu_nvidia(os, value))
             return
-        elif v.upper() in ["INTEL"]:
+        elif v.upper() in ["INTEL", "INTEL(R)"]:
             line.append(Gpu_intel(os, value))
             return

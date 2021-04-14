@@ -12,6 +12,11 @@ class Gpu_intel(Gpu_interface):
     def model(self, value: str):
         self._model = value
 
+    @Gpu_interface.vendor.setter
+    def vendor(self, value: str):
+        self._vendor = value.replace(f"{GPU_VENDOR}(R)", f"{GPU_VENDOR}")
+
+
     def get_temp(self):
         if self.os == "windows":
             raise NotImplementedError(
