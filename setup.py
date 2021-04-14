@@ -13,7 +13,16 @@ setuptools.setup(
     author="MrPotatoBobx",
     author_email="junkahole23@protonmail.com",
     license="MIT",
-    package_data={"fetch_cord": ["config_schema.json", "resources/default.conf", "resources/fetch_cord.conf", "resources/fetchcord_ids.json", "computer/*.py", "computer/*/*.py"]},
+    package_data={
+        "fetch_cord": [
+            "config_schema.json",
+            "resources/default.conf",
+            "resources/fetch_cord.conf",
+            "resources/fetchcord_ids.json",
+            "computer/*.py",
+            "computer/*/*.py",
+        ]
+    },
     packages=["fetch_cord"],
     include_package_data=True,
     install_requires=["pypresence", "psutil", "importlib-resources"],
