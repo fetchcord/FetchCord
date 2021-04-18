@@ -51,6 +51,8 @@
 
 - [x] Flatpak support
 
+- [x] Add Snap support
+
 - [x] Add Windows support.
 
 - [x] Detect Window Manager/Desktop Environment version
@@ -61,8 +63,6 @@
 ### To-Do
 
 - [ ] Add more distributions (If your distro is not supported open an issue)
-
-- [ ] Add Snap support
 
 - [ ] Add support for desktop icon use
 
@@ -77,6 +77,10 @@ NOTE: you need neofetch to be also installed for this to work.
 On Arch Linux install this package for the git version: [fetchcord-git](https://aur.archlinux.org/packages/fetchcord-git/)
 
 Do note that this version is directly from master, for the stable release use [pip](#via-pip)
+#### Via Snap
+On systems with snap installed, you can run `sudo snap install fetchcord --classic` to install fetchcord.
+
+Note that like the AUR version, this version is directly from master, for the stable release use [pip](#via-pip) <!-- remove this if you're not automatically deploying it -->
 #### Via pip
 To Install fetchcord via pip you can run `pip3 install fetchcord`
 
