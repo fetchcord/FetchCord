@@ -136,3 +136,6 @@ authkey_pypi
 fctest.py
 .vscode
 samples
+
+# Snap
+*.snap

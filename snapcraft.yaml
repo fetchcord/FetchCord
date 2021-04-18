@@ -1,0 +1,24 @@
+name: fetchcord
+version: git # By specifying git for the version, the current git tag or commit will be used as the version string. Versions carry no semantic meaning in snaps. This can be changed to a normal version number if desired.
+summary: FetchCord
+grade: stable
+description: |
+  FetchCord grabs your OS info and displays it as Discord Rich Presence
+base: core18
+confinement: classic
+
+parts:
+  fetchcord:
+    plugin: python
+    python-version: python3
+    source: .
+    stage-packages:
+      - neofetch
+    python-packages:
+      - pypresence
+      - psutil
+      - importlib-resources
+
+apps:
+  fetchcord:
+    command: bin/fetchcord
