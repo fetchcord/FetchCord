@@ -1,4 +1,4 @@
-#from __future__ import annotations
+# from __future__ import annotations
 
 import os
 from sys import platform
@@ -19,9 +19,10 @@ class Cpu_amd(Cpu_interface):
         self.info = " ".join(value.split()[1:])
         self._model = " ".join([value.split()[2], value.split()[3]])
 
-        if self._model.find("APU") != -1:
+        if self._model.find("APU") != -1 or (
+            self._model.find("RADEON") != -1 and self._model.lower().find("ryzen") == -1
+        ):
             self._model = f"{self._model.split('-')[0]} APU"
-
 
     def get_temp(self) -> float:
         if self.os == "windows":
@@ -33,7 +34,7 @@ class Cpu_amd(Cpu_interface):
                 "Temperature report for AMD CPU's is not supported on MacOS yet."
             )
         elif (
-            self.os == "linux" # and os.name != "nt" linux only
+            self.os == "linux"  # and os.name != "nt" linux only
         ):  # os.name comparaison not needed, its just for the linter
             sensors = sensors_temperatures()
             if "k10temp" in sensors:
