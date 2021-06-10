@@ -385,11 +385,15 @@ class Computer:
         if self.os == "windows":
             try:
                 values = run_command(["neofetch", "--noart"])
+                if args.nfco:
+                    with open(args.nfco) as f:
+                        values = "\n".join(f.readlines())
+
             except Exception:
                 pass
             else:
                 neofetchwin = True
-        elif not neofetchwin:
+        if not neofetchwin:
             if self.os == "linux":
                 enableFlatpak()
 
@@ -428,7 +432,7 @@ class Computer:
                 if args.nfco:
                     with open(args.nfco) as f:
                         values = "\n".join(f.readlines())
-                
+
             except Exception:
                 print(
                     "ERROR: Neofetch not found, please install it or check installation and that neofetch is in PATH."
