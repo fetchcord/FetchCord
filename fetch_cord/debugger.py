@@ -1,4 +1,4 @@
-#from __future__ import annotations
+# from __future__ import annotations
 
 from typing import List
 
@@ -9,7 +9,7 @@ from .computer.cpu.Cpu_interface import Cpu_interface
 def run_debug(computer: Computer):
     print("----out.py----\n")
     print("----DE/WM----")
-    if computer.os != "windows":
+    if not computer.neofetchwin:
         print("deid: %s" % computer.deid)
         print("wmid: %s" % computer.wmid)
         try:
