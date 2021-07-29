@@ -3,7 +3,7 @@
 import logging
 from sys import platform, exit
 import sys
-from typing import Callable, Dict, List, Tuple
+from typing import Callable, Dict, List
 import psutil, os
 
 from ..run_command import exec_bash, run_command
@@ -15,6 +15,7 @@ from .cpu.get_cpu import get_cpu
 from .cpu.Cpu_interface import Cpu_interface
 from .gpu.get_gpu import get_gpu
 from .gpu.Gpu_interface import GpuType, get_gpuid
+from .mobo.get_mobo import get_mobo
 
 args = parse_args()
 
@@ -65,11 +66,20 @@ class Computer:
 
     @property
     def motherboard(self) -> str:
-        return self.get_component_line("Motherboard:")
+        tmp = self.get_component_line("Motherboard:")
+        if tmp == "Motherboard: N/A":
+            return self.host
+        
+        return tmp
 
     @property
     def motherboardid(self) -> str:
-        return self.get_component_idkey("Motherboard:")
+        tmp = self.get_component_idkey("Motherboard:")
+
+        if tmp == self.idsMap[self.idsMap["map"]["Motherboard:"]]["unknown"]:
+            return self.hostid
+        
+        return tmp
 
     @property
     def host(self) -> str:
@@ -271,7 +281,7 @@ class Computer:
             "Disk": self.get_disk,
             "Memory:": self.get_memory,
             "OS:": self.get,
-            "Motherboard:": self.get,
+            "Motherboard:": get_mobo,
             "Host:": self.get,
             "Resolution:": self.get,
             "Theme:": self.get,
@@ -525,7 +535,7 @@ class Computer:
         try:
             return self.componentMap[key]
         except KeyError as err:
-            if quiet:
+            if args.debug:
                 print("[KeyError]: {}".format(err), end="")
 
             return []
@@ -535,8 +545,9 @@ class Computer:
             values = self.componentMap[key]
             return "\n".join(values) if len(values) > 0 else "{} N/A".format(key)
         except KeyError as err:
-            print("[KeyError]: ", end="")
-            print(err)
+            if args.debug:
+                print("[KeyError]: ", end="")
+                print(err)
 
             return "{} N/A".format(key)
 
