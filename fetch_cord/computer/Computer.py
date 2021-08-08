@@ -74,10 +74,14 @@ class Computer:
 
     @property
     def motherboardid(self) -> str:
-        tmp = self.get_component_idkey("Motherboard:")
+        return self.get_component_idkey("Motherboard:")
+
+    @property
+    def motherboardappid(self) -> str:
+        tmp = self.get_component_id("Motherboard:")
 
         if tmp == self.idsMap[self.idsMap["map"]["Motherboard:"]]["unknown"]:
-            return self.hostid
+            return self.hostappid
         
         return tmp
 

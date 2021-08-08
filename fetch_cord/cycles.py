@@ -222,19 +222,19 @@ def cycle2(run: Run_rpc, key: str, computer: Computer):
 
 def cycle3(run: Run_rpc, key: str, computer: Computer):
     # if not then forget it
-    if computer.host != "Host: N/A":
+    if computer.host != "Host: N/A" and computer.motherboard != "Motherboard: N/A":
         top_line = run.config["cycle_3"]["top_line"]
         if top_line == "battery":
             top_line = computer.battery
         elif top_line == "host":
-            top_line = computer.host
+            top_line = computer.motherboard
         elif top_line == "resolution":
             top_line = computer.resolution
         bottom_line = run.config["cycle_3"]["bottom_line"]
         if bottom_line == "resolution":
             bottom_line = computer.resolution
         elif bottom_line == "host":
-            bottom_line = computer.host
+            bottom_line = computer.motherboard
         elif bottom_line == "battery":
             bottom_line = computer.battery
         lapordesk_icon = run.config["cycle_3"]["lapordesk_icon"]
@@ -249,7 +249,7 @@ def cycle3(run: Run_rpc, key: str, computer: Computer):
             state=computer.resolution,
             details=computer.battery,
             large_image="big",
-            large_text=computer.host,
+            large_text=computer.motherboard,
             small_image=lapordesk_icon,
             small_text=computer.lapordesk,
             start=computer.uptime,
