@@ -19,11 +19,11 @@ from .mobo.get_mobo import get_mobo
 
 args = parse_args()
 
-logger = Logger(
-    "fetchcord_computer.log",
-    "fetchcord_computer",
-    logging.DEBUG if args.debug else logging.INFO,
-)
+# logger = Logger(
+#     "fetchcord_computer.log",
+#     "fetchcord_computer",
+#     logging.DEBUG if args.debug else logging.INFO,
+# )
 
 
 class Computer:
@@ -69,7 +69,7 @@ class Computer:
         tmp = self.get_component_line("Motherboard:")
         if tmp == "Motherboard: N/A":
             return self.host
-        
+
         return tmp
 
     @property
@@ -82,7 +82,7 @@ class Computer:
 
         if tmp == self.idsMap[self.idsMap["map"]["Motherboard:"]]["unknown"]:
             return self.hostappid
-        
+
         return tmp
 
     @property
