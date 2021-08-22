@@ -568,6 +568,8 @@ class Computer:
                 self.idsMap["map"][key]
             )
         )
+        if args.debug:
+            print(f"Value: {component}")
 
         return component_list["unknown"]
 
