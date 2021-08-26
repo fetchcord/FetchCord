@@ -74,9 +74,11 @@
 ## Installing on (GNU/)Linux
 NOTE: you need neofetch to be also installed for this to work.
 #### Via AUR
-On Arch Linux install this package for the git version: [fetchcord-git](https://aur.archlinux.org/packages/fetchcord-git/)
+On Arch Linux for the git testing version (the less stable version): [fetchcord](https://aur.archlinux.org/packages/fetchcord-testing/)
 
-Do note that this version is directly from master, for the stable release use [pip](#via-pip)
+And the git version (synced with master): [fetchcord](https://aur.archlinux.org/packages/fetchcord/)
+
+Historically the stabler release was the one from [pip](#via-pip) but now master will have only the stable releases.
 #### Via Snap
 On systems with snap installed, you can run `sudo snap install fetchcord --classic` to install fetchcord.
 
