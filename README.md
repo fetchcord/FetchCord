@@ -74,7 +74,7 @@
 ## Installing on (GNU/)Linux
 NOTE: you need neofetch to be also installed for this to work.
 #### Via AUR
-On Arch Linux for the git testing version (the less stable version): [fetchcord](https://aur.archlinux.org/packages/fetchcord-testing/)
+On Arch Linux for the git testing version (the less stable version): [fetchcord-testing](https://aur.archlinux.org/packages/fetchcord-testing/)
 
 And the git version (synced with master): [fetchcord](https://aur.archlinux.org/packages/fetchcord/)
 
