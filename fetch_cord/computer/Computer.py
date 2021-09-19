@@ -338,6 +338,12 @@ class Computer:
         elif not self.get_component("Font:", True) and args.termfont:
             self.componentMap["Font:"] = [args.termfont]
 
+        if not self.get_component("Motherboard", True) and self.os == "linux":
+            key = "Motherboard:"
+            if key not in self.componentMap:
+                self.componentMap[key] = []
+            self.parseMap[key](self.os, self.componentMap[key], "", key)
+
     def updateMap(self):
         """
         Clear the components values and fetch new ones
