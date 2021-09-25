@@ -161,7 +161,7 @@ default config path should be `~/.config/neofetch/config.conf`
 
 ## Website
 
-Fetchcord now has a website! You can find this site over at https://fetchcord.github.io/ - please keep in mind this site is still currently work in progress though.
+Fetchcord now has a website! You can find this site over at https://fetchcord.github.io/ - please keep in mind this site is still currently a work in progress though.
 
 ## Examples
 
