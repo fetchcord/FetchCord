@@ -1,4 +1,4 @@
-#from __future__ import annotations
+# from __future__ import annotations
 
 import time
 from typing import Dict
@@ -222,48 +222,48 @@ def cycle2(run: Run_rpc, key: str, computer: Computer):
 
 def cycle3(run: Run_rpc, key: str, computer: Computer):
     # if not then forget it
-    if computer.host != "Host: N/A" and computer.motherboard != "Motherboard: N/A":
-        top_line = run.config["cycle_3"]["top_line"]
-        if top_line == "battery":
-            top_line = computer.battery
-        elif top_line == "host":
-            top_line = computer.motherboard
-        elif top_line == "resolution":
-            top_line = computer.resolution
-        bottom_line = run.config["cycle_3"]["bottom_line"]
-        if bottom_line == "resolution":
-            bottom_line = computer.resolution
-        elif bottom_line == "host":
-            bottom_line = computer.motherboard
-        elif bottom_line == "battery":
-            bottom_line = computer.battery
-        lapordesk_icon = run.config["cycle_3"]["lapordesk_icon"]
-        if lapordesk_icon == "on":
-            lapordesk_icon = computer.lapordesk
-        else:
-            lapordesk_icon = "off"
-        if args.debug:
-            print("cycle 3")
-        run.try_update(
-            key,
-            state=computer.resolution,
-            details=computer.battery,
-            large_image="big",
-            large_text=computer.motherboard,
-            small_image=lapordesk_icon,
-            small_text=computer.lapordesk,
-            start=computer.uptime,
-        )
-        if args.debug:
-            print("appid: %s" % computer.hostappid)
-        config_time = run.config["cycle_3"]["time"]
-        if args.time:
-            time.sleep(int(args.time))
-        elif args.nodistro and args.nohardware and args.noshell:
-            time.sleep(9999)
-        elif config_time:
-            time.sleep(int(config_time))
-        else:
-            time.sleep(30)
+    top_line = run.config["cycle_3"]["top_line"]
+    if top_line == "battery":
+        top_line = computer.battery if computer.battery != "Battery N/A" else "  "
+    elif top_line == "host":
+        top_line = computer.motherboard
+    elif top_line == "resolution":
+        top_line = computer.resolution
+    bottom_line = run.config["cycle_3"]["bottom_line"]
+    if bottom_line == "resolution":
+        bottom_line = computer.resolution
+    elif bottom_line == "host":
+        bottom_line = computer.motherboard
+    elif bottom_line == "battery":
+        bottom_line = computer.battery if computer.battery != "Battery N/A" else "  "
+    lapordesk_icon = run.config["cycle_3"]["lapordesk_icon"]
+    if lapordesk_icon == "on":
+        lapordesk_icon = computer.lapordesk
+    else:
+        lapordesk_icon = "off"
+    if args.debug:
+        print("cycle 3")
+    run.try_update(
+        key,
+        state=bottom_line,
+        details=top_line,
+        large_image="big",
+        large_text=computer.motherboard,
+        small_image=lapordesk_icon,
+        small_text=computer.lapordesk,
+        start=computer.uptime,
+    )
+    if args.debug:
+        print("appid: %s" % computer.motherboardappid)
+
+    config_time = run.config["cycle_3"]["time"]
+    if args.time:
+        time.sleep(int(args.time))
+    elif args.nodistro and args.nohardware and args.noshell:
+        time.sleep(9999)
+    elif config_time:
+        time.sleep(int(config_time))
+    else:
+        time.sleep(30)
     # back from whence you came
     run.try_clear(key)

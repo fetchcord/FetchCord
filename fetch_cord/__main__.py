@@ -53,6 +53,7 @@ def main():
     if (
         not computer.neofetchwin
         and computer.host == "Host: N/A"
+        and computer.motherboard == "Motherboard: N/A"
         and args.nodistro
         and args.noshell
         and args.nohardware
@@ -102,7 +103,7 @@ def main():
             loops["cycle2"] = (computer.terminalid, cycle2)
             loops_indexes[len(loops_indexes)] = "cycle2"
         if not args.nohost and computer.os != "macos":
-            loops["cycle3"] = (computer.hostappid, cycle3)
+            loops["cycle3"] = (computer.motherboardappid, cycle3)
             loops_indexes[len(loops_indexes)] = "cycle3"
         if args.pause_cycle:
             loops["pause"] = ("", pause)
