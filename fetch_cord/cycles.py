@@ -70,7 +70,7 @@ def runmac(run: Run_rpc, key: str, computer: Computer):
         start=computer.uptime,
     )
     if args.time:
-        time.sleep(int(args.time))
+        time.sleep(float(args.time))
     elif args.nohost and args.nohardware and args.noshell:
         time.sleep(9999)
     else:
