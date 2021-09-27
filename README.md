@@ -101,7 +101,7 @@ Optionally for systemd users there is a user-side `fetchcord.service` in this re
 
 To install FetchCord, run `pip3 install FetchCord`
 
-NOTE: you need neofetch to be also installed for this to work.
+NOTE: you need neofetch to be also installed for this to work. To do this, use `brew install neofetch`.
 
 ### Run 
 
@@ -135,29 +135,57 @@ And more
 default config path should be `~/.config/neofetch/config.conf`
 
 ## Arguments
---nodistro, Don't show distro info.
+`--nodistro`, Don't show distro info.
 
---nohardware, Don't show hardware info.
+`--nohardware`, Don't show hardware info.
 
---noshell, Don't show shell/terminal info.
+`--noshell`, Don't show shell/terminal info.
 
---nohost, Don't show host info.
+`--nohost`, Don't show host info.
 
---time, -t, set custom duration for cycles in seconds.
+`--noconfig`, Disable neofetch custom config. Enable if you have an incompatible custom configuration.
 
---terminal, set custom terminal (useful if using a script or dmenu).
+`--time TIME` or `-t TIME`, Set custom time in seconds for cycles. Default is 30 seconds seconds.
 
---termfont, set custom terminal font (useful if neofetch can't get it).
+`--terminal TERMINAL`, Set custom Terminal (useful if using something like dmenu, or launching from a script).
 
---pause-cycle, Extra cycle that pauses FetchCord to show other activities.
+`--termfont TERMFONT`, Set custom terminal font (useful if neofetch can't get it).
 
---update, Update database of distros, hardware, etc.
+`--install`, Install fetchcord as a systemd service (user) and enable it.
 
---debug, For debug logs.
+`--uninstall`, Uninstall fetchcord as a systemd service (user).
 
---memtype, use GB or MB to show RAM.
+`--enable`, Enable fetchcord systemd service (user).
 
--h or --help, shows this information above.
+`--disable`, Disable fetchcord systemd service (user).
+
+`--start`, Start fetchcord systemd service (user).
+
+`--stop`, Stop fetchcord systemd service (user).
+
+`--status`, Get fetchcord systemd service status (user).
+
+`--update`, Update database of distros, hardware, etc.
+
+`--testing`, Get files from testing branch instead of master.
+
+`--debug` or `-d`, Enable debugging.
+
+`--pause-cycle`, Extra cycle that pauses for 30 seconds or custom time using --time argument.
+
+`--memtype TYPE` or `-m`, Show Memory in GiB or MiB. Valid vaules are 'gb', 'mb'.
+
+`--poll-rate RATE` or `-r RATE`, Set info polling rate.
+
+`--version` or `-v`, Print FetchCord Version.
+
+`--config-path CONFIG_PATH` or `-c CONFIG_PATH`, Specify custom neofetch config path.
+
+`--fetchcord-config-path FETCHCORD_CONFIG_PATH` or `-fc FETCHCORD_CONFIG_PATH`, Specify custom fetchcord config path.
+
+`--nfco NFCO` or `-nfco NFCO`, nfco.
+
+`-h` or `--help`, shows this information above.
 
 ## Website
 
@@ -169,7 +197,7 @@ Fetchcord now has a website! You can find this site over at https://fetchcord.gi
 ![MacOS bigsur](Examples/mac.png) ![Windows 10](Examples/windows.png) ![Ubuntu](Examples/ubuntu.png)
 ### Terminals
 ![Konsole](Examples/konsole.png) ![Gnome terminal](Examples/gnometerm.png) ![Apple terminal](Examples/appleterm.png)
-### Cpus
+### CPUs
 ![Ryzen 9](Examples/ryzencpu.png) ![Intel i7](Examples/intelcpu.png) ![Intel pentium](Examples/pent.png)
 ### Hosts
 ![HP laptop](Examples/hp.png) ![TUF gaming laptop](Examples/tuf.png) ![Lenovo desktop](Examples/len.png)
