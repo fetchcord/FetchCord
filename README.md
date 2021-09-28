@@ -2,16 +2,16 @@
 </p>
 <p align="center">
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
-       <img alt="Compatible OSes" src="https://img.shields.io/badge/Compatible-MacOS%2FLinux%2FWindows%2F-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white">
+       <img alt="Compatible OSes" src="https://img.shields.io/badge/Compatible-MacOS%2FLinux%2FWindows%2F-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white" />
     </a>
   <a href="https://www.python.org/downloads/">
-       <img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge">
+       <img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge" />
     </a>
    <a href="https://discord.gg/P4h9kdV">
-       <img alt="Discord Server" src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
+       <img alt="Discord Server" src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge" />
     </a>
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
-       <img alt="Header Image" src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png"
+       <img alt="Header Image" src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png" />
     </a>
   
   </a>
