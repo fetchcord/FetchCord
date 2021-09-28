@@ -90,32 +90,35 @@ def main():
         loops: Dict = {}
         loops_indexes: Dict = {}
 
-        if not args.nodistro and computer.os != "macos":
-            loops["cycle0"] = (computer.osinfoid, cycle0)
-            loops_indexes[len(loops_indexes)] = "cycle0"
-        if computer.os == "macos":
-            loops["runmac"] = ("740822755376758944", runmac)
-            loops_indexes[len(loops_indexes)] = "runmac"
-        if not args.nohardware:
-            loops["cycle1"] = (computer.cpuid, cycle1)
-            loops_indexes[len(loops_indexes)] = "cycle1"
-        if not args.noshell:
-            loops["cycle2"] = (computer.terminalid, cycle2)
-            loops_indexes[len(loops_indexes)] = "cycle2"
-        if not args.nohost and computer.os != "macos":
-            loops["cycle3"] = (computer.motherboardappid, cycle3)
-            loops_indexes[len(loops_indexes)] = "cycle3"
-        if args.pause_cycle:
-            loops["pause"] = ("", pause)
-            loops_indexes[len(loops_indexes)] = "pause"
+        if os.WIFSTOPPED or os.WSTOPSIG:
+            print("Connection Error: Please connect to the internet to use FetchCord!")
+        else:
+            if not args.nodistro and computer.os != "macos":
+                loops["cycle0"] = (computer.osinfoid, cycle0)
+                loops_indexes[len(loops_indexes)] = "cycle0"
+            if computer.os == "macos":
+                loops["runmac"] = ("740822755376758944", runmac)
+                loops_indexes[len(loops_indexes)] = "runmac"
+            if not args.nohardware:
+                loops["cycle1"] = (computer.cpuid, cycle1)
+                loops_indexes[len(loops_indexes)] = "cycle1"
+            if not args.noshell:
+                loops["cycle2"] = (computer.terminalid, cycle2)
+                loops_indexes[len(loops_indexes)] = "cycle2"
+            if not args.nohost and computer.os != "macos":
+                loops["cycle3"] = (computer.motherboardappid, cycle3)
+                loops_indexes[len(loops_indexes)] = "cycle3"
+            if args.pause_cycle:
+                loops["pause"] = ("", pause)
+                loops_indexes[len(loops_indexes)] = "pause"
 
-        run.set_loop(
-            loops,
-            loops_indexes,
-            computer.updateMap,
-            int(args.poll_rate) if args.poll_rate else 3,
-        )
-        run.run_loop(computer)
+            run.set_loop(
+                loops,
+                loops_indexes,
+                computer.updateMap,
+                int(args.poll_rate) if args.poll_rate else 3,
+            )
+            run.run_loop(computer)
 
 
 if __name__ == "__main__":
