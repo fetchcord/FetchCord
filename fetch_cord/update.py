@@ -1,5 +1,3 @@
-#from __future__ import annotations
-
 import urllib.request, sys, os
 from .args import parse_args
 
