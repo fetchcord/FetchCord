@@ -2,16 +2,16 @@
 </p>
 <p align="center">
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
-       <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux%2FWindows%2F-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white">
+       <img alt="Compatible OSes" src="https://img.shields.io/badge/Compatible-MacOS%2FLinux%2FWindows%2F-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white">
     </a>
   <a href="https://www.python.org/downloads/">
-       <img src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge">
+       <img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge">
     </a>
    <a href="https://discord.gg/P4h9kdV">
-       <img src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
+       <img alt="Discord Server" src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
     </a>
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
-       <img src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png"
+       <img alt="Header Image" src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png"
     </a>
   
   </a>
@@ -189,15 +189,15 @@ default config path should be `~/.config/neofetch/config.conf`
 
 ## Website
 
-Fetchcord now has a website! You can find this site over at https://fetchcord.github.io/ - please keep in mind this site is still currently a work in progress though.
+Fetchcord now has a website! You can find this site over at [https://fetchcord.github.io/](https://fetchcord.github.io/) - please keep in mind this site is still currently a work in progress though and will have a proper domain soon.
 
 ## Examples
 
 ### Operating Systems
-![MacOS bigsur](Examples/mac.png) ![Windows 10](Examples/windows.png) ![Ubuntu](Examples/ubuntu.png)
+![MacOS Big Sur](Examples/mac.png) ![Windows 10](Examples/windows.png) ![Ubuntu](Examples/ubuntu.png)
 ### Terminals
-![Konsole](Examples/konsole.png) ![Gnome terminal](Examples/gnometerm.png) ![Apple terminal](Examples/appleterm.png)
+![Konsole](Examples/konsole.png) ![Gnome Terminal](Examples/gnometerm.png) ![Apple Terminal](Examples/appleterm.png)
 ### CPUs
-![Ryzen 9](Examples/ryzencpu.png) ![Intel i7](Examples/intelcpu.png) ![Intel pentium](Examples/pent.png)
+![Ryzen 9](Examples/ryzencpu.png) ![Intel i7](Examples/intelcpu.png) ![Intel Pentium](Examples/pent.png)
 ### Hosts
-![HP laptop](Examples/hp.png) ![TUF gaming laptop](Examples/tuf.png) ![Lenovo desktop](Examples/len.png)
+![HP Laptop](Examples/hp.png) ![TUF Gaming Laptop](Examples/tuf.png) ![Lenovo Desktop](Examples/len.png)
