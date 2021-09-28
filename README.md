@@ -173,7 +173,7 @@ default config path should be `~/.config/neofetch/config.conf`
 
 `--pause-cycle`, Extra cycle that pauses for 30 seconds or custom time using --time argument.
 
-`--memtype TYPE` or `-m`, Show Memory in GiB or MiB. Valid vaules are 'gb', 'mb'.
+`--memtype TYPE` or `-m TYPE`, Show Memory in GiB or MiB. Valid vaules are 'gb', 'mb'.
 
 `--poll-rate RATE` or `-r RATE`, Set info polling rate.
 
