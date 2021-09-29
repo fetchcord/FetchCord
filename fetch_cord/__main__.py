@@ -10,36 +10,39 @@ from .update import update
 from . import __init__ as __init__
 from .resources import systemd_service
 
-
 def main():
   args = parse_args()
-
-  if os.name != "nt" and sys.platform != "darwin" and args.update:
+  
+  if args.update:    
     update()
-  elif args.install:
-    systemd_service.install()
-  elif args.uninstall:
-    systemd_service.uninstall()
-  elif args.enable:
-    systemd_service.enable()
-  elif args.disable:
-    systemd_service.disable()
-  elif args.start:
-    systemd_service.start()
-  elif args.stop:
-    systemd_service.stop()
-  elif args.status:
-    systemd_service.status()
-  elif args.version:
+  if os.name != "nt" and sys.platform != "darwin":
+    if args.install:
+      systemd_service.install()
+    if args.uninstall:
+      systemd_service.uninstall()
+    if args.enable:
+      systemd_service.enable()
+    if args.disable:
+      systemd_service.disable()
+    if args.start:
+      systemd_service.start()
+    if args.stop:
+      systemd_service.stop()
+    if args.status:
+      systemd_service.status()
+  if args.version:
     print("FetchCord version:", __init__.VERSION)
     sys.exit(0)
   if args.time and float(args.time) < 15:
     print("ERROR: Invalid time set, must be > 15 seconds, please try again with a different time setting!")
     sys.exit(1)
-  elif args.time and float(args.time) >= 15 != "":
+  if args.time and float(args.time) >= 15 != "":
     print("setting custom time %s seconds" % args.time)
-  elif args.help:
-    sys.exit(0)
+  try:
+    if args.help:
+      sys.exit(0)
+  except AttributeError:
+    pass
   
   computer: Computer = Computer()
 
@@ -52,9 +55,7 @@ def main():
 
   run: Run_rpc = Run_rpc()
 
-  if os.WIFSTOPPED or os.WSTOPSIG:
-    print("Connection Error: Please connect to the internet to use FetchCord!")
-  elif computer.neofetchwin:
+  if computer.neofetchwin:
     # wandowz
     loops: Dict = {}
     loops_indexes: Dict = {}
@@ -106,6 +107,6 @@ def main():
     )
 
     run.run_loop(computer)
-
+    
 if __name__ == "__main__":
   main()
