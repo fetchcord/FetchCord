@@ -36,7 +36,7 @@ def main():
   if args.time and float(args.time) < 15:
     print("ERROR: Invalid time set, must be > 15 seconds, or must not be a String, cannot continue.")
     sys.exit(1)
-  elif args.time and float(args.time) >= 15 != NaN:
+  elif args.time and float(args.time) >= 15 != "":
     print("setting custom time %s seconds" % args.time)
   try:
     if args.help:
