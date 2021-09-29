@@ -38,11 +38,8 @@ def main():
     sys.exit(1)
   elif args.time and float(args.time) >= 15 != "":
     print("setting custom time %s seconds" % args.time)
-  try:
-    if args.help:
-      sys.exit(0)
-  except AttributeError:
-    pass
+  elif args.help:
+    sys.exit(0)
   
   computer: Computer = Computer()
 
