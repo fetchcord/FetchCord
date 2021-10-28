@@ -2,6 +2,9 @@ import sys
 import pathlib
 import subprocess
 
+# main_ui.py file is generated from main.ui. main.ui can be edited in QtCreator
+# In order to convert main.ui to main_ui.py, you can use this command:
+# pyuic5 main.ui -o main_ui.py -i 4
 try:
     import main_ui
 except ImportError:

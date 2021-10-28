@@ -13,7 +13,7 @@
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
        <img src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png"
     </a>
-  
+
   </a>
 </p>
 
@@ -37,7 +37,7 @@
 ### Features
 
 - [x] Distribution detection
- 
+
 - [x] Distribution Version
 
 - [x] Package detection
@@ -59,6 +59,8 @@
 - [x] Detect Window Manager/Desktop Environment version
 
 - [x] Periodic polling of info such as package count, RAM usage, etc.
+
+- [x] GUI Frontend
 
 
 ### To-Do
@@ -85,7 +87,9 @@ On systems with snap installed, you can run `sudo snap install fetchcord --class
 
 Note that like the AUR version, this version is directly from master, for the stable release use [pip](#via-pip) <!-- remove this if you're not automatically deploying it -->
 #### Via pip
-To Install fetchcord via pip you can run `pip3 install fetchcord`
+To install fetchcord via pip you can run `pip3 install fetchcord`
+
+To install fetchcord with the GUI requirements, run `pip3 install fetchcord[gui]`
 
 If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
 
@@ -103,7 +107,7 @@ To install FetchCord, run `pip3 install FetchCord`
 
 NOTE: you need neofetch to be also installed for this to work.
 
-### Run 
+### Run
 
 simply run `fetchcord`
 
@@ -113,6 +117,9 @@ To install fetchcord on Windows run `python -m pip install fetchcord neofetch-wi
 
 ### Run
 To run Fetchcord run `fetchcord`
+
+### GUI
+The fetchcord GUI can be opened by running `fetchcord --gui` in a terminal. A desktop file may be added in a future version.
 
 ### Configuration
 
@@ -157,6 +164,8 @@ default config path should be `~/.config/neofetch/config.conf`
 
 --memtype, use GB or MB to show RAM.
 
+--gui, open the fetchcord GUI
+
 -h or --help, shows this information above.
 
 ## Website
@@ -173,3 +182,6 @@ Fetchcord now has a website! You can find this site over at https://fetchcord.gi
 ![Ryzen 9](Examples/ryzencpu.png) ![Intel i7](Examples/intelcpu.png) ![Intel pentium](Examples/pent.png)
 ### Hosts
 ![HP laptop](Examples/hp.png) ![TUF gaming laptop](Examples/tuf.png) ![Lenovo desktop](Examples/len.png)
+### GUI
+Note that the GUI version may look different depending on your OS and Qt theme.
+![GUI](Examples/gui.png)
