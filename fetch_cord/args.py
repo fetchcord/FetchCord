@@ -129,5 +129,10 @@ def parse_args():
         action="store",
         help="nfco",
     )
+    parser.add_argument(
+        "--gui",
+        action="store_true",
+        help="Start FetchCord GUI"
+    )
 
     return parser.parse_args()

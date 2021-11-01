@@ -265,5 +265,6 @@ def cycle3(run: Run_rpc, key: str, computer: Computer):
         time.sleep(int(config_time))
     else:
         time.sleep(30)
+
     # back from whence you came
     run.try_clear(key)
