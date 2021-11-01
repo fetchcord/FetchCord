@@ -1,5 +1,3 @@
-# from __future__ import annotations
-
 import logging
 from sys import platform, exit
 import sys
@@ -18,13 +16,6 @@ from .gpu.Gpu_interface import GpuType, get_gpuid
 from .mobo.get_mobo import get_mobo
 
 args = parse_args()
-
-# logger = Logger(
-#     "fetchcord_computer.log",
-#     "fetchcord_computer",
-#     logging.DEBUG if args.debug else logging.INFO,
-# )
-
 
 class Computer:
     parseMap: Dict[str, Callable]

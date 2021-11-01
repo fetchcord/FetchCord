@@ -1,5 +1,3 @@
-# from __future__ import annotations
-
 import time
 from typing import Dict
 
@@ -21,7 +19,7 @@ def pause(run: Run_rpc, key: str, computer: Computer):
     if args.debug:
         print("pause_cycle")
     if args.time:
-        time.sleep(int(args.time))
+        time.sleep(float(args.time))
     else:
         time.sleep(30)
 
@@ -42,7 +40,7 @@ def windows(run: Run_rpc, key: str, computer: Computer):
     )
 
     if args.time:
-        time.sleep(int(args.time))
+        time.sleep(float(args.time))
     elif args.nohardware:
         time.sleep(9999)
     else:
@@ -70,7 +68,7 @@ def runmac(run: Run_rpc, key: str, computer: Computer):
         start=computer.uptime,
     )
     if args.time:
-        time.sleep(int(args.time))
+        time.sleep(float(args.time))
     elif args.nohost and args.nohardware and args.noshell:
         time.sleep(9999)
     else:
@@ -111,11 +109,11 @@ def cycle0(run: Run_rpc, key: str, computer: Computer):
         print("appid: %s" % computer.osinfoid)
     config_time = run.config["cycle_0"]["time"]
     if args.time:
-        time.sleep(int(args.time))
+        time.sleep(float(args.time))
     elif args.nohost and args.nohardware and args.noshell:
         time.sleep(9999)
     elif config_time:
-        time.sleep(int(config_time))
+        time.sleep(float(config_time))
     else:
         time.sleep(30)
     run.try_clear(key)
@@ -161,11 +159,11 @@ def cycle1(run: Run_rpc, key: str, computer: Computer):
         print("appid: %s" % computer.cpuid)
     config_time = run.config["cycle_1"]["time"]
     if args.time:
-        time.sleep(int(args.time))
+        time.sleep(float(args.time))
     elif args.nodistro and args.noshell and args.nohost:
         time.sleep(9999)
     elif config_time:
-        time.sleep(int(config_time))
+        time.sleep(float(config_time))
     else:
         time.sleep(30)
     run.try_clear(key)
@@ -210,11 +208,11 @@ def cycle2(run: Run_rpc, key: str, computer: Computer):
     config_time = run.config["cycle_2"]["time"]
 
     if args.time:
-        time.sleep(int(args.time))
+        time.sleep(float(args.time))
     elif args.nodistro and args.nohardware and args.nohost:
         time.sleep(9999)
     elif config_time:
-        time.sleep(int(config_time))
+        time.sleep(float(config_time))
     else:
         time.sleep(30)
     run.try_clear(key)
@@ -258,11 +256,11 @@ def cycle3(run: Run_rpc, key: str, computer: Computer):
 
     config_time = run.config["cycle_3"]["time"]
     if args.time:
-        time.sleep(int(args.time))
+        time.sleep(float(args.time))
     elif args.nodistro and args.nohardware and args.noshell:
         time.sleep(9999)
     elif config_time:
-        time.sleep(int(config_time))
+        time.sleep(float(config_time))
     else:
         time.sleep(30)
     # back from whence you came
