@@ -1,10 +1,12 @@
+# from __future__ import annotations
+
 import argparse
 
 
 def parse_args():
 
     parser = argparse.ArgumentParser(
-        description="Fetch Cord\n https://github.com/MrPotatoBobx/FetchCord"
+        description="Fetch Cord\n" "https://github.com/MrPotatoBobx/FetchCord"
     )
     parser.add_argument(
         "--nodistro", action="store_true", help="Don't show distro info."
