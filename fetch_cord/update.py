@@ -1,9 +1,8 @@
-#from __future__ import annotations
-
 import urllib.request, sys, os
 from .args import parse_args
 
 args = parse_args()
+
 
 def update():
     print("Updating database...")

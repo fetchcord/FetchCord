@@ -13,6 +13,7 @@ except ImportError:
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialogButtonBox
 from PyQt5 import QtGui
 
+
 class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
     def __init__(self, *args, **kwargs):
         super(FetchCordMainUI, self).__init__(*args, **kwargs)
@@ -20,7 +21,11 @@ class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
         self.fetchcord_process = None
 
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(str(pathlib.Path(__file__).parent / "FetchDis.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(
+            QtGui.QPixmap(str(pathlib.Path(__file__).parent / "FetchDis.png")),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off,
+        )
         self.setWindowIcon(icon)
 
         self.setupUi(self)
@@ -40,37 +45,37 @@ class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
         args = {}
 
         if not self.distroInfo.isChecked():
-            args['--nodistro'] = ''
+            args["--nodistro"] = ""
 
         if not self.hardwareInfo.isChecked():
-            args['--nohardware'] = ''
+            args["--nohardware"] = ""
 
         if not self.shellInfo.isChecked():
-            args['--noshell'] = ''
+            args["--noshell"] = ""
 
         if not self.hostInfo.isChecked():
-            args['--nohost'] = ''
+            args["--nohost"] = ""
 
         if self.disableNeofetchConfig.isChecked():
-            args['--noconfig'] = ''
+            args["--noconfig"] = ""
 
-        if 'GiB' in str(self.memoryUnits.currentText()):
-            args['--memtype'] = 'gb'
+        if "GiB" in str(self.memoryUnits.currentText()):
+            args["--memtype"] = "gb"
         else:
-            args['--memtype'] = 'mb'
+            args["--memtype"] = "mb"
 
         if self.terminalName.text():
-            args['--terminal'] = self.terminalName.text()
+            args["--terminal"] = self.terminalName.text()
 
         if self.terminalFont.text():
-            args['--termfont'] = self.terminalFont.text()
+            args["--termfont"] = self.terminalFont.text()
 
-        args['--time'] = str(self.cycleTime.value())
+        args["--time"] = str(self.cycleTime.value())
 
         if self.pauseCycle.value():
-            args['--pause-cycle'] = str(self.pauseCycle.value())
+            args["--pause-cycle"] = str(self.pauseCycle.value())
 
-        args['--poll-rate'] = str(self.pollRate.value())
+        args["--poll-rate"] = str(self.pollRate.value())
 
         return args
 
@@ -92,34 +97,35 @@ class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
 
     def _install_systemd(self):
-        self.run_fetchcord({'--install': ''})
+        self.run_fetchcord({"--install": ""})
 
     def _uninstall_systemd(self):
-        self.run_fetchcord({'--uninstall': ''})
+        self.run_fetchcord({"--uninstall": ""})
 
     def _enable_systemd(self):
-        self.run_fetchcord({'--enable': ''})
+        self.run_fetchcord({"--enable": ""})
 
     def _disable_systemd(self):
-        self.run_fetchcord({'--disable': ''})
+        self.run_fetchcord({"--disable": ""})
 
     def _start_systemd(self):
-        self.run_fetchcord({'--start': ''})
+        self.run_fetchcord({"--start": ""})
 
     def _stop_systemd(self):
-        self.run_fetchcord({'--stop': ''})
+        self.run_fetchcord({"--stop": ""})
 
     def _update_database(self):
-        args = {'--update': ''}
+        args = {"--update": ""}
         if self.testingBranch.isChecked():
-            args['--testing'] = ''
+            args["--testing"] = ""
         self.run_fetchcord(args)
 
     def run_fetchcord(self, args: dict, disable_start_button: bool = False):
-        process_call_args = ['fetchcord'] + list(self.flatten(list(args.items())))
+        process_call_args = ["fetchcord"] + list(self.flatten(list(args.items())))
         self.fetchcord_process = subprocess.Popen(process_call_args, shell=True)
         if disable_start_button:
             self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
+
 
 def main():
     app = QApplication(sys.argv)
@@ -127,5 +133,6 @@ def main():
     window.show()
     sys.exit(app.exec_())
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

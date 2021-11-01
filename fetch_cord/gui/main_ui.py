@@ -18,7 +18,9 @@ class Ui_Dialog(object):
         self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
         self.buttonBox.setGeometry(QtCore.QRect(290, 410, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(
+            QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok
+        )
         self.buttonBox.setCenterButtons(False)
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayoutWidget = QtWidgets.QWidget(Dialog)
@@ -135,14 +137,20 @@ class Ui_Dialog(object):
         self.hostInfo.setText(_translate("Dialog", "Show Host Info"))
         self.memoryUnits.setItemText(0, _translate("Dialog", "Mebibytes (MiB)"))
         self.memoryUnits.setItemText(1, _translate("Dialog", "Gibibytes (GiB)"))
-        self.terminalName.setPlaceholderText(_translate("Dialog", "Custom Terminal Name"))
-        self.terminalFont.setPlaceholderText(_translate("Dialog", "Custom Terminal Font"))
+        self.terminalName.setPlaceholderText(
+            _translate("Dialog", "Custom Terminal Name")
+        )
+        self.terminalFont.setPlaceholderText(
+            _translate("Dialog", "Custom Terminal Font")
+        )
         self.pauseCycle.setSuffix(_translate("Dialog", "sec"))
         self.pollRate.setSuffix(_translate("Dialog", "sec"))
         self.cycleTime.setSuffix(_translate("Dialog", "sec"))
         self.label_4.setText(_translate("Dialog", "Cycle Time:"))
         self.label_3.setText(_translate("Dialog", "Pause Cycle:"))
-        self.disableNeofetchConfig.setText(_translate("Dialog", "Disable custom Neofetch config"))
+        self.disableNeofetchConfig.setText(
+            _translate("Dialog", "Disable custom Neofetch config")
+        )
         self.label_5.setText(_translate("Dialog", "Poll Rate:"))
         self.installSystemd.setText(_translate("Dialog", "Install as systemd service"))
         self.disableSystemd.setText(_translate("Dialog", "Disable systemd service"))
