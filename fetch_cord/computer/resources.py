@@ -1,3 +1,6 @@
+#from __future__ import annotations
+
+
 try:
     import importlib.resources as pkg_resources
 except ImportError:

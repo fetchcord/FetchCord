@@ -1,3 +1,6 @@
+#from __future__ import annotations
+
+
 try:
     import importlib.resources as pkg_resources
 except ImportError:
@@ -32,6 +35,30 @@ def load_config():
         _validate_config(default_config)
 
         return default_config
+
+
+# def load_config():
+#     base_config = configparser.ConfigParser()
+#     base_config.read(["/etc/fetch_cord.conf"])
+#     base_config = _parsed_config_to_dict(base_config)
+#     _validate_config(base_config)
+
+
+# #    try:
+#     user_config = configparser.ConfigParser()
+#     user_config.read("/etc/fetch_cord.conf")
+#     user_config = _parsed_config_to_dict(user_config)
+# #    except configparser.ParsingError as e:
+# #        print(
+# #            "Error parsing config file %s. Falling back to default config %s. Error is : %s",
+# #            envs.USER_CONFIG_COPY_PATH, envs.DEFAULT_CONFIG_PATH, str(e))
+#     return base_config
+
+#     corrected_config = _validate_config(user_config, fallback_config=base_config)
+
+
+#     return corrected_config
+
 
 def _validate_config(config, fallback_config=None):
 

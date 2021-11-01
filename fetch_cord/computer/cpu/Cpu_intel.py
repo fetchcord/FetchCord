@@ -1,3 +1,5 @@
+#from __future__ import annotations
+
 from .Cpu_interface import Cpu_interface
 import re
 
@@ -43,4 +45,4 @@ class Cpu_intel(Cpu_interface):
                 "Temperature report for Intel CPU's is not supported on Linux yet."
             )
         else:
-            raise NotImplementedError("Unknown OS, no CPU temperature report.")
+            raise NotImplementedError("Unkown OS, no CPU temperature report.")

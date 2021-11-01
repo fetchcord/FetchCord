@@ -1,3 +1,6 @@
+#from __future__ import annotations
+
+
 from typing import Callable, Dict
 from pypresence import Presence, exceptions
 import time, sys

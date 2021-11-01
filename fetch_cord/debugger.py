@@ -1,3 +1,5 @@
+# from __future__ import annotations
+
 from typing import List
 
 from .computer.Computer import Computer
@@ -19,7 +21,6 @@ def run_debug(computer: Computer):
         print("termid: %s" % computer.terminalid)
         print("termline item 0: %s" % computer.terminal)
         print("themeline: %s" % computer.theme)
-        print("moboline: %s" % computer.motherboard)
         if computer.host != "Host: N/A":
             print("\n----HOST INFO----\n")
             print("hostline: %s" % computer.host)

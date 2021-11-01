@@ -1,3 +1,5 @@
+# from __future__ import annotations
+
 import logging
 from sys import platform, exit
 import sys
@@ -16,6 +18,13 @@ from .gpu.Gpu_interface import GpuType, get_gpuid
 from .mobo.get_mobo import get_mobo
 
 args = parse_args()
+
+# logger = Logger(
+#     "fetchcord_computer.log",
+#     "fetchcord_computer",
+#     logging.DEBUG if args.debug else logging.INFO,
+# )
+
 
 class Computer:
     parseMap: Dict[str, Callable]
@@ -328,12 +337,6 @@ class Computer:
             )
         elif not self.get_component("Font:", True) and args.termfont:
             self.componentMap["Font:"] = [args.termfont]
-
-        if not self.get_component("Motherboard", True) and self.os == "linux":
-            key = "Motherboard:"
-            if key not in self.componentMap:
-                self.componentMap[key] = []
-            self.parseMap[key](self.os, self.componentMap[key], "", key)
 
     def updateMap(self):
         """
