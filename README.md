@@ -2,16 +2,16 @@
 </p>
 <p align="center">
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
-       <img alt="Compatible OSes" src="https://img.shields.io/badge/Compatible-MacOS%2FLinux%2FWindows%2F-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white" />
+       <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux%2FWindows%2F-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white">
     </a>
   <a href="https://www.python.org/downloads/">
-       <img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge" />
+       <img src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge">
     </a>
    <a href="https://discord.gg/P4h9kdV">
-       <img alt="Discord Server" src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge" />
+       <img src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
     </a>
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
-       <img alt="Header Image" src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png" />
+       <img src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png"
     </a>
   
   </a>
@@ -30,7 +30,6 @@
     - [Running on Windows](#run-2)
 - [**Configuration**](#Configuration)
 - [**Arguments**](#arguments)
-- [**Website**](#website)
 
 + [**Examples**](#examples)
 
@@ -75,11 +74,9 @@
 ## Installing on (GNU/)Linux
 NOTE: you need neofetch to be also installed for this to work.
 #### Via AUR
-On Arch Linux for the git testing version (the less stable version): [fetchcord-testing](https://aur.archlinux.org/packages/fetchcord-testing/)
+On Arch Linux install this package for the git version: [fetchcord-git](https://aur.archlinux.org/packages/fetchcord-git/)
 
-And the git version (synced with master): [fetchcord](https://aur.archlinux.org/packages/fetchcord/)
-
-Historically the stabler release was the one from [pip](#via-pip) but now master will have only the stable releases.
+Do note that this version is directly from master, for the stable release use [pip](#via-pip)
 #### Via Snap
 On systems with snap installed, you can run `sudo snap install fetchcord --classic` to install fetchcord.
 
@@ -101,7 +98,7 @@ Optionally for systemd users there is a user-side `fetchcord.service` in this re
 
 To install FetchCord, run `pip3 install FetchCord`
 
-NOTE: you need neofetch to be also installed for this to work. To do this, use `brew install neofetch`.
+NOTE: you need neofetch to be also installed for this to work.
 
 ### Run 
 
@@ -135,69 +132,36 @@ And more
 default config path should be `~/.config/neofetch/config.conf`
 
 ## Arguments
-`--nodistro`, Don't show distro info.
+--nodistro, Don't show distro info.
 
-`--nohardware`, Don't show hardware info.
+--nohardware, Don't show hardware info.
 
-`--noshell`, Don't show shell/terminal info.
+--noshell, Don't show shell/terminal info.
 
-`--nohost`, Don't show host info.
+--nohost, Don't show host info.
 
-`--noconfig`, Disable neofetch custom config. Enable if you have an incompatible custom configuration.
+--time, -t, set custom duration for cycles in seconds.
 
-`--time TIME` or `-t TIME`, Set custom time in seconds for cycles. Default is 30 seconds seconds.
+--terminal, set custom terminal (useful if using a script or dmenu).
 
-`--terminal TERMINAL`, Set custom Terminal (useful if using something like dmenu, or launching from a script).
+--termfont, set custom terminal font (useful if neofetch can't get it).
 
-`--termfont TERMFONT`, Set custom terminal font (useful if neofetch can't get it).
+--pause-cycle, Extra cycle that pauses FetchCord to show other activities.
 
-`--install`, Install fetchcord as a systemd service (user) and enable it.
+--update, Update database of distros, hardware, etc.
 
-`--uninstall`, Uninstall fetchcord as a systemd service (user).
+--debug, For debug logs.
 
-`--enable`, Enable fetchcord systemd service (user).
+--memtype, use GB or MB to show RAM.
 
-`--disable`, Disable fetchcord systemd service (user).
-
-`--start`, Start fetchcord systemd service (user).
-
-`--stop`, Stop fetchcord systemd service (user).
-
-`--status`, Get fetchcord systemd service status (user).
-
-`--update`, Update database of distros, hardware, etc.
-
-`--testing`, Get files from testing branch instead of master.
-
-`--debug` or `-d`, Enable debugging.
-
-`--pause-cycle`, Extra cycle that pauses for 30 seconds or custom time using --time argument.
-
-`--memtype TYPE` or `-m TYPE`, Show Memory in GiB or MiB. Valid vaules are 'gb', 'mb'.
-
-`--poll-rate RATE` or `-r RATE`, Set info polling rate.
-
-`--version` or `-v`, Print FetchCord Version.
-
-`--config-path CONFIG_PATH` or `-c CONFIG_PATH`, Specify custom neofetch config path.
-
-`--fetchcord-config-path FETCHCORD_CONFIG_PATH` or `-fc FETCHCORD_CONFIG_PATH`, Specify custom fetchcord config path.
-
-`--nfco NFCO` or `-nfco NFCO`, nfco.
-
-`-h` or `--help`, shows this information above.
-
-## Website
-
-Fetchcord now has a website! You can find this site over at [https://fetchcord.github.io/](https://fetchcord.github.io/) - please keep in mind this site is still currently a work in progress though and will have a proper domain soon.
-
+-h or --help, shows this information above.
 ## Examples
 
 ### Operating Systems
-![MacOS Big Sur](Examples/mac.png) ![Windows 10](Examples/windows.png) ![Ubuntu](Examples/ubuntu.png)
+![MacOS bigsur](Examples/mac.png) ![Windows 10](Examples/windows.png) ![Ubuntu](Examples/ubuntu.png)
 ### Terminals
-![Konsole](Examples/konsole.png) ![Gnome Terminal](Examples/gnometerm.png) ![Apple Terminal](Examples/appleterm.png)
-### CPUs
-![Ryzen 9](Examples/ryzencpu.png) ![Intel i7](Examples/intelcpu.png) ![Intel Pentium](Examples/pent.png)
+![Konsole](Examples/konsole.png) ![Gnome terminal](Examples/gnometerm.png) ![Apple terminal](Examples/appleterm.png)
+### Cpus
+![Ryzen 9](Examples/ryzencpu.png) ![Intel i7](Examples/intelcpu.png) ![Intel pentium](Examples/pent.png)
 ### Hosts
-![HP Laptop](Examples/hp.png) ![TUF Gaming Laptop](Examples/tuf.png) ![Lenovo Desktop](Examples/len.png)
+![HP laptop](Examples/hp.png) ![TUF gaming laptop](Examples/tuf.png) ![Lenovo desktop](Examples/len.png)
