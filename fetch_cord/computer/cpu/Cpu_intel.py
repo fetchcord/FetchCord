@@ -1,5 +1,3 @@
-#from __future__ import annotations
-
 from .Cpu_interface import Cpu_interface
 import re
 

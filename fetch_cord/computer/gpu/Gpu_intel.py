@@ -1,4 +1,3 @@
-# from __future__ import annotations
 from .Gpu_interface import Gpu_interface
 
 GPU_VENDOR = "intel"
@@ -15,7 +14,6 @@ class Gpu_intel(Gpu_interface):
     @Gpu_interface.vendor.setter
     def vendor(self, value: str):
         self._vendor = value.replace(f"{GPU_VENDOR}(R)", f"{GPU_VENDOR}")
-
 
     def get_temp(self):
         if self.os == "windows":

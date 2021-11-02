@@ -18,6 +18,7 @@ parts:
       - pypresence
       - psutil
       - importlib-resources
+      - PyQt5
 
 apps:
   fetchcord:

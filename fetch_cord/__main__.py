@@ -1,5 +1,3 @@
-# from __future__ import annotations
-
 from typing import Dict
 import sys, os
 
@@ -11,10 +9,15 @@ from .debugger import run_rpc_debug
 from .update import update
 from . import __init__ as __init__
 from .resources import systemd_service
+from .gui import gui
 
 
 def main():
     args = parse_args()
+
+    if args.gui:
+        gui.main()
+        sys.exit(0)
 
     if args.update:
         update()
