@@ -40,7 +40,7 @@ def main():
         print("FetchCord version:", __init__.VERSION)
         sys.exit(0)
     if args.time:
-        if int(args.time) < 15:
+        if float(args.time) < 15:
             print("ERROR: Invalid time set, must be > 15 seconds, cannot continue.")
             sys.exit(1)
         else:
