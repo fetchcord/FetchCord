@@ -4,7 +4,7 @@ import logging
 from sys import platform, exit
 import sys
 from typing import Callable, Dict, List
-import psutil, os
+import os
 
 from ..run_command import exec_bash, run_command
 from ..args import parse_args
@@ -27,6 +27,18 @@ args = parse_args()
 
 
 class Computer:
+    def BootTime():
+        if os.name == 'nt':
+            global _last_btime
+            ret = float(cext.BootTime())
+            if abs(ret - _last_btime) <= 1:
+                return _last_btime
+            else:
+                _last_btime = ret
+                return ret
+        else:
+            return os.popen('stat -c %Z /proc/').read().strip()
+    
     parseMap: Dict[str, Callable]
     componentMap: Dict[str, List] = {}
     idsMap: Dict[str, Dict]
@@ -300,7 +312,7 @@ class Computer:
         }
 
         self.idsMap = get_infos()
-        self.uptime = psutil.boot_time()
+        self.uptime = BootTime()
 
         self.detect_os()
         self.detect_laptop()
