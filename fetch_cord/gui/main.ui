@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>647</width>
+    <width>677</width>
     <height>452</height>
    </rect>
   </property>
@@ -37,7 +37,7 @@
     <rect>
      <x>30</x>
      <y>20</y>
-     <width>178</width>
+     <width>211</width>
      <height>331</height>
     </rect>
    </property>
@@ -100,10 +100,21 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="terminalName">
-      <property name="placeholderText">
-       <string>Custom Terminal Name</string>
+     <widget class="QComboBox" name="terminalName">
+      <property name="currentText">
+       <string>Terminal Name</string>
       </property>
+      <property name="insertPolicy">
+       <enum>QComboBox::InsertAtBottom</enum>
+      </property>
+      <property name="placeholderText">
+       <string/>
+      </property>
+      <item>
+       <property name="text">
+        <string>Terminal Name</string>
+       </property>
+      </item>
      </widget>
     </item>
     <item>
@@ -205,7 +216,7 @@
     <rect>
      <x>250</x>
      <y>200</y>
-     <width>381</width>
+     <width>412</width>
      <height>190</height>
     </rect>
    </property>

@@ -1,6 +1,7 @@
 import sys
 import pathlib
 import subprocess
+import json
 
 # main_ui.py file is generated from main.ui. main.ui can be edited in QtCreator
 # In order to convert main.ui to main_ui.py, you can use this command:
@@ -12,6 +13,8 @@ except ImportError:
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialogButtonBox
 from PyQt5 import QtGui
+import psutil
+
 
 
 class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
@@ -19,10 +22,11 @@ class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
         super(FetchCordMainUI, self).__init__(*args, **kwargs)
 
         self.fetchcord_process = None
+        script_dir = pathlib.Path(__file__).parent
 
         icon = QtGui.QIcon()
         icon.addPixmap(
-            QtGui.QPixmap(str(pathlib.Path(__file__).parent / "FetchDis.png")),
+            QtGui.QPixmap(str(script_dir / "FetchDis.png")),
             QtGui.QIcon.Normal,
             QtGui.QIcon.Off,
         )
@@ -33,6 +37,11 @@ class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
         self.buttonBox.button(QDialogButtonBox.Ok).setText("Start")
         self.buttonBox.button(QDialogButtonBox.Cancel).setText("Stop")
 
+        with open(script_dir.parent / "resources/fetchcord_ids.json") as f:
+            terminals = list(json.load(f)["terminal"].keys())
+        for term in terminals:
+            self.terminalName.addItem(term)
+
         self.installSystemd.clicked.connect(self._install_systemd)
         self.uninstallSystemd.clicked.connect(self._uninstall_systemd)
         self.enableSystemd.clicked.connect(self._enable_systemd)
@@ -40,6 +49,18 @@ class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
         self.startSystemd.clicked.connect(self._start_systemd)
         self.stopSystemd.clicked.connect(self._stop_systemd)
         self.update.clicked.connect(self._update_database)
+
+        self.detect_running_fetchcord_processes()
+
+    def detect_running_fetchcord_processes(self):
+
+        for proc in psutil.process_iter():
+            if "fetchcord" in proc.name() and "--gui" not in proc.cmdline():
+                self.fetchcord_process = proc
+
+        if self.fetchcord_process is not None:
+            print(f'FetchCord Process ID: {self.fetchcord_process.pid}')
+            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
     def collect_arguments(self):
         args = {}
@@ -64,8 +85,8 @@ class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
         else:
             args["--memtype"] = "mb"
 
-        if self.terminalName.text():
-            args["--terminal"] = self.terminalName.text()
+        if self.terminalName.currentText() != "Terminal Name":
+            args["--terminal"] = self.terminalName.currentText()
 
         if self.terminalFont.text():
             args["--termfont"] = self.terminalFont.text()
@@ -122,7 +143,9 @@ class FetchCordMainUI(QMainWindow, main_ui.Ui_Dialog):
 
     def run_fetchcord(self, args: dict, disable_start_button: bool = False):
         process_call_args = ["fetchcord"] + list(self.flatten(list(args.items())))
-        self.fetchcord_process = subprocess.Popen(process_call_args, shell=True)
+        process_call_args = list(filter(None, process_call_args))
+        print(f"DEBUG: {subprocess.list2cmdline(process_call_args)}")
+        self.fetchcord_process = subprocess.Popen(process_call_args)
         if disable_start_button:
             self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
