@@ -1,5 +1,3 @@
-# from __future__ import annotations
-
 from typing import Dict
 import sys, os
 
@@ -11,10 +9,15 @@ from .debugger import run_rpc_debug
 from .update import update
 from . import __init__ as __init__
 from .resources import systemd_service
+from .gui import gui
 
 
 def main():
     args = parse_args()
+
+    if args.gui:
+        gui.main()
+        sys.exit(0)
 
     if args.update:
         update()
@@ -37,7 +40,7 @@ def main():
         print("FetchCord version:", __init__.VERSION)
         sys.exit(0)
     if args.time:
-        if int(args.time) < 15:
+        if float(args.time) < 15:
             print("ERROR: Invalid time set, must be > 15 seconds, cannot continue.")
             sys.exit(1)
         else:
@@ -53,6 +56,7 @@ def main():
     if (
         not computer.neofetchwin
         and computer.host == "Host: N/A"
+        and computer.motherboard == "Motherboard: N/A"
         and args.nodistro
         and args.noshell
         and args.nohardware
@@ -102,7 +106,7 @@ def main():
             loops["cycle2"] = (computer.terminalid, cycle2)
             loops_indexes[len(loops_indexes)] = "cycle2"
         if not args.nohost and computer.os != "macos":
-            loops["cycle3"] = (computer.hostappid, cycle3)
+            loops["cycle3"] = (computer.motherboardappid, cycle3)
             loops_indexes[len(loops_indexes)] = "cycle3"
         if args.pause_cycle:
             loops["pause"] = ("", pause)

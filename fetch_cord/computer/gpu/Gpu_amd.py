@@ -1,4 +1,3 @@
-# from __future__ import annotations
 from fetch_cord.run_command import BashError, exec_bash
 from typing import List
 import sys
