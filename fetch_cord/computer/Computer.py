@@ -25,6 +25,18 @@ args = parse_args()
 
 
 class Computer:
+    def boot_time_calc:
+        if os.name == 'nt':
+            global _last_btime
+            ret = float(cext.boot_time_calc())
+            if abs(ret - _last_btime) <= 1:
+                return _last_btime
+            else:
+                _last_btime = ret
+                return ret
+        else:
+            return os.popen('stat -c %Z /proc/').read().strip()
+    
     parseMap: Dict[str, Callable]
     componentMap: Dict[str, List] = {}
     idsMap: Dict[str, Dict]
@@ -298,7 +310,7 @@ class Computer:
         }
 
         self.idsMap = get_infos()
-        self.uptime = psutil.boot_time()
+        self.uptime = boot_time_calc()
 
         self.detect_os()
         self.detect_laptop()
