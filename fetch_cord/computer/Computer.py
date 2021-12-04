@@ -23,20 +23,19 @@ args = parse_args()
 #     logging.DEBUG if args.debug else logging.INFO,
 # )
 
-
-class Computer:
-    def boot_time_calc():
-        if os.name == 'nt':
-            global _last_btime
-            ret = float(cext.boot_time_calc())
-            if abs(ret - _last_btime) <= 1:
-                return _last_btime
-            else:
-                _last_btime = ret
-                return ret
+def boot_time_calc():
+    if os.name == 'nt':
+        global _last_btime
+        ret = float(cext.boot_time_calc())
+        if abs(ret - _last_btime) <= 1:
+            return _last_btime
         else:
-            return os.popen('stat -c %Z /proc/').read().strip()
-    
+            _last_btime = ret
+            return ret
+    else:
+        return os.popen('stat -c %Z /proc/').read().strip()
+
+class Computer:    
     parseMap: Dict[str, Callable]
     componentMap: Dict[str, List] = {}
     idsMap: Dict[str, Dict]
