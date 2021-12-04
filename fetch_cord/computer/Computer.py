@@ -25,7 +25,7 @@ args = parse_args()
 
 
 class Computer:
-    def boot_time_calc:
+    def boot_time_calc():
         if os.name == 'nt':
             global _last_btime
             ret = float(cext.boot_time_calc())
