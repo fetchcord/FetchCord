@@ -16,8 +16,6 @@ class Config(dict):
         with resources.path(package, resource) as path:
             return path
 
-        return None
-
     def get_config(self, path: str):
         with open(path, "r") as stream:
             try:

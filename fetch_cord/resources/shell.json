@@ -1,0 +1,18 @@
+{
+    "fish": [
+        "fish"
+    ],
+    "zsh": [
+        "zsh"
+    ],
+    "bash": [
+        "bash"
+    ],
+    "tcsh": [
+        "tcsh"
+    ],
+    "ruby": [
+        "ruby"
+    ],
+    "unknown": "unknown"
+}

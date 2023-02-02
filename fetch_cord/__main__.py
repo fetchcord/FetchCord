@@ -58,6 +58,8 @@ def main():
         "cpu": get_infos("cpus"),
         "gpu": get_infos("gpus"),
         "os": get_infos("os"),
+        "terminal": get_infos("terminal"),
+        "shell": get_infos("shell"),
         "motherboard": get_infos("motherboards"),
         "system_type": get_infos("system_types"),
     }
