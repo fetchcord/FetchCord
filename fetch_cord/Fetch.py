@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict
 
 from . import resources
-from fetchcord.Tools import exec_bash, exec_ps1, get_resource_path
+from fetch_cord.Tools import exec_bash, exec_ps1, get_resource_path
 
 
 def get_infos(name: str):
@@ -32,7 +32,7 @@ class Fetch:
 
     def run_script(self, component_class: str) -> str:
         path = get_resource_path(
-            f"fetchcord.resources.scripts.{platform.system()}", "."
+            f"fetch_cord.resources.scripts.{platform.system()}", "."
         ).joinpath(component_class)
 
         if component_class.split(".")[-1].lower() == "ps1":

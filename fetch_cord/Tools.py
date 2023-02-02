@@ -28,3 +28,7 @@ def exec_ps1(command: str) -> str:
 def get_resource_path(package, resource: str) -> Path:
     with resources.path(package, resource) as path:
         return path
+
+
+class BashError(Exception):
+    pass

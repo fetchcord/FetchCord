@@ -8,7 +8,7 @@ class Config(dict):
     def __init__(self) -> None:
         super(Config, self).__init__(
             self.get_config(
-                self.get_resource_path("fetchcord.resources", "fetchcord_conf.yml")
+                self.get_resource_path("fetch_cord.resources", "fetchcord_conf.yml")
             )
         )
 

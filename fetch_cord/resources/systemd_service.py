@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from os import system
-from ..run_command import BashError, exec_bash
+from ..Tools import BashError, exec_bash
 from ..args import parse_args
 import sys
 
