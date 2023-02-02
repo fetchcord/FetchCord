@@ -23,7 +23,7 @@ setuptools.setup(
     },
     packages=["fetch_cord"],
     include_package_data=True,
-    install_requires=["pypresence", "psutil", "importlib-resources"],
+    install_requires=["pypresence", "psutil", "importlib-resources", "pyyaml"],
     keywords=["distro", "info", "discord", "fetch"],
     classifiers=[
         "License :: OSI Approved :: MIT License",

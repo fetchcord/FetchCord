@@ -7,15 +7,17 @@ from threading import Event
 from fetch_cord.Config import Config
 from fetch_cord.Cycle import Cycle
 from fetch_cord.Fetch import Fetch, get_infos, get_component_id
-from .args import parse_args
 from .update import update
 from . import __init__ as __init__
 from .resources import systemd_service
 
+from fetch_cord.args import parse_args
 
-def main():
-    args = parse_args()
+args = parse_args()
+__all__ = [args]
 
+
+def handle_args() -> None:
     if args.update:
         update()
     if os.name != "nt" and sys.platform != "darwin":
@@ -47,6 +49,10 @@ def main():
             sys.exit(0)
     except AttributeError:
         pass
+
+
+def main():
+    handle_args()
 
     fetchcord_ids = {
         "cpu": get_infos("cpus"),
