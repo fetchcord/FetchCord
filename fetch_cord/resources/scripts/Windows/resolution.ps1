@@ -1,0 +1,1 @@
+Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth } | ForEach-Object { $_.ScreenHeight }

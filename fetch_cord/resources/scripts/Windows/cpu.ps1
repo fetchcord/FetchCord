@@ -1,0 +1,1 @@
+Get-WmiObject -Class Win32_Processor -ComputerName. | Select-Object -Property Name | ForEach-Object {$_.Name}

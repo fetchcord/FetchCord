@@ -1,0 +1,1 @@
+lscpu | grep "Model name:" | cut -d: -f2 | xargs

@@ -1,0 +1,1 @@
+Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object SystemType | ForEach-Object {$_.SystemType}

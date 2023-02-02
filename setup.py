@@ -9,18 +9,16 @@ setuptools.setup(
     description="grabs information about your Distro and displays it as Discord Rich Presence.",
     long_description=open(join(dirname(__file__), "README.md")).read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/MrPotatoBobx/FetchCord",
-    author="MrPotatoBobx",
-    author_email="junkahole23@protonmail.com",
+    url="https://github.com/fetchcord/FetchCord",
+    author="FetchCord team",
+    author_email="contact@fetchcord.org",
     license="MIT",
     package_data={
         "fetch_cord": [
-            "config_schema.json",
+            "resources/scripts/*",
+            "resources/scripts/*/*",
+            "resources/fetchcord_conf.yml",
             "resources/default.conf",
-            "resources/fetch_cord.conf",
-            "resources/fetchcord_ids.json",
-            "computer/*.py",
-            "computer/*/*.py",
         ]
     },
     packages=["fetch_cord"],
@@ -32,7 +30,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     entry_points={
         "console_scripts": [
             "fetchcord=fetch_cord.__main__:main",

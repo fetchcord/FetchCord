@@ -1,0 +1,1 @@
+@wmic os get Caption | find /v "Caption"

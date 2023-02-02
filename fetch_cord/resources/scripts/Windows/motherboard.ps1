@@ -1,0 +1,1 @@
+Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}

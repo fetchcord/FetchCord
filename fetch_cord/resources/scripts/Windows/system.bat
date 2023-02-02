@@ -1,0 +1,1 @@
+@wmic computersystem get systemtype | findstr /v "^$" | find /v "SystemType"

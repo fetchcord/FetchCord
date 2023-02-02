@@ -1,0 +1,1 @@
+gwmi win32_VideoController | Select-Object -Property Name | ForEach-Object { $_.Name }

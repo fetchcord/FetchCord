@@ -1,0 +1,62 @@
+---
+cycles:
+  # - name: os
+  #   app_id: "os"
+  #   top_line: "kernel"
+  #   bottom_line: "packages"
+  #   small_icon: "system_type"
+  #   time: 30
+  - name: "hardware"
+    app_id: "cpu"
+    top_line: "mem"
+    bottom_line: "gpu"
+    small_icon: "gpu"
+    time: 30
+  # - name: "shell"
+  #   top_line: "font"
+  #   bottom_line: "shell"
+  #   small_icon: "on"
+  #   time: 30
+  # - name: "host"
+  #   app_id: "motherboard"
+  #   top_line: "motherboard"
+  #   bottom_line: "resolution"
+  #   small_icon: "system_type"
+  #   time: 30
+scripts:
+  Windows:
+    cpu:
+      - "cpu.ps1"
+      - "cpu.bat"
+    gpu:
+      - "gpu.ps1"
+      - "gpu.bat"
+    mem:
+      - "mem.ps1"
+      - "mem.bat"
+    kernel:
+      - "kernel.ps1"
+      - "kernel.bat"
+    packages:
+      - "packages.ps1"
+      - "packages.bat"
+    os:
+      - "os.ps1"
+      - "os.bat"
+    motherboard:
+      - "motherboard.ps1"
+      - "motherboard.bat"
+    resolution:
+      - "resolution.ps1"
+      - "resolution.bat"
+    system_type:
+      - "battery.ps1"
+      - "battery.bat"
+  Linux:
+    cpu:
+      - "cpu.sh"
+    mem:
+      - "mem.sh"
+    gpu:
+      - "gpu.sh"
+  Darwin:

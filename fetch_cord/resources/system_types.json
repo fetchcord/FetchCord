@@ -1,0 +1,9 @@
+{
+    "unknown": "off",
+    "desktop": [
+        "^$"
+    ],
+    "laptop": [
+        ".+"
+    ]
+}
