@@ -1,7 +1,7 @@
 # from __future__ import annotations
 
 import urllib.request, sys, os
-from .args import parse_args
+from fetch_cord.args import parse_args
 
 args = parse_args()
 

@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Dict
 
-from . import resources
+from fetch_cord import resources
 from fetch_cord.Tools import exec_bash, exec_ps1, get_resource_path
 
 

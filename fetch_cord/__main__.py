@@ -7,9 +7,9 @@ from threading import Event
 from fetch_cord.Config import Config
 from fetch_cord.Cycle import Cycle
 from fetch_cord.Fetch import Fetch, get_infos, get_component_id
-from .update import update
-from . import __init__ as __init__
-from .resources import systemd_service
+from fetch_cord.update import update
+from fetch_cord import __init__ as __init__
+from fetch_cord.resources import systemd_service
 
 from fetch_cord.args import parse_args
 
