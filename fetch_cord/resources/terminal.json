@@ -12,7 +12,7 @@
         "xterm"
     ],
     "741286819676553258": [
-        "konsole"
+        "(?i)konsole"
     ],
     "741328861115056160": [
         "gnome-terminal"
@@ -21,7 +21,7 @@
         "cool-retro-term"
     ],
     "743246048968835092": [
-        "urxvt"
+        "(?i)urxvt"
     ],
     "744332423072055296": [
         "xfce4-terminal"
@@ -36,7 +36,8 @@
         "mate-terminal"
     ],
     "878027718132899901": [
-        "terminus"
+        "(?i)terminus",
+        "io.elementary.t"
     ],
     "878034077444374559": [
         "windows terminal"
