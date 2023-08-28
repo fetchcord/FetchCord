@@ -8,10 +8,48 @@
         "(?i)thinkcentre"
     ],
     "746447043190456561": [
-        "(?i)gigabyte"
+        "(?i)gigabyte",
+        "(?i)Z370XP SLI",
+        "(?i)Z390 GAMING X",
+        "(?i)H310M A 2.0"
     ],
     "749061181607772200": [
         "(?i)aorus"
+    ],
+    "743970870631858288": [
+        "(?i)inspiron",
+        "(?i)latitude",
+        "(?i)g3"
+    ],
+    "743971270395297852": [
+        "(?i)hp",
+        "(?i)hewlett-packard",
+        "(?i)J7D10ET"
+    ],
+    "744330890343219262": [
+        "(?i)tuf"
+    ],
+    "743936082780880928": [
+        "(?i)asus",
+        "(?i)asustek",
+        "(?i)rog",
+        "(?i)republic of gamers",
+        "(?i)K53TA 1.0"
+    ],
+    "744326890512318544": [
+        "(?i)acer",
+        "(?i)KBL  (Metapod_KL)",
+        "(?i)aspire",
+        "(?i)DL (Tulip_DA)"
+    ],
+    "748290608787095694": [
+        "(?i)macbookair,"
+    ],
+    "750016315854553138": [
+        "(?i)macbookpro,"
+    ],
+    "749014556604497972": [
+        "(?i)hvm"
     ],
     "785620748021792788": [
         "(?i)dell",
@@ -21,20 +59,13 @@
         "(?i)precision",
         "(?i)vostro",
         "(?i)xps",
-        "(?i)optiplex"
+        "(?i)optiplex",
+        "(?i)optiplex 780"
     ],
     "787106184783200266": [
-        "(?i)msi"
-    ],
-    "743936082780880928": [
-        "(?i)asus",
-        "(?i)asustek",
-        "(?i)rog",
-        "(?i)republic of gamers"
-    ],
-    "743971270395297852": [
-        "(?i)hp",
-        "(?i)hewlett packard"
+        "(?i)msi",
+        "(?i)MS-7C02 1.0",
+        "(?i)PE70 6QD REV:1.0"
     ],
     "811349714946490408": [
         "(?i)asrock"
