@@ -63,10 +63,40 @@ scripts:
       - "terminal.ps1"
       - "terminal.bat"
   Linux:
+    battery:
+      - "battery.sh"
     cpu:
       - "cpu.sh"
-    mem:
-      - "mem.sh"
+    font:
+      - "font.sh"
     gpu:
       - "gpu.sh"
+    kernel:
+      - "kernel.sh"
+    mem:
+      - "mem.sh"
+    packages:
+      - "packages.sh"
+    shell:
+      - "shell.sh"
+    terminal:
+      - "terminal.sh"
   Darwin:
+    battery:
+      - "battery.sh"
+    cpu:
+      - "cpu.sh"
+    font:
+      - "font.sh"
+    gpu:
+      - "gpu.sh"
+    kernel:
+      - "kernel.sh"
+    mem:
+      - "mem.sh"
+    packages:
+      - "packages.sh"
+    shell:
+      - "shell.sh"
+    terminal:
+      - "terminal.sh"

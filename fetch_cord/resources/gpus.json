@@ -30,7 +30,5 @@
         "nvidiaintel",
         "intelnvidia"
     ],
-    "unknown": [
-        "off"
-    ]
+    "unknown": "off"
 }

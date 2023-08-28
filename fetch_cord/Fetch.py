@@ -21,7 +21,7 @@ def get_component_id(search: str, id_list: dict) -> str:
     for id, patterns in id_list.items():
         if any(re.search(pattern, search) for pattern in patterns):
             return id
-    return id_list["unknown"][0]
+    return id_list["unknown"]
 
 
 class Fetch:

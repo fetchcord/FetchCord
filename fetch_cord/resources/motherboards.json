@@ -1,15 +1,43 @@
 {
     "744326223412461630": [
-        "(?i)lenovo"
+        "(?i)lenovo",
+        "(?i)thinkpad",
+        "(?i)thinkbook",
+        "(?i)ideapad",
+        "(?i)legion",
+        "(?i)thinkcentre"
     ],
     "746447043190456561": [
         "(?i)gigabyte"
     ],
+    "749061181607772200": [
+        "(?i)aorus"
+    ],
     "785620748021792788": [
-        "(?i)dell"
+        "(?i)dell",
+        "(?i)alienware",
+        "(?i)inspiron",
+        "(?i)latitude",
+        "(?i)precision",
+        "(?i)vostro",
+        "(?i)xps",
+        "(?i)optiplex"
     ],
     "787106184783200266": [
         "(?i)msi"
+    ],
+    "743936082780880928": [
+        "(?i)asus",
+        "(?i)asustek",
+        "(?i)rog",
+        "(?i)republic of gamers"
+    ],
+    "743971270395297852": [
+        "(?i)hp",
+        "(?i)hewlett packard"
+    ],
+    "811349714946490408": [
+        "(?i)asrock"
     ],
     "unknown": "742887089179197462"
 }

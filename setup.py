@@ -19,6 +19,8 @@ setuptools.setup(
             "resources/scripts/*/*",
             "resources/fetchcord_conf.yml",
             "resources/default.conf",
+            "resources/*.py",
+            "resources/*.json",
         ]
     },
     packages=["fetch_cord"],
