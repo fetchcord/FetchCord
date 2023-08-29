@@ -9,13 +9,13 @@
         "alacritty"
     ],
     "741287143187546125": [
-        "xterm"
+        "(?i)xterm"
     ],
     "741286819676553258": [
         "(?i)konsole"
     ],
     "741328861115056160": [
-        "gnome-terminal"
+        "(?i)gnome-terminal"
     ],
     "741731097498353794": [
         "cool-retro-term"
@@ -24,7 +24,7 @@
         "(?i)urxvt"
     ],
     "744332423072055296": [
-        "xfce4-terminal"
+        "(?i)xfce4-terminal"
     ],
     "744950796298354689": [
         "apple_terminal"
