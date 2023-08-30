@@ -1,29 +1,29 @@
 ---
 cycles:
-  # - name: os
-  #   app_id: "os"
-  #   top_line: "kernel"
-  #   bottom_line: "packages"
-  #   small_icon: "system_type"
-  #   time: 30
+  - name: os
+    app_id: "os"
+    top_line: "kernel"
+    bottom_line: "packages"
+    small_icon: "system_type"
+    time: 30
   - name: "hardware"
     app_id: "cpu"
     top_line: "mem"
     bottom_line: "gpu"
     small_icon: "gpu"
     time: 30
-  # - name: "shell"
-  #   app_id: "terminal"
-  #   top_line: "font"
-  #   bottom_line: "shell"
-  #   small_icon: "shell"
-  #   time: 30
-  # - name: "host"
-  #   app_id: "motherboard"
-  #   top_line: "motherboard"
-  #   bottom_line: "resolution"
-  #   small_icon: "system_type"
-  #   time: 30
+  - name: "shell"
+    app_id: "terminal"
+    top_line: "font"
+    bottom_line: "shell"
+    small_icon: "shell"
+    time: 30
+  - name: "host"
+    app_id: "motherboard"
+    top_line: "motherboard"
+    bottom_line: "resolution"
+    small_icon: "system_type"
+    time: 30
 scripts:
   Windows:
     cpu:

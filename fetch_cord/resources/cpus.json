@@ -42,16 +42,20 @@
         "(?i)^.*(athlon.*gold|gold.*athlon).*$"
     ],
     "741044208512532570": [
-        "(?i)Intel i3"
+        "(?i)Intel i3",
+        "(?i)intel.*core.*i3.*"
     ],
     "741099939198926920": [
-        "(?i)Intel i5"
+        "(?i)Intel i5",
+        "(?i)intel.*core.*i5.*"
     ],
     "741100300219187335": [
-        "(?i)Intel i7"
+        "(?i)Intel i7",
+        "(?i)intel.*core.*i7.*"
     ],
     "741100622040006719": [
-        "(?i)Intel i9"
+        "(?i)Intel i9",
+        "(?i)intel.*core.*i9.*"
     ],
     "741203845706940467": [
         "(?i)^.*(intel.*pentium|pentium.*intel).*$",
