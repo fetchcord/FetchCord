@@ -1,18 +1,18 @@
 {
     "fish": [
-        "fish"
+        "(?i)fish"
     ],
     "zsh": [
-        "zsh"
+        "(?i)zsh"
     ],
     "bash": [
-        "bash"
+        "(?i)bash"
     ],
     "tcsh": [
-        "tcsh"
+        "(?i)tcsh"
     ],
     "ruby": [
-        "ruby"
+        "(?i)ruby"
     ],
     "742887089179197462": [
         "unknown"

@@ -3,10 +3,10 @@
         "st"
     ],
     "741285676250824725": [
-        "kitty"
+        "(?i)kitty"
     ],
     "741291339945345045": [
-        "alacritty"
+        "(?i)alacritty"
     ],
     "741287143187546125": [
         "(?i)xterm"
@@ -18,7 +18,7 @@
         "(?i)gnome-terminal"
     ],
     "741731097498353794": [
-        "cool-retro-term"
+        "(?i)cool-retro-term"
     ],
     "743246048968835092": [
         "(?i)urxvt"
@@ -33,14 +33,14 @@
         "lxterminal"
     ],
     "746531413360377856": [
-        "mate-terminal"
+        "(?i)mate-terminal"
     ],
     "878027718132899901": [
         "(?i)terminus",
         "io.elementary.t"
     ],
     "878034077444374559": [
-        "windows terminal"
+        "(?i)windows"
     ],
     "745691250186911796": [
         "unknown"
