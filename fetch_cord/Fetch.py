@@ -19,7 +19,6 @@ def get_infos(name: str):
 
 def get_component_id(search: str, id_list: dict) -> str:
     for id, patterns in id_list.items():
-        print(id, patterns, search, any(re.search(pattern, search) for pattern in patterns))
         if any(re.search(pattern, search) for pattern in patterns):
             return id
     
