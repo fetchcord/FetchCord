@@ -59,10 +59,12 @@
     ],
     "741203845706940467": [
         "(?i)^.*(intel.*pentium|pentium.*intel).*$",
-        "(?i)pentium"
+        "(?i)pentium",
+        "(?i)intel.*core.*pentium.*"
     ],
     "742904581360713849": [
-        "(?i)Intel celeron"
+        "(?i)Intel celeron",
+        "(?i)celeron"
     ],
     "746527640382603375": [
         "(?i)Intel core 2 duo",
