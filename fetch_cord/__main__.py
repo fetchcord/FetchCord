@@ -18,6 +18,8 @@ __all__ = [args]
 
 
 def handle_args() -> None:
+    """Handle the arguments passed to the program."""
+
     if args.update:
         update()
     if os.name != "nt" and sys.platform != "darwin":
@@ -54,6 +56,7 @@ def handle_args() -> None:
 def main():
     handle_args()
 
+    # Get the ids for the components
     fetchcord_ids = {
         "cpu": get_infos("cpus"),
         "gpu": get_infos("gpus"),
@@ -71,12 +74,16 @@ def main():
     config = Config()
     # Load cycles
     cycles = [Cycle(cycle, stop_event) for cycle in config["cycles"]]
+    print(config["scripts"])
     fetch = Fetch(config["scripts"])
 
+    # Handle Ctrl+C and SIGTERM
     signal(SIGINT, lambda s, f: stop_event.set())
     signal(SIGTERM, lambda s, f: stop_event.set())
 
+    # Main loop
     while not stop_event.is_set():
+        # Loop through the cycles defined in the config
         for cycle in cycles:
             if stop_event.is_set():
                 break
