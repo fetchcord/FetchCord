@@ -1,5 +1,6 @@
 # from __future__ import annotations
 
+import platform
 import sys, os
 
 from signal import SIGINT, SIGTERM, signal
@@ -74,8 +75,15 @@ def main():
     config = Config()
     # Load cycles
     cycles = [Cycle(cycle, stop_event) for cycle in config["cycles"]]
-    print(config["scripts"])
-    fetch = Fetch(config["scripts"])
+
+    os_type = platform.system()
+    scripts = {
+        component_type: value[os_type]
+        for component_type, value in config["commands"].items()
+        if os_type in value
+    }
+
+    fetch = Fetch(scripts)
 
     # Handle Ctrl+C and SIGTERM
     signal(SIGINT, lambda s, f: stop_event.set())

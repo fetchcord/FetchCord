@@ -5,98 +5,138 @@ cycles:
     top_line: "kernel"
     bottom_line: "packages"
     small_icon: "system_type"
-    time: 30
+    time: &cycle_time 30
   - name: "hardware"
     app_id: "cpu"
     top_line: "mem"
     bottom_line: "gpu"
     small_icon: "gpu"
-    time: 30
+    time: *cycle_time
   - name: "shell"
     app_id: "terminal"
     top_line: "font"
     bottom_line: "shell"
     small_icon: "shell"
-    time: 30
+    time: *cycle_time
   - name: "host"
     app_id: "motherboard"
     top_line: "motherboard"
     bottom_line: "resolution"
     small_icon: "system_type"
-    time: 30
-scripts:
-  Windows:
-    cpu:
-      - "cpu.ps1"
-      - "cpu.bat"
-    gpu:
-      - "gpu.ps1"
-      - "gpu.bat"
-    mem:
-      - "mem.ps1"
-      - "mem.bat"
-    kernel:
-      - "kernel.ps1"
-      - "kernel.bat"
-    packages:
-      - "packages.ps1"
-      - "packages.bat"
-    os:
-      - "os.ps1"
-      - "os.bat"
-    motherboard:
-      - "motherboard.ps1"
-      - "motherboard.bat"
-    resolution:
-      - "resolution.ps1"
-      - "resolution.bat"
-    system_type:
-      - "battery.ps1"
-      - "battery.bat"
-    shell:
-      - "shell.ps1"
-      - "shell.bat"
-    font:
-      - "font.ps1"
-      - "font.bat"
-    terminal:
-      - "terminal.ps1"
-      - "terminal.bat"
-  Linux:
-    battery:
-      - "battery.sh"
-    cpu:
-      - "cpu.sh"
-    font:
-      - "font.sh"
-    gpu:
-      - "gpu.sh"
-    kernel:
-      - "kernel.sh"
-    mem:
-      - "mem.sh"
-    packages:
-      - "packages.sh"
-    shell:
-      - "shell.sh"
-    terminal:
-      - "terminal.sh"
-  Darwin:
-    battery:
-      - "battery.sh"
-    cpu:
-      - "cpu.sh"
-    font:
-      - "font.sh"
-    gpu:
-      - "gpu.sh"
-    kernel:
-      - "kernel.sh"
-    mem:
-      - "mem.sh"
-    packages:
-      - "packages.sh"
-    shell:
-      - "shell.sh"
-    terminal:
-      - "terminal.sh"
+    time: *cycle_time
+commands:
+  cpu:
+    Windows: |
+      Get-WmiObject -Class Win32_Processor -ComputerName. | Select-Object -Property Name | ForEach-Object {$_.Name}
+    Linux: &cpu_sh |
+      lscpu | grep "Model name:" | cut -d: -f2 | xargs
+    Darwin: *cpu_sh
+  gpu:
+    Windows: |
+      Get-WmiObject Win32_VideoController | Select-Object Name | ForEach-Object {$_.Name}
+    Linux: &gpu_sh |
+      lspci -mmQ | grep 3D | cut -d " " -f1 --complement | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1 --complement --output-delimiter=" "
+    Darwin: *gpu_sh
+  mem:
+    Windows: |
+      # Get total physical memory (in bytes)
+      $TotalMemory = (Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory
+
+      # Get available physical memory (in bytes)
+      $AvailableMemory = (Get-CimInstance -ClassName Win32_PerfFormattedData_PerfOS_Memory).AvailableBytes
+
+      # Convert values to GB
+      $TotalMemory = [int64]$TotalMemory/1024/1024/1024
+      $AvailableMemory = [int64]$AvailableMemory/1024/1024/1024
+
+      # Calculate used memory
+      $UsedMemory = $TotalMemory - $AvailableMemory
+
+      # Output used and total memory in GB
+      Write-Output ("{0:N2} GB / {1:N2} GB" -f $UsedMemory, $TotalMemory)
+    Linux: &mem_sh |
+      # Get total physical memory (in bytes)
+      TotalMemory=$(cat /proc/meminfo | grep MemTotal | awk '{print $2}')
+
+      # Get available physical memory (in bytes)
+      AvailableMemory=$(cat /proc/meminfo | grep MemFree | awk '{print $2}')
+
+      # Convert values to GB
+      TotalMemory=$(expr $TotalMemory / 1024 / 1024)
+      AvailableMemory=$(expr $AvailableMemory / 1024 / 1024)
+
+      # Calculate used memory
+      UsedMemory=$(expr $TotalMemory - $AvailableMemory)
+
+      # Output used and total memory in GB
+      echo "$UsedMemory GB / $TotalMemory GB"
+    Darwin: *mem_sh
+  kernel:
+    Windows: |
+      Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object Version | ForEach-Object {$_.Version}
+    Linux: &kernel_sh |
+      neofetch --stdout | grep "Kernel" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *kernel_sh
+  packages:
+    Windows: |
+      Write-Host (Get-Package | Measure-Object).Count packages
+    Linux: &packages_sh |
+      neofetch --stdout | grep "Packages" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *packages_sh
+  os:
+    Windows: |
+      Get-CimInstance Win32_OperatingSystem | Select-Object Caption | ForEach-Object {$_.Caption}
+    Linux: &os_sh |
+      neofetch --stdout | grep "OS" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *os_sh
+  host:
+    Windows: |
+      Get-WmiObject Win32_BaseBoard | Select-Object Product | ForEach-Object {$_.Product}
+    Linux: &host_sh |
+      neofetch --stdout | grep "Host" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *host_sh
+  motherboard:
+    Windows: |
+      Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
+    Linux: &motherboard_sh |
+      neofetch --stdout | grep "Motherboard" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *motherboard_sh
+  resolution:
+    Windows: |
+      Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth.ToString() + 'x' + $_.ScreenHeight.ToString() }
+    Linux: &resolution_sh |
+      neofetch --stdout | grep "Resolution" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *resolution_sh
+  system_type:
+    Windows: |
+      Get-CimInstance Win32_Battery | Select-Object BatteryStatus | ForEach-Object {$_.BatteryStatus}
+    Linux: &battery_sh |
+      if ls /sys/class/power_supply/ | grep -qi battery; then echo "Laptop"; else echo "Desktop"; fi
+    Darwin: *battery_sh
+  shell:
+    Windows: |
+      Write-Host "PowerShell $(($PSVersionTable).PSVersion)"
+    Linux: &shell_sh |
+      neofetch --stdout | grep "Shell" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *shell_sh
+  font:
+    Windows: |
+      $Font = (Get-ItemProperty -Path "HKCU:\Console").FaceName
+
+      if ($Font -eq "__DefaultTTFont__") {
+          $RegistryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console\TrueTypeFont"
+          $DefaultFont = (Get-ItemProperty -Path $RegistryPath).00
+          Write-Host "$DefaultFont"
+      }
+      else {
+          Write-Host "$Font"
+      }
+    Linux: &font_sh |
+      neofetch --stdout | grep "Font" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *font_sh
+  terminal:
+    Windows: |
+      $host.Name
+    Linux: &terminal_sh |
+      neofetch --stdout | grep "Terminal" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *terminal_sh

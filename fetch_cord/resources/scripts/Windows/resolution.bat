@@ -1,1 +1,0 @@
-@wmic desktopmonitor get screenwidth,screenheight | findstr /v "^$" | find /v "ScreenHeight" | find /v "ScreenWidth"

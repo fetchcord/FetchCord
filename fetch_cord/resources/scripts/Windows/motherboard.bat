@@ -1,1 +1,0 @@
-@wmic computersystem get manufacturer | findstr /v "^$" | findstr /v "Manufacturer"

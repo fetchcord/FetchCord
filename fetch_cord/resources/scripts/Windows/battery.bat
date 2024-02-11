@@ -1,1 +1,0 @@
-@wmic path Win32_Battery get DeviceID | findstr /v "^$" | find /v "DeviceID"

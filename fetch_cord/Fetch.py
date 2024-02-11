@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict
 
 from fetch_cord import resources
-from fetch_cord.Tools import exec_bash, exec_ps1, get_resource_path
+from fetch_cord.Tools import exec_bash, exec_ps1
 
 
 def get_infos(name: str):
@@ -21,12 +21,13 @@ def get_component_id(search: str, id_list: dict) -> str:
     for id, patterns in id_list.items():
         if any(re.search(pattern, search) for pattern in patterns):
             return id
-    
+
     for id, patterns in id_list.items():
         if "unknown" in patterns:
             return id
 
     return "unknown"
+
 
 class Fetch:
     scripts: Dict
@@ -34,21 +35,19 @@ class Fetch:
     def __init__(self, scripts: Dict):
         self.scripts = scripts
 
-    def run_script(self, component_class: str) -> str:
-        path = get_resource_path(
-            f"fetch_cord.resources.scripts.{platform.system()}", "."
-        ).joinpath(component_class)
-
-        if component_class.split(".")[-1].lower() == "ps1":
-            return exec_ps1(path)
+    def run_script(self, script: str) -> str:
+        if platform.system() == "Windows":
+            return exec_ps1(script)
         else:
-            return exec_bash(path)
+            return exec_bash(script)
 
     def fetch(self, component_class: str) -> str:
-        for script in self.scripts[platform.system()][component_class]:
-            result = self.run_script(script)
+        if component_class not in self.scripts:
+            return f"Error: Component {component_class} not found"
 
-            if result != "":
-                return result.lstrip().split("\n")[0]
+        result = self.run_script(self.scripts[component_class])
+
+        if result != "":
+            return result.lstrip().split("\n")[0]
 
         return "Not Found"

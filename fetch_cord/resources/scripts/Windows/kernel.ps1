@@ -1,1 +1,0 @@
-Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object Version | ForEach-Object {$_.Version}

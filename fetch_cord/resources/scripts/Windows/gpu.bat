@@ -1,1 +1,0 @@
-@wmic path win32_VideoController get name | find /v "Name"

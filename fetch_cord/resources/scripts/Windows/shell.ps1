@@ -1,1 +1,0 @@
-Write-Host "PowerShell $(($PSVersionTable).PSVersion)"

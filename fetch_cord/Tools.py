@@ -21,7 +21,7 @@ def exec_bash(command: str) -> str:
 
 def exec_ps1(command: str) -> str:
     return subprocess.run(
-        ["powershell", command], encoding="utf-8", stdout=subprocess.PIPE, shell=True
+        ["powershell", command], encoding="utf-8", stdout=subprocess.PIPE
     ).stdout.strip()
 
 
