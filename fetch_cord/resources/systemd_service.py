@@ -19,7 +19,7 @@ def systemd_cmd(cmd: str):
 def install():
     try:
         exec_bash("mkdir -p ~/.local/share/systemd/user")
-    except:
+    except Exception:
         print("Error : Cannot create directory...")
         sys.exit(1)
 
@@ -27,7 +27,7 @@ def install():
         exec_bash(
             f"wget -O ~/.local/share/systemd/user/fetchcord.service https://raw.githubusercontent.com/MrPotatoBobx/FetchCord/{'testing' if args.testing else 'master'}/systemd/fetchcord.service",
         )
-    except:
+    except Exception:
         print("Error: Failed to download the service file.")
         sys.exit(1)
 
@@ -43,7 +43,7 @@ def uninstall():
 
     try:
         exec_bash("rm -f ~/.local/share/systemd/user/fetchcord.service")
-    except:
+    except Exception:
         print("Error : Cannot remove service file...")
         sys.exit(1)
 

@@ -17,12 +17,19 @@ from fetch_cord.args import parse_args
 args = parse_args()
 __all__ = [args]
 
+args = parse_args()
+
+if args.gui:
+    from .gui import gui
+
 
 def handle_args() -> None:
     """Handle the arguments passed to the program."""
 
     if args.update:
         update()
+    if args.gui:
+        gui.main()
     if os.name != "nt" and sys.platform != "darwin":
         if args.install:
             systemd_service.install()
@@ -42,7 +49,7 @@ def handle_args() -> None:
         print("FetchCord version:", __init__.VERSION)
         sys.exit(0)
     if args.time:
-        if int(args.time) < 15:
+        if float(args.time) < 15:
             print("ERROR: Invalid time set, must be > 15 seconds, cannot continue.")
             sys.exit(1)
         else:
