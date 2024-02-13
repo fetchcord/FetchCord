@@ -35,7 +35,7 @@ commands:
     Windows: |
       Get-WmiObject Win32_VideoController | Select-Object Name | ForEach-Object {$_.Name}
     Linux: &gpu_sh |
-      lspci -mmQ | grep 3D | cut -d " " -f1 --complement | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1 --complement --output-delimiter=" "
+      lspci -mm | grep 3D | cut -d " " -f1 --complement | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1 --complement --output-delimiter=" "
     Darwin: *gpu_sh
   mem:
     Windows: |
