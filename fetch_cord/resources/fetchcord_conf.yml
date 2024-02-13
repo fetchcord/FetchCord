@@ -34,9 +34,10 @@ commands:
   gpu:
     Windows: |
       Get-WmiObject Win32_VideoController | Select-Object Name | ForEach-Object {$_.Name}
-    Linux: &gpu_sh |
+    Linux: |
       lspci -mm | grep -e 3D -e VGA | cut -d " " -f1 --complement | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1 --complement --output-delimiter=" "
-    Darwin: *gpu_sh
+    Darwin: |
+      system_profiler SPDisplaysDataType | grep 'Chipset Model' | xargs| cut -d " " -f3- | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1-
   mem:
     Windows: |
       # Get total physical memory (in bytes)
