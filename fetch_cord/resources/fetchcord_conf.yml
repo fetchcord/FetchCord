@@ -1,11 +1,12 @@
 ---
+cycle_time: &cycle_time 30
 cycles:
   - name: os
     app_id: "os"
     top_line: "kernel"
     bottom_line: "packages"
     small_icon: "system_type"
-    time: &cycle_time 30
+    time: *cycle_time
   - name: "hardware"
     app_id: "cpu"
     top_line: "mem"
@@ -35,7 +36,7 @@ commands:
     Windows: |
       Get-WmiObject Win32_VideoController | Select-Object Name | ForEach-Object {$_.Name}
     Linux: |
-      lspci -mm | grep -e 3D -e VGA | cut -d " " -f1 --complement | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1 --complement --output-delimiter=" "
+      lspci -mm | grep -e 3D -e VGA | cut -d " " -f1 --complement | | sed 's/[^"]*"\([^"]*\)"/"\1" /g' | python -c "import sys; print('\"' + '\" \"'.join([part for part in sys.stdin.read().strip().split('\"') if part.strip()][-2:]) + '\"')" | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1 --complement --output-delimiter=" "
     Darwin: |
       system_profiler SPDisplaysDataType | grep 'Chipset Model' | xargs| cut -d " " -f3- | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1-
   mem:
@@ -63,11 +64,11 @@ commands:
       AvailableMemory=$(cat /proc/meminfo | grep MemFree | awk '{print $2}')
 
       # Convert values to GB
-      TotalMemory=$(expr $TotalMemory / 1024 / 1024)
-      AvailableMemory=$(expr $AvailableMemory / 1024 / 1024)
+      TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024}")
+      AvailableMemory=$(awk "BEGIN {print $AvailableMemory / 1024 / 1024}")
 
       # Calculate used memory
-      UsedMemory=$(expr $TotalMemory - $AvailableMemory)
+      UsedMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory - $AvailableMemory}")
 
       # Output used and total memory in GB
       echo "$UsedMemory GB / $TotalMemory GB"

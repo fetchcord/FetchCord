@@ -4,7 +4,8 @@
         "(?i)radeon"
     ],
     "nvidia": [
-        "(?i)nvidia"
+        "(?i)nvidia",
+        "(?i)geforce"
     ],
     "intel": [
         "(?i)intel"
