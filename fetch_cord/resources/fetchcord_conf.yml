@@ -36,7 +36,7 @@ commands:
     Windows: |
       Get-WmiObject Win32_VideoController | Select-Object Name | ForEach-Object {$_.Name}
     Linux: |
-      lspci -mm | grep -e 3D -e VGA | cut -d " " -f1 --complement | | sed 's/[^"]*"\([^"]*\)"/"\1" /g' | python3 -c "import sys; print('\"' + '\" \"'.join([part for part in sys.stdin.read().strip().split('\"') if part.strip()][-2:]) + '\"')" | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1 --complement --output-delimiter=" "
+      lspci -mm | grep -e 3D -e VGA | cut -d " " -f1 --complement | sed 's/[^"]*"\([^"]*\)"/"\1" /g' | python3 -c "import sys; print('\"' + '\" \"'.join([part for part in sys.stdin.read().strip().split('\"') if part.strip()][-2:]) + '\"')" | sed -e 's/" "/\t/g' -e 's/\"//g' | xargs
     Darwin: |
       system_profiler SPDisplaysDataType | grep 'Chipset Model' | xargs| cut -d " " -f3- | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1-
   mem:
