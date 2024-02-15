@@ -18,8 +18,6 @@ def get_infos():
     return infos
 
 
-def get_default_config():
+def get_default_config() -> str:
     with pkg_resources.path(fc_resources, "default.conf") as path:
         return path
-
-    return None

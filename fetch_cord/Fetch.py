@@ -8,6 +8,7 @@ from typing import Dict
 
 from fetch_cord import resources
 from fetch_cord.Tools import exec_bash, exec_ps1
+from fetch_cord.resources import get_default_config
 
 
 def get_infos(name: str):
@@ -36,6 +37,9 @@ class Fetch:
         self.scripts = scripts
 
     def run_script(self, script: str) -> str:
+        if "neofetch" in script:
+            script.replace("neofetch", f"neofetch --config {get_default_config()}")
+
         if platform.system() == "Windows":
             return exec_ps1(script)
         else:
