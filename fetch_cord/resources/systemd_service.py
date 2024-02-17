@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
-from ..run_command import BashError, exec_bash
-from ..args import parse_args
+from os import system
+from fetch_cord.Tools import BashError, exec_bash
+from fetch_cord.args import parse_args
 import sys
 
 args = parse_args()

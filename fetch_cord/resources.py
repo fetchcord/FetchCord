@@ -1,3 +1,6 @@
+# from __future__ import annotations
+
+
 try:
     import importlib.resources as pkg_resources
 except ImportError:
@@ -5,7 +8,7 @@ except ImportError:
     import importlib_resources as pkg_resources
 import json
 
-from .. import resources as fc_resources
+from fetch_cord import resources as fc_resources
 
 
 def get_infos():
@@ -15,8 +18,6 @@ def get_infos():
     return infos
 
 
-def get_default_config():
+def get_default_config() -> str:
     with pkg_resources.path(fc_resources, "default.conf") as path:
         return path
-
-    return None

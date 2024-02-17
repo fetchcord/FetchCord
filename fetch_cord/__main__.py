@@ -1,14 +1,21 @@
-from typing import Dict
+# from __future__ import annotations
+
+import platform
 import sys, os
 
-from .run_rpc import Run_rpc
-from .cycles import cycle0, cycle1, cycle2, cycle3, runmac, windows, pause
-from .computer.Computer import Computer
-from .args import parse_args
-from .debugger import run_rpc_debug
-from .update import update
-from . import __init__ as __init__
-from .resources import systemd_service
+from signal import SIGINT, SIGTERM, signal
+from threading import Event
+from fetch_cord.Config import Config
+from fetch_cord.Cycle import Cycle
+from fetch_cord.Fetch import Fetch, get_infos, get_component_id
+from fetch_cord.update import update
+from fetch_cord import __init__ as __init__
+from fetch_cord.resources import systemd_service
+
+from fetch_cord.args import parse_args
+
+args = parse_args()
+__all__ = [args]
 
 args = parse_args()
 
@@ -16,13 +23,13 @@ if args.gui:
     from .gui import gui
 
 
-def main():
-
-    if args.gui:
-        gui.main()
+def handle_args() -> None:
+    """Handle the arguments passed to the program."""
 
     if args.update:
         update()
+    if args.gui:
+        gui.main()
     if os.name != "nt" and sys.platform != "darwin":
         if args.install:
             systemd_service.install()
@@ -53,74 +60,80 @@ def main():
     except AttributeError:
         pass
 
-    computer: Computer = Computer()
 
-    if (
-        not computer.neofetchwin
-        and computer.host == "Host: N/A"
-        and computer.motherboard == "Motherboard: N/A"
-        and args.nodistro
-        and args.noshell
-        and args.nohardware
-    ):
-        print("ERROR: no hostline is available!")
-        sys.exit(1)
-    # printing info with debug switch
-    if args.debug:
-        run_rpc_debug(computer)
+def main():
+    handle_args()
 
-    run: Run_rpc = Run_rpc()
+    # Get the ids for the components
+    fetchcord_ids = {
+        "cpu": get_infos("cpus"),
+        "gpu": get_infos("gpus"),
+        "os": get_infos("os"),
+        "terminal": get_infos("terminal"),
+        "shell": get_infos("shell"),
+        "motherboard": get_infos("motherboards"),
+        "system_type": get_infos("system_types"),
+    }
 
-    if computer.neofetchwin:
-        # wandowz
-        loops: Dict = {}
-        loops_indexes: Dict = {}
+    # Stop event for the loop
+    stop_event = Event()
 
-        if not args.nodistro:
-            loops["windows"] = (computer.osinfoid, windows)
-            loops_indexes[len(loops_indexes)] = "windows"
-        if not args.nohardware:
-            loops["cycle1"] = (computer.cpuid, cycle1)
-            loops_indexes[len(loops_indexes)] = "cycle1"
+    # Load config
+    config = Config()
+    # Load cycles
+    cycles = [Cycle(cycle, stop_event) for cycle in config["cycles"]]
 
-        run.set_loop(
-            loops,
-            loops_indexes,
-            computer.updateMap,
-            int(args.poll_rate) if args.poll_rate else 3,
-        )
-        run.run_loop(computer)
-    else:
-        # loonix
-        loops: Dict = {}
-        loops_indexes: Dict = {}
+    os_type = platform.system()
+    scripts = {
+        component_type: value[os_type]
+        for component_type, value in config["commands"].items()
+        if os_type in value
+    }
 
-        if not args.nodistro and computer.os != "macos":
-            loops["cycle0"] = (computer.osinfoid, cycle0)
-            loops_indexes[len(loops_indexes)] = "cycle0"
-        if computer.os == "macos":
-            loops["runmac"] = ("740822755376758944", runmac)
-            loops_indexes[len(loops_indexes)] = "runmac"
-        if not args.nohardware:
-            loops["cycle1"] = (computer.cpuid, cycle1)
-            loops_indexes[len(loops_indexes)] = "cycle1"
-        if not args.noshell:
-            loops["cycle2"] = (computer.terminalid, cycle2)
-            loops_indexes[len(loops_indexes)] = "cycle2"
-        if not args.nohost and computer.os != "macos":
-            loops["cycle3"] = (computer.motherboardappid, cycle3)
-            loops_indexes[len(loops_indexes)] = "cycle3"
-        if args.pause_cycle:
-            loops["pause"] = ("", pause)
-            loops_indexes[len(loops_indexes)] = "pause"
+    fetch = Fetch(scripts)
 
-        run.set_loop(
-            loops,
-            loops_indexes,
-            computer.updateMap,
-            int(args.poll_rate) if args.poll_rate else 3,
-        )
-        run.run_loop(computer)
+    # Handle Ctrl+C and SIGTERM
+    signal(SIGINT, lambda s, f: stop_event.set())
+    signal(SIGTERM, lambda s, f: stop_event.set())
+
+    # Main loop
+    while not stop_event.is_set():
+        # Loop through the cycles defined in the config
+        for cycle in cycles:
+            if stop_event.is_set():
+                break
+
+            app = fetch.fetch(cycle.app_id)
+            bottom = fetch.fetch(cycle.bottom_line)
+            top = fetch.fetch(cycle.top_line)
+            icon = fetch.fetch(cycle.small_icon)
+
+            client_id = get_component_id(app.lower(), fetchcord_ids[cycle.app_id])
+
+            icon_id = get_component_id(icon, fetchcord_ids[cycle.small_icon])
+
+            print(
+                f"""client_id: {client_id} \
+app: {app} \
+bottom: {bottom} \
+top: {top} \
+icon: {icon} \
+icon_id: {icon_id}"""
+            )
+
+            if cycle.rpc is None:
+                cycle.setup(client_id)
+
+            try:
+                cycle.try_connect()
+            except ConnectionResetError:
+                cycle.try_connect()
+
+            cycle.update(client_id, bottom, top, icon_id)
+
+        stop_event.wait(0.05)
+
+    print("Closing connection.")
 
 
 if __name__ == "__main__":

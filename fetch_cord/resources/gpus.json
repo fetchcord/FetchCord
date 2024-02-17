@@ -1,0 +1,37 @@
+{
+    "amd": [
+        "(?i)amd",
+        "(?i)radeon"
+    ],
+    "nvidia": [
+        "(?i)nvidia",
+        "(?i)geforce"
+    ],
+    "intel": [
+        "(?i)intel"
+    ],
+    "vmware": [
+        "(?i)vmware"
+    ],
+    "virtio": [
+        "(?i)virtio"
+    ],
+    "cirrus": [
+        "(?i)cirrus"
+    ],
+    "nvidiaamd": [
+        "nvidiaamd",
+        "amdnvidia"
+    ],
+    "amdintel": [
+        "amdintel",
+        "intelamd"
+    ],
+    "nvidiaintel": [
+        "nvidiaintel",
+        "intelnvidia"
+    ],
+    "off": [
+        "unknown"
+    ]
+}

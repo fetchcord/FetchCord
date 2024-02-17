@@ -1,0 +1,144 @@
+---
+cycle_time: &cycle_time 30
+cycles:
+  - name: os
+    app_id: "os"
+    top_line: "kernel"
+    bottom_line: "packages"
+    small_icon: "system_type"
+    time: *cycle_time
+  - name: "hardware"
+    app_id: "cpu"
+    top_line: "mem"
+    bottom_line: "gpu"
+    small_icon: "gpu"
+    time: *cycle_time
+  - name: "shell"
+    app_id: "terminal"
+    top_line: "font"
+    bottom_line: "shell"
+    small_icon: "shell"
+    time: *cycle_time
+  - name: "host"
+    app_id: "motherboard"
+    top_line: "motherboard"
+    bottom_line: "resolution"
+    small_icon: "system_type"
+    time: *cycle_time
+commands:
+  cpu:
+    Windows: |
+      Get-WmiObject -Class Win32_Processor -ComputerName. | Select-Object -Property Name | ForEach-Object {$_.Name}
+    Linux: &cpu_sh |
+      lscpu | grep "Model name:" | cut -d: -f2 | xargs
+    Darwin: *cpu_sh
+  gpu:
+    Windows: |
+      Get-WmiObject Win32_VideoController | Select-Object Name | ForEach-Object {$_.Name}
+    Linux: |
+      lspci -mm | grep -e 3D -e VGA | cut -d " " -f1 --complement | sed 's/[^"]*"\([^"]*\)"/"\1" /g' | python3 -c "import sys; print('\"' + '\" \"'.join([part for part in sys.stdin.read().strip().split('\"') if part.strip()][-2:]) + '\"')" | sed -e 's/" "/\t/g' -e 's/\"//g' | xargs
+    Darwin: |
+      system_profiler SPDisplaysDataType | grep 'Chipset Model' | xargs| cut -d " " -f3- | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1-
+  mem:
+    Windows: |
+      # Get total physical memory (in bytes)
+      $TotalMemory = (Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory
+
+      # Get available physical memory (in bytes)
+      $AvailableMemory = (Get-CimInstance -ClassName Win32_PerfFormattedData_PerfOS_Memory).AvailableBytes
+
+      # Convert values to GB
+      $TotalMemory = [int64]$TotalMemory/1024/1024/1024
+      $AvailableMemory = [int64]$AvailableMemory/1024/1024/1024
+
+      # Calculate used memory
+      $UsedMemory = $TotalMemory - $AvailableMemory
+
+      # Output used and total memory in GB
+      Write-Output ("{0:N2} GB / {1:N2} GB" -f $UsedMemory, $TotalMemory)
+    Linux: &mem_sh |
+      # Get total physical memory (in bytes)
+      TotalMemory=$(cat /proc/meminfo | grep MemTotal | awk '{print $2}')
+
+      # Get available physical memory (in bytes)
+      AvailableMemory=$(cat /proc/meminfo | grep MemFree | awk '{print $2}')
+
+      # Convert values to GB
+      TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024}")
+      AvailableMemory=$(awk "BEGIN {print $AvailableMemory / 1024 / 1024}")
+
+      # Calculate used memory
+      UsedMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory - $AvailableMemory}")
+
+      # Output used and total memory in GB
+      echo "$UsedMemory GB / $TotalMemory GB"
+    Darwin: *mem_sh
+  kernel:
+    Windows: |
+      Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object Version | ForEach-Object {$_.Version}
+    Linux: &kernel_sh |
+      neofetch --stdout | grep "Kernel" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *kernel_sh
+  packages:
+    Windows: |
+      Write-Host (Get-Package | Measure-Object).Count packages
+    Linux: &packages_sh |
+      neofetch --stdout | grep "Packages" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *packages_sh
+  os:
+    Windows: |
+      Get-CimInstance Win32_OperatingSystem | Select-Object Caption | ForEach-Object {$_.Caption}
+    Linux: &os_sh |
+      neofetch --stdout | grep "OS" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *os_sh
+  host:
+    Windows: |
+      Get-WmiObject Win32_BaseBoard | Select-Object Product | ForEach-Object {$_.Product}
+    Linux: &host_sh |
+      neofetch --stdout | grep "Host" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *host_sh
+  motherboard:
+    Windows: |
+      Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
+    Linux: &motherboard_sh |
+      neofetch --stdout | grep "Motherboard" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *motherboard_sh
+  resolution:
+    Windows: |
+      Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth.ToString() + 'x' + $_.ScreenHeight.ToString() }
+    Linux: &resolution_sh |
+      neofetch --stdout | grep "Resolution" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *resolution_sh
+  system_type:
+    Windows: |
+      Get-CimInstance Win32_Battery | Select-Object BatteryStatus | ForEach-Object {$_.BatteryStatus}
+    Linux: &battery_sh |
+      if ls /sys/class/power_supply/ | grep -qi battery; then echo "Laptop"; else echo "Desktop"; fi
+    Darwin: *battery_sh
+  shell:
+    Windows: |
+      Write-Host "PowerShell $(($PSVersionTable).PSVersion)"
+    Linux: &shell_sh |
+      neofetch --stdout | grep "Shell" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *shell_sh
+  font:
+    Windows: |
+      $Font = (Get-ItemProperty -Path "HKCU:\Console").FaceName
+
+      if ($Font -eq "__DefaultTTFont__") {
+          $RegistryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console\TrueTypeFont"
+          $DefaultFont = (Get-ItemProperty -Path $RegistryPath).00
+          Write-Host "$DefaultFont"
+      }
+      else {
+          Write-Host "$Font"
+      }
+    Linux: &font_sh |
+      neofetch --stdout | grep "Font" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *font_sh
+  terminal:
+    Windows: |
+      $host.Name
+    Linux: &terminal_sh |
+      neofetch --stdout | grep "Terminal" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Darwin: *terminal_sh
