@@ -21,7 +21,10 @@ class Cycle:
 
     stop: Event = None
 
-    def __init__(self, config: Dict, stop: Event = Event()):
+    def __init__(self, config: Dict, stop: Event = None):
+        if stop is None:
+            stop = Event()
+
         for key in config:
             setattr(self, key, config[key])
         self.stop = stop
@@ -72,7 +75,7 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
         """Wait for n seconds or until interrupted."""
 
         intervals = int(n / interval_duration)
-        for i in range(intervals):
+        for _ in range(intervals):
             if self.stop.wait(interval_duration):
                 break
 

@@ -1,6 +1,9 @@
 # from __future__ import annotations
 
-import urllib.request, sys, os
+import os
+import sys
+import urllib.request
+
 from fetch_cord.args import parse_args
 
 args = parse_args()

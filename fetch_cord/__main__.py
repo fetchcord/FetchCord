@@ -1,7 +1,8 @@
 # from __future__ import annotations
 
 import platform
-import sys, os
+import sys
+import os
 
 from signal import SIGINT, SIGTERM, signal
 from threading import Event
