@@ -7,8 +7,9 @@ from pathlib import Path
 from typing import Dict
 
 from fetch_cord import resources
+from fetch_cord.native import native
 from fetch_cord.Tools import exec_bash, exec_ps1
-from fetch_cord.resources import get_default_config
+from fetch_cord.get_resources import get_default_config
 
 
 def get_infos(name: str):
@@ -46,10 +47,14 @@ class Fetch:
             return exec_bash(script)
 
     def fetch(self, component_class: str) -> str:
-        if component_class not in self.scripts:
-            return f"Error: Component {component_class} not found"
+        result = (
+            native.fetch(component_class)
+            if component_class not in self.scripts
+            else self.run_script(self.scripts[component_class])
+        )
 
-        result = self.run_script(self.scripts[component_class])
+        if result is None:
+            return f"Error: Component {component_class} not found"
 
         if result != "":
             return result.lstrip().split("\n")[0]

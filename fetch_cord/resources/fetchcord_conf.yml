@@ -80,8 +80,6 @@ commands:
       neofetch --stdout | grep "Kernel" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *kernel_sh
   packages:
-    Windows: |
-      Write-Host (Get-Package | Measure-Object).Count packages
     Linux: &packages_sh |
       neofetch --stdout | grep "Packages" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *packages_sh

@@ -130,7 +130,7 @@ icon_id: {icon_id}"""
             except ConnectionResetError:
                 cycle.try_connect()
 
-            cycle.update(client_id, bottom, top, icon_id)
+            cycle.update(client_id, app, bottom, top, icon, icon_id)
 
         stop_event.wait(0.05)
 
