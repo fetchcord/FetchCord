@@ -99,7 +99,7 @@ commands:
     Windows: |
       Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
     Linux: &motherboard_sh |
-      neofetch --stdout | grep "Motherboard" | awk -F: '{print $2}' | sed 's/^\s*//'
+      neofetch --stdout | grep -E "Motherboard|Host" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *motherboard_sh
   resolution:
     Windows: |
