@@ -20,6 +20,7 @@ setuptools.setup(
             "resources/fetchcord_conf.yml",
             "resources/default.conf",
             "resources/*.py",
+            "native/**.py",
             "resources/*.json",
         ]
     },
