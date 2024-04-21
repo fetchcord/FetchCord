@@ -31,7 +31,8 @@ commands:
       Get-WmiObject -Class Win32_Processor -ComputerName. | Select-Object -Property Name | ForEach-Object {$_.Name}
     Linux: &cpu_sh |
       lscpu | grep "Model name:" | cut -d: -f2 | xargs
-    Darwin: *cpu_sh
+    Darwin: |
+      sysctl -n machdep.cpu.brand_string
   gpu:
     Windows: |
       Get-WmiObject Win32_VideoController | Select-Object Name | ForEach-Object {$_.Name}
@@ -72,7 +73,28 @@ commands:
 
       # Output used and total memory in GB
       echo "$UsedMemory GB / $TotalMemory GB"
-    Darwin: *mem_sh
+    Darwin: |
+      # Get total physical memory (in bytes)
+      TotalMemory=$(sysctl -n hw.memsize)
+
+      # Get free memory in pages
+      FreePages=$(vm_stat | grep 'Pages free:' | awk '{print $3}' | sed 's/\.//')
+
+      # Get the page size in bytes (usually 4096)
+      PageSize=$(vm_stat | grep 'page size of' | awk '{print $8}')
+
+      # Calculate free memory in bytes
+      AvailableMemory=$(($FreePages * $PageSize))
+
+      # Convert values to GB
+      TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024 / 1024}")
+      AvailableMemory=$(awk "BEGIN {print $AvailableMemory / 1024 / 1024 / 1024}")
+
+      # Calculate used memory
+      UsedMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory - $AvailableMemory}")
+
+      # Output used and total memory in GB
+      echo "$UsedMemory GB / $TotalMemory GB"
   kernel:
     Windows: |
       Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object Version | ForEach-Object {$_.Version}
@@ -100,7 +122,11 @@ commands:
       Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
     Linux: &motherboard_sh |
       neofetch --stdout | grep -E "Motherboard|Host" | awk -F: '{print $2}' | sed 's/^\s*//'
-    Darwin: *motherboard_sh
+    Darwin: |
+      model_name=$(system_profiler SPHardwareDataType | awk -F: '/Model Name/ {print $2}')
+      model_identifier=$(system_profiler SPHardwareDataType | awk -F: '/Model Identifier/ {print $2}')
+
+      echo "${model_name}${model_identifier}"
   resolution:
     Windows: |
       Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth.ToString() + 'x' + $_.ScreenHeight.ToString() }
@@ -112,7 +138,8 @@ commands:
       Get-CimInstance Win32_Battery | Select-Object BatteryStatus | ForEach-Object {$_.BatteryStatus}
     Linux: &battery_sh |
       if ls /sys/class/power_supply/ | grep -qi battery; then echo "Laptop"; else echo "Desktop"; fi
-    Darwin: *battery_sh
+    Darwin: |
+      if pmset -g batt | grep -qi battery; then echo "laptop"; else echo "desktop"; fi
   shell:
     Windows: |
       Write-Host "PowerShell $(($PSVersionTable).PSVersion)"
