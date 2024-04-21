@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict
 
 from fetch_cord import resources
-from fetch_cord.native import native
+from fetch_cord.native import native as native_module
 from fetch_cord.Tools import exec_bash, exec_ps1
 from fetch_cord.get_resources import get_default_config
 
@@ -48,7 +48,7 @@ class Fetch:
 
     def fetch(self, component_class: str) -> str:
         result = (
-            native.fetch(component_class)
+            native_module.fetch(component_class)
             if component_class not in self.scripts
             else self.run_script(self.scripts[component_class])
         )
