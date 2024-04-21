@@ -142,7 +142,9 @@ class Ui_Dialog(object):
         self.memoryUnits.setItemText(1, _translate("Dialog", "Gibibytes (GiB)"))
         self.terminalName.setCurrentText(_translate("Dialog", "Terminal Name"))
         self.terminalName.setItemText(0, _translate("Dialog", "Terminal Name"))
-        self.terminalFont.setPlaceholderText(_translate("Dialog", "Custom Terminal Font"))
+        self.terminalFont.setPlaceholderText(
+            _translate("Dialog", "Custom Terminal Font")
+        )
         self.pauseCycle.setSuffix(_translate("Dialog", "sec"))
         self.pollRate.setSuffix(_translate("Dialog", "sec"))
         self.cycleTime.setSuffix(_translate("Dialog", "sec"))

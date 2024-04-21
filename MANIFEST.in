@@ -1,5 +1,3 @@
-include *.py
-include */*.py
-include */*/*.py
-include */*/FetchDis.png
-include */*/*/*.py
+include resources/*.json
+include resources/fetchcord_conf.yml
+include resources/default.conf

@@ -2,7 +2,6 @@ import argparse
 
 
 def parse_args():
-
     parser = argparse.ArgumentParser(
         description="Fetch Cord\n" "https://github.com/MrPotatoBobx/FetchCord"
     )
