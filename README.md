@@ -13,7 +13,6 @@
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
        <img src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png"
     </a>
-
   </a>
 </p>
 
@@ -26,9 +25,9 @@
   - [Install on MacOS](#installing-on-macos)
   - [Install on Windows](#installing-on-windows)
 - **Running**
-  - [Running on (gnu/)linux](#run)
-  - [Running on MacOS](#run-1)
-  - [Running on Windows](#run-2)
+  - [Running on (gnu/)linux](#run-on-linux)
+  - [Running on MacOS](#run-on-macos)
+  - [Running on Windows](#run-on-windows)
 - [**Configuration**](#configuration)
 - [**Arguments**](#arguments)
 - [**Website**](#website)
@@ -48,11 +47,9 @@
 
 - [x] Detecting Window Manager/Desktop Environment
 
-- [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
+- [x] Detecting GPU/CPU and display it in a cycle
 
 - [x] Flatpak support
-
-- [x] Add Snap support
 
 - [x] Add Windows support.
 
@@ -60,7 +57,11 @@
 
 - [x] Periodic polling of info such as package count, RAM usage, etc.
 
-- [x] GUI Frontend
+## To be tested
+
+- [ ] Snap support
+
+- [ ] GUI Frontend
 
 ## To-Do
 
@@ -76,53 +77,59 @@
 
 NOTE: you need neofetch to be also installed for this to work.
 
+### Via pip (recommended)
+
+To install fetchcord via pip you can run `pip3 install fetchcord`
+
+(experimental) To install fetchcord with the GUI requirements, run `pip3 install fetchcord[gui]`
+
+If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
+
 ### Via AUR
 
 On Arch Linux for the git testing version (the less stable version): [fetchcord-testing](https://aur.archlinux.org/packages/fetchcord-testing/)
 
 And the git version (synced with master): [fetchcord](https://aur.archlinux.org/packages/fetchcord/)
 
-Historically the stabler release was the one from [pip](#via-pip) but now master will have only the stable releases.
-
 ### Via Snap
 
 On systems with snap installed, you can run `sudo snap install fetchcord --classic` to install fetchcord.
 
-Note that like the AUR version, this version is directly from master, for the stable release use [pip](#via-pip) <!-- remove this if you're not automatically deploying it -->
+Note that like the AUR version, this version is directly from master, for the stable release use [pip](#via-pip-recommended) <!-- remove this if you're not automatically deploying it -->
 
-### Via pip
-
-To install fetchcord via pip you can run `pip3 install fetchcord`
-
-To install fetchcord with the GUI requirements, run `pip3 install fetchcord[gui]`
-
-If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
-
-### Run
+### Run on Linux
 
 Once installed, simply run `fetchcord`. The program is also daemonizable meaning you can start it on boot using any method you prefer.
 
-If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PATH"` to your bashrc, or just run `python3 -m fetchcord`.
+If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PATH"` to your bashrc, or just run `python3 -m fetch_cord`.
 
 Optionally for systemd users there is a user-side `fetchcord.service` in this repo that can be installed to `~/.local/share/systemd/user/`, started and enabled on boot using `systemctl --user enable --now fetchcord`.
 
 ## Installing on MacOS
 
-To install FetchCord, run `pip3 install FetchCord`
-
 NOTE: you need neofetch to be also installed for this to work.
 
-### Run
+To install fetchcord via pip you can run `pip3 install fetchcord`
 
-simply run `fetchcord`
+(experimental) To install fetchcord with the GUI requirements, run `pip3 install fetchcord[gui]`
+
+If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
+
+### Run on MacOS
+
+Once installed, simply run `fetchcord`. The program is also daemonizable meaning you can start it on boot using any method you prefer.
+
+If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PATH"` to your zshrc, or just run `python3 -m fetch_cord`.
 
 ## Installing on Windows
 
-To install fetchcord on Windows run `python -m pip install fetchcord neofetch-win`. Alternatively, you can use the neofetch package from scoop as well (show more info at the expense of possible GPU detection, for now).
+To install fetchcord on Windows run `pip3 install fetchcord` or `python3 -m pip install fetchcord`.
 
-### Run
+### Run on Windows
 
 To run Fetchcord run `fetchcord`
+
+If you get `fetchcord: command not found`, add your python scripts folder to your PATH or use `python3 -m fetch_cord`.
 
 ### GUI
 
