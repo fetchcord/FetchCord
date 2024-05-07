@@ -18,6 +18,7 @@ setuptools.setup(
             "resources/scripts/*",
             "resources/scripts/*/*",
             "resources/fetchcord_conf.yml",
+            "resources/fetchcord_cmds.yml",
             "resources/default.conf",
             "resources/*.py",
             "native/*.py",

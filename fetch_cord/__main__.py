@@ -81,6 +81,7 @@ def main():
 
     # Load config
     config = Config()
+    config["commands"] = Config("fetchcord_cmds.yml")["commands"]
     # Load cycles
     cycles = [Cycle(cycle, stop_event) for cycle in config["cycles"]]
 

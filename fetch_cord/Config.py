@@ -5,11 +5,9 @@ import yaml
 
 
 class Config(dict):
-    def __init__(self) -> None:
+    def __init__(self, config_name: str = "fetchcord_conf.yml") -> None:
         super(Config, self).__init__(
-            self.get_config(
-                self.get_resource_path("fetch_cord.resources", "fetchcord_conf.yml")
-            )
+            self.get_config(self.get_resource_path("fetch_cord.resources", config_name))
         )
 
     def get_resource_path(self, package, resource: str):
