@@ -18,23 +18,23 @@
 </p>
 
 # Table of content
+
 - [**Features**](#features)
 - [**To-Do**](#to-do)
-+ **Installing**
-    - [Install on (gnu/)linux](#installing-on-gnulinux)
-    - [Install on MacOS](#installing-on-macos)
-    - [Install on Windows](#installing-on-windows)
- + **Running**
-    - [Running on (gnu/)linux](#run)
-    - [Running on MacOS](#run-1)
-    - [Running on Windows](#run-2)
-- [**Configuration**](#Configuration)
+- **Installing**
+  - [Install on (gnu/)linux](#installing-on-gnulinux)
+  - [Install on MacOS](#installing-on-macos)
+  - [Install on Windows](#installing-on-windows)
+- **Running**
+  - [Running on (gnu/)linux](#run)
+  - [Running on MacOS](#run-1)
+  - [Running on Windows](#run-2)
+- [**Configuration**](#configuration)
 - [**Arguments**](#arguments)
 - [**Website**](#website)
+- [**Examples**](#examples)
 
-+ [**Examples**](#examples)
-
-### Features
+## Features
 
 - [x] Distribution detection
 
@@ -62,8 +62,7 @@
 
 - [x] GUI Frontend
 
-
-### To-Do
+## To-Do
 
 - [ ] Add more distributions (If your distro is not supported open an issue)
 
@@ -73,20 +72,26 @@
 
 - [ ] More GPUs?
 
-
 ## Installing on (GNU/)Linux
+
 NOTE: you need neofetch to be also installed for this to work.
-#### Via AUR
+
+### Via AUR
+
 On Arch Linux for the git testing version (the less stable version): [fetchcord-testing](https://aur.archlinux.org/packages/fetchcord-testing/)
 
 And the git version (synced with master): [fetchcord](https://aur.archlinux.org/packages/fetchcord/)
 
 Historically the stabler release was the one from [pip](#via-pip) but now master will have only the stable releases.
-#### Via Snap
+
+### Via Snap
+
 On systems with snap installed, you can run `sudo snap install fetchcord --classic` to install fetchcord.
 
 Note that like the AUR version, this version is directly from master, for the stable release use [pip](#via-pip) <!-- remove this if you're not automatically deploying it -->
-#### Via pip
+
+### Via pip
+
 To install fetchcord via pip you can run `pip3 install fetchcord`
 
 To install fetchcord with the GUI requirements, run `pip3 install fetchcord[gui]`
@@ -116,9 +121,11 @@ simply run `fetchcord`
 To install fetchcord on Windows run `python -m pip install fetchcord neofetch-win`. Alternatively, you can use the neofetch package from scoop as well (show more info at the expense of possible GPU detection, for now).
 
 ### Run
+
 To run Fetchcord run `fetchcord`
 
 ### GUI
+
 The fetchcord GUI can be opened by running `fetchcord --gui` in a terminal. A desktop file may be added in a future version.
 
 ### Configuration
@@ -142,6 +149,7 @@ And more
 default config path should be `~/.config/neofetch/config.conf`
 
 ## Arguments
+
 --nodistro, Don't show distro info.
 
 --nohardware, Don't show hardware info.
@@ -175,13 +183,22 @@ Fetchcord now has a website! You can find this site over at https://fetchcord.gi
 ## Examples
 
 ### Operating Systems
+
 ![MacOS bigsur](Examples/mac.png) ![Windows 10](Examples/windows.png) ![Ubuntu](Examples/ubuntu.png)
+
 ### Terminals
+
 ![Konsole](Examples/konsole.png) ![Gnome terminal](Examples/gnometerm.png) ![Apple terminal](Examples/appleterm.png)
+
 ### Cpus
+
 ![Ryzen 9](Examples/ryzencpu.png) ![Intel i7](Examples/intelcpu.png) ![Intel pentium](Examples/pent.png)
+
 ### Hosts
+
 ![HP laptop](Examples/hp.png) ![TUF gaming laptop](Examples/tuf.png) ![Lenovo desktop](Examples/len.png)
+
 ### GUI
+
 Note that the GUI version may look different depending on your OS and Qt theme.
 ![GUI](Examples/gui.png)
