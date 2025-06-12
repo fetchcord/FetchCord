@@ -10,10 +10,10 @@ from fetch_cord.Config import Config
 from fetch_cord.Cycle import Cycle
 from fetch_cord.Fetch import Fetch, get_infos, get_component_id
 from fetch_cord.update import update
-from fetch_cord import __init__ as __init__
 from fetch_cord.resources import systemd_service
-
 from fetch_cord.args import parse_args
+
+from . import VERSION
 
 args = parse_args()
 __all__ = [args]
@@ -41,7 +41,7 @@ def handle_args() -> None:
         if args.status:
             systemd_service.status()
     if args.version:
-        print("FetchCord version:", __init__.VERSION)
+        print("FetchCord version:", VERSION)
         sys.exit(0)
     if args.time:
         if float(args.time) < 15:
