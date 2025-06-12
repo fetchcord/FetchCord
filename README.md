@@ -75,7 +75,7 @@
 
 ## Installing on (GNU/)Linux
 
-NOTE: you need neofetch to be also installed for this to work.
+NOTE: you need fastfetch to be also installed for this to work.
 
 ### Via pip (recommended)
 
@@ -107,7 +107,7 @@ Optionally for systemd users there is a user-side `fetchcord.service` in this re
 
 ## Installing on MacOS
 
-NOTE: you need neofetch to be also installed for this to work.
+NOTE: you need fastfetch to be also installed for this to work.
 
 To install fetchcord via pip you can run `pip3 install fetchcord`
 
@@ -137,7 +137,8 @@ The fetchcord GUI can be opened by running `fetchcord --gui` in a terminal. A de
 
 ### Configuration
 
-On Linux you can use the neofetch config file to:
+TODO Fastfetch config
+<!-- On Linux you can use the neofetch config file to:
 
 Show disk usage
 
@@ -153,7 +154,7 @@ Theme
 
 And more
 
-default config path should be `~/.config/neofetch/config.conf`
+default config path should be `~/.config/neofetch/config.conf` -->
 
 ## Arguments
 
@@ -169,7 +170,7 @@ default config path should be `~/.config/neofetch/config.conf`
 
 --terminal, set custom terminal (useful if using a script or dmenu).
 
---termfont, set custom terminal font (useful if neofetch can't get it).
+--termfont, set custom terminal font (useful if fastfetch can't get it).
 
 --pause-cycle, Extra cycle that pauses FetchCord to show other activities.
 

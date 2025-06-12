@@ -18,7 +18,7 @@ def parse_args():
     parser.add_argument(
         "--noconfig",
         action="store_true",
-        help="Disable neofetch custom config. Enable if you have an incompatible custom configuration.",
+        help="Disable fastfetch custom config. Enable if you have an incompatible custom configuration.",
     )
     parser.add_argument(
         "--time",
@@ -37,7 +37,7 @@ def parse_args():
         "--termfont",
         metavar="TERMFONT",
         action="store",
-        help="Set custom Terminal Font (useful if neofetch can't get it).",
+        help="Set custom Terminal Font (useful if fastfetch can't get it).",
     )
     parser.add_argument(
         "--install",
@@ -112,7 +112,7 @@ def parse_args():
         "--config-path",
         "-c",
         action="store",
-        help="Specify custom neofetch config path.",
+        help="Specify custom fastfetch config path.",
     )
     parser.add_argument(
         "--fetchcord-config-path",

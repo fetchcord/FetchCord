@@ -43,14 +43,14 @@ class TestFetchCordComputer(unittest.TestCase):
         print("Detected OS : " + self.pc.os)
 
     @ordered
-    def test_detected_neofetch(self):
-        """Test detected neofetch"""
+    def test_detected_fastfetch(self):
+        """Test detected fastfetch"""
 
-        print("Detected Neofetch : ", end="")
-        if self.pc.neofetch:
-            print("neofetch")
-        elif self.pc.neofetchwin:
-            print("neofetch-win")
+        print("Detected fastfetch : ", end="")
+        if self.pc.fastfetch:
+            print("fastfetch")
+        # elif self.pc.neofetchwin:
+        #     print("neofetch-win")
         else:
             print("None")
 

@@ -9,7 +9,7 @@ assignees: ''
 
 # Debug info
 
-**Please run `fetchcord --debug` and put it here. You might also want to send the output of  `neofetch --noart`(windows) or `neofetch -- stdout`(macos&linux)**
+**Please run `fetchcord --debug` and put it here. You might also want to send the output of  `fas`(macos&linux)**
 
 # Requested item
 

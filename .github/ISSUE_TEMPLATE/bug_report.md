@@ -11,7 +11,7 @@ assignees: ''
 
 **Please run `fetchcord --debug` and send it here.**
 
-**If you are unable to run FetchCord please run `neofetch --noart`(windows) or `neofetch -- stdout`(macos&linux)**
+**If you are unable to run FetchCord please run `fastfetch -l none`(macos&linux)**
 
 # Operating system & way of installation
 

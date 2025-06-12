@@ -38,8 +38,9 @@ class Fetch:
         self.scripts = scripts
 
     def run_script(self, script: str) -> str:
-        if "neofetch" in script:
-            script.replace("neofetch", f"neofetch --config {get_default_config()}")
+        # TODO fastfetch config handling
+        # if "neofetch" in script:
+        #     script.replace("neofetch", f"neofetch --config {get_default_config()}")
 
         if platform.system() == "Windows":
             return exec_ps1(script)

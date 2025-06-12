@@ -73,29 +73,29 @@ commands:
     Windows: |
       Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object Version | ForEach-Object {$_.Version}
     Linux: &kernel_sh |
-      neofetch --stdout | grep "Kernel" | awk -F: '{print $2}' | sed 's/^\s*//'
+      fastfetch -l none | grep "Kernel" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *kernel_sh
   packages:
     Linux: &packages_sh |
-      neofetch --stdout | grep "Packages" | awk -F: '{print $2}' | sed 's/^\s*//'
+      fastfetch -l none | grep "Packages" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *packages_sh
   os:
     Windows: |
       Get-CimInstance Win32_OperatingSystem | Select-Object Caption | ForEach-Object {$_.Caption}
     Linux: &os_sh |
-      neofetch --stdout | grep "OS" | awk -F: '{print $2}' | sed 's/^\s*//'
+      fastfetch -l none | grep "OS" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *os_sh
   host:
     Windows: |
       Get-WmiObject Win32_BaseBoard | Select-Object Product | ForEach-Object {$_.Product}
     Linux: &host_sh |
-      neofetch --stdout | grep "Host" | awk -F: '{print $2}' | sed 's/^\s*//'
+      fastfetch -l none | grep "Host" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *host_sh
   motherboard:
     Windows: |
       Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
     Linux: &motherboard_sh |
-      neofetch --stdout | grep -E "Motherboard|Host" | awk -F: '{print $2}' | sed 's/^\s*//'
+      fastfetch -l none | grep -E "Motherboard|Host" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: |
       model_name=$(system_profiler SPHardwareDataType | awk -F: '/Model Name/ {print $2}')
       model_identifier=$(system_profiler SPHardwareDataType | awk -F: '/Model Identifier/ {print $2}')
@@ -105,7 +105,7 @@ commands:
     Windows: |
       Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth.ToString() + 'x' + $_.ScreenHeight.ToString() }
     Linux: &resolution_sh |
-      neofetch --stdout | grep "Resolution" | awk -F: '{print $2}' | sed 's/^\s*//'
+      fastfetch -l none | grep "Resolution" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *resolution_sh
   system_type:
     Windows: |
@@ -118,7 +118,7 @@ commands:
     Windows: |
       Write-Host "PowerShell $(($PSVersionTable).PSVersion)"
     Linux: &shell_sh |
-      neofetch --stdout | grep "Shell" | awk -F: '{print $2}' | sed 's/^\s*//'
+      fastfetch -l none | grep "Shell" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *shell_sh
   font:
     Windows: |
@@ -133,11 +133,11 @@ commands:
           Write-Host "$Font"
       }
     Linux: &font_sh |
-      neofetch --stdout | grep "Font" | awk -F: '{print $2}' | sed 's/^\s*//'
+      fastfetch -l none | grep "Font" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *font_sh
   terminal:
     Windows: |
       $host.Name
     Linux: &terminal_sh |
-      neofetch --stdout | grep "Terminal" | awk -F: '{print $2}' | sed 's/^\s*//'
+      fastfetch -l none | grep "Terminal" | awk -F: '{print $2}' | sed 's/^\s*//'
     Darwin: *terminal_sh
