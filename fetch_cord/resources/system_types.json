@@ -1,9 +1,9 @@
 {
-    "unknown": "off",
-    "desktop": [
-        "^$"
-    ],
     "laptop": [
-        ".+"
-    ]
+        "(?i)laptop"
+    ],
+    "desktop": [
+        "(?i)desktop"
+    ],
+    "off": "unknown"
 }

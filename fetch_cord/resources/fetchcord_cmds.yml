@@ -95,7 +95,7 @@ commands:
     Windows: |
       Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
     Linux: &motherboard_sh |
-      fastfetch -l none | grep -E "Motherboard|Host" | awk -F: '{print $2}' | sed 's/^\s*//'
+      cat /sys/devices/virtual/dmi/id/board_{vendor,name} | xargs
     Darwin: |
       model_name=$(system_profiler SPHardwareDataType | awk -F: '/Model Name/ {print $2}')
       model_identifier=$(system_profiler SPHardwareDataType | awk -F: '/Model Identifier/ {print $2}')
@@ -105,13 +105,13 @@ commands:
     Windows: |
       Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth.ToString() + 'x' + $_.ScreenHeight.ToString() }
     Linux: &resolution_sh |
-      fastfetch -l none | grep "Resolution" | awk -F: '{print $2}' | sed 's/^\s*//'
+      xdpyinfo | awk '/dimensions/ {print $2}'
     Darwin: *resolution_sh
   system_type:
     Windows: |
       Get-CimInstance Win32_Battery | Select-Object BatteryStatus | ForEach-Object {$_.BatteryStatus}
     Linux: &battery_sh |
-      if ls /sys/class/power_supply/ | grep -qi battery; then echo "Laptop"; else echo "Desktop"; fi
+      if ls /sys/class/power_supply/ | grep -qi battery; then echo "laptop"; else echo "desktop"; fi
     Darwin: |
       if pmset -g batt | grep -qi battery; then echo "laptop"; else echo "desktop"; fi
   shell:

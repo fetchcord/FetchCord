@@ -61,8 +61,6 @@
 
 - [ ] Snap support
 
-- [ ] GUI Frontend
-
 ## To-Do
 
 - [ ] Add more distributions (If your distro is not supported open an issue)
@@ -80,8 +78,6 @@ NOTE: you need fastfetch to be also installed for this to work.
 ### Via pip (recommended)
 
 To install fetchcord via pip you can run `pip3 install fetchcord`
-
-(experimental) To install fetchcord with the GUI requirements, run `pip3 install fetchcord[gui]`
 
 If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
 
@@ -111,8 +107,6 @@ NOTE: you need fastfetch to be also installed for this to work.
 
 To install fetchcord via pip you can run `pip3 install fetchcord`
 
-(experimental) To install fetchcord with the GUI requirements, run `pip3 install fetchcord[gui]`
-
 If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
 
 ### Run on MacOS
@@ -130,10 +124,6 @@ To install fetchcord on Windows run `pip3 install fetchcord` or `python3 -m pip 
 To run Fetchcord run `fetchcord`
 
 If you get `fetchcord: command not found`, add your python scripts folder to your PATH or use `python3 -m fetch_cord`.
-
-### GUI
-
-The fetchcord GUI can be opened by running `fetchcord --gui` in a terminal. A desktop file may be added in a future version.
 
 ### Configuration
 
@@ -180,8 +170,6 @@ default config path should be `~/.config/neofetch/config.conf` -->
 
 --memtype, use GB or MB to show RAM.
 
---gui, open the fetchcord GUI
-
 -h or --help, shows this information above.
 
 ## Website
@@ -205,8 +193,3 @@ Fetchcord now has a website! You can find this site over at https://fetchcord.gi
 ### Hosts
 
 ![HP laptop](Examples/hp.png) ![TUF gaming laptop](Examples/tuf.png) ![Lenovo desktop](Examples/len.png)
-
-### GUI
-
-Note that the GUI version may look different depending on your OS and Qt theme.
-![GUI](Examples/gui.png)

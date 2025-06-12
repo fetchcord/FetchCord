@@ -20,17 +20,11 @@ __all__ = [args]
 
 args = parse_args()
 
-if args.gui:
-    from .gui import gui
-
-
 def handle_args() -> None:
     """Handle the arguments passed to the program."""
 
     if args.update:
         update()
-    if args.gui:
-        gui.main()
     if os.name != "nt" and sys.platform != "darwin":
         if args.install:
             systemd_service.install()
