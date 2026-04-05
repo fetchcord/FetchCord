@@ -31,7 +31,6 @@
 - [**Configuration**](#configuration)
 - [**Arguments**](#arguments)
 - [**Website**](#website)
-- [**Examples**](#examples)
 
 ## Features
 
@@ -72,8 +71,15 @@
 - [ ] More GPUs?
 
 ## Installing on (GNU/)Linux
+NOTE: you need neofetch to be also installed for this to work.
+#### Via AUR
+On Arch Linux for the git testing version (the less stable version): [fetchcord-testing](https://aur.archlinux.org/packages/fetchcord-testing/)
 
-NOTE: you need fastfetch to be also installed for this to work.
+And the git version (synced with master): [fetchcord](https://aur.archlinux.org/packages/fetchcord/)
+
+Historically the stabler release was the one from [pip](#via-pip) but now master will have only the stable releases.
+#### Via Snap
+On systems with snap installed, you can run `sudo snap install fetchcord --classic` to install fetchcord.
 
 ### Via pip (recommended)
 
