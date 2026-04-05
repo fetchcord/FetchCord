@@ -64,7 +64,7 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
                 start=psutil.boot_time(),
             )
 
-            self.wait(int(self.time))
+            self.wait(int(self.time)) if self.time else self.wait(30)
 
             self.rpc.close()
         # ConnectionResetError is here to avoid crashing
