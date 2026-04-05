@@ -1,0 +1,11 @@
+# FetchCord Dependencies
+# Minimum versions for security and compatibility
+
+# Discord Rich Presence
+pypresence>=4.3.0
+
+# System information
+psutil>=5.9.0
+
+# YAML configuration
+pyyaml>=6.0.1
