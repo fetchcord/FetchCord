@@ -18,7 +18,6 @@ from . import VERSION
 args = parse_args()
 __all__ = [args]
 
-args = parse_args()
 
 def handle_args() -> None:
     """Handle the arguments passed to the program."""
