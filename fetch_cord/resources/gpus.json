@@ -10,6 +10,13 @@
     "intel": [
         "(?i)intel"
     ],
+    "apple": [
+        "(?i)apple",
+        "(?i)m1",
+        "(?i)m2",
+        "(?i)m3",
+        "(?i)m4"
+    ],
     "vmware": [
         "(?i)vmware"
     ],
