@@ -4,8 +4,8 @@
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
        <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux%2FWindows%2F-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white">
     </a>
-  <a href="https://www.python.org/downloads/">
-       <img src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge">
+    <a href="https://www.python.org/downloads/">
+       <img src="https://img.shields.io/badge/python-3.10+-blue.svg?style=for-the-badge&logo=python&logoColor=white">
     </a>
    <a href="https://discord.gg/P4h9kdV">
        <img src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
@@ -71,15 +71,8 @@
 - [ ] More GPUs?
 
 ## Installing on (GNU/)Linux
-NOTE: you need neofetch to be also installed for this to work.
-#### Via AUR
-On Arch Linux for the git testing version (the less stable version): [fetchcord-testing](https://aur.archlinux.org/packages/fetchcord-testing/)
 
-And the git version (synced with master): [fetchcord](https://aur.archlinux.org/packages/fetchcord/)
-
-Historically the stabler release was the one from [pip](#via-pip) but now master will have only the stable releases.
-#### Via Snap
-On systems with snap installed, you can run `sudo snap install fetchcord --classic` to install fetchcord.
+**Requirements: Python 3.10+ and fastfetch**
 
 ### Via pip (recommended)
 
@@ -109,7 +102,7 @@ Optionally for systemd users there is a user-side `fetchcord.service` in this re
 
 ## Installing on MacOS
 
-NOTE: you need fastfetch to be also installed for this to work.
+**Requirements: Python 3.10+ and fastfetch**
 
 To install fetchcord via pip you can run `pip3 install fetchcord`
 
@@ -123,6 +116,8 @@ If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PA
 
 ## Installing on Windows
 
+**Requirements: Python 3.10+**
+
 To install fetchcord on Windows run `pip3 install fetchcord` or `python3 -m pip install fetchcord`.
 
 ### Run on Windows
@@ -131,26 +126,27 @@ To run Fetchcord run `fetchcord`
 
 If you get `fetchcord: command not found`, add your python scripts folder to your PATH or use `python3 -m fetch_cord`.
 
-### Configuration
+## What's New in 3.0.0
 
-TODO Fastfetch config
-<!-- On Linux you can use the neofetch config file to:
+### Breaking Changes
+- **Python 3.10+ is now required** (dropped support for older versions)
+- Migrated from `neofetch` to `fastfetch` for system info detection
+- Complete architecture rewrite with new module structure
 
-Show disk usage
+### New Features
+- **Improved Security**: Input validation and sanitized shell commands
+- **Better Performance**: Refactored code with constants and reduced duplication
+- **Modern Python**: Using Python 3.10+ features (union types with `|`, better type hints)
+- **Better Packaging**: Added `pyproject.toml` for modern Python packaging
+- **Comprehensive Tests**: 32 tests covering all modules
 
-Battery level
-
-CPU temp
-
-Current CPU speed
-
-Font
-
-Theme
-
-And more
-
-default config path should be `~/.config/neofetch/config.conf` -->
+### Architecture Changes
+The codebase has been completely rewritten with a modular architecture:
+- **Config**: YAML configuration management
+- **Cycle**: Discord Rich Presence cycle handling
+- **Fetch**: System information fetching with fastfetch
+- **Tools**: Utility functions for command execution
+- **Constants**: Centralized configuration values
 
 ## Arguments
 
@@ -170,13 +166,33 @@ default config path should be `~/.config/neofetch/config.conf` -->
 
 --pause-cycle, Extra cycle that pauses FetchCord to show other activities.
 
+--install, Install fetchcord as a systemd service and enable it.
+
+--uninstall, Uninstall fetchcord systemd service.
+
+--enable, Enable fetchcord systemd service.
+
+--disable, Disable fetchcord systemd service.
+
+--start, Start fetchcord systemd service.
+
+--stop, Stop fetchcord systemd service.
+
+--status, Check fetchcord systemd service status.
+
 --update, Update database of distros, hardware, etc.
 
---debug, For debug logs.
+--testing, Get files from testing branch (for development).
 
---memtype, use GB or MB to show RAM.
+--debug, -d, Enable debugging output.
 
--h or --help, shows this information above.
+--config-path, -c, Specify custom fastfetch config path.
+
+--fetchcord-config-path, -fc, Specify custom fetchcord config path.
+
+--version, -v, Print FetchCord version.
+
+-h or --help, Show help message.
 
 ## Website
 
