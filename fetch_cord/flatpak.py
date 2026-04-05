@@ -20,6 +20,13 @@ def get_home_dir() -> Path:
 
 
 def enableFlatpak():
+    """Enable Flatpak Discord support. Linux only."""
+    import sys
+
+    # Flatpak is Linux-only
+    if sys.platform == "darwin":
+        return
+
     try:
         home = get_home_dir()
     except ValueError as e:
@@ -39,6 +46,7 @@ def enableFlatpak():
 
 
 def XDG_Symlink(home: Path):
+    """Create XDG runtime directory symlink for Flatpak Discord."""
     try:
         print("Symlinking XDG_RUNTIME_DIR path for Flatpak Discord.")
         var_dir = home / ".var"
