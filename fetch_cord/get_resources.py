@@ -6,16 +6,8 @@ try:
 except ImportError:
     # Try backported to PY<37 `importlib_resources`.
     import importlib_resources as pkg_resources
-import json
 
 from fetch_cord import resources as fc_resources
-
-
-def get_infos():
-    with pkg_resources.open_text(fc_resources, "fetchcord_ids.json") as f:
-        infos = json.load(f)
-
-    return infos
 
 
 def get_default_config() -> str:
