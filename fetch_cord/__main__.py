@@ -87,9 +87,14 @@ def main():
 
     fetch = Fetch(scripts)
 
-    # Handle Ctrl+C and SIGTERM
-    signal(SIGINT, lambda s, f: stop_event.set())
-    signal(SIGTERM, lambda s, f: stop_event.set())
+    def signal_handler(signum, frame):
+        stop_event.set()
+        for cycle in cycles:
+            if cycle.rpc:
+                cycle.rpc.close()
+
+    signal(SIGINT, signal_handler)
+    signal(SIGTERM, signal_handler)
 
     # Main loop
     while not stop_event.is_set():
@@ -135,7 +140,11 @@ large_image: {large_image}"""
 
         stop_event.wait(0.05)
 
-    print("Closing connection.")
+    for cycle in cycles:
+        if cycle.rpc:
+            cycle.rpc.close()
+
+    print("Connections closed.")
 
 
 if __name__ == "__main__":
