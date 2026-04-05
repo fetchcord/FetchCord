@@ -55,7 +55,6 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
     ):
         try:
             self.rpc.update(
-                int(client_id),
                 state=bottom,
                 details=top,
                 large_image="big",
