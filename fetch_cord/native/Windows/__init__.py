@@ -4,7 +4,7 @@ if os.name == "nt":
     from typing import Optional
     from . import packages
 
-    def fetch(component_class: str) -> Optional[str | None]:
+    def fetch(component_class: str) -> Optional[str]:
         fetch_map = {"packages": packages}
 
         if component_class not in fetch_map:
