@@ -5,19 +5,7 @@ import sys
 import urllib.request
 from pathlib import Path
 
-from fetch_cord.args import parse_args
-
-args = parse_args()
-
-RESOURCE_FILES = [
-    "cpus.json",
-    "gpus.json",
-    "os.json",
-    "terminal.json",
-    "shell.json",
-    "motherboards.json",
-    "system_types.json",
-]
+from fetch_cord.constants import RESOURCE_FILES, SERVICE_FILE_URL_TEMPLATE, TESTING_BRANCH, DEFAULT_BRANCH
 
 
 def validate_filename(filename: str) -> bool:
@@ -39,13 +27,17 @@ def get_resources_dir() -> Path:
     return Path(__file__).parent / "resources"
 
 
-def update():
+def update(testing: bool = False) -> None:
+    """Update resource files from the repository.
+    
+    Args:
+        testing: If True, download from testing branch; otherwise from master.
+    """
     print("Updating database...")
-    branch = "testing" if args.testing else "master"
+    branch = TESTING_BRANCH if testing else DEFAULT_BRANCH
     base_url = f"https://raw.githubusercontent.com/fetchcord/FetchCord/{branch}/fetch_cord/resources/"
     resources_dir = get_resources_dir()
 
-    # Ensure resources directory exists
     try:
         resources_dir.mkdir(parents=True, exist_ok=True)
     except OSError as e:

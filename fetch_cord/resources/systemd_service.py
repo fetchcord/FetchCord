@@ -1,18 +1,9 @@
 #!/usr/bin/python3
 import os
-import re
 import sys
 
 from fetch_cord.Tools import BashError, exec_bash
-from fetch_cord.args import parse_args
-
-args = parse_args()
-
-VALID_SYSTEMD_COMMANDS = {"start", "stop", "enable", "disable", "status"}
-SERVICE_FILE_URL = (
-    "https://raw.githubusercontent.com/MrPotatoBobx/FetchCord/"
-    f"{'testing' if args.testing else 'master'}/systemd/fetchcord.service"
-)
+from fetch_cord.constants import VALID_SYSTEMD_COMMANDS, SERVICE_FILE_URL_TEMPLATE, TESTING_BRANCH, DEFAULT_BRANCH
 
 
 def validate_systemd_cmd(cmd: str) -> str:
@@ -36,6 +27,19 @@ def get_systemd_user_dir() -> str:
     return os.path.join(home, ".local", "share", "systemd", "user")
 
 
+def get_service_file_url(testing: bool = False) -> str:
+    """Get the service file URL based on branch.
+    
+    Args:
+        testing: If True, use testing branch; otherwise use master.
+        
+    Returns:
+        The URL to download the service file from.
+    """
+    branch = TESTING_BRANCH if testing else DEFAULT_BRANCH
+    return SERVICE_FILE_URL_TEMPLATE.format(branch=branch)
+
+
 def systemd_cmd(cmd: str):
     """Execute a systemd command with validation."""
     try:
@@ -51,7 +55,7 @@ def systemd_cmd(cmd: str):
         sys.exit(1)
 
 
-def install():
+def install(testing: bool = False):
     """Install the systemd service."""
     systemd_dir = get_systemd_user_dir()
 
@@ -62,9 +66,10 @@ def install():
         sys.exit(1)
 
     service_file = os.path.join(systemd_dir, "fetchcord.service")
+    service_url = get_service_file_url(testing)
 
     try:
-        exec_bash(f'wget -O "{service_file}" "{SERVICE_FILE_URL}"')
+        exec_bash(f'wget -O "{service_file}" "{service_url}"')
     except Exception as err:
         print(f"Error: Failed to download the service file: {err}")
         sys.exit(1)

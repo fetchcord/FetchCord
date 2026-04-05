@@ -23,10 +23,10 @@ def handle_args() -> None:
     """Handle the arguments passed to the program."""
 
     if args.update:
-        update()
+        update(testing=args.testing)
     if os.name != "nt" and sys.platform != "darwin":
         if args.install:
-            systemd_service.install()
+            systemd_service.install(testing=args.testing)
         if args.uninstall:
             systemd_service.uninstall()
         if args.enable:
