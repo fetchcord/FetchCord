@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
 
-from importlib import resources
 import yaml
+
+from fetch_cord.Tools import get_resource_path
 
 
 class Config(dict):
     def __init__(self, config_name: str = "fetchcord_conf.yml") -> None:
         super(Config, self).__init__(
-            self.get_config(self.get_resource_path("fetch_cord.resources", config_name))
+            self.get_config(get_resource_path("fetch_cord.resources", config_name))
         )
-
-    def get_resource_path(self, package, resource: str):
-        with resources.path(package, resource) as path:
-            return path
 
     def get_config(self, path: str):
         with open(path, "r") as stream:
