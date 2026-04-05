@@ -6,7 +6,7 @@ from fetch_cord.native import Windows
 fetch_map = {"Windows": Windows}
 
 
-def fetch(component_class: str) -> Optional[str]:
+def fetch(component_class: str) -> str | None:
     sys_platform = platform.system()
 
     if sys_platform not in fetch_map:
