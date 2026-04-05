@@ -107,13 +107,20 @@ def main():
 
             icon_id = get_component_id(icon, fetchcord_ids[cycle.small_icon])
 
+            # For Apple M chips, use the chip name as the large image
+            large_image = "big"
+            if icon and "apple m" in icon.lower():
+                # Convert "Apple M4 Pro" to "apple-m4-pro"
+                large_image = icon.lower().replace(" ", "-")
+
             print(
                 f"""client_id: {client_id} \
 app: {app} \
 bottom: {bottom} \
 top: {top} \
 icon: {icon} \
-icon_id: {icon_id}"""
+icon_id: {icon_id} \
+large_image: {large_image}"""
             )
 
             if cycle.rpc is None:
@@ -124,7 +131,7 @@ icon_id: {icon_id}"""
             except ConnectionResetError:
                 cycle.try_connect()
 
-            cycle.update(client_id, app, bottom, top, icon, icon_id)
+            cycle.update(client_id, app, bottom, top, icon, icon_id, large_image)
 
         stop_event.wait(0.05)
 

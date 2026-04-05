@@ -51,13 +51,13 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
                 self.wait(30)
 
     def update(
-        self, client_id: str, app: str, bottom: str, top: str, icon: str, icon_id: str
+        self, client_id: str, app: str, bottom: str, top: str, icon: str, icon_id: str, large_image: str = "big"
     ):
         try:
             self.rpc.update(
                 state=bottom,
                 details=top,
-                large_image="big",
+                large_image=large_image,
                 large_text=app,
                 small_image=icon_id,
                 small_text=icon,
