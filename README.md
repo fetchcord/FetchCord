@@ -104,7 +104,17 @@ Optionally for systemd users there is a user-side `fetchcord.service` in this re
 
 **Requirements: Python 3.10+ and fastfetch**
 
-To install fetchcord via pip you can run `pip3 install fetchcord`
+### Using Homebrew (recommended)
+
+```bash
+# Install dependencies
+brew bundle
+
+# Then install fetchcord
+pip3 install fetchcord
+```
+
+### Manual installation
 
 If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
 
