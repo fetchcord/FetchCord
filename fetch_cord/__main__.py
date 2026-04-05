@@ -91,6 +91,10 @@ def main():
         stop_event.set()
         for cycle in cycles:
             if cycle.rpc:
+                try:
+                    cycle.rpc.clear()
+                except:
+                    pass
                 cycle.rpc.close()
 
     signal(SIGINT, signal_handler)
@@ -142,9 +146,13 @@ large_image: {large_image}"""
 
     for cycle in cycles:
         if cycle.rpc:
+            try:
+                cycle.rpc.clear()
+            except:
+                pass
             cycle.rpc.close()
 
-    print("Connections closed.")
+    print("Activity cleared and connections closed.")
 
 
 if __name__ == "__main__":
