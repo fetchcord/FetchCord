@@ -139,3 +139,6 @@ samples
 
 # Snap
 *.snap
+
+# Sisyphus workflow metadata
+.sisyphus/

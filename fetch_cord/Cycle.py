@@ -31,8 +31,7 @@ class Cycle:
         self.stop = stop
 
     def __del__(self) -> None:
-        if self.rpc is not None:
-            self.rpc.close()
+        self.close_connection()
 
     def setup(self, client_id: str) -> None:
         self.rpc = Presence(int(client_id))
@@ -59,15 +58,12 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
             except Exception as e:
                 if self.debug:
                     print(f'close_connection: clear() failed: {e}')
-                pass
             try:
                 self.rpc.close()
             except Exception as e:
                 if self.debug:
                     print(f'close_connection: close() failed: {e}')
-                pass
             self.rpc = None
-            # Small delay to ensure Discord releases the connection
             time.sleep(0.1)
 
     def update(

@@ -25,7 +25,9 @@
         "(?i)urxvt"
     ],
     "744950796298354689": [
-        "apple_terminal"
+        "(?i)apple_terminal",
+        "(?i)Terminal",
+        "(?i)iterm"
     ],
     "745701997503840380": [
         "lxterminal"

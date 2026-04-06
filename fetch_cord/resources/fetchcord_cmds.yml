@@ -119,7 +119,11 @@ commands:
       Write-Host "PowerShell $(($PSVersionTable).PSVersion)"
     Linux: &shell_sh |
       fastfetch -l none | grep "Shell" | awk -F: '{print $2}' | sed 's/^\s*//'
-    Darwin: *shell_sh
+    Darwin: |
+      # Use $SHELL environment variable for reliable detection
+      shell_path="${SHELL:-$(fastfetch -l none | grep "Shell" | awk -F: '{print $2}' | sed 's/^\s*//')}"
+      # Extract just the shell name (e.g., /bin/zsh -> zsh)
+      echo "$(basename "$shell_path")"
   font:
     Windows: |
       $Font = (Get-ItemProperty -Path "HKCU:\Console").FaceName
@@ -140,4 +144,8 @@ commands:
       $host.Name
     Linux: &terminal_sh |
       fastfetch -l none | grep "Terminal" | awk -F: '{print $2}' | sed 's/^\s*//'
-    Darwin: *terminal_sh
+    Darwin: |
+      # Use $TERM_PROGRAM environment variable for reliable detection
+      term="${TERM_PROGRAM:-$(fastfetch -l none | grep "Terminal" | awk -F: '{print $2}' | sed 's/^\s*//')}"
+      # Remove .app suffix if present (e.g., "iTerm.app" -> "iTerm")
+      echo "${term%.app}"

@@ -6,6 +6,7 @@ import os
 
 from signal import SIGINT, SIGTERM, signal
 from threading import Event
+from pypresence import exceptions
 from fetch_cord.Config import Config
 from fetch_cord.Cycle import Cycle
 from fetch_cord.Fetch import Fetch, get_infos, get_component_id
@@ -90,12 +91,7 @@ def main():
     def signal_handler(signum, frame):
         stop_event.set()
         for cycle in cycles:
-            if cycle.rpc:
-                try:
-                    cycle.rpc.clear()
-                except:
-                    pass
-                cycle.rpc.close()
+            cycle.close_connection()
 
     signal(SIGINT, signal_handler)
     signal(SIGTERM, signal_handler)
@@ -144,26 +140,17 @@ large_image: {large_image}"""
             if cycle.rpc is None:
                 cycle.setup(client_id)
 
-            try:
-                cycle.try_connect()
-            except ConnectionRefusedError:
-                cycle.try_connect()
+            cycle.try_connect()
 
             try:
                 cycle.update(client_id, app, bottom, top, icon, icon_id, large_image)
-            except (ConnectionResetError, Exception):
-                # Connection was reset or invalid - close and reconnect on next iteration
+            except (ConnectionResetError, exceptions.InvalidID):
                 cycle.close_connection()
 
         stop_event.wait(0.05)
 
     for cycle in cycles:
-        if cycle.rpc:
-            try:
-                cycle.rpc.clear()
-            except:
-                pass
-            cycle.rpc.close()
+        cycle.close_connection()
 
     print("Activity cleared and connections closed.")
 
