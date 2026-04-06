@@ -101,6 +101,7 @@ def main():
     signal(SIGTERM, signal_handler)
 
     # Main loop
+    current_client_id = None
     while not stop_event.is_set():
         # Loop through the cycles defined in the config
         for cycle in cycles:
@@ -132,15 +133,27 @@ icon_id: {icon_id} \
 large_image: {large_image}"""
             )
 
+            # Reconnect if client_id changed
+            if client_id != current_client_id:
+                # Close ALL cycles' connections since Discord only allows one RP at a time
+                for c in cycles:
+                    if c.rpc:
+                        c.close_connection()
+                current_client_id = client_id
+
             if cycle.rpc is None:
                 cycle.setup(client_id)
 
             try:
                 cycle.try_connect()
-            except ConnectionResetError:
+            except ConnectionRefusedError:
                 cycle.try_connect()
 
-            cycle.update(client_id, app, bottom, top, icon, icon_id, large_image)
+            try:
+                cycle.update(client_id, app, bottom, top, icon, icon_id, large_image)
+            except (ConnectionResetError, Exception):
+                # Connection was reset or invalid - close and reconnect on next iteration
+                cycle.close_connection()
 
         stop_event.wait(0.05)
 

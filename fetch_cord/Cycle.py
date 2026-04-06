@@ -5,6 +5,7 @@ from threading import Event
 from typing import Dict
 from pypresence import Presence, exceptions
 import psutil
+import time
 
 
 class Cycle:
@@ -50,6 +51,25 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
                 )
                 self.wait(30)
 
+    def close_connection(self) -> None:
+        """Fully close the RPC connection and ensure cleanup."""
+        if self.rpc is not None:
+            try:
+                self.rpc.clear()
+            except Exception as e:
+                if self.debug:
+                    print(f'close_connection: clear() failed: {e}')
+                pass
+            try:
+                self.rpc.close()
+            except Exception as e:
+                if self.debug:
+                    print(f'close_connection: close() failed: {e}')
+                pass
+            self.rpc = None
+            # Small delay to ensure Discord releases the connection
+            time.sleep(0.1)
+
     def update(
         self, client_id: str, app: str, bottom: str, top: str, icon: str, icon_id: str, large_image: str = "big"
     ):
@@ -66,8 +86,19 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
 
             self.wait(int(self.time)) if self.time else self.wait(30)
 
-        except (ConnectionResetError, exceptions.InvalidID):
-            pass
+        except ConnectionResetError as e:
+            if self.debug:
+                print(f'update: ConnectionResetError for "{self.name}": {e}')
+            # Connection was reset - need to reconnect
+            self.close_connection()
+            raise
+
+        except exceptions.InvalidID as e:
+            if self.debug:
+                print(f'update: InvalidID for "{self.name}": {e}')
+            # Invalid client_id - need to re-setup with new client_id
+            self.close_connection()
+            raise
 
     def wait(self, n: float, interval_duration: float = 0.05) -> None:
         """Wait for n seconds or until interrupted."""
