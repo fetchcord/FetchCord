@@ -7,7 +7,7 @@ name = "FetchCord"
 version = "3.0.0"
 description = "Display system information as Discord Rich Presence"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = {text = "MIT"}
 keywords = ["distro", "info", "discord", "fetch", "rich-presence"]
 authors = [
@@ -19,29 +19,28 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: System :: Monitoring",
     "Topic :: Utilities",
 ]
 
 dependencies = [
-    "pypresence>=4.3.0",
-    "psutil>=5.9.0",
-    "pyyaml>=6.0.1",
+    "pypresence>=4.6.2",
+    "psutil>=7.2.2",
+    "pyyaml>=6.0.3",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "black>=23.0.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
-    "types-psutil>=5.9.0",
-    "types-PyYAML>=6.0.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "black>=26.5.1",
+    "ruff>=0.16.3",
+    "mypy>=2.3.0",
+    "types-psutil>=7.2.2",
+    "types-PyYAML>=6.0.12",
 ]
 
 [project.urls]
@@ -68,7 +67,7 @@ fetch_cord = [
 
 [tool.black]
 line-length = 88
-target-version = ['py310']
+target-version = ['py312']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -85,7 +84,7 @@ extend-exclude = '''
 '''
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 line-length = 88
 
 [tool.ruff.lint]
@@ -108,7 +107,7 @@ ignore = [
 "tests/**/*.py" = ["S"]  # Don't check security in tests
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.12"
 strict = true
 
 # winreg is Windows-only; mypy has no usable stubs for it on Linux.
