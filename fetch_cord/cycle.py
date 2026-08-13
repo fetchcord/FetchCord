@@ -1,28 +1,35 @@
 #!/usr/bin/env python3
 
 
-from threading import Event
-from typing import Dict
-from pypresence import Presence, exceptions
-import psutil
 import time
+from threading import Event
+from typing import Any
+
+import psutil
+from pypresence import exceptions
+from pypresence.presence import Presence
+
+from fetch_cord.constants import (
+    DEFAULT_CYCLE_TIME_SECONDS,
+    RPC_CONNECTION_REFUSED_MSG,
+    WAIT_INTERVAL_SECONDS,
+)
 
 
 class Cycle:
     name: str
-
-    app_id: str = None
-    top_line: str = None
-    bottom_line: str = None
-    small_icon: str = None
-    time: str = None
+    app_id: str | None = None
+    top_line: str | None = None
+    bottom_line: str | None = None
+    small_icon: str | None = None
+    time: int | None = None
 
     debug: bool = False
-    rpc: Presence = None
+    rpc: Presence | None = None
 
-    stop: Event = None
+    stop: Event
 
-    def __init__(self, config: Dict, stop: Event = None):
+    def __init__(self, config: dict[str, Any], stop: Event | None = None) -> None:
         if stop is None:
             stop = Event()
 
@@ -30,25 +37,22 @@ class Cycle:
             setattr(self, key, config[key])
         self.stop = stop
 
-    def __del__(self) -> None:
-        self.close_connection()
-
     def setup(self, client_id: str) -> None:
         self.rpc = Presence(int(client_id))
 
     def try_connect(self) -> None:
+        if self.rpc is None:
+            return
+
         while not self.stop.is_set():
             try:
                 if self.debug:
-                    print('try_connect(name="{}")'.format(self.name))
+                    print(f'try_connect(name="{self.name}")')
                 self.rpc.connect()
                 break
-            except ConnectionRefusedError:
-                print(
-                    """
-RPC connection refused (is Discord open?); trying again in 30 seconds"""
-                )
-                self.wait(30)
+            except (ConnectionRefusedError, exceptions.DiscordNotFound):
+                print(RPC_CONNECTION_REFUSED_MSG)
+                self.wait(DEFAULT_CYCLE_TIME_SECONDS)
 
     def close_connection(self) -> None:
         """Fully close the RPC connection and ensure cleanup."""
@@ -57,18 +61,27 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
                 self.rpc.clear()
             except Exception as e:
                 if self.debug:
-                    print(f'close_connection: clear() failed: {e}')
+                    print(f"close_connection: clear() failed: {e}")
             try:
                 self.rpc.close()
             except Exception as e:
                 if self.debug:
-                    print(f'close_connection: close() failed: {e}')
+                    print(f"close_connection: close() failed: {e}")
             self.rpc = None
             time.sleep(0.1)
 
     def update(
-        self, client_id: str, app: str, bottom: str, top: str, icon: str, icon_id: str, large_image: str = "big"
-    ):
+        self,
+        app: str,
+        bottom: str,
+        top: str,
+        icon: str,
+        icon_id: str,
+        large_image: str = "big",
+    ) -> None:
+        if self.rpc is None:
+            return
+
         try:
             self.rpc.update(
                 state=bottom,
@@ -77,10 +90,10 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
                 large_text=app,
                 small_image=icon_id,
                 small_text=icon,
-                start=psutil.boot_time(),
+                start=int(psutil.boot_time()),
             )
 
-            self.wait(int(self.time)) if self.time else self.wait(30)
+            self.wait(self.time if self.time else DEFAULT_CYCLE_TIME_SECONDS)
 
         except ConnectionResetError as e:
             if self.debug:
@@ -96,7 +109,7 @@ RPC connection refused (is Discord open?); trying again in 30 seconds"""
             self.close_connection()
             raise
 
-    def wait(self, n: float, interval_duration: float = 0.05) -> None:
+    def wait(self, n: float, interval_duration: float = WAIT_INTERVAL_SECONDS) -> None:
         """Wait for n seconds or until interrupted."""
 
         intervals = int(n / interval_duration)

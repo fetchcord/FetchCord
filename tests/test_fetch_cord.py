@@ -3,16 +3,16 @@
 
 Tests cover:
 - Config: YAML configuration loading
-- Cycle: Discord RPC cycle management  
+- Cycle: Discord RPC cycle management
 - Fetch: System information fetching
 - Tools: Command execution utilities
 """
 
 import json
 import re
+import subprocess
 import sys
 import unittest
-from pathlib import Path
 from threading import Event
 from unittest.mock import MagicMock, mock_open, patch
 
@@ -20,38 +20,32 @@ from unittest.mock import MagicMock, mock_open, patch
 class TestConfig(unittest.TestCase):
     """Test cases for Config class."""
 
-    @patch("fetch_cord.Config.resources.path")
-    @patch("fetch_cord.Config.yaml.safe_load")
+    @patch("fetch_cord.config.get_resource_path", return_value="/fake/path/config.yml")
+    @patch("fetch_cord.config.yaml.safe_load")
     @patch("builtins.open", new_callable=mock_open, read_data="key: value")
     def test_config_loads_yaml(self, mock_file, mock_yaml_load, mock_resources_path):
         """Test that Config loads YAML configuration correctly."""
-        mock_resources_path.return_value.__enter__ = MagicMock(
-            return_value=MagicMock()
-        )
-        mock_resources_path.return_value.__exit__ = MagicMock(return_value=False)
-        mock_resources_path.return_value.__enter__.return_value = "/fake/path/config.yml"
+        mock_resources_path.return_value = "/fake/path/config.yml"
         mock_yaml_load.return_value = {"key": "value", "nested": {"data": 123}}
 
-        from fetch_cord.Config import Config
+        from fetch_cord.config import Config
 
         config = Config("fetchcord_conf.yml")
 
         self.assertEqual(config["key"], "value")
         self.assertEqual(config["nested"]["data"], 123)
 
-    @patch("fetch_cord.Config.resources.path")
-    @patch("fetch_cord.Config.yaml.safe_load")
+    @patch("fetch_cord.config.get_resource_path", return_value="/fake/path/config.yml")
+    @patch("fetch_cord.config.yaml.safe_load")
     @patch("builtins.open", new_callable=mock_open, read_data="key: value")
-    def test_config_acts_like_dict(self, mock_file, mock_yaml_load, mock_resources_path):
+    def test_config_acts_like_dict(
+        self, mock_file, mock_yaml_load, mock_resources_path
+    ):
         """Test that Config behaves like a dictionary."""
-        mock_resources_path.return_value.__enter__ = MagicMock(
-            return_value=MagicMock()
-        )
-        mock_resources_path.return_value.__exit__ = MagicMock(return_value=False)
-        mock_resources_path.return_value.__enter__.return_value = "/fake/path/config.yml"
+        mock_resources_path.return_value = "/fake/path/config.yml"
         mock_yaml_load.return_value = {"key": "value", "number": 42}
 
-        from fetch_cord.Config import Config
+        from fetch_cord.config import Config
 
         config = Config()
 
@@ -59,44 +53,42 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(len(config), 2)
         self.assertEqual(list(config.keys()), ["key", "number"])
 
-    @patch("fetch_cord.Config.resources.path")
-    @patch("fetch_cord.Config.yaml.safe_load")
+    @patch("fetch_cord.config.get_resource_path", return_value="/fake/path/config.yml")
+    @patch("fetch_cord.config.yaml.safe_load")
     @patch("builtins.open", new_callable=mock_open, read_data="key: value")
-    def test_config_default_config_name(self, mock_file, mock_yaml_load, mock_resources_path):
+    def test_config_default_config_name(
+        self, mock_file, mock_yaml_load, mock_resources_path
+    ):
         """Test that Config uses default config name when not specified."""
-        mock_resources_path.return_value.__enter__ = MagicMock(
-            return_value=MagicMock()
-        )
-        mock_resources_path.return_value.__exit__ = MagicMock(return_value=False)
-        mock_resources_path.return_value.__enter__.return_value = "/fake/path/config.yml"
+        mock_resources_path.return_value = "/fake/path/config.yml"
         mock_yaml_load.return_value = {"test": "data"}
 
-        from fetch_cord.Config import Config
+        from fetch_cord.config import Config
 
-        config = Config()
+        Config()
 
         mock_resources_path.assert_called_once()
         args = mock_resources_path.call_args[0]
         self.assertEqual(args[1], "fetchcord_conf.yml")
 
-    @patch("fetch_cord.Config.resources.path")
-    @patch("fetch_cord.Config.print")
+    @patch("fetch_cord.config.get_resource_path", return_value="/fake/path/config.yml")
+    @patch("fetch_cord.config.print")
     @patch("builtins.open", new_callable=mock_open, read_data="key: value")
-    def test_config_yaml_error_handling(self, mock_file, mock_print, mock_resources_path):
+    def test_config_yaml_error_handling(
+        self, mock_file, mock_print, mock_resources_path
+    ):
         """Test that Config handles YAML errors gracefully."""
         import yaml
 
-        mock_resources_path.return_value.__enter__ = MagicMock(
-            return_value=MagicMock()
-        )
-        mock_resources_path.return_value.__exit__ = MagicMock(return_value=False)
-        mock_resources_path.return_value.__enter__.return_value = "/fake/path/config.yml"
+        mock_resources_path.return_value = "/fake/path/config.yml"
 
-        from fetch_cord.Config import Config
+        from fetch_cord.config import Config
 
-        with patch.object(yaml, "safe_load", side_effect=yaml.YAMLError("YAML Error")):
-            with self.assertRaises(TypeError):
-                config = Config()
+        with (
+            patch.object(yaml, "safe_load", side_effect=yaml.YAMLError("YAML Error")),
+            self.assertRaises(ValueError),
+        ):
+            Config()
 
 
 class TestCycle(unittest.TestCase):
@@ -114,10 +106,10 @@ class TestCycle(unittest.TestCase):
             "debug": True,
         }
 
-    @patch("fetch_cord.Cycle.Presence")
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_initialization(self, mock_presence_class):
         """Test Cycle initialization with config."""
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         stop_event = Event()
         cycle = Cycle(self.config, stop_event)
@@ -131,23 +123,23 @@ class TestCycle(unittest.TestCase):
         self.assertTrue(cycle.debug)
         self.assertEqual(cycle.stop, stop_event)
 
-    @patch("fetch_cord.Cycle.Presence")
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_default_stop_event(self, mock_presence_class):
         """Test Cycle creates default stop event if none provided."""
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         cycle = Cycle(self.config)
 
         self.assertIsNotNone(cycle.stop)
         self.assertIsInstance(cycle.stop, Event)
 
-    @patch("fetch_cord.Cycle.Presence")
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_setup(self, mock_presence_class):
         """Test Cycle setup method."""
         mock_presence = MagicMock()
         mock_presence_class.return_value = mock_presence
 
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         cycle = Cycle(self.config)
         cycle.setup("123456")
@@ -155,14 +147,14 @@ class TestCycle(unittest.TestCase):
         mock_presence_class.assert_called_once_with(123456)
         self.assertEqual(cycle.rpc, mock_presence)
 
-    @patch("fetch_cord.Cycle.Presence")
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_try_connect_success(self, mock_presence_class):
         """Test Cycle try_connect succeeds immediately."""
         mock_presence = MagicMock()
         mock_presence.connect = MagicMock()
         mock_presence_class.return_value = mock_presence
 
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         cycle = Cycle(self.config)
         cycle.setup("123456")
@@ -170,8 +162,8 @@ class TestCycle(unittest.TestCase):
 
         mock_presence.connect.assert_called_once()
 
-    @patch("fetch_cord.Cycle.Presence")
-    @patch("fetch_cord.Cycle.print")
+    @patch("fetch_cord.cycle.Presence")
+    @patch("fetch_cord.cycle.print")
     def test_cycle_try_connect_refused(self, mock_print, mock_presence_class):
         """Test Cycle try_connect handles ConnectionRefusedError."""
         mock_presence = MagicMock()
@@ -182,7 +174,7 @@ class TestCycle(unittest.TestCase):
         ]
         mock_presence_class.return_value = mock_presence
 
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         stop_event = Event()
         cycle = Cycle(self.config, stop_event)
@@ -192,8 +184,8 @@ class TestCycle(unittest.TestCase):
 
         self.assertGreater(mock_presence.connect.call_count, 1)
 
-    @patch("fetch_cord.Cycle.psutil")
-    @patch("fetch_cord.Cycle.Presence")
+    @patch("fetch_cord.cycle.psutil")
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_update(self, mock_presence_class, mock_psutil):
         """Test Cycle update method."""
         mock_presence = MagicMock()
@@ -202,13 +194,13 @@ class TestCycle(unittest.TestCase):
         mock_presence_class.return_value = mock_presence
         mock_psutil.boot_time.return_value = 1234567890
 
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         cycle = Cycle(self.config)
         cycle.setup("123456")
         cycle.wait = MagicMock()
 
-        cycle.update("123456", "App Name", "Bottom Text", "Top Text", "Icon", "icon_id")
+        cycle.update("App Name", "Bottom Text", "Top Text", "Icon", "icon_id")
 
         mock_presence.update.assert_called_once_with(
             state="Bottom Text",
@@ -219,12 +211,13 @@ class TestCycle(unittest.TestCase):
             small_text="Icon",
             start=1234567890,
         )
-        mock_presence.close.assert_called_once()
+        # A successful update keeps the RPC connection open (no close).
+        mock_presence.close.assert_not_called()
 
-    @patch("fetch_cord.Cycle.Presence")
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_wait(self, mock_presence_class):
         """Test Cycle wait method."""
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         stop_event = Event()
         cycle = Cycle(self.config, stop_event)
@@ -232,10 +225,10 @@ class TestCycle(unittest.TestCase):
         stop_event.set()
         cycle.wait(0.1)
 
-    @patch("fetch_cord.Cycle.Presence")
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_wait_with_interval(self, mock_presence_class):
         """Test Cycle wait method with interval checking."""
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         stop_event = Event()
         cycle = Cycle(self.config, stop_event)
@@ -251,10 +244,10 @@ class TestCycle(unittest.TestCase):
         cycle.wait(1.0, interval_duration=0.01)
         timer.join()
 
-    @patch("fetch_cord.Cycle.Presence")
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_repr(self, mock_presence_class):
         """Test Cycle __repr__ method."""
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         cycle = Cycle(self.config)
         repr_str = repr(cycle)
@@ -263,22 +256,25 @@ class TestCycle(unittest.TestCase):
         self.assertIn("123456789", repr_str)
         self.assertIn("Top Line", repr_str)
 
-    @patch("fetch_cord.Cycle.Presence")
-    def test_cycle_destructor(self, mock_presence_class):
-        """Test Cycle destructor closes RPC connection."""
+    @patch("fetch_cord.cycle.Presence")
+    def test_cycle_close_connection(self, mock_presence_class):
+        """Explicit close_connection releases the RPC client."""
         mock_presence = MagicMock()
+        mock_presence.clear = MagicMock()
         mock_presence.close = MagicMock()
         mock_presence_class.return_value = mock_presence
 
-        from fetch_cord.Cycle import Cycle
+        from fetch_cord.cycle import Cycle
 
         cycle = Cycle(self.config)
         cycle.setup("123456")
         cycle.rpc = mock_presence
 
-        cycle.__del__()
+        cycle.close_connection()
 
+        mock_presence.clear.assert_called_once()
         mock_presence.close.assert_called_once()
+        self.assertIsNone(cycle.rpc)
 
 
 class TestFetchFunctions(unittest.TestCase):
@@ -336,131 +332,170 @@ class TestFetchFunctions(unittest.TestCase):
         return "unknown"
 
 
+class TestInfo(unittest.TestCase):
+    """Tests for the structured fastfetch JSON parser."""
+
+    def test_parse_fastfetch_json_basic(self):
+        from fetch_cord.info import parse_fastfetch_json
+
+        raw = json.dumps(
+            [
+                {
+                    "type": "OS",
+                    "result": {"prettyName": "Arch Linux", "name": "Arch Linux"},
+                },
+                {
+                    "type": "Kernel",
+                    "result": {"release": "6.8.0-arch", "name": "Linux"},
+                },
+                {"type": "CPU", "result": {"cpu": "AMD Ryzen 9"}},
+                {"type": "GPU", "error": "GPU detection failed"},
+                {"type": "Memory", "result": {"used": 2147483648, "total": 4294967296}},
+                {"type": "Packages", "result": {"all": 100, "pacman": 100}},
+            ]
+        )
+
+        fields = parse_fastfetch_json(raw)
+
+        self.assertEqual(fields["os"], "Arch Linux")
+        self.assertEqual(fields["kernel"], "6.8.0-arch")
+        self.assertEqual(fields["cpu"], "AMD Ryzen 9")
+        self.assertEqual(fields["memory"], "2.00 GB / 4.00 GB")
+        self.assertEqual(fields["packages"], "100")
+        self.assertNotIn("gpu", fields)  # error entries are skipped
+
+    def test_parse_fastfetch_json_invalid(self):
+        from fetch_cord.info import parse_fastfetch_json
+
+        self.assertEqual(parse_fastfetch_json("not json"), {})
+        self.assertEqual(parse_fastfetch_json(""), {})
+
+    def test_parse_fastfetch_json_not_a_list(self):
+        from fetch_cord.info import parse_fastfetch_json
+
+        self.assertEqual(parse_fastfetch_json('{"modules": {}}'), {})
+
+    def test_parse_fastfetch_json_memory_zero(self):
+        from fetch_cord.info import parse_fastfetch_json
+
+        raw = json.dumps(
+            [{"type": "Memory", "result": {"used": 0, "total": 1073741824}}]
+        )
+        fields = parse_fastfetch_json(raw)
+        self.assertEqual(fields["memory"], "0.00 GB / 1.00 GB")
+
+
 class TestFetchClass(unittest.TestCase):
-    """Test cases for Fetch class (requires mocking the native module import)."""
+    """Tests for the field providers and the Fetch snapshot cache."""
 
     @classmethod
     def setUpClass(cls):
-        """Set up class-level mocks to avoid import errors."""
         cls.native_patcher = patch.dict(
             sys.modules,
-            {"fetch_cord.native.native": MagicMock(fetch=MagicMock(return_value=None))}
+            {"fetch_cord.native.native": MagicMock(fetch=MagicMock(return_value=None))},
         )
         cls.native_patcher.start()
-
-        cls.resources_patcher = patch("fetch_cord.Fetch.resources")
+        cls.resources_patcher = patch("fetch_cord.fetch.resources")
         cls.mock_resources = cls.resources_patcher.start()
         cls.mock_resources.__file__ = "/fake/resources/__init__.py"
 
-        try:
-            from fetch_cord.Fetch import Fetch
-            cls.Fetch = Fetch
-        except Exception as e:
-            cls.native_patcher.stop()
-            cls.resources_patcher.stop()
-            raise
-
     @classmethod
     def tearDownClass(cls):
-        """Stop class-level mocks."""
         cls.native_patcher.stop()
         cls.resources_patcher.stop()
 
-    def test_fetch_class_initialization(self):
-        """Test Fetch class initialization."""
-        scripts = {"cpu": "echo CPU", "gpu": "echo GPU"}
-        fetch = self.Fetch(scripts)
+    @patch("fetch_cord.fetch.run_command")
+    def test_fastfetch_provider_parses_output(self, mock_run):
+        from fetch_cord.fetch import FastfetchProvider
 
-        self.assertEqual(fetch.scripts, scripts)
+        mock_run.return_value = json.dumps(
+            [{"type": "OS", "result": {"prettyName": "Debian GNU/Linux"}}]
+        )
+        fields = FastfetchProvider().fetch()
+        self.assertEqual(fields["os"], "Debian GNU/Linux")
 
-    @patch("fetch_cord.Fetch.platform.system")
-    @patch("fetch_cord.Fetch.exec_bash")
-    def test_fetch_run_script_bash(self, mock_exec_bash, mock_platform):
-        """Test Fetch run_script uses bash on non-Windows."""
-        mock_platform.return_value = "Linux"
-        mock_exec_bash.return_value = "CPU Info"
+    @patch("fetch_cord.fetch.run_command", side_effect=FileNotFoundError)
+    def test_fastfetch_provider_handles_missing_binary(self, mock_run):
+        from fetch_cord.fetch import FastfetchProvider
 
-        fetch = self.Fetch({"cpu": "echo 'CPU Info'"})
-        result = fetch.run_script("echo 'CPU Info'")
+        self.assertEqual(FastfetchProvider().fetch(), {})
 
-        mock_exec_bash.assert_called_once_with("echo 'CPU Info'")
-        self.assertEqual(result, "CPU Info")
+    @patch("fetch_cord.fetch.exec_bash")
+    def test_command_provider_skips_existing_and_strips(self, mock_exec_bash):
+        from fetch_cord.fetch import CommandProvider
 
-    @patch("fetch_cord.Fetch.platform.system")
-    @patch("fetch_cord.Fetch.exec_ps1")
-    def test_fetch_run_script_windows(self, mock_exec_ps1, mock_platform):
-        """Test Fetch run_script uses PowerShell on Windows."""
-        mock_platform.return_value = "Windows"
-        mock_exec_ps1.return_value = "Windows Info"
+        mock_exec_bash.return_value = "  Value\nignored line\n"
+        provider = CommandProvider({"cpu": "echo cpu", "gpu": "echo gpu"})
 
-        fetch = self.Fetch({})
-        result = fetch.run_script("Get-ComputerInfo")
+        fields = provider.fetch(skip={"cpu"})  # cpu already provided elsewhere
 
-        mock_exec_ps1.assert_called_once_with("Get-ComputerInfo")
-        self.assertEqual(result, "Windows Info")
+        mock_exec_bash.assert_called_once_with("echo gpu")
+        self.assertEqual(fields, {"gpu": "Value"})
 
-    def test_fetch_fetch_native(self):
-        """Test Fetch fetch method uses native module."""
-        from fetch_cord.Fetch import native_module
+    def test_command_provider_handles_bash_error(self):
+        from fetch_cord.tools import BashError
 
-        native_module.fetch.reset_mock()
-        native_module.fetch.return_value = "Native Result"
+        with patch("fetch_cord.fetch.exec_bash", side_effect=BashError("boom")):
+            from fetch_cord.fetch import CommandProvider
 
-        scripts = {"cpu": "echo CPU"}
-        fetch = self.Fetch(scripts)
-        result = fetch.fetch("gpu")
+            self.assertEqual(CommandProvider({"cpu": "bad"}).fetch(), {})
 
-        native_module.fetch.assert_called_once_with("gpu")
-        self.assertEqual(result, "Native Result")
+    def test_native_provider(self):
+        from fetch_cord.fetch import NativeProvider, native_module
 
-    @patch("fetch_cord.Fetch.platform.system")
-    @patch("fetch_cord.Fetch.exec_bash")
-    def test_fetch_fetch_script(self, mock_exec_bash, mock_platform):
-        """Test Fetch fetch method uses script when available."""
-        mock_platform.return_value = "Linux"
-        mock_exec_bash.return_value = "  Script Result\nextra line"
+        native_module.fetch.return_value = "432 packages"
+        fields = NativeProvider().fetch()
+        self.assertEqual(fields.get("packages"), "432 packages")
 
-        scripts = {"cpu": "lscpu"}
-        fetch = self.Fetch(scripts)
-        result = fetch.fetch("cpu")
+    def test_fetch_snapshot_first_provider_wins(self):
+        from fetch_cord.fetch import Fetch
 
-        mock_exec_bash.assert_called_once_with("lscpu")
-        self.assertEqual(result, "Script Result")
+        class ProviderOne:
+            name = "one"
 
-    def test_fetch_fetch_not_found(self):
-        """Test Fetch fetch method handles missing component."""
-        from fetch_cord.Fetch import native_module
+            def fetch(self, skip=None):
+                return {"a": "1", "b": "1"}
 
-        native_module.fetch.return_value = None
+        class ProviderTwo:
+            name = "two"
 
-        fetch = self.Fetch({})
-        result = fetch.fetch("nonexistent")
+            def fetch(self, skip=None):
+                # Only fills gaps; must not overwrite existing fields.
+                return {"b": "2", "c": "2"}
 
-        self.assertEqual(result, "Error: Component nonexistent not found")
+        fetch = Fetch([ProviderOne(), ProviderTwo()])
+        snap = fetch.snapshot()
 
-    def test_fetch_fetch_empty_result(self):
-        """Test Fetch fetch method handles empty result."""
-        from fetch_cord.Fetch import native_module
+        self.assertEqual(snap, {"a": "1", "b": "1", "c": "2"})
+        self.assertEqual(fetch.fetch("a"), "1")
+        self.assertEqual(fetch.fetch("b"), "1")
+        self.assertEqual(fetch.fetch("c"), "2")
 
-        native_module.fetch.return_value = ""
+    def test_fetch_missing_field_returns_not_found(self):
+        from fetch_cord.fetch import Fetch
 
-        fetch = self.Fetch({})
-        result = fetch.fetch("component")
+        class EmptyProvider:
+            name = "empty"
 
-        self.assertEqual(result, "Not Found")
+            def fetch(self, skip=None):
+                return {}
+
+        fetch = Fetch([EmptyProvider()])
+        self.assertEqual(fetch.fetch("nonexistent"), "Not Found")
+        self.assertEqual(fetch.fetch(None), "Not Found")
 
 
 class TestTools(unittest.TestCase):
     """Test cases for Tools module."""
 
-    @patch("fetch_cord.Tools.subprocess.run")
+    @patch("fetch_cord.tools.subprocess.run")
     def test_run_command(self, mock_run):
         """Test run_command function."""
         mock_process = MagicMock()
         mock_process.stdout = "command output"
         mock_run.return_value = mock_process
 
-        from fetch_cord.Tools import run_command
+        from fetch_cord.tools import run_command
 
         result = run_command(["ls", "-la"])
 
@@ -472,16 +507,16 @@ class TestTools(unittest.TestCase):
         )
         self.assertEqual(result, "command output")
 
-    @patch("fetch_cord.Tools.subprocess.run")
+    @patch("fetch_cord.tools.subprocess.run")
     def test_run_command_with_shell(self, mock_run):
         """Test run_command with shell=True."""
         mock_process = MagicMock()
         mock_process.stdout = "shell output"
         mock_run.return_value = mock_process
 
-        from fetch_cord.Tools import run_command
+        from fetch_cord.tools import run_command
 
-        result = run_command(["echo", "hello"], shell=True)
+        run_command(["echo", "hello"], shell=True)
 
         mock_run.assert_called_once_with(
             ["echo", "hello"],
@@ -490,33 +525,49 @@ class TestTools(unittest.TestCase):
             shell=True,
         )
 
-    @patch("fetch_cord.Tools.subprocess.run")
+    @patch("fetch_cord.tools.subprocess.run")
     def test_exec_bash(self, mock_run):
         """Test exec_bash function."""
         mock_process = MagicMock()
         mock_process.stdout = "  bash output  \n"
+        mock_process.returncode = 0
         mock_run.return_value = mock_process
 
-        from fetch_cord.Tools import exec_bash
+        from fetch_cord.tools import exec_bash
 
         result = exec_bash("echo hello")
 
         mock_run.assert_called_once_with(
-            ["echo hello"],
+            "echo hello",
             encoding="utf-8",
             stdout=-1,
+            stderr=subprocess.STDOUT,
             shell=True,
         )
         self.assertEqual(result, "bash output")
 
-    @patch("fetch_cord.Tools.subprocess.run")
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_exec_bash_raises_on_failure(self, mock_run):
+        """exec_bash raises BashError when the command exits non-zero."""
+        mock_process = MagicMock()
+        mock_process.stdout = "some error"
+        mock_process.returncode = 1
+        mock_run.return_value = mock_process
+
+        from fetch_cord.tools import BashError, exec_bash
+
+        with self.assertRaises(BashError):
+            exec_bash("false")
+
+    @patch("fetch_cord.tools.subprocess.run")
     def test_exec_ps1(self, mock_run):
         """Test exec_ps1 function."""
         mock_process = MagicMock()
         mock_process.stdout = "  powershell output  \n"
+        mock_process.returncode = 0
         mock_run.return_value = mock_process
 
-        from fetch_cord.Tools import exec_ps1
+        from fetch_cord.tools import exec_ps1
 
         result = exec_ps1("Get-Process")
 
@@ -524,10 +575,11 @@ class TestTools(unittest.TestCase):
             ["powershell", "Get-Process"],
             encoding="utf-8",
             stdout=-1,
+            stderr=subprocess.STDOUT,
         )
         self.assertEqual(result, "powershell output")
 
-    @patch("fetch_cord.Tools.resources.path")
+    @patch("fetch_cord.tools.resources.path")
     def test_get_resource_path(self, mock_resources_path):
         """Test get_resource_path function."""
         mock_path = MagicMock()
@@ -535,7 +587,7 @@ class TestTools(unittest.TestCase):
         mock_path.__exit__ = MagicMock(return_value=False)
         mock_resources_path.return_value = mock_path
 
-        from fetch_cord.Tools import get_resource_path
+        from fetch_cord.tools import get_resource_path
 
         result = get_resource_path("fetch_cord.resources", "test.yml")
 
@@ -544,7 +596,7 @@ class TestTools(unittest.TestCase):
 
     def test_bash_error_exception(self):
         """Test BashError exception can be raised."""
-        from fetch_cord.Tools import BashError
+        from fetch_cord.tools import BashError
 
         with self.assertRaises(BashError):
             raise BashError("Test error")
@@ -558,11 +610,11 @@ class TestIntegration(unittest.TestCase):
         """Set up class-level mocks."""
         cls.native_patcher = patch.dict(
             sys.modules,
-            {"fetch_cord.native.native": MagicMock(fetch=MagicMock(return_value=None))}
+            {"fetch_cord.native.native": MagicMock(fetch=MagicMock(return_value=None))},
         )
         cls.native_patcher.start()
 
-        cls.resources_patcher = patch("fetch_cord.Fetch.resources")
+        cls.resources_patcher = patch("fetch_cord.fetch.resources")
         cls.mock_resources = cls.resources_patcher.start()
         cls.mock_resources.__file__ = "/fake/resources/__init__.py"
 
@@ -572,22 +624,26 @@ class TestIntegration(unittest.TestCase):
         cls.native_patcher.stop()
         cls.resources_patcher.stop()
 
-    @patch("fetch_cord.Tools.subprocess.run")
-    @patch("fetch_cord.Fetch.platform.system")
-    def test_fetch_uses_tools(self, mock_platform, mock_run):
-        """Test that Fetch module uses Tools module."""
-        mock_platform.return_value = "Linux"
-        mock_process = MagicMock()
-        mock_process.stdout = "Test Output"
-        mock_run.return_value = mock_process
+    @patch("fetch_cord.fetch.exec_bash")
+    @patch("fetch_cord.fetch.run_command")
+    def test_fetch_chain_fills_gaps(self, mock_run, mock_exec_bash):
+        """Fastfetch fills common fields; the command provider fills the rest."""
+        mock_run.return_value = json.dumps(
+            [
+                {"type": "OS", "result": {"prettyName": "Debian GNU/Linux"}},
+                {"type": "Kernel", "result": {"release": "6.8.0"}},
+            ]
+        )
+        mock_exec_bash.return_value = "  Desktop\n"
 
-        from fetch_cord.Fetch import Fetch
+        from fetch_cord.fetch import CommandProvider, FastfetchProvider, Fetch
 
-        fetch = Fetch({"test": "echo test"})
-        result = fetch.run_script("echo test")
+        fetch = Fetch([FastfetchProvider(), CommandProvider({"system_type": "echo x"})])
+        snap = fetch.snapshot()
 
-        mock_run.assert_called()
-        self.assertEqual(result, "Test Output")
+        self.assertEqual(snap["os"], "Debian GNU/Linux")
+        self.assertEqual(snap["kernel"], "6.8.0")
+        self.assertEqual(snap["system_type"], "Desktop")
 
 
 if __name__ == "__main__":

@@ -1,31 +1,29 @@
-# from __future__ import annotations
-
 """Constants used throughout FetchCord."""
 
 # Timing constants (in seconds)
 MIN_CYCLE_TIME_SECONDS = 15
 DEFAULT_CYCLE_TIME_SECONDS = 30
-RECONNECTION_WAIT_SECONDS = 30
 WAIT_INTERVAL_SECONDS = 0.05
 
 # Git branches
 DEFAULT_BRANCH = "master"
 TESTING_BRANCH = "testing"
 
-# Error messages
-ERROR_COMPONENT_NOT_FOUND = "Error: Component {component} not found"
+# Error / status messages
 RESULT_NOT_FOUND = "Not Found"
 CUSTOM_TIME_MESSAGE = "setting custom time {time} seconds"
 
 # RPC connection
-RPC_CONNECTION_REFUSED_MSG = "RPC connection refused (is Discord open?); trying again in 30 seconds"
+RPC_CONNECTION_REFUSED_MSG = (
+    "RPC connection refused (is Discord open?); trying again in 30 seconds"
+)
 
 # Systemd commands
 VALID_SYSTEMD_COMMANDS = {"start", "stop", "enable", "disable", "status"}
 
 # Service file URL
 SERVICE_FILE_URL_TEMPLATE = (
-    "https://raw.githubusercontent.com/MrPotatoBobx/FetchCord/"
+    "https://raw.githubusercontent.com/fetchcord/FetchCord/"
     "{branch}/systemd/fetchcord.service"
 )
 

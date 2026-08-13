@@ -1,5 +1,5 @@
 import platform
-from typing import Optional
+from typing import cast
 
 from fetch_cord.native import Windows
 
@@ -12,4 +12,4 @@ def fetch(component_class: str) -> str | None:
     if sys_platform not in fetch_map:
         return None
 
-    return fetch_map[sys_platform].fetch(component_class)
+    return cast(str | None, fetch_map[sys_platform].fetch(component_class))

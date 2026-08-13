@@ -170,12 +170,6 @@ The codebase has been completely rewritten with a modular architecture:
 
 --time, -t, set custom duration for cycles in seconds.
 
---terminal, set custom terminal (useful if using a script or dmenu).
-
---termfont, set custom terminal font (useful if fastfetch can't get it).
-
---pause-cycle, Extra cycle that pauses FetchCord to show other activities.
-
 --install, Install fetchcord as a systemd service and enable it.
 
 --uninstall, Uninstall fetchcord systemd service.
@@ -195,10 +189,6 @@ The codebase has been completely rewritten with a modular architecture:
 --testing, Get files from testing branch (for development).
 
 --debug, -d, Enable debugging output.
-
---config-path, -c, Specify custom fastfetch config path.
-
---fetchcord-config-path, -fc, Specify custom fetchcord config path.
 
 --version, -v, Print FetchCord version.
 

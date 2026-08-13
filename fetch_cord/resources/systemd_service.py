@@ -2,8 +2,13 @@
 import os
 import sys
 
-from fetch_cord.Tools import BashError, exec_bash
-from fetch_cord.constants import VALID_SYSTEMD_COMMANDS, SERVICE_FILE_URL_TEMPLATE, TESTING_BRANCH, DEFAULT_BRANCH
+from fetch_cord.constants import (
+    DEFAULT_BRANCH,
+    SERVICE_FILE_URL_TEMPLATE,
+    TESTING_BRANCH,
+    VALID_SYSTEMD_COMMANDS,
+)
+from fetch_cord.tools import BashError, exec_bash
 
 
 def validate_systemd_cmd(cmd: str) -> str:
@@ -29,10 +34,10 @@ def get_systemd_user_dir() -> str:
 
 def get_service_file_url(testing: bool = False) -> str:
     """Get the service file URL based on branch.
-    
+
     Args:
         testing: If True, use testing branch; otherwise use master.
-        
+
     Returns:
         The URL to download the service file from.
     """
@@ -40,7 +45,7 @@ def get_service_file_url(testing: bool = False) -> str:
     return SERVICE_FILE_URL_TEMPLATE.format(branch=branch)
 
 
-def systemd_cmd(cmd: str):
+def systemd_cmd(cmd: str) -> None:
     """Execute a systemd command with validation."""
     try:
         validated_cmd = validate_systemd_cmd(cmd)
@@ -55,7 +60,7 @@ def systemd_cmd(cmd: str):
         sys.exit(1)
 
 
-def install(testing: bool = False):
+def install(testing: bool = False) -> None:
     """Install the systemd service."""
     systemd_dir = get_systemd_user_dir()
 
@@ -78,7 +83,7 @@ def install(testing: bool = False):
     start()
 
 
-def uninstall():
+def uninstall() -> None:
     """Uninstall the systemd service."""
     systemd_cmd("stop")
     systemd_cmd("disable")
@@ -95,31 +100,31 @@ def uninstall():
     sys.exit(0)
 
 
-def enable():
+def enable() -> None:
     """Enable the systemd service."""
     systemd_cmd("enable")
     sys.exit(0)
 
 
-def disable():
+def disable() -> None:
     """Disable the systemd service."""
     systemd_cmd("disable")
     sys.exit(0)
 
 
-def start():
+def start() -> None:
     """Start the systemd service."""
     systemd_cmd("start")
     sys.exit(0)
 
 
-def stop():
+def stop() -> None:
     """Stop the systemd service."""
     systemd_cmd("stop")
     sys.exit(0)
 
 
-def status():
+def status() -> None:
     """Check the systemd service status."""
     systemd_cmd("status")
     sys.exit(0)

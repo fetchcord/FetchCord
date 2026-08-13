@@ -1,11 +1,10 @@
 # from __future__ import annotations
 
-import os
 import sys
 import urllib.request
 from pathlib import Path
 
-from fetch_cord.constants import RESOURCE_FILES, SERVICE_FILE_URL_TEMPLATE, TESTING_BRANCH, DEFAULT_BRANCH
+from fetch_cord.constants import DEFAULT_BRANCH, RESOURCE_FILES, TESTING_BRANCH
 
 
 def validate_filename(filename: str) -> bool:
@@ -14,12 +13,12 @@ def validate_filename(filename: str) -> bool:
         return False
     if ".." in filename or "/" in filename or "\\" in filename:
         return False
-    allowed_chars = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.")
+    allowed_chars = set(
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_."
+    )
     if not all(c in allowed_chars for c in filename):
         return False
-    if not filename.endswith(".json"):
-        return False
-    return True
+    return filename.endswith(".json")
 
 
 def get_resources_dir() -> Path:
@@ -29,7 +28,7 @@ def get_resources_dir() -> Path:
 
 def update(testing: bool = False) -> None:
     """Update resource files from the repository.
-    
+
     Args:
         testing: If True, download from testing branch; otherwise from master.
     """
