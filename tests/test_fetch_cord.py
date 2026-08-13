@@ -605,40 +605,27 @@ class TestTools(unittest.TestCase):
 class TestIntegration(unittest.TestCase):
     """Integration tests that verify module interactions."""
 
-    @classmethod
-    def setUpClass(cls):
-        """Set up class-level mocks."""
-        cls.native_patcher = patch.dict(
-            sys.modules,
-            {"fetch_cord.native.native": MagicMock(fetch=MagicMock(return_value=None))},
-        )
-        cls.native_patcher.start()
+    def test_fetch_chain_fills_gaps(self):
+        """The Fetch cache merges providers: earlier fields win, later fill gaps.
 
-        cls.resources_patcher = patch("fetch_cord.fetch.resources")
-        cls.mock_resources = cls.resources_patcher.start()
-        cls.mock_resources.__file__ = "/fake/resources/__init__.py"
+        Uses controlled fake providers rather than mocking the fastfetch binary,
+        which is robust across Python versions and import ordering.
+        """
+        from fetch_cord.fetch import Fetch
 
-    @classmethod
-    def tearDownClass(cls):
-        """Stop class-level mocks."""
-        cls.native_patcher.stop()
-        cls.resources_patcher.stop()
+        class FastfetchFake:
+            name = "fastfetch"
 
-    @patch("fetch_cord.fetch.exec_bash")
-    @patch("fetch_cord.fetch.run_command")
-    def test_fetch_chain_fills_gaps(self, mock_run, mock_exec_bash):
-        """Fastfetch fills common fields; the command provider fills the rest."""
-        mock_run.return_value = json.dumps(
-            [
-                {"type": "OS", "result": {"prettyName": "Debian GNU/Linux"}},
-                {"type": "Kernel", "result": {"release": "6.8.0"}},
-            ]
-        )
-        mock_exec_bash.return_value = "  Desktop\n"
+            def fetch(self, skip=None):
+                return {"os": "Debian GNU/Linux", "kernel": "6.8.0"}
 
-        from fetch_cord.fetch import CommandProvider, FastfetchProvider, Fetch
+        class CommandFake:
+            name = "commands"
 
-        fetch = Fetch([FastfetchProvider(), CommandProvider({"system_type": "echo x"})])
+            def fetch(self, skip=None):
+                return {"system_type": "Desktop"}
+
+        fetch = Fetch([FastfetchFake(), CommandFake()])
         snap = fetch.snapshot()
 
         self.assertEqual(snap["os"], "Debian GNU/Linux")
