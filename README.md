@@ -72,7 +72,7 @@
 
 ## Installing on (GNU/)Linux
 
-**Requirements: Python 3.10+ and fastfetch**
+**Requirements: Python 3.12+ and fastfetch**
 
 ### Via pip (recommended)
 
@@ -102,21 +102,38 @@ Optionally for systemd users there is a user-side `fetchcord.service` in this re
 
 ## Installing on MacOS
 
-**Requirements: Python 3.10+ and fastfetch**
+**Requirements: Python 3.12+ and fastfetch**
 
-### Using Homebrew (recommended)
+### Via Homebrew (recommended)
+
+FetchCord ships a Homebrew formula. Install it with:
 
 ```bash
-# Install dependencies
-brew bundle
+brew tap fetchcord/homebrew-fetchcord
+brew install fetchcord
+```
 
-# Then install fetchcord
+`brew install` pulls in `fastfetch` automatically. The tap repository is
+`github.com/fetchcord/homebrew-fetchcord`; the formula itself lives in this
+repo at `Formula/fetchcord.rb`. To test the formula locally without a tap:
+
+```bash
+brew install --build-from-source ./Formula/fetchcord.rb
+```
+
+### Via pip
+
+```bash
 pip3 install fetchcord
 ```
 
-### Manual installation
+### Uninstall
 
-If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
+```bash
+brew uninstall fetchcord
+# or, if installed via pip
+pip3 uninstall fetchcord
+```
 
 ### Run on MacOS
 
@@ -126,7 +143,7 @@ If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PA
 
 ## Installing on Windows
 
-**Requirements: Python 3.10+**
+**Requirements: Python 3.12+**
 
 To install fetchcord on Windows run `pip3 install fetchcord` or `python3 -m pip install fetchcord`.
 
