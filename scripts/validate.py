@@ -82,6 +82,12 @@ def main() -> int:
     parser.add_argument(
         "--connect", action="store_true", help="try to set Discord Rich Presence"
     )
+    parser.add_argument(
+        "--cycle",
+        type=int,
+        metavar="SECONDS",
+        help="cycle through all configured cycles, pausing SECONDS on each",
+    )
     args = parser.parse_args()
 
     if args.json:
@@ -135,26 +141,44 @@ def main() -> int:
         for key, value in payload.items():
             print(f"    {key:<12} {value!r}")
 
-    if args.connect:
+    if args.connect or args.cycle:
         from pypresence import Presence
 
-        first_name, (client_id, payload) = next(iter(payloads.items()))
-        print(
-            f"\nConnecting to Discord (cycle '{first_name}', client_id={client_id})..."
-        )
-        rpc = Presence(int(client_id))
-        rpc.connect()
-        rpc.update(**payload)
-        print(
-            "[OK] Rich presence set. Look at your Discord profile. Press Ctrl+C to stop."
-        )
-        try:
-            while True:
-                time.sleep(1)
-        except KeyboardInterrupt:
-            rpc.clear()
-            rpc.close()
-            print("\nRich presence cleared.")
+        if args.cycle:
+            print(
+                f"\nCycling through all cycles ({args.cycle}s each). "
+                "Press Ctrl+C to stop."
+            )
+            try:
+                while True:
+                    for name, (client_id, payload) in payloads.items():
+                        print(f"  -> setting cycle '{name}' (client_id={client_id})")
+                        rpc = Presence(int(client_id))
+                        rpc.connect()
+                        rpc.update(**payload)
+                        time.sleep(args.cycle)
+                        rpc.clear()
+                        rpc.close()
+            except KeyboardInterrupt:
+                print("\nCycling stopped.")
+        else:
+            first_name, (client_id, payload) = next(iter(payloads.items()))
+            print(
+                f"\nConnecting to Discord (cycle '{first_name}', client_id={client_id})..."
+            )
+            rpc = Presence(int(client_id))
+            rpc.connect()
+            rpc.update(**payload)
+            print(
+                "[OK] Rich presence set. Look at your Discord profile. Press Ctrl+C to stop."
+            )
+            try:
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                rpc.clear()
+                rpc.close()
+                print("\nRich presence cleared.")
 
     return 1 if missing else 0
 

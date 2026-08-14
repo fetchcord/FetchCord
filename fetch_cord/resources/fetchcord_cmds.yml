@@ -107,7 +107,7 @@ commands:
     Linux: &resolution_sh |
       xdpyinfo | awk '/dimensions/ {print $2}'
     Darwin: |
-      system_profiler SPDisplaysDataType 2>/dev/null | awk '/Resolution:/ {print $2"x"$3; exit}'
+      system_profiler SPDisplaysDataType 2>/dev/null | awk '/Resolution:/ {print $2"x"$4; exit}'
   system_type:
     Windows: |
       Get-CimInstance Win32_Battery | Select-Object BatteryStatus | ForEach-Object {$_.BatteryStatus}
