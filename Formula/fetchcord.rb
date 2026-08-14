@@ -37,4 +37,9 @@ class Fetchcord < Formula
   test do
     assert_match "FetchCord version:", shell_output("#{bin}/fetchcord --version")
   end
+
+  livecheck do
+    url "https://github.com/fetchcord/FetchCord/releases"
+    strategy :github_latest
+  end
 end

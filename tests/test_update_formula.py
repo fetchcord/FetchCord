@@ -36,6 +36,25 @@ class TestRewrite(unittest.TestCase):
             out,
         )
 
+    def test_preserves_livecheck_block(self) -> None:
+        # The livecheck block's 4-space url line must survive a rewrite.
+        text = (
+            '  url "old"\n'
+            '  sha256 "oldsha"\n'
+            "  livecheck do\n"
+            '    url "https://github.com/fetchcord/FetchCord/releases"\n'
+            "    strategy :github_latest\n"
+            "  end\n"
+        )
+        out = rewrite(text, "v3.0.0", "newsha")
+        self.assertIn(
+            'url "https://github.com/fetchcord/FetchCord/archive/refs/tags/v3.0.0.tar.gz"',
+            out,
+        )
+        self.assertIn('  sha256 "newsha"', out)
+        self.assertIn('    url "https://github.com/fetchcord/FetchCord/releases"', out)
+        self.assertIn("strategy :github_latest", out)
+
 
 class TestTarballUrl(unittest.TestCase):
     def test_builds_github_tarball_url(self) -> None:
