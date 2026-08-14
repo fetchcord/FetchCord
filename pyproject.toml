@@ -124,11 +124,16 @@ disable_error_code = ["no-untyped-call"]
 # Tests lean heavily on unittest.mock; be pragmatic about strict typing there
 # (production code is still fully strict).
 [[tool.mypy.overrides]]
-module = ["test_fetch_cord", "test_more"]
+module = [
+    "test_fetch_cord",
+    "test_more",
+    "test_presence",
+    "test_fixtures",
+]
 disallow_untyped_defs = false
 disallow_any_generics = false
 check_untyped_defs = false
-disable_error_code = ["no-untyped-call"]
+disable_error_code = ["no-untyped-call", "method-assign"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

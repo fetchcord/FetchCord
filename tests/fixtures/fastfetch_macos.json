@@ -1,0 +1,57 @@
+[
+  {
+    "type": "OS",
+    "result": {
+      "name": "macOS",
+      "prettyName": "macOS 15.1",
+      "version": "15.1",
+      "versionID": "24B83",
+      "id": "macos"
+    }
+  },
+  {
+    "type": "Kernel",
+    "result": {
+      "name": "Darwin",
+      "release": "24.3.0",
+      "version": "Darwin Kernel Version 24.3.0"
+    }
+  },
+  {
+    "type": "CPU",
+    "result": {
+      "cpu": "Apple M4 Pro"
+    }
+  },
+  {
+    "type": "GPU",
+    "result": {
+      "gpu": "Apple M4 Pro"
+    }
+  },
+  {
+    "type": "Memory",
+    "result": {
+      "total": 34359738368,
+      "used": 11811160064
+    }
+  },
+  {
+    "type": "Packages",
+    "result": {
+      "all": 0
+    }
+  },
+  {
+    "type": "Shell",
+    "result": {
+      "prettyName": "zsh"
+    }
+  },
+  {
+    "type": "Terminal",
+    "result": {
+      "prettyName": "Apple_Terminal"
+    }
+  }
+]

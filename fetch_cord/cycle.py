@@ -14,6 +14,7 @@ from fetch_cord.constants import (
     RPC_CONNECTION_REFUSED_MSG,
     WAIT_INTERVAL_SECONDS,
 )
+from fetch_cord.presence import build_presence_activity
 
 
 class Cycle:
@@ -84,13 +85,15 @@ class Cycle:
 
         try:
             self.rpc.update(
-                state=bottom,
-                details=top,
-                large_image=large_image,
-                large_text=app,
-                small_image=icon_id,
-                small_text=icon,
-                start=int(psutil.boot_time()),
+                **build_presence_activity(
+                    details=top,
+                    state=bottom,
+                    large_image=large_image,
+                    large_text=app,
+                    small_image=icon_id,
+                    small_text=icon,
+                    start=int(psutil.boot_time()),
+                )
             )
 
             self.wait(self.time if self.time else DEFAULT_CYCLE_TIME_SECONDS)

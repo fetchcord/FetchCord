@@ -40,3 +40,42 @@ jobs:
 
       - name: Run tests with coverage gate
         run: python -m pytest tests/ -q --cov=fetch_cord --cov-fail-under=80
+
+  smoke:
+    name: Smoke - real fastfetch detection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install project
+        run: pip install -e "."
+
+      - name: Install fastfetch (static binary)
+        run: |
+          curl -sL -o fastfetch.tar.gz \
+            https://github.com/fastfetch-cli/fastfetch/releases/download/2.67.0/fastfetch-linux-amd64.tar.gz
+          tar -xzf fastfetch.tar.gz
+
+      - name: Run real detection smoke test
+        run: |
+          export PATH="$GITHUB_WORKSPACE/fastfetch-linux-amd64/usr/bin:$PATH"
+          fastfetch --version
+          python - <<'EOF'
+          from fetch_cord.fetch import FastfetchProvider, Fetch
+
+          snap = Fetch([FastfetchProvider()]).snapshot()
+          assert snap.get("os"), f"missing os: {snap}"
+          assert snap.get("kernel"), f"missing kernel: {snap}"
+          print(
+              "Detected: "
+              f"os={snap.get('os')} "
+              f"kernel={snap.get('kernel')} "
+              f"cpu={snap.get('cpu')} "
+              f"memory={snap.get('memory')} "
+              f"packages={snap.get('packages')}"
+          )
+          EOF
