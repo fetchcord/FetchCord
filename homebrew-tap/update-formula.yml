@@ -1,0 +1,58 @@
+# Auto-update the FetchCord formula whenever a new FetchCord release is tagged.
+#
+# Copy this file into the tap repository at
+#   fetchcord/homebrew-fetchcord/.github/workflows/update-formula.yml
+#
+# It polls fetchcord/FetchCord for the latest release on a schedule (and can be
+# triggered manually from the Actions tab), then updates the formula's
+# url/sha256 and commits the change.
+
+name: Update formula on new FetchCord release
+
+on:
+  schedule:
+    # every 6 hours at a slight offset to spread load
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tap
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch the latest release tag
+        id: latest
+        run: |
+          TAG=$(curl -s https://api.github.com/repos/fetchcord/FetchCord/releases/latest \
+                | python3 -c "import sys,json;print(json.load(sys.stdin)['tag_name'])")
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Latest FetchCord release: $TAG"
+
+      - name: Download the formula updater from FetchCord
+        run: |
+          mkdir -p scripts
+          curl -sL -o scripts/update_formula.py \
+            https://raw.githubusercontent.com/fetchcord/FetchCord/master/scripts/update_formula.py
+
+      - name: Update the formula to the latest release
+        run: python3 scripts/update_formula.py
+
+      - name: Commit and push if the formula changed
+        run: |
+          if ! git diff --quiet Formula/fetchcord.rb; then
+            git add Formula/fetchcord.rb
+            git -c user.name="fetchcord-bot" \
+                -c user.email="fetchcord-bot@users.noreply.github.com" \
+                commit -m "chore: update fetchcord formula to ${{ steps.latest.outputs.tag }}"
+            git push
+            echo "Pushed formula update to ${{ steps.latest.outputs.tag }}"
+          else
+            echo "Formula already up to date (no change)."
+          fi

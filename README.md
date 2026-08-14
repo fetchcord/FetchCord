@@ -121,6 +121,10 @@ repo at `Formula/fetchcord.rb`. To test the formula locally without a tap:
 brew install --build-from-source ./Formula/fetchcord.rb
 ```
 
+The tap's own CI keeps the formula up to date: a scheduled workflow
+(`homebrew-tap/update-formula.yml`, copied into the tap) watches FetchCord
+for new releases and updates the formula's `url`/`sha256` automatically.
+
 ### Via pip
 
 ```bash

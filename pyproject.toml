@@ -129,6 +129,7 @@ module = [
     "test_more",
     "test_presence",
     "test_fixtures",
+    "test_update_formula",
 ]
 disallow_untyped_defs = false
 disallow_any_generics = false
@@ -141,3 +142,4 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short"
+pythonpath = ["."]
