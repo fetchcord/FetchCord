@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import platform
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -70,7 +71,7 @@ def build_cycle_payload(
         large_text=app,
         small_image=icon_id,
         small_text=icon,
-        start=0,
+        start=int(time.time()),
     )
     return client_id, payload
 
@@ -135,8 +136,6 @@ def main() -> int:
             print(f"    {key:<12} {value!r}")
 
     if args.connect:
-        import time
-
         from pypresence import Presence
 
         first_name, (client_id, payload) = next(iter(payloads.items()))

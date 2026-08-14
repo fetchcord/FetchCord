@@ -97,8 +97,8 @@ commands:
     Linux: &motherboard_sh |
       cat /sys/devices/virtual/dmi/id/board_{vendor,name} | xargs
     Darwin: |
-      model_name=$(system_profiler SPHardwareDataType | awk -F: '/Model Name/ {print $2}')
-      model_identifier=$(system_profiler SPHardwareDataType | awk -F: '/Model Identifier/ {print $2}')
+      model_name=$(system_profiler SPHardwareDataType 2>/dev/null | awk -F: '/Model Name/ {print $2}')
+      model_identifier=$(system_profiler SPHardwareDataType 2>/dev/null | awk -F: '/Model Identifier/ {print $2}')
 
       echo "${model_name}${model_identifier}"
   resolution:
@@ -106,7 +106,8 @@ commands:
       Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth.ToString() + 'x' + $_.ScreenHeight.ToString() }
     Linux: &resolution_sh |
       xdpyinfo | awk '/dimensions/ {print $2}'
-    Darwin: *resolution_sh
+    Darwin: |
+      system_profiler SPDisplaysDataType 2>/dev/null | awk '/Resolution:/ {print $2"x"$3; exit}'
   system_type:
     Windows: |
       Get-CimInstance Win32_Battery | Select-Object BatteryStatus | ForEach-Object {$_.BatteryStatus}
