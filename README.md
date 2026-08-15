@@ -5,7 +5,7 @@
        <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux%2FWindows%2F-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white">
     </a>
     <a href="https://www.python.org/downloads/">
-       <img src="https://img.shields.io/badge/python-3.10+-blue.svg?style=for-the-badge&logo=python&logoColor=white">
+       <img src="https://img.shields.io/badge/python-3.12+-blue.svg?style=for-the-badge&logo=python&logoColor=white">
     </a>
    <a href="https://discord.gg/P4h9kdV">
        <img src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
@@ -74,11 +74,21 @@
 
 **Requirements: Python 3.12+ and fastfetch**
 
-### Via pip (recommended)
+### Via pip
 
-To install fetchcord via pip you can run `pip3 install fetchcord`
+PyPI still serves FetchCord 2.7.7 (neofetch). 3.0.0 is not published there yet.
 
-If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
+Until the 3.0.0 tag is on PyPI, install from GitHub:
+
+```bash
+pipx install "git+https://github.com/fetchcord/FetchCord.git@testing"
+# or, in a venv:
+pip install "git+https://github.com/fetchcord/FetchCord.git@testing"
+```
+
+Debian/Ubuntu 24.04+ distro pip is externally managed; use `pipx` or a venv, not `sudo pip`.
+
+To remove: `pipx uninstall fetchcord` or `pip uninstall fetchcord`.
 
 ### Via AUR
 
@@ -88,9 +98,7 @@ And the git version (synced with master): [fetchcord](https://aur.archlinux.org/
 
 ### Via Snap
 
-On systems with snap installed, you can run `sudo snap install fetchcord --classic` to install fetchcord.
-
-Note that like the AUR version, this version is directly from master, for the stable release use [pip](#via-pip-recommended) <!-- remove this if you're not automatically deploying it -->
+The Snap is **not a 3.0 install path**. It still tracks an older classic/core18 build. Use pipx/venv or Homebrew instead.
 
 ### Run on Linux
 
@@ -106,29 +114,27 @@ Optionally for systemd users there is a user-side `fetchcord.service` in this re
 
 ### Via Homebrew (recommended)
 
-FetchCord ships a Homebrew formula. Install it with:
+The live tap still points at 2.7.7. For FetchCord 3, install HEAD from this formula:
 
 ```bash
-brew tap fetchcord/homebrew-fetchcord
-brew install fetchcord
+brew tap fetchcord/fetchcord
+brew install --HEAD fetchcord
 ```
 
-`brew install` pulls in `fastfetch` automatically. The tap repository is
-`github.com/fetchcord/homebrew-fetchcord`; the formula itself lives in this
-repo at `Formula/fetchcord.rb`. To test the formula locally without a tap:
+That pulls in `fastfetch` and Python 3.12. After the v3.0.0 tag, `brew install fetchcord` (no `--HEAD`) will work once the tap updater fills `url`/`sha256`.
+
+To test locally:
 
 ```bash
-brew install --build-from-source ./Formula/fetchcord.rb
+brew install --HEAD --build-from-source ./Formula/fetchcord.rb
 ```
-
-The tap's own CI keeps the formula up to date: a scheduled workflow
-(`homebrew-tap/update-formula.yml`, copied into the tap) watches FetchCord
-for new releases and updates the formula's `url`/`sha256` automatically.
 
 ### Via pip
 
+Same as Linux: 3.0 is not on PyPI yet.
+
 ```bash
-pip3 install fetchcord
+pipx install "git+https://github.com/fetchcord/FetchCord.git@testing"
 ```
 
 ### Uninstall
@@ -149,7 +155,13 @@ If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PA
 
 **Requirements: Python 3.12+**
 
-To install fetchcord on Windows run `pip3 install fetchcord` or `python3 -m pip install fetchcord`.
+3.0 is not on PyPI yet. In a venv:
+
+```
+python -m pip install "git+https://github.com/fetchcord/FetchCord.git@testing"
+```
+
+Windows builds of `FetchCord.exe` are attached to GitHub Releases once `v3.0.0` is tagged.
 
 ### Run on Windows
 
@@ -160,16 +172,16 @@ If you get `fetchcord: command not found`, add your python scripts folder to you
 ## What's New in 3.0.0
 
 ### Breaking Changes
-- **Python 3.10+ is now required** (dropped support for older versions)
+- **Python 3.12+ is now required** (dropped support for older versions)
 - Migrated from `neofetch` to `fastfetch` for system info detection
 - Complete architecture rewrite with new module structure
 
 ### New Features
 - **Improved Security**: Input validation and sanitized shell commands
 - **Better Performance**: Refactored code with constants and reduced duplication
-- **Modern Python**: Using Python 3.10+ features (union types with `|`, better type hints)
+- **Modern Python**: Using Python 3.12+ features (union types with `|`, better type hints)
 - **Better Packaging**: Added `pyproject.toml` for modern Python packaging
-- **Comprehensive Tests**: 32 tests covering all modules
+- **Comprehensive Tests**: pytest suite plus a real fastfetch CI smoke job
 
 ### Architecture Changes
 The codebase has been completely rewritten with a modular architecture:

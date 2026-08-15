@@ -23,9 +23,13 @@
   },
   {
     "type": "GPU",
-    "result": {
-      "gpu": "NVIDIA GeForce RTX 4080"
-    }
+    "result": [
+      {
+        "name": "NVIDIA GeForce RTX 4080",
+        "vendor": "NVIDIA",
+        "type": "Discrete"
+      }
+    ]
   },
   {
     "type": "Memory",

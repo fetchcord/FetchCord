@@ -2,7 +2,7 @@
 commands:
   cpu:
     Windows: |
-      Get-WmiObject -Class Win32_Processor -ComputerName. | Select-Object -Property Name | ForEach-Object {$_.Name}
+      Get-WmiObject -Class Win32_Processor | Select-Object -Property Name | ForEach-Object {$_.Name}
     Linux: &cpu_sh |
       lscpu | grep "Model name:" | cut -d: -f2 | xargs
     Darwin: |
@@ -36,7 +36,7 @@ commands:
       TotalMemory=$(cat /proc/meminfo | grep MemTotal | awk '{print $2}')
 
       # Get available physical memory (in bytes)
-      AvailableMemory=$(cat /proc/meminfo | grep MemFree | awk '{print $2}')
+      AvailableMemory=$(cat /proc/meminfo | grep MemAvailable | awk '{print $2}')
 
       # Convert values to GB
       TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024}")
@@ -73,24 +73,37 @@ commands:
     Windows: |
       Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object Version | ForEach-Object {$_.Version}
     Linux: &kernel_sh |
-      fastfetch -l none | grep "Kernel" | awk -F: '{print $2}' | sed 's/^\s*//'
+      uname -r
     Darwin: *kernel_sh
   packages:
-    Linux: &packages_sh |
-      fastfetch -l none | grep "Packages" | awk -F: '{print $2}' | sed 's/^\s*//'
-    Darwin: *packages_sh
+    Linux: |
+      if command -v dpkg-query >/dev/null 2>&1; then
+        dpkg-query -f '${Status}\n' -W 2>/dev/null | grep -c 'install ok installed'
+      elif command -v pacman >/dev/null 2>&1; then
+        pacman -Qq 2>/dev/null | wc -l
+      elif command -v rpm >/dev/null 2>&1; then
+        rpm -qa 2>/dev/null | wc -l
+      elif command -v apk >/dev/null 2>&1; then
+        apk info 2>/dev/null | wc -l
+      fi
+    Darwin: |
+      n=0
+      command -v brew >/dev/null 2>&1 && n=$((n + $(brew list --formula 2>/dev/null | wc -l)))
+      echo "$n"
   os:
     Windows: |
       Get-CimInstance Win32_OperatingSystem | Select-Object Caption | ForEach-Object {$_.Caption}
-    Linux: &os_sh |
-      fastfetch -l none | grep "OS" | awk -F: '{print $2}' | sed 's/^\s*//'
-    Darwin: *os_sh
+    Linux: |
+      if [ -f /etc/os-release ]; then . /etc/os-release; echo "$PRETTY_NAME"; else uname -s; fi
+    Darwin: |
+      echo "$(sw_vers -productName) $(sw_vers -productVersion)"
   host:
     Windows: |
       Get-WmiObject Win32_BaseBoard | Select-Object Product | ForEach-Object {$_.Product}
-    Linux: &host_sh |
-      fastfetch -l none | grep "Host" | awk -F: '{print $2}' | sed 's/^\s*//'
-    Darwin: *host_sh
+    Linux: |
+      cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null
+    Darwin: |
+      sysctl -n hw.model
   motherboard:
     Windows: |
       Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
@@ -100,7 +113,7 @@ commands:
       model_name=$(system_profiler SPHardwareDataType 2>/dev/null | awk -F: '/Model Name/ {print $2}')
       model_identifier=$(system_profiler SPHardwareDataType 2>/dev/null | awk -F: '/Model Identifier/ {print $2}')
 
-      echo "${model_name}${model_identifier}"
+      echo "${model_name} ${model_identifier}" | xargs
   resolution:
     Windows: |
       Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth.ToString() + 'x' + $_.ScreenHeight.ToString() }
@@ -118,13 +131,10 @@ commands:
   shell:
     Windows: |
       Write-Host "PowerShell $(($PSVersionTable).PSVersion)"
-    Linux: &shell_sh |
-      fastfetch -l none | grep "Shell" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Linux: |
+      echo "$(basename "${SHELL:-/bin/sh}")"
     Darwin: |
-      # Use $SHELL environment variable for reliable detection
-      shell_path="${SHELL:-$(fastfetch -l none | grep "Shell" | awk -F: '{print $2}' | sed 's/^\s*//')}"
-      # Extract just the shell name (e.g., /bin/zsh -> zsh)
-      echo "$(basename "$shell_path")"
+      echo "$(basename "${SHELL:-/bin/zsh}")"
   font:
     Windows: |
       $Font = (Get-ItemProperty -Path "HKCU:\Console").FaceName
@@ -137,16 +147,16 @@ commands:
       else {
           Write-Host "$Font"
       }
-    Linux: &font_sh |
-      fastfetch -l none | grep "Font" | awk -F: '{print $2}' | sed 's/^\s*//'
-    Darwin: *font_sh
+    Linux: |
+      fc-match monospace 2>/dev/null | sed 's/:.*//' || true
+    Darwin: |
+      true
   terminal:
     Windows: |
       $host.Name
-    Linux: &terminal_sh |
-      fastfetch -l none | grep "Terminal" | awk -F: '{print $2}' | sed 's/^\s*//'
+    Linux: |
+      term="${TERM_PROGRAM:-${TERMINAL:-$TERM}}"
+      echo "${term%.app}"
     Darwin: |
-      # Use $TERM_PROGRAM environment variable for reliable detection
-      term="${TERM_PROGRAM:-$(fastfetch -l none | grep "Terminal" | awk -F: '{print $2}' | sed 's/^\s*//')}"
-      # Remove .app suffix if present (e.g., "iTerm.app" -> "iTerm")
+      term="${TERM_PROGRAM:-$TERM}"
       echo "${term%.app}"

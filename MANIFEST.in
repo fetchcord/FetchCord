@@ -1,4 +1,1 @@
-include resources/*.json
-include resources/fetchcord_conf.yml
-include resources/fetchcord_cmds.yml
-include resources/default.conf
+recursive-include fetch_cord/resources *.yml *.json

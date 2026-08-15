@@ -9,7 +9,6 @@ Tests cover:
 """
 
 import json
-import re
 import subprocess
 import sys
 import unittest
@@ -320,16 +319,20 @@ class TestFetchFunctions(unittest.TestCase):
         self.assertEqual(result, "unknown")
 
     def _call_get_component_id(self, search, id_list):
-        """Direct implementation of get_component_id for testing."""
-        for id, patterns in id_list.items():
-            if any(re.search(pattern, search) for pattern in patterns):
-                return id
+        from fetch_cord.fetch import get_component_id
 
-        for id, patterns in id_list.items():
-            if "unknown" in patterns:
-                return id
+        return get_component_id(search, id_list)
 
-        return "unknown"
+    def test_get_component_id_from_os_db(self):
+        from fetch_cord.fetch import get_component_id, get_infos
+
+        os_ids = get_infos("os")
+        debian_id = get_component_id("debian gnu/linux 13.4 (trixie)", os_ids)
+        self.assertNotEqual(debian_id, "unknown")
+        self.assertTrue(debian_id.isdigit())
+
+        macos_id = get_component_id("macos 15.1", os_ids)
+        self.assertNotEqual(macos_id, "unknown")
 
 
 class TestInfo(unittest.TestCase):
@@ -383,6 +386,23 @@ class TestInfo(unittest.TestCase):
         )
         fields = parse_fastfetch_json(raw)
         self.assertEqual(fields["memory"], "0.00 GB / 1.00 GB")
+
+    def test_parse_fastfetch_json_gpu_array(self):
+        from fetch_cord.info import parse_fastfetch_json
+
+        raw = json.dumps(
+            [
+                {
+                    "type": "GPU",
+                    "result": [
+                        {"name": "NVIDIA GeForce RTX 4080", "vendor": "NVIDIA"},
+                        {"name": "AMD Radeon", "vendor": "AMD"},
+                    ],
+                }
+            ]
+        )
+        fields = parse_fastfetch_json(raw)
+        self.assertEqual(fields["gpu"], "NVIDIA GeForce RTX 4080 / AMD Radeon")
 
 
 class TestFetchClass(unittest.TestCase):
@@ -441,10 +461,11 @@ class TestFetchClass(unittest.TestCase):
             self.assertEqual(CommandProvider({"cpu": "bad"}).fetch(), {})
 
     def test_native_provider(self):
-        from fetch_cord.fetch import NativeProvider, native_module
+        from fetch_cord.fetch import NativeProvider
 
-        native_module.fetch.return_value = "432 packages"
-        fields = NativeProvider().fetch()
+        provider = NativeProvider()
+        provider._native = MagicMock(fetch=MagicMock(return_value="432 packages"))
+        fields = provider.fetch()
         self.assertEqual(fields.get("packages"), "432 packages")
 
     def test_fetch_snapshot_first_provider_wins(self):
@@ -483,6 +504,35 @@ class TestFetchClass(unittest.TestCase):
         fetch = Fetch([EmptyProvider()])
         self.assertEqual(fetch.fetch("nonexistent"), "Not Found")
         self.assertEqual(fetch.fetch(None), "Not Found")
+
+    def test_snapshot_aliases_memory_to_mem(self):
+        from fetch_cord.fetch import Fetch
+
+        class MemProvider:
+            name = "mem"
+
+            def fetch(self, skip=None):
+                return {"memory": "2.00 GB / 4.00 GB"}
+
+        snap = Fetch([MemProvider()]).snapshot()
+        self.assertEqual(snap["memory"], "2.00 GB / 4.00 GB")
+        self.assertEqual(snap["mem"], "2.00 GB / 4.00 GB")
+
+    @patch("fetch_cord.fetch.run_command")
+    def test_fastfetch_drops_pythonish_terminal(self, mock_run):
+        from fetch_cord.fetch import FastfetchProvider
+
+        mock_run.return_value = json.dumps(
+            [
+                {"type": "OS", "result": {"prettyName": "Debian GNU/Linux"}},
+                {"type": "Terminal", "result": {"prettyName": "python"}},
+                {"type": "Shell", "result": {"prettyName": "hermes"}},
+            ]
+        )
+        fields = FastfetchProvider().fetch()
+        self.assertEqual(fields["os"], "Debian GNU/Linux")
+        self.assertNotIn("terminal", fields)
+        self.assertNotIn("shell", fields)
 
 
 class TestTools(unittest.TestCase):

@@ -12,6 +12,10 @@ from fetch_cord.info import FASTFETCH_MODULES, parse_fastfetch_json
 from fetch_cord.native import native as native_module
 from fetch_cord.tools import BashError, exec_bash, exec_ps1, run_command
 
+# Fastfetch reports the Python interpreter (or this app's process) as the
+# terminal/shell when FetchCord is launched as `python -m fetch_cord`.
+_PYTHONISH_PROCESS = re.compile(r"^(python\d*(\.\d+)?|hermes)$", re.I)
+
 
 def get_infos(name: str) -> dict[str, list[str]]:
     """Load a component-id database (e.g. ``cpus.json``) from the package data."""
@@ -22,15 +26,23 @@ def get_infos(name: str) -> dict[str, list[str]]:
 
 def get_component_id(search: str, id_list: dict[str, list[str]]) -> str:
     for id, patterns in id_list.items():
+        if not isinstance(patterns, list):
+            continue
         if any(re.search(pattern, search) for pattern in patterns):
             return id
 
-    print(f"Warning: No match found for '{search}' in the provided patterns: {id_list}")
+    print(f"Warning: No match found for '{search}'")
     for id, patterns in id_list.items():
-        if "unknown" in patterns:
+        if isinstance(patterns, list) and "unknown" in patterns:
             return id
 
     return "unknown"
+
+
+def _looks_like_python_process(value: str) -> bool:
+    base = value.strip().split()[0]
+    base = base.rsplit("/", 1)[-1]
+    return bool(_PYTHONISH_PROCESS.match(base))
 
 
 class FieldProvider(Protocol):
@@ -65,7 +77,15 @@ class FastfetchProvider:
             )
         except FileNotFoundError:
             return {}
-        return parse_fastfetch_json(raw)
+        fields = parse_fastfetch_json(raw)
+        # Drop interpreter-as-terminal so CommandProvider can use $TERM_PROGRAM.
+        for key in ("terminal", "shell"):
+            value = fields.get(key)
+            if value and _looks_like_python_process(value):
+                del fields[key]
+        if skip:
+            return {k: v for k, v in fields.items() if k not in skip}
+        return fields
 
 
 class CommandProvider:
@@ -133,6 +153,9 @@ class Fetch:
         for provider in self.providers:
             for field, value in provider.fetch(skip=set(data)).items():
                 data.setdefault(field, value)
+        # Hardware cycle reads `mem`; fastfetch emits `memory`.
+        if "memory" in data and "mem" not in data:
+            data["mem"] = data["memory"]
         self._cache = data
         return data
 

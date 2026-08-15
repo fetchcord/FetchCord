@@ -2,7 +2,8 @@
 
 fastfetch prints a JSON array where each element is either
 `{"type": "ModuleName", "result": {...}}` or, on failure,
-`{"type": "ModuleName", "error": "..."}`.
+`{"type": "ModuleName", "error": "..."}`. GPU (and some other modules)
+return `result` as a list of objects.
 
 This module turns that into a flat `{field: display_string}` mapping, which is
 what FetchCord renders into Rich Presence. Parsing structured data once is far
@@ -38,6 +39,19 @@ def _first_text(result: dict[str, Any]) -> str:
     return ""
 
 
+def _coerce_results(result: Any) -> list[dict[str, Any]]:
+    """Normalize a module result to a list of dicts (GPU is a list)."""
+    if isinstance(result, dict):
+        return [result]
+    if isinstance(result, list):
+        return [item for item in result if isinstance(item, dict)]
+    return []
+
+
+def _format_gpu(result: dict[str, Any]) -> str:
+    return result.get("name") or result.get("gpu") or _first_text(result)
+
+
 def _format_module(module_type: str, result: dict[str, Any]) -> str:
     """Render one fastfetch module result as a display string."""
     if module_type == "OS":
@@ -47,7 +61,10 @@ def _format_module(module_type: str, result: dict[str, Any]) -> str:
         return result.get("release") or result.get("name") or ""
 
     if module_type == "CPU":
-        return result.get("cpu") or _first_text(result)
+        return result.get("cpu") or result.get("name") or _first_text(result)
+
+    if module_type == "GPU":
+        return _format_gpu(result)
 
     if module_type == "Memory":
         used = int(result.get("used") or 0)
@@ -81,11 +98,15 @@ def parse_fastfetch_json(raw: str) -> dict[str, str]:
         module_type = entry.get("type", "")
         if not isinstance(module_type, str) or "error" in entry:
             continue
-        result = entry.get("result")
-        if not isinstance(result, dict):
+        items = _coerce_results(entry.get("result"))
+        if not items:
             continue
 
-        value = _format_module(module_type, result)
+        if module_type == "GPU":
+            names = [name for name in (_format_gpu(item) for item in items) if name]
+            value = " / ".join(names)
+        else:
+            value = _format_module(module_type, items[0])
         if value:
             fields[module_type.lower()] = value
 

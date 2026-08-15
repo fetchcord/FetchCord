@@ -54,8 +54,10 @@ Changelog = "https://github.com/fetchcord/FetchCord/releases"
 fetchcord = "fetch_cord.__main__:main"
 
 [tool.setuptools]
-packages = ["fetch_cord"]
 include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["fetch_cord*"]
 
 [tool.setuptools.package-data]
 fetch_cord = [

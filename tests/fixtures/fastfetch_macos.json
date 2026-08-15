@@ -25,9 +25,13 @@
   },
   {
     "type": "GPU",
-    "result": {
-      "gpu": "Apple M4 Pro"
-    }
+    "result": [
+      {
+        "name": "Apple M4 Pro",
+        "vendor": "Apple",
+        "type": "Discrete"
+      }
+    ]
   },
   {
     "type": "Memory",
