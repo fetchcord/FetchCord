@@ -40,7 +40,7 @@ commands:
 
       # Convert values to GB
       TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024}")
-      AvailableMemory=$(awk "BEGIN {print $AvailableMemory / 1024 / 1024}")
+      AvailableMemory=$(awk "BEGIN {printf \"%.2f\", $AvailableMemory / 1024 / 1024}")
 
       # Calculate used memory
       UsedMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory - $AvailableMemory}")
@@ -62,7 +62,7 @@ commands:
 
       # Convert values to GB
       TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024 / 1024}")
-      AvailableMemory=$(awk "BEGIN {print $AvailableMemory / 1024 / 1024 / 1024}")
+      AvailableMemory=$(awk "BEGIN {printf \"%.2f\", $AvailableMemory / 1024 / 1024 / 1024}")
 
       # Calculate used memory
       UsedMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory - $AvailableMemory}")
@@ -108,7 +108,7 @@ commands:
     Windows: |
       Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
     Linux: &motherboard_sh |
-      cat /sys/devices/virtual/dmi/id/board_{vendor,name} | xargs
+      cat /sys/devices/virtual/dmi/id/board_vendor /sys/devices/virtual/dmi/id/board_name | xargs
     Darwin: |
       model_name=$(system_profiler SPHardwareDataType 2>/dev/null | awk -F: '/Model Name/ {print $2}')
       model_identifier=$(system_profiler SPHardwareDataType 2>/dev/null | awk -F: '/Model Identifier/ {print $2}')

@@ -13,6 +13,7 @@ import subprocess
 import sys
 import unittest
 from threading import Event
+from typing import Any
 from unittest.mock import MagicMock, mock_open, patch
 
 
@@ -681,6 +682,35 @@ class TestIntegration(unittest.TestCase):
         self.assertEqual(snap["os"], "Debian GNU/Linux")
         self.assertEqual(snap["kernel"], "6.8.0")
         self.assertEqual(snap["system_type"], "Desktop")
+
+
+class TestFetchcordCmds(unittest.TestCase):
+    """CommandProvider scripts in fetchcord_cmds.yml must be POSIX /bin/sh."""
+
+    commands: dict[str, Any]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        from fetch_cord.config import Config
+
+        cls.commands = Config("fetchcord_cmds.yml")["commands"]
+
+    def test_linux_motherboard_uses_explicit_dmi_paths(self) -> None:
+        linux = self.commands["motherboard"]["Linux"]
+        self.assertNotIn("board_{vendor,name}", linux)
+        self.assertIn("/sys/devices/virtual/dmi/id/board_vendor", linux)
+        self.assertIn("/sys/devices/virtual/dmi/id/board_name", linux)
+
+    def test_mem_available_uses_fixed_precision(self) -> None:
+        for script in (self.commands["mem"]["Linux"], self.commands["mem"]["Darwin"]):
+            lines = [
+                line.strip()
+                for line in script.splitlines()
+                if line.strip().startswith("AvailableMemory=$(awk")
+            ]
+            self.assertEqual(len(lines), 1, script)
+            self.assertIn("printf", lines[0])
+            self.assertIn("%.2f", lines[0])
 
 
 if __name__ == "__main__":
