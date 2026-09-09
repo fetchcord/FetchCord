@@ -1,0 +1,162 @@
+---
+commands:
+  cpu:
+    Windows: |
+      Get-WmiObject -Class Win32_Processor | Select-Object -Property Name | ForEach-Object {$_.Name}
+    Linux: &cpu_sh |
+      lscpu | grep "Model name:" | cut -d: -f2 | xargs
+    Darwin: |
+      sysctl -n machdep.cpu.brand_string
+  gpu:
+    Windows: |
+      Get-WmiObject Win32_VideoController | Select-Object Name | ForEach-Object {$_.Name}
+    Linux: |
+      lspci -mm | grep -e 3D -e VGA | cut -d " " -f1 --complement | sed 's/[^"]*"\([^"]*\)"/"\1" /g' | python3 -c "import sys; print('\"' + '\" \"'.join([part for part in sys.stdin.read().strip().split('\"') if part.strip()][-2:]) + '\"')" | sed -e 's/" "/\t/g' -e 's/\"//g' | xargs
+    Darwin: |
+      system_profiler SPDisplaysDataType | grep 'Chipset Model' | xargs| cut -d " " -f3- | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1-
+  mem:
+    Windows: |
+      # Get total physical memory (in bytes)
+      $TotalMemory = (Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory
+
+      # Get available physical memory (in bytes)
+      $AvailableMemory = (Get-CimInstance -ClassName Win32_PerfFormattedData_PerfOS_Memory).AvailableBytes
+
+      # Convert values to GB
+      $TotalMemory = [int64]$TotalMemory/1024/1024/1024
+      $AvailableMemory = [int64]$AvailableMemory/1024/1024/1024
+
+      # Calculate used memory
+      $UsedMemory = $TotalMemory - $AvailableMemory
+
+      # Output used and total memory in GB
+      Write-Output ("{0:N2} GB / {1:N2} GB" -f $UsedMemory, $TotalMemory)
+    Linux: &mem_sh |
+      # Get total physical memory (in bytes)
+      TotalMemory=$(cat /proc/meminfo | grep MemTotal | awk '{print $2}')
+
+      # Get available physical memory (in bytes)
+      AvailableMemory=$(cat /proc/meminfo | grep MemAvailable | awk '{print $2}')
+
+      # Convert values to GB
+      TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024}")
+      AvailableMemory=$(awk "BEGIN {printf \"%.2f\", $AvailableMemory / 1024 / 1024}")
+
+      # Calculate used memory
+      UsedMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory - $AvailableMemory}")
+
+      # Output used and total memory in GB
+      echo "$UsedMemory GB / $TotalMemory GB"
+    Darwin: |
+      # Get total physical memory (in bytes)
+      TotalMemory=$(sysctl -n hw.memsize)
+
+      # Get free memory in pages
+      FreePages=$(vm_stat | grep 'Pages free:' | awk '{print $3}' | sed 's/\.//')
+
+      # Get the page size in bytes (usually 4096)
+      PageSize=$(vm_stat | grep 'page size of' | awk '{print $8}')
+
+      # Calculate free memory in bytes
+      AvailableMemory=$(($FreePages * $PageSize))
+
+      # Convert values to GB
+      TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024 / 1024}")
+      AvailableMemory=$(awk "BEGIN {printf \"%.2f\", $AvailableMemory / 1024 / 1024 / 1024}")
+
+      # Calculate used memory
+      UsedMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory - $AvailableMemory}")
+
+      # Output used and total memory in GB
+      echo "$UsedMemory GB / $TotalMemory GB"
+  kernel:
+    Windows: |
+      Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object Version | ForEach-Object {$_.Version}
+    Linux: &kernel_sh |
+      uname -r
+    Darwin: *kernel_sh
+  packages:
+    Linux: |
+      if command -v dpkg-query >/dev/null 2>&1; then
+        dpkg-query -f '${Status}\n' -W 2>/dev/null | grep -c 'install ok installed'
+      elif command -v pacman >/dev/null 2>&1; then
+        pacman -Qq 2>/dev/null | wc -l
+      elif command -v rpm >/dev/null 2>&1; then
+        rpm -qa 2>/dev/null | wc -l
+      elif command -v apk >/dev/null 2>&1; then
+        apk info 2>/dev/null | wc -l
+      fi
+    Darwin: |
+      n=0
+      command -v brew >/dev/null 2>&1 && n=$((n + $(brew list --formula 2>/dev/null | wc -l)))
+      echo "$n"
+  os:
+    Windows: |
+      Get-CimInstance Win32_OperatingSystem | Select-Object Caption | ForEach-Object {$_.Caption}
+    Linux: |
+      if [ -f /etc/os-release ]; then . /etc/os-release; echo "$PRETTY_NAME"; else uname -s; fi
+    Darwin: |
+      echo "$(sw_vers -productName) $(sw_vers -productVersion)"
+  host:
+    Windows: |
+      Get-WmiObject Win32_BaseBoard | Select-Object Product | ForEach-Object {$_.Product}
+    Linux: |
+      cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null
+    Darwin: |
+      sysctl -n hw.model
+  motherboard:
+    Windows: |
+      Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
+    Linux: &motherboard_sh |
+      cat /sys/devices/virtual/dmi/id/board_vendor /sys/devices/virtual/dmi/id/board_name | xargs
+    Darwin: |
+      model_name=$(system_profiler SPHardwareDataType 2>/dev/null | awk -F: '/Model Name/ {print $2}')
+      model_identifier=$(system_profiler SPHardwareDataType 2>/dev/null | awk -F: '/Model Identifier/ {print $2}')
+
+      echo "${model_name} ${model_identifier}" | xargs
+  resolution:
+    Windows: |
+      Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth.ToString() + 'x' + $_.ScreenHeight.ToString() }
+    Linux: &resolution_sh |
+      xdpyinfo | awk '/dimensions/ {print $2}'
+    Darwin: |
+      system_profiler SPDisplaysDataType 2>/dev/null | awk '/Resolution:/ {print $2"x"$4; exit}'
+  system_type:
+    Windows: |
+      Get-CimInstance Win32_Battery | Select-Object BatteryStatus | ForEach-Object {$_.BatteryStatus}
+    Linux: &battery_sh |
+      if ls /sys/class/power_supply/ | grep -qi battery; then echo "laptop"; else echo "desktop"; fi
+    Darwin: |
+      if pmset -g batt | grep -qi battery; then echo "laptop"; else echo "desktop"; fi
+  shell:
+    Windows: |
+      Write-Host "PowerShell $(($PSVersionTable).PSVersion)"
+    Linux: |
+      echo "$(basename "${SHELL:-/bin/sh}")"
+    Darwin: |
+      echo "$(basename "${SHELL:-/bin/zsh}")"
+  font:
+    Windows: |
+      $Font = (Get-ItemProperty -Path "HKCU:\Console").FaceName
+
+      if ($Font -eq "__DefaultTTFont__") {
+          $RegistryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console\TrueTypeFont"
+          $DefaultFont = (Get-ItemProperty -Path $RegistryPath).00
+          Write-Host "$DefaultFont"
+      }
+      else {
+          Write-Host "$Font"
+      }
+    Linux: |
+      fc-match monospace 2>/dev/null | sed 's/:.*//' || true
+    Darwin: |
+      true
+  terminal:
+    Windows: |
+      $host.Name
+    Linux: |
+      term="${TERM_PROGRAM:-${TERMINAL:-$TERM}}"
+      echo "${term%.app}"
+    Darwin: |
+      term="${TERM_PROGRAM:-$TERM}"
+      echo "${term%.app}"

@@ -4,8 +4,8 @@
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
        <img src="https://img.shields.io/badge/Compatible-MacOS%2FLinux%2FWindows%2F-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white">
     </a>
-  <a href="https://www.python.org/downloads/">
-       <img src="https://img.shields.io/pypi/pyversions/django?color=dark%20green&logo=python&logoColor=white&style=for-the-badge">
+    <a href="https://www.python.org/downloads/">
+       <img src="https://img.shields.io/badge/python-3.12+-blue.svg?style=for-the-badge&logo=python&logoColor=white">
     </a>
    <a href="https://discord.gg/P4h9kdV">
        <img src="https://img.shields.io/discord/742068289278312549?label=Discord&logo=discord&logoColor=white&style=for-the-badge">
@@ -13,31 +13,29 @@
     <a href="https://img.shields.io/badge/Compatible-MacOS%2FWindows%2FLinux-brightgreen?style=for-the-badge&logo=discord">
        <img src="https://cdn.discordapp.com/attachments/695182849476657223/742064452421288077/FetchDis.png"
     </a>
-  
   </a>
 </p>
 
 # Table of content
+
 - [**Features**](#features)
 - [**To-Do**](#to-do)
-+ **Installing**
-    - [Install on (gnu/)linux](#installing-on-gnulinux)
-    - [Install on MacOS](#installing-on-macos)
-    - [Install on Windows](#installing-on-windows)
- + **Running**
-    - [Running on (gnu/)linux](#run)
-    - [Running on MacOS](#run-1)
-    - [Running on Windows](#run-2)
-- [**Configuration**](#Configuration)
+- **Installing**
+  - [Install on (gnu/)linux](#installing-on-gnulinux)
+  - [Install on MacOS](#installing-on-macos)
+  - [Install on Windows](#installing-on-windows)
+- **Running**
+  - [Running on (gnu/)linux](#run-on-linux)
+  - [Running on MacOS](#run-on-macos)
+  - [Running on Windows](#run-on-windows)
+- [**Configuration**](#configuration)
 - [**Arguments**](#arguments)
 - [**Website**](#website)
 
-+ [**Examples**](#examples)
-
-### Features
+## Features
 
 - [x] Distribution detection
- 
+
 - [x] Distribution Version
 
 - [x] Package detection
@@ -48,11 +46,9 @@
 
 - [x] Detecting Window Manager/Desktop Environment
 
-- [x] Detecting GPU/CPU and display it in a cycle (thanks to Hyper-KVM)
+- [x] Detecting GPU/CPU and display it in a cycle
 
 - [x] Flatpak support
-
-- [x] Add Snap support
 
 - [x] Add Windows support.
 
@@ -60,8 +56,11 @@
 
 - [x] Periodic polling of info such as package count, RAM usage, etc.
 
+## To be tested
 
-### To-Do
+- [ ] Snap support
+
+## To-Do
 
 - [ ] Add more distributions (If your distro is not supported open an issue)
 
@@ -71,70 +70,129 @@
 
 - [ ] More GPUs?
 
-
 ## Installing on (GNU/)Linux
-NOTE: you need neofetch to be also installed for this to work.
-#### Via AUR
+
+**Requirements: Python 3.12+ and fastfetch**
+
+### Via pip
+
+PyPI still serves FetchCord 2.7.7 (neofetch). 3.0.0 is not published there yet.
+
+Until the 3.0.0 tag is on PyPI, install from GitHub:
+
+```bash
+pipx install "git+https://github.com/fetchcord/FetchCord.git@testing"
+# or, in a venv:
+pip install "git+https://github.com/fetchcord/FetchCord.git@testing"
+```
+
+Debian/Ubuntu 24.04+ distro pip is externally managed; use `pipx` or a venv, not `sudo pip`.
+
+To remove: `pipx uninstall fetchcord` or `pip uninstall fetchcord`.
+
+### Via AUR
+
 On Arch Linux for the git testing version (the less stable version): [fetchcord-testing](https://aur.archlinux.org/packages/fetchcord-testing/)
 
 And the git version (synced with master): [fetchcord](https://aur.archlinux.org/packages/fetchcord/)
 
-Historically the stabler release was the one from [pip](#via-pip) but now master will have only the stable releases.
-#### Via Snap
-On systems with snap installed, you can run `sudo snap install fetchcord --classic` to install fetchcord.
+### Via Snap
 
-Note that like the AUR version, this version is directly from master, for the stable release use [pip](#via-pip) <!-- remove this if you're not automatically deploying it -->
-#### Via pip
-To Install fetchcord via pip you can run `pip3 install fetchcord`
+The Snap is **not a 3.0 install path**. It still tracks an older classic/core18 build. Use pipx/venv or Homebrew instead.
 
-If you want to remove FetchCord you can run `pip3 uninstall fetchcord`
-
-### Run
+### Run on Linux
 
 Once installed, simply run `fetchcord`. The program is also daemonizable meaning you can start it on boot using any method you prefer.
 
-If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PATH"` to your bashrc, or just run `python3 -m fetchcord`.
+If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PATH"` to your bashrc, or just run `python3 -m fetch_cord`.
 
 Optionally for systemd users there is a user-side `fetchcord.service` in this repo that can be installed to `~/.local/share/systemd/user/`, started and enabled on boot using `systemctl --user enable --now fetchcord`.
 
 ## Installing on MacOS
 
-To install FetchCord, run `pip3 install FetchCord`
+**Requirements: Python 3.12+ and fastfetch**
 
-NOTE: you need neofetch to be also installed for this to work.
+### Via Homebrew (recommended)
 
-### Run 
+The live tap still points at 2.7.7. For FetchCord 3, install HEAD from this formula:
 
-simply run `fetchcord`
+```bash
+brew tap fetchcord/fetchcord
+brew install --HEAD fetchcord
+```
+
+That pulls in `fastfetch` and Python 3.12. After the v3.0.0 tag, `brew install fetchcord` (no `--HEAD`) will work once the tap updater fills `url`/`sha256`.
+
+To test locally:
+
+```bash
+brew install --HEAD --build-from-source ./Formula/fetchcord.rb
+```
+
+### Via pip
+
+Same as Linux: 3.0 is not on PyPI yet.
+
+```bash
+pipx install "git+https://github.com/fetchcord/FetchCord.git@testing"
+```
+
+### Uninstall
+
+```bash
+brew uninstall fetchcord
+# or, if installed via pip
+pip3 uninstall fetchcord
+```
+
+### Run on MacOS
+
+Once installed, simply run `fetchcord`. The program is also daemonizable meaning you can start it on boot using any method you prefer.
+
+If you get `fetchcord: command not found`,add `export PATH="$HOME/.local/bin:$PATH"` to your zshrc, or just run `python3 -m fetch_cord`.
 
 ## Installing on Windows
 
-To install fetchcord on Windows run `python -m pip install fetchcord neofetch-win`. Alternatively, you can use the neofetch package from scoop as well (show more info at the expense of possible GPU detection, for now).
+**Requirements: Python 3.12+**
 
-### Run
+3.0 is not on PyPI yet. In a venv:
+
+```
+python -m pip install "git+https://github.com/fetchcord/FetchCord.git@testing"
+```
+
+Windows builds of `FetchCord.exe` are attached to GitHub Releases once `v3.0.0` is tagged.
+
+### Run on Windows
+
 To run Fetchcord run `fetchcord`
 
-### Configuration
+If you get `fetchcord: command not found`, add your python scripts folder to your PATH or use `python3 -m fetch_cord`.
 
-On Linux you can use the neofetch config file to:
+## What's New in 3.0.0
 
-Show disk usage
+### Breaking Changes
+- **Python 3.12+ is now required** (dropped support for older versions)
+- Migrated from `neofetch` to `fastfetch` for system info detection
+- Complete architecture rewrite with new module structure
 
-Battery level
+### New Features
+- **Improved Security**: Input validation and sanitized shell commands
+- **Better Performance**: Refactored code with constants and reduced duplication
+- **Modern Python**: Using Python 3.12+ features (union types with `|`, better type hints)
+- **Better Packaging**: Added `pyproject.toml` for modern Python packaging
+- **Comprehensive Tests**: pytest suite plus a real fastfetch CI smoke job
 
-CPU temp
-
-Current CPU speed
-
-Font
-
-Theme
-
-And more
-
-default config path should be `~/.config/neofetch/config.conf`
+### Architecture Changes
+The codebase has been completely rewritten with a modular architecture:
+- **Config**: YAML configuration management
+- **Cycle**: Discord Rich Presence cycle handling
+- **Fetch**: System information fetching with fastfetch
+- **Tools**: Utility functions for command execution
+- **Constants**: Centralized configuration values
 
 ## Arguments
+
 --nodistro, Don't show distro info.
 
 --nohardware, Don't show hardware info.
@@ -145,19 +203,29 @@ default config path should be `~/.config/neofetch/config.conf`
 
 --time, -t, set custom duration for cycles in seconds.
 
---terminal, set custom terminal (useful if using a script or dmenu).
+--install, Install fetchcord as a systemd service and enable it.
 
---termfont, set custom terminal font (useful if neofetch can't get it).
+--uninstall, Uninstall fetchcord systemd service.
 
---pause-cycle, Extra cycle that pauses FetchCord to show other activities.
+--enable, Enable fetchcord systemd service.
+
+--disable, Disable fetchcord systemd service.
+
+--start, Start fetchcord systemd service.
+
+--stop, Stop fetchcord systemd service.
+
+--status, Check fetchcord systemd service status.
 
 --update, Update database of distros, hardware, etc.
 
---debug, For debug logs.
+--testing, Get files from testing branch (for development).
 
---memtype, use GB or MB to show RAM.
+--debug, -d, Enable debugging output.
 
--h or --help, shows this information above.
+--version, -v, Print FetchCord version.
+
+-h or --help, Show help message.
 
 ## Website
 
@@ -166,10 +234,17 @@ Fetchcord now has a website! You can find this site over at https://fetchcord.gi
 ## Examples
 
 ### Operating Systems
+
 ![MacOS bigsur](Examples/mac.png) ![Windows 10](Examples/windows.png) ![Ubuntu](Examples/ubuntu.png)
+
 ### Terminals
+
 ![Konsole](Examples/konsole.png) ![Gnome terminal](Examples/gnometerm.png) ![Apple terminal](Examples/appleterm.png)
+
 ### Cpus
+
 ![Ryzen 9](Examples/ryzencpu.png) ![Intel i7](Examples/intelcpu.png) ![Intel pentium](Examples/pent.png)
+
 ### Hosts
+
 ![HP laptop](Examples/hp.png) ![TUF gaming laptop](Examples/tuf.png) ![Lenovo desktop](Examples/len.png)

@@ -1,0 +1,27 @@
+---
+cycle_time: &cycle_time 30
+cycles:
+  - name: os
+    app_id: os
+    top_line: kernel
+    bottom_line: packages
+    small_icon: system_type
+    time: *cycle_time
+  - name: hardware
+    app_id: cpu
+    top_line: mem
+    bottom_line: gpu
+    small_icon: gpu
+    time: *cycle_time
+  - name: shell
+    app_id: terminal
+    top_line: font
+    bottom_line: shell
+    small_icon: shell
+    time: *cycle_time
+  - name: host
+    app_id: motherboard
+    top_line: motherboard
+    bottom_line: resolution
+    small_icon: system_type
+    time: *cycle_time

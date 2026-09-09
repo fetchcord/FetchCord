@@ -1,23 +1,24 @@
 name: fetchcord
-version: git # By specifying git for the version, the current git tag or commit will be used as the version string. Versions carry no semantic meaning in snaps. This can be changed to a normal version number if desired.
+version: git
 summary: FetchCord
-grade: stable
+grade: devel
 description: |
-  FetchCord grabs your OS info and displays it as Discord Rich Presence
-base: core18
+  FetchCord grabs your OS info and displays it as Discord Rich Presence.
+
+  The Snap package is unmaintained for 3.0 (classic confinement + core18
+  cannot ship Python 3.12). Prefer pip or Homebrew. This file is kept so
+  existing snap listings do not break the repo layout.
+base: core24
 confinement: classic
 
 parts:
   fetchcord:
     plugin: python
-    python-version: python3
     source: .
-    stage-packages:
-      - neofetch
     python-packages:
       - pypresence
       - psutil
-      - importlib-resources
+      - PyYAML
 
 apps:
   fetchcord:

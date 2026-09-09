@@ -99,7 +99,7 @@ celerybeat-schedule
 
 # Environments
 .env
-.venv
+.venv*/
 env/
 venv/
 ENV/
@@ -139,3 +139,6 @@ samples
 
 # Snap
 *.snap
+
+# Sisyphus workflow metadata
+.sisyphus/

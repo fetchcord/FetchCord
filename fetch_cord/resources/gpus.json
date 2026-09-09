@@ -1,0 +1,44 @@
+{
+    "amd": [
+        "(?i)amd",
+        "(?i)radeon"
+    ],
+    "nvidia": [
+        "(?i)nvidia",
+        "(?i)geforce"
+    ],
+    "intel": [
+        "(?i)intel"
+    ],
+    "apple": [
+        "(?i)apple",
+        "(?i)m1",
+        "(?i)m2",
+        "(?i)m3",
+        "(?i)m4"
+    ],
+    "vmware": [
+        "(?i)vmware"
+    ],
+    "virtio": [
+        "(?i)virtio"
+    ],
+    "cirrus": [
+        "(?i)cirrus"
+    ],
+    "nvidiaamd": [
+        "nvidiaamd",
+        "amdnvidia"
+    ],
+    "amdintel": [
+        "amdintel",
+        "intelamd"
+    ],
+    "nvidiaintel": [
+        "nvidiaintel",
+        "intelnvidia"
+    ],
+    "off": [
+        "unknown"
+    ]
+}

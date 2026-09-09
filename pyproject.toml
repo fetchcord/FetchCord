@@ -1,0 +1,147 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "FetchCord"
+version = "3.0.0"
+description = "Display system information as Discord Rich Presence"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+keywords = ["distro", "info", "discord", "fetch", "rich-presence"]
+authors = [
+    {name = "FetchCord team", email = "contact@fetchcord.org"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: System :: Monitoring",
+    "Topic :: Utilities",
+]
+
+dependencies = [
+    "pypresence>=4.6.2",
+    "psutil>=7.2.2",
+    "pyyaml>=6.0.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "black>=26.5.1",
+    "ruff>=0.16.3",
+    "mypy>=2.3.0",
+    "types-psutil>=7.2.2",
+    "types-PyYAML>=6.0.12",
+]
+
+[project.urls]
+Homepage = "https://github.com/fetchcord/FetchCord"
+Documentation = "https://github.com/fetchcord/FetchCord#readme"
+Repository = "https://github.com/fetchcord/FetchCord.git"
+Issues = "https://github.com/fetchcord/FetchCord/issues"
+Changelog = "https://github.com/fetchcord/FetchCord/releases"
+
+[project.scripts]
+fetchcord = "fetch_cord.__main__:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["fetch_cord*"]
+
+[tool.setuptools.package-data]
+fetch_cord = [
+    "resources/*.yml",
+    "resources/*.py",
+    "resources/*.json",
+    "native/**/*.py",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "E501",  # Line too long (handled by black)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S"]  # Don't check security in tests
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+# winreg is Windows-only; mypy has no usable stubs for it on Linux.
+[[tool.mypy.overrides]]
+module = "fetch_cord.native.Windows.packages"
+disable_error_code = ["attr-defined"]
+
+# pypresence ships py.typed but with incomplete annotations; the calls in
+# cycle.py (connect/close/update) are untyped in the upstream library.
+[[tool.mypy.overrides]]
+module = "fetch_cord.cycle"
+disable_error_code = ["no-untyped-call"]
+
+# Tests lean heavily on unittest.mock; be pragmatic about strict typing there
+# (production code is still fully strict).
+[[tool.mypy.overrides]]
+module = [
+    "test_fetch_cord",
+    "test_more",
+    "test_presence",
+    "test_fixtures",
+    "test_update_formula",
+]
+disallow_untyped_defs = false
+disallow_any_generics = false
+check_untyped_defs = false
+disable_error_code = ["no-untyped-call", "method-assign"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+pythonpath = ["."]

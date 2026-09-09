@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-wheel:
+    name: Build wheel & sdist
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade pip build
+
+      - name: Build wheel and sdist
+        run: python -m build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-dist
+          path: dist/
+
+  build-windows-exe:
+    name: Build Windows exe
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies and PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install -e "."
+
+      - name: Build exe
+        run: pyinstaller --noconfirm fetchcord.spec
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-exe
+          path: dist/*.exe
+
+  publish:
+    name: Publish GitHub Release
+    needs: [build-wheel, build-windows-exe]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      # Attaches the wheel, sdist and Windows exe to the git tag's Release.
+      # (To also publish to PyPI, add a pypi/ environment and enable trusted
+      # publishing, then uncomment the block below.)
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/wheel-dist/*
+            artifacts/windows-exe/*
+
+      # Optional PyPI publishing via trusted publishing (OpenID Connect).
+      # Requires: PyPI project named `fetchcord` + a GitHub Actions environment
+      # called `pypi` in repository settings.
+      # - name: Publish to PyPI
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     environment: pypi
+      #     packages-dir: artifacts/wheel-dist

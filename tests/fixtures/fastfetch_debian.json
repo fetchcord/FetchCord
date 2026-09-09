@@ -1,0 +1,100 @@
+[
+  {
+    "type": "OS",
+    "result": {
+      "buildID": "",
+      "codename": "trixie",
+      "id": "debian",
+      "idLike": "",
+      "name": "Debian GNU/Linux",
+      "prettyName": "Debian GNU/Linux 13.4 (trixie)",
+      "variant": "",
+      "variantID": "",
+      "version": "13 (trixie)",
+      "versionID": "13.4"
+    }
+  },
+  {
+    "type": "Kernel",
+    "result": {
+      "architecture": "x86_64",
+      "name": "Linux",
+      "release": "6.12.91-fly",
+      "version": "#1 SMP PREEMPT_DYNAMIC Thu Jun 25 02:49:32 UTC 2026",
+      "pageSize": 4096
+    }
+  },
+  {
+    "type": "CPU",
+    "result": {
+      "cpu": "AMD EPYC",
+      "vendor": "AuthenticAMD",
+      "packages": 1,
+      "cores": {
+        "physical": 2,
+        "logical": 2,
+        "online": 2
+      },
+      "frequency": {
+        "base": 2500,
+        "max": 0
+      },
+      "coreTypes": [],
+      "temperature": null,
+      "march": "x86_64-v3",
+      "numaNodes": 1,
+      "codeName": null,
+      "technology": null
+    }
+  },
+  {
+    "type": "GPU",
+    "error": "GPU detection failed"
+  },
+  {
+    "type": "Memory",
+    "result": {
+      "total": 1008582656,
+      "used": 865644544
+    }
+  },
+  {
+    "type": "Packages",
+    "result": {
+      "all": 432,
+      "dpkg": 432
+    }
+  },
+  {
+    "type": "Shell",
+    "result": {
+      "exe": "/usr/bin/bash",
+      "exeName": "bash",
+      "exePath": "/usr/bin/bash",
+      "pid": 7458,
+      "ppid": 153,
+      "processName": "bash",
+      "prettyName": "bash",
+      "version": "5.2.37",
+      "tty": 0
+    }
+  },
+  {
+    "type": "Terminal",
+    "result": {
+      "processName": "hermes",
+      "exe": "/opt/hermes/.venv/bin/hermes",
+      "exeName": "hermes",
+      "exePath": "/usr/bin/python3.13",
+      "pid": 153,
+      "ppid": 24,
+      "prettyName": "hermes",
+      "version": "",
+      "tty": ""
+    }
+  },
+  {
+    "type": "Font",
+    "error": "Font isn't supported in TTY"
+  }
+]

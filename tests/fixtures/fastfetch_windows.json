@@ -1,0 +1,59 @@
+[
+  {
+    "type": "OS",
+    "result": {
+      "name": "Microsoft Windows 11 Pro",
+      "prettyName": "Windows 11 Pro",
+      "version": "23H2",
+      "id": "win32"
+    }
+  },
+  {
+    "type": "Kernel",
+    "result": {
+      "name": "Windows",
+      "release": "10.0.22631"
+    }
+  },
+  {
+    "type": "CPU",
+    "result": {
+      "cpu": "AMD Ryzen 7 7800X3D"
+    }
+  },
+  {
+    "type": "GPU",
+    "result": [
+      {
+        "name": "NVIDIA GeForce RTX 4080",
+        "vendor": "NVIDIA",
+        "type": "Discrete"
+      }
+    ]
+  },
+  {
+    "type": "Memory",
+    "result": {
+      "total": 34359738368,
+      "used": 16106127360
+    }
+  },
+  {
+    "type": "Packages",
+    "result": {
+      "all": 120
+    }
+  },
+  {
+    "type": "Shell",
+    "result": {
+      "prettyName": "PowerShell"
+    }
+  },
+  {
+    "type": "Terminal",
+    "result": {
+      "prettyName": "Windows Terminal"
+    }
+  }
+]

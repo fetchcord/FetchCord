@@ -1,0 +1,44 @@
+{
+    "kde": [
+        "(?i)kde"
+    ],
+    "plasma": [
+        "(?i)plasma"
+    ],
+    "xfce": [
+        "(?i)xfce"
+    ],
+    "mate": [
+        "(?i)mate"
+    ],
+    "budgie": [
+        "(?i)budgie"
+    ],
+    "gnome": [
+        "(?i)gnome"
+    ],
+    "cinnamon": [
+        "(?i)cinnamon"
+    ],
+    "aero": [
+        "(?i)aero"
+    ],
+    "pantheon": [
+        "(?i)pantheon"
+    ],
+    "explorer": [
+        "(?i)explorer"
+    ],
+    "lxde": [
+        "(?i)lxde"
+    ],
+    "lxqt": [
+        "(?i)lxqt"
+    ],
+    "unity": [
+        "(?i)unity"
+    ],
+    "deepin": [
+        "(?i)deepin"
+    ]
+}

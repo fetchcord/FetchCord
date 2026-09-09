@@ -1,4 +1,1 @@
-include *.py
-include */*.py
-include */*/*.py
-include */*/*/*.py
+recursive-include fetch_cord/resources *.yml *.json

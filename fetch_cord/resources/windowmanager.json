@@ -1,0 +1,32 @@
+{
+    "dwm": [
+        "(?i)dwm"
+    ],
+    "i3": [
+        "(?i)i3"
+    ],
+    "awesome": [
+        "(?i)awesome"
+    ],
+    "enlightenment": [
+        "(?i)enlightenment"
+    ],
+    "bspwm": [
+        "(?i)bspwm"
+    ],
+    "xmonad": [
+        "(?i)xmonad"
+    ],
+    "sway": [
+        "(?i)sway"
+    ],
+    "openbox": [
+        "(?i)openbox"
+    ],
+    "herbstluftwm": [
+        "(?i)herbstluftwm"
+    ],
+    "unknown": [
+        "unknown"
+    ]
+}

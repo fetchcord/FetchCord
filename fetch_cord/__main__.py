@@ -1,26 +1,44 @@
 # from __future__ import annotations
 
-from typing import Dict
-import sys, os
+import argparse
+import os
+import platform
+import sys
+from signal import SIGINT, SIGTERM, signal
+from threading import Event
 
-from .run_rpc import Run_rpc
-from .cycles import cycle0, cycle1, cycle2, cycle3, runmac, windows, pause
-from .computer.Computer import Computer
-from .args import parse_args
-from .debugger import run_rpc_debug
-from .update import update
-from . import __init__ as __init__
-from .resources import systemd_service
+from pypresence import exceptions
+
+from fetch_cord.args import parse_args
+from fetch_cord.config import Config
+from fetch_cord.constants import (
+    CUSTOM_TIME_MESSAGE,
+    MIN_CYCLE_TIME_SECONDS,
+    RESULT_NOT_FOUND,
+)
+from fetch_cord.cycle import Cycle
+from fetch_cord.fetch import (
+    CommandProvider,
+    FastfetchProvider,
+    Fetch,
+    NativeProvider,
+    get_component_id,
+    get_infos,
+)
+from fetch_cord.resources import systemd_service
+from fetch_cord.update import update
+
+from . import VERSION
 
 
-def main():
-    args = parse_args()
+def handle_args(args: argparse.Namespace) -> None:
+    """Handle the arguments passed to the program."""
 
     if args.update:
-        update()
+        update(testing=args.testing)
     if os.name != "nt" and sys.platform != "darwin":
         if args.install:
-            systemd_service.install()
+            systemd_service.install(testing=args.testing)
         if args.uninstall:
             systemd_service.uninstall()
         if args.enable:
@@ -34,87 +52,159 @@ def main():
         if args.status:
             systemd_service.status()
     if args.version:
-        print("FetchCord version:", __init__.VERSION)
+        print("FetchCord version:", VERSION)
         sys.exit(0)
     if args.time:
-        if int(args.time) < 15:
-            print("ERROR: Invalid time set, must be > 15 seconds, cannot continue.")
+        if float(args.time) < MIN_CYCLE_TIME_SECONDS:
+            print(
+                f"ERROR: Invalid time set, must be > {MIN_CYCLE_TIME_SECONDS} "
+                "seconds, cannot continue."
+            )
             sys.exit(1)
-        else:
-            print("setting custom time %s seconds" % args.time)
-    try:
-        if args.help:
-            sys.exit(0)
-    except AttributeError:
-        pass
+        print(CUSTOM_TIME_MESSAGE.format(time=args.time))
 
-    computer: Computer = Computer()
 
-    if (
-        not computer.neofetchwin
-        and computer.host == "Host: N/A"
-        and args.nodistro
-        and args.noshell
-        and args.nohardware
-    ):
-        print("ERROR: no hostline is available!")
-        sys.exit(1)
-    # printing info with debug switch
-    if args.debug:
-        run_rpc_debug(computer)
+def main(
+    args: argparse.Namespace | None = None, *, stop_event: Event | None = None
+) -> None:
+    """Run FetchCord. Parses CLI args unless one is supplied (embeddable).
 
-    run: Run_rpc = Run_rpc()
+    ``stop_event`` is injectable so tests can terminate the loop deterministically;
+    it is created internally when not provided.
+    """
+    if args is None:
+        args = parse_args()
+    handle_args(args)
 
-    if computer.neofetchwin:
-        # wandowz
-        loops: Dict = {}
-        loops_indexes: Dict = {}
+    # Get the ids for the components
+    fetchcord_ids = {
+        "cpu": get_infos("cpus"),
+        "gpu": get_infos("gpus"),
+        "os": get_infos("os"),
+        "terminal": get_infos("terminal"),
+        "shell": get_infos("shell"),
+        "motherboard": get_infos("motherboards"),
+        "system_type": get_infos("system_types"),
+    }
 
-        if not args.nodistro:
-            loops["windows"] = (computer.osinfoid, windows)
-            loops_indexes[len(loops_indexes)] = "windows"
-        if not args.nohardware:
-            loops["cycle1"] = (computer.cpuid, cycle1)
-            loops_indexes[len(loops_indexes)] = "cycle1"
+    # Stop event for the loop (injectable for tests)
+    if stop_event is None:
+        stop_event = Event()
 
-        run.set_loop(
-            loops,
-            loops_indexes,
-            computer.updateMap,
-            int(args.poll_rate) if args.poll_rate else 3,
-        )
-        run.run_loop(computer)
-    else:
-        # loonix
-        loops: Dict = {}
-        loops_indexes: Dict = {}
+    # Load config
+    config = Config()
+    config["commands"] = Config("fetchcord_cmds.yml")["commands"]
+    # Load cycles
+    cycles = [Cycle(cycle, stop_event) for cycle in config["cycles"]]
 
-        if not args.nodistro and computer.os != "macos":
-            loops["cycle0"] = (computer.osinfoid, cycle0)
-            loops_indexes[len(loops_indexes)] = "cycle0"
-        if computer.os == "macos":
-            loops["runmac"] = ("740822755376758944", runmac)
-            loops_indexes[len(loops_indexes)] = "runmac"
-        if not args.nohardware:
-            loops["cycle1"] = (computer.cpuid, cycle1)
-            loops_indexes[len(loops_indexes)] = "cycle1"
-        if not args.noshell:
-            loops["cycle2"] = (computer.terminalid, cycle2)
-            loops_indexes[len(loops_indexes)] = "cycle2"
-        if not args.nohost and computer.os != "macos":
-            loops["cycle3"] = (computer.hostappid, cycle3)
-            loops_indexes[len(loops_indexes)] = "cycle3"
-        if args.pause_cycle:
-            loops["pause"] = ("", pause)
-            loops_indexes[len(loops_indexes)] = "pause"
+    # Apply CLI overrides: honor --debug / --time and drop disabled cycles.
+    hide = {
+        "os": args.nodistro,
+        "hardware": args.nohardware,
+        "shell": args.noshell,
+        "host": args.nohost,
+    }
+    cycles = [c for c in cycles if not hide.get(c.name, False)]
+    for cycle in cycles:
+        cycle.debug = args.debug
+        if args.time:
+            cycle.time = int(args.time)
 
-        run.set_loop(
-            loops,
-            loops_indexes,
-            computer.updateMap,
-            int(args.poll_rate) if args.poll_rate else 3,
-        )
-        run.run_loop(computer)
+    os_type = platform.system()
+    # Only the commands defined for this OS are run. The structured fastfetch
+    # provider fills the common fields first; command/native providers only
+    # fill the gaps (e.g. motherboard/resolution/system_type, or everything on
+    # Windows where fastfetch may not be installed).
+    command_map = {
+        component_type: value[os_type]
+        for component_type, value in config["commands"].items()
+        if os_type in value
+    }
+
+    fetch = Fetch([FastfetchProvider(), CommandProvider(command_map), NativeProvider()])
+
+    def signal_handler(signum: int, frame: object) -> None:
+        stop_event.set()
+        for cycle in cycles:
+            cycle.close_connection()
+
+    signal(SIGINT, signal_handler)
+    signal(SIGTERM, signal_handler)
+
+    # Main loop
+    current_client_id = None
+    while not stop_event.is_set():
+        # Loop through the cycles defined in the config
+        for cycle in cycles:
+            if stop_event.is_set():
+                break
+
+            app_id = cycle.app_id
+            top_line = cycle.top_line
+            bottom_line = cycle.bottom_line
+            small_icon = cycle.small_icon
+            if (
+                app_id is None
+                or top_line is None
+                or bottom_line is None
+                or small_icon is None
+            ):
+                continue
+
+            # Collect every field once per cycle, then read from the snapshot.
+            snapshot = fetch.snapshot()
+            app = snapshot.get(app_id, RESULT_NOT_FOUND)
+            bottom = snapshot.get(bottom_line, RESULT_NOT_FOUND)
+            top = snapshot.get(top_line, RESULT_NOT_FOUND)
+            icon = snapshot.get(small_icon, RESULT_NOT_FOUND)
+
+            client_id = get_component_id(app.lower(), fetchcord_ids[app_id])
+
+            icon_id = get_component_id(icon, fetchcord_ids[small_icon])
+
+            # For Apple M chips, use the chip name as the large image
+            large_image = "big"
+            if icon and "apple m" in icon.lower():
+                # Convert "Apple M4 Pro" to "apple-m4-pro"
+                large_image = icon.lower().replace(" ", "-")
+
+            if args.debug:
+                print(
+                    f"""client_id: {client_id} \
+app: {app} \
+bottom: {bottom} \
+top: {top} \
+icon: {icon} \
+icon_id: {icon_id} \
+large_image: {large_image}"""
+                )
+
+            # Reconnect if client_id changed
+            if client_id != current_client_id:
+                # Close ALL cycles' connections since Discord only allows one RP at a time
+                for c in cycles:
+                    if c.rpc:
+                        c.close_connection()
+                current_client_id = client_id
+
+            if cycle.rpc is None:
+                cycle.setup(client_id)
+
+            cycle.try_connect()
+
+            try:
+                cycle.update(app, bottom, top, icon, icon_id, large_image)
+            except (ConnectionResetError, exceptions.InvalidID):
+                cycle.close_connection()
+
+        stop_event.wait(0.05)
+
+    # stop_event is set by the SIGINT/SIGTERM handler above, which mypy cannot
+    # see, so this cleanup runs when the loop is interrupted by a signal.
+    for cycle in cycles:
+        cycle.close_connection()
+
+    print("Activity cleared and connections closed.")
 
 
 if __name__ == "__main__":

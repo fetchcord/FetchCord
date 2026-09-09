@@ -3,11 +3,11 @@
 
 # [Service]
 # ExecStart=
-# ExecStart=-/usr/bin/fetchcord --nohost --time 15 --terminal 'gnome-terminal' --termfont 'Terminus Medium'
+# ExecStart=-/usr/bin/fetchcord --nohost --time 15
 
 [Unit]
 Description=Display OS info as Discord Rich Presence
-Documentation=https://github.com/MrPotatoBobx/FetchCord
+Documentation=https://github.com/fetchcord/FetchCord
 After=network.target multi-user.target graphical-session.target
 
 [Service]
