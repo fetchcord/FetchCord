@@ -111,7 +111,7 @@ Uninstall with `pipx uninstall fetchcord` or `pip uninstall fetchcord`.
 
 **AUR** ([fetchcord](https://aur.archlinux.org/packages/fetchcord/), [fetchcord-testing](https://aur.archlinux.org/packages/fetchcord-testing/)) still packages FetchCord 2.x / neofetch. Prefer pipx from this repo until those packages are updated for 3.0.
 
-**Snap** is not a 3.0 install path. The listing is unmaintained (classic/core18 cannot ship Python 3.12).
+**Snap** is not a 3.0 install path. The store listing is gone, and the in-tree `snapcraft.yaml` is unmaintained.
 
 **From a clone**
 
