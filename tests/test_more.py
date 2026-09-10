@@ -450,6 +450,46 @@ class TestCycleExtras(unittest.TestCase):
         self.assertEqual(mock_presence.connect.call_count, 2)
         cycle.wait.assert_called_once()
 
+    @patch("fetch_cord.cycle.Presence")
+    def test_try_connect_is_a_no_op_once_connected(
+        self, mock_presence_class: MagicMock
+    ) -> None:
+        """The main loop calls try_connect every pass; only the first connects.
+
+        Reconnecting an already-connected pipe every pass is what makes a
+        single-cycle setup blink.
+        """
+        mock_presence = MagicMock()
+        mock_presence_class.return_value = mock_presence
+
+        cycle = self._cycle()
+        cycle.setup("123")
+
+        cycle.try_connect()
+        cycle.try_connect()
+        cycle.try_connect()
+
+        mock_presence.connect.assert_called_once()
+
+    @patch("fetch_cord.cycle.Presence")
+    def test_close_connection_allows_reconnecting(
+        self, mock_presence_class: MagicMock
+    ) -> None:
+        mock_presence = MagicMock()
+        mock_presence_class.return_value = mock_presence
+
+        cycle = self._cycle()
+        cycle.setup("123")
+        cycle.try_connect()
+        cycle.close_connection()
+
+        self.assertFalse(cycle.connected)
+
+        cycle.setup("456")
+        cycle.try_connect()
+
+        self.assertEqual(mock_presence.connect.call_count, 2)
+
     @patch("fetch_cord.cycle.psutil")
     @patch("fetch_cord.cycle.Presence")
     def test_update_connection_reset(
