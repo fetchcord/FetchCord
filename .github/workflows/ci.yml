@@ -6,12 +6,40 @@ on:
   pull_request:
 
 jobs:
-  test:
-    name: Quality gates (Python ${{ matrix.python-version }})
+  lint:
+    name: Lint and types
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install project with dev extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Format check (ruff format)
+        run: ruff format --check .
+
+      - name: Type check (mypy)
+        run: mypy fetch_cord tests
+
+  test:
+    name: Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.12", "3.13", "3.14"]
 
     steps:
@@ -28,15 +56,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-
-      - name: Lint (ruff)
-        run: ruff check .
-
-      - name: Format check (ruff format)
-        run: ruff format --check .
-
-      - name: Type check (mypy)
-        run: mypy fetch_cord tests
 
       - name: Run tests with coverage gate
         run: python -m pytest tests/ -q --cov=fetch_cord --cov-fail-under=80
@@ -79,3 +98,44 @@ jobs:
               f"packages={snap.get('packages')}"
           )
           EOF
+
+  smoke-windows:
+    name: Smoke - real detection on Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install project
+        run: pip install -e "."
+
+      # No fastfetch here on purpose: this is the path Windows users are
+      # actually on, where FastfetchProvider returns {} and the PowerShell
+      # command provider plus the native package counter carry the snapshot.
+      - name: Run real detection smoke test
+        shell: python
+        run: |
+          from fetch_cord.config import Config
+          from fetch_cord.fetch import CommandProvider, Fetch, NativeProvider
+
+          commands = Config("fetchcord_cmds.yml")["commands"]
+          command_map = {
+              field: value["Windows"]
+              for field, value in commands.items()
+              if "Windows" in value
+          }
+
+          snap = Fetch([CommandProvider(command_map), NativeProvider()]).snapshot()
+          assert snap.get("os"), f"missing os: {snap}"
+          assert snap.get("cpu"), f"missing cpu: {snap}"
+          print(
+              "Detected: "
+              f"os={snap.get('os')} "
+              f"cpu={snap.get('cpu')} "
+              f"gpu={snap.get('gpu')} "
+              f"motherboard={snap.get('motherboard')} "
+              f"packages={snap.get('packages')}"
+          )
