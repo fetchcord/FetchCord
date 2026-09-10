@@ -528,6 +528,39 @@ class TestFetchExtras(unittest.TestCase):
         self.assertEqual(FastfetchProvider().fetch(), {})
 
 
+class TestUnknownComponentWarning(unittest.TestCase):
+    def setUp(self) -> None:
+        from fetch_cord import fetch as fetch_module
+
+        self._warned = fetch_module._WARNED_UNKNOWN
+        self._warned.clear()
+        self.addCleanup(self._warned.clear)
+
+    @patch("builtins.print")
+    def test_unknown_component_warns_only_once(self, mock_print: MagicMock) -> None:
+        from fetch_cord.fetch import get_component_id
+
+        for _ in range(5):
+            get_component_id("some unlisted gpu", {"known": ["nvidia"]})
+
+        warnings = [
+            call for call in mock_print.call_args_list if "No match found" in str(call)
+        ]
+        self.assertEqual(len(warnings), 1)
+
+    @patch("builtins.print")
+    def test_each_distinct_component_still_warns(self, mock_print: MagicMock) -> None:
+        from fetch_cord.fetch import get_component_id
+
+        get_component_id("unlisted gpu", {"known": ["nvidia"]})
+        get_component_id("unlisted mobo", {"known": ["nvidia"]})
+
+        warnings = [
+            call for call in mock_print.call_args_list if "No match found" in str(call)
+        ]
+        self.assertEqual(len(warnings), 2)
+
+
 class TestInfoExtras(unittest.TestCase):
     def test_first_text_fallback(self) -> None:
         from fetch_cord.info import _first_text
