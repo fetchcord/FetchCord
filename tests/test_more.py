@@ -412,6 +412,47 @@ class TestMain(unittest.TestCase):
 
         fake_fetch.snapshot.assert_called()
 
+    @patch("fetch_cord.__main__.Fetch")
+    @patch("fetch_cord.__main__.get_component_id", return_value="client-1")
+    @patch("fetch_cord.__main__.get_infos", return_value={})
+    @patch("fetch_cord.cycle.Cycle.try_connect")
+    @patch("fetch_cord.cycle.Cycle.setup")
+    def test_main_loop_snapshots_once_per_rotation(
+        self,
+        mock_setup: MagicMock,
+        mock_try_connect: MagicMock,
+        mock_get_infos: MagicMock,
+        mock_get_component_id: MagicMock,
+        mock_fetch_class: MagicMock,
+    ) -> None:
+        """One collection per rotation, not one per cycle.
+
+        Collecting per cycle meant a dozen PowerShell processes four times a
+        rotation on Windows, for four reads out of the same data.
+        """
+        from threading import Event
+
+        from fetch_cord.__main__ import main
+
+        fake_fetch = MagicMock()
+        fake_fetch.snapshot.return_value = {}
+        mock_fetch_class.return_value = fake_fetch
+
+        stop = Event()
+        updates = []
+
+        def record_update(*args: object, **kwargs: object) -> None:
+            updates.append(args)
+            # Stop once we have been round every cycle exactly once.
+            if len(updates) >= 4:
+                stop.set()
+
+        with patch("fetch_cord.cycle.Cycle.update", side_effect=record_update):
+            main(self._ns(), stop_event=stop)
+
+        self.assertEqual(len(updates), 4)
+        self.assertEqual(fake_fetch.snapshot.call_count, 1)
+
 
 class TestCycleExtras(unittest.TestCase):
     def _cycle(self: Any) -> Any:
