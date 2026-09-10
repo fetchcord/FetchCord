@@ -55,7 +55,12 @@ def handle_args(args: argparse.Namespace) -> None:
         print("FetchCord version:", VERSION)
         sys.exit(0)
     if args.time:
-        if float(args.time) < MIN_CYCLE_TIME_SECONDS:
+        try:
+            seconds = float(args.time)
+        except ValueError:
+            print(f"ERROR: --time must be a number, got {args.time!r}.")
+            sys.exit(1)
+        if seconds < MIN_CYCLE_TIME_SECONDS:
             print(
                 f"ERROR: Invalid time set, must be > {MIN_CYCLE_TIME_SECONDS} "
                 "seconds, cannot continue."
@@ -108,7 +113,8 @@ def main(
     for cycle in cycles:
         cycle.debug = args.debug
         if args.time:
-            cycle.time = int(args.time)
+            # handle_args has already validated this parses as a float.
+            cycle.time = int(float(args.time))
 
     os_type = platform.system()
     # Only the commands defined for this OS are run. The structured fastfetch
