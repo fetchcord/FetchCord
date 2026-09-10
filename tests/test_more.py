@@ -6,7 +6,7 @@ Windows-native module, and exception paths in cycle/fetch/info/tools).
 """
 
 import argparse
-import sys
+import os
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -219,21 +219,50 @@ class TestNative(unittest.TestCase):
 
 class TestWindows(unittest.TestCase):
     def test_windows_module_non_nt_fetch(self) -> None:
-        # On POSIX (our CI), the Windows module's else-branch returns None.
-        from fetch_cord.native.Windows import fetch
+        """The else-branch returns None off Windows.
 
-        self.assertIsNone(fetch("packages"))
+        os.name is read at import time, so forcing it means reimporting the
+        module rather than just patching the name - otherwise this only ever
+        tested whichever branch the test runner happened to be on.
+        """
+        import importlib
 
+        from fetch_cord.native import Windows as WindowsNative
+
+        with patch("os.name", "posix"):
+            reloaded = importlib.reload(WindowsNative)
+            try:
+                self.assertIsNone(reloaded.fetch("packages"))
+            finally:
+                importlib.reload(WindowsNative)
+
+    def test_windows_module_nt_fetch_dispatches(self) -> None:
+        """And on Windows it dispatches to the packages fetcher."""
+        import importlib
+
+        from fetch_cord.native import Windows as WindowsNative
+
+        if os.name != "nt":
+            self.skipTest("needs winreg")
+
+        reloaded = importlib.reload(WindowsNative)
+        self.assertIsNone(reloaded.fetch("not-a-component"))
+        self.assertIn("packages", str(reloaded.fetch("packages")))
+
+    @unittest.skipUnless(os.name == "nt", "winreg is Windows-only")
     def test_get_installed_software(self) -> None:
+        from fetch_cord.native.Windows import packages
+
         fake_winreg = MagicMock()
         fake_winreg.OpenKey.return_value = MagicMock()
         fake_winreg.QueryInfoKey.return_value = (1, 0)
         fake_winreg.EnumKey.return_value = "App1"
         fake_winreg.QueryValueEx.return_value = ("App1 Name", 1)
 
-        with patch.dict(sys.modules, {"winreg": fake_winreg}):
-            from fetch_cord.native.Windows import packages
-
+        # packages imports winreg at module scope, so patching sys.modules
+        # after the fact hits the real registry on Windows. Patch the
+        # already-bound reference instead.
+        with patch.object(packages, "winreg", fake_winreg):
             self.assertEqual(packages.get_installed_software(), ["App1 Name"])
             self.assertEqual(packages.fetch(), "1 packages")
 
@@ -297,10 +326,45 @@ class TestMain(unittest.TestCase):
 
     @patch("fetch_cord.__main__.systemd_service.install")
     def test_handle_args_install(self, mock_install: MagicMock) -> None:
+        """The systemd flags are gated on os.name AND sys.platform, so pin both.
+
+        Only pinning os.name still skipped the branch on macOS, where
+        sys.platform is "darwin".
+        """
         from fetch_cord.__main__ import handle_args
 
-        handle_args(self._ns(install=True, testing=False))
+        with (
+            patch("fetch_cord.__main__.os.name", "posix"),
+            patch("fetch_cord.__main__.sys.platform", "linux"),
+        ):
+            handle_args(self._ns(install=True, testing=False))
         mock_install.assert_called_once_with(testing=False)
+
+    @patch("fetch_cord.__main__.systemd_service.install")
+    def test_handle_args_install_ignored_on_windows(
+        self, mock_install: MagicMock
+    ) -> None:
+        from fetch_cord.__main__ import handle_args
+
+        with (
+            patch("fetch_cord.__main__.os.name", "nt"),
+            patch("fetch_cord.__main__.sys.platform", "win32"),
+        ):
+            handle_args(self._ns(install=True, testing=False))
+        mock_install.assert_not_called()
+
+    @patch("fetch_cord.__main__.systemd_service.install")
+    def test_handle_args_install_ignored_on_macos(
+        self, mock_install: MagicMock
+    ) -> None:
+        from fetch_cord.__main__ import handle_args
+
+        with (
+            patch("fetch_cord.__main__.os.name", "posix"),
+            patch("fetch_cord.__main__.sys.platform", "darwin"),
+        ):
+            handle_args(self._ns(install=True, testing=False))
+        mock_install.assert_not_called()
 
     @patch("fetch_cord.__main__.Fetch")
     @patch("fetch_cord.__main__.get_component_id", return_value="client-1")

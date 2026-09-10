@@ -442,8 +442,11 @@ class TestFetchClass(unittest.TestCase):
 
         self.assertEqual(FastfetchProvider().fetch(), {})
 
+    @patch("fetch_cord.fetch.platform.system", return_value="Linux")
     @patch("fetch_cord.fetch.exec_bash")
-    def test_command_provider_skips_existing_and_strips(self, mock_exec_bash):
+    def test_command_provider_skips_existing_and_strips(
+        self, mock_exec_bash, mock_system
+    ):
         from fetch_cord.fetch import CommandProvider
 
         mock_exec_bash.return_value = "  Value\nignored line\n"
@@ -454,10 +457,35 @@ class TestFetchClass(unittest.TestCase):
         mock_exec_bash.assert_called_once_with("echo gpu")
         self.assertEqual(fields, {"gpu": "Value"})
 
-    def test_command_provider_handles_bash_error(self):
+    @patch("fetch_cord.fetch.platform.system", return_value="Windows")
+    @patch("fetch_cord.fetch.exec_ps1")
+    def test_command_provider_uses_powershell_on_windows(
+        self, mock_exec_ps1, mock_system
+    ):
+        """CommandProvider branches on the OS, so the OS has to be pinned."""
+        from fetch_cord.fetch import CommandProvider
+
+        mock_exec_ps1.return_value = "  Value\nignored line\n"
+
+        fields = CommandProvider({"gpu": "Get-Gpu"}).fetch()
+
+        mock_exec_ps1.assert_called_once_with("Get-Gpu")
+        self.assertEqual(fields, {"gpu": "Value"})
+
+    @patch("fetch_cord.fetch.platform.system", return_value="Linux")
+    def test_command_provider_handles_bash_error(self, mock_system):
         from fetch_cord.tools import BashError
 
         with patch("fetch_cord.fetch.exec_bash", side_effect=BashError("boom")):
+            from fetch_cord.fetch import CommandProvider
+
+            self.assertEqual(CommandProvider({"cpu": "bad"}).fetch(), {})
+
+    @patch("fetch_cord.fetch.platform.system", return_value="Windows")
+    def test_command_provider_handles_powershell_error(self, mock_system):
+        from fetch_cord.tools import BashError
+
+        with patch("fetch_cord.fetch.exec_ps1", side_effect=BashError("boom")):
             from fetch_cord.fetch import CommandProvider
 
             self.assertEqual(CommandProvider({"cpu": "bad"}).fetch(), {})
