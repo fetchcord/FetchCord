@@ -75,7 +75,9 @@ class FastfetchProvider:
                     ":".join(FASTFETCH_MODULES),
                 ]
             )
-        except FileNotFoundError:
+        except (FileNotFoundError, BashError):
+            # Not installed, or wedged and killed by the timeout - either way
+            # the command provider below takes over.
             return {}
         fields = parse_fastfetch_json(raw)
         # Drop interpreter-as-terminal so CommandProvider can use $TERM_PROGRAM.

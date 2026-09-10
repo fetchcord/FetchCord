@@ -17,6 +17,8 @@ from threading import Event
 from typing import Any
 from unittest.mock import MagicMock, mock_open, patch
 
+from fetch_cord.tools import COMMAND_TIMEOUT_SECONDS
+
 
 class TestConfig(unittest.TestCase):
     """Test cases for Config class."""
@@ -582,7 +584,10 @@ class TestTools(unittest.TestCase):
         mock_run.assert_called_once_with(
             ["ls", "-la"],
             encoding="utf-8",
+            errors="replace",
             stdout=-1,
+            stderr=subprocess.DEVNULL,
+            timeout=COMMAND_TIMEOUT_SECONDS,
             shell=False,
         )
         self.assertEqual(result, "command output")
@@ -601,7 +606,10 @@ class TestTools(unittest.TestCase):
         mock_run.assert_called_once_with(
             ["echo", "hello"],
             encoding="utf-8",
+            errors="replace",
             stdout=-1,
+            stderr=subprocess.DEVNULL,
+            timeout=COMMAND_TIMEOUT_SECONDS,
             shell=True,
         )
 
@@ -622,6 +630,7 @@ class TestTools(unittest.TestCase):
             encoding="utf-8",
             stdout=-1,
             stderr=subprocess.STDOUT,
+            timeout=COMMAND_TIMEOUT_SECONDS,
             shell=True,
         )
         self.assertEqual(result, "bash output")
@@ -665,6 +674,7 @@ class TestTools(unittest.TestCase):
             errors="replace",
             stdout=-1,
             stderr=subprocess.STDOUT,
+            timeout=COMMAND_TIMEOUT_SECONDS,
         )
         self.assertEqual(result, "powershell output")
 
@@ -680,6 +690,40 @@ class TestTools(unittest.TestCase):
         from fetch_cord.tools import exec_ps1
 
         self.assertEqual(exec_ps1("Write-Output 'Ünïcödé — ok'"), "Ünïcödé — ok")
+
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_exec_bash_timeout_raises_bash_error(self, mock_run):
+        """A wedged command becomes a BashError instead of hanging forever."""
+        mock_run.side_effect = subprocess.TimeoutExpired(
+            cmd="sleep 999", timeout=COMMAND_TIMEOUT_SECONDS
+        )
+
+        from fetch_cord.tools import BashError, exec_bash
+
+        with self.assertRaises(BashError):
+            exec_bash("sleep 999")
+
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_exec_ps1_timeout_raises_bash_error(self, mock_run):
+        mock_run.side_effect = subprocess.TimeoutExpired(
+            cmd="Start-Sleep", timeout=COMMAND_TIMEOUT_SECONDS
+        )
+
+        from fetch_cord.tools import BashError, exec_ps1
+
+        with self.assertRaises(BashError):
+            exec_ps1("Start-Sleep 999")
+
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_run_command_timeout_raises_bash_error(self, mock_run):
+        mock_run.side_effect = subprocess.TimeoutExpired(
+            cmd="fastfetch", timeout=COMMAND_TIMEOUT_SECONDS
+        )
+
+        from fetch_cord.tools import BashError, run_command
+
+        with self.assertRaises(BashError):
+            run_command(["fastfetch"])
 
     @patch("fetch_cord.tools.resources.path")
     def test_get_resource_path(self, mock_resources_path):
