@@ -246,6 +246,29 @@ class TestCycle(unittest.TestCase):
         timer.join()
 
     @patch("fetch_cord.cycle.Presence")
+    def test_cycle_wait_returns_promptly_when_stopped(self, mock_presence_class):
+        """A 30s cycle must not keep the process alive for 30s after Ctrl+C."""
+        import time as _time
+
+        from fetch_cord.cycle import Cycle
+
+        stop_event = Event()
+        cycle = Cycle(self.config, stop_event)
+
+        import threading
+
+        timer = threading.Timer(0.05, stop_event.set)
+        timer.start()
+        try:
+            started = _time.perf_counter()
+            cycle.wait(30)
+            elapsed = _time.perf_counter() - started
+        finally:
+            timer.cancel()
+
+        self.assertLess(elapsed, 5)
+
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_repr(self, mock_presence_class):
         """Test Cycle __repr__ method."""
         from fetch_cord.cycle import Cycle
