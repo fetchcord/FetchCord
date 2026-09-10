@@ -9,6 +9,7 @@ Tests cover:
 """
 
 import json
+import os
 import subprocess
 import sys
 import unittest
@@ -622,13 +623,35 @@ class TestTools(unittest.TestCase):
 
         result = exec_ps1("Get-Process")
 
+        from fetch_cord.tools import PS1_PREAMBLE
+
         mock_run.assert_called_once_with(
-            ["powershell", "Get-Process"],
+            [
+                "powershell",
+                "-NoProfile",
+                "-NonInteractive",
+                "-Command",
+                PS1_PREAMBLE + "Get-Process",
+            ],
             encoding="utf-8",
+            errors="replace",
             stdout=-1,
             stderr=subprocess.STDOUT,
         )
         self.assertEqual(result, "powershell output")
+
+    @unittest.skipUnless(os.name == "nt", "PowerShell is Windows-only")
+    def test_exec_ps1_non_ascii_output_does_not_raise(self):
+        """Non-ASCII output must come back decoded, not as a UnicodeDecodeError.
+
+        Regression test: PowerShell 5.1 emits the console OEM code page, so
+        decoding its bytes as UTF-8 used to blow up on any accented character
+        - and UnicodeDecodeError is not a BashError, so it escaped
+        CommandProvider's handler and killed the presence loop.
+        """
+        from fetch_cord.tools import exec_ps1
+
+        self.assertEqual(exec_ps1("Write-Output 'Ünïcödé — ok'"), "Ünïcödé — ok")
 
     @patch("fetch_cord.tools.resources.path")
     def test_get_resource_path(self, mock_resources_path):
