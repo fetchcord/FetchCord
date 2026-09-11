@@ -85,6 +85,21 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Say whether FetchCord is set to start when you sign in.",
     )
+    parser.add_argument(
+        "--pause-when",
+        metavar="NAME",
+        nargs="+",
+        help=(
+            "Process names that should hold the presence back while they run "
+            "(e.g. --pause-when steam spotify). Overrides pause_when in the "
+            "config. The .exe suffix is optional."
+        ),
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print what would be sent to Discord, then exit without connecting.",
+    )
     parser.add_argument("--debug", "-d", action="store_true", help="Enable debugging.")
     parser.add_argument(
         "--version", "-v", action="store_true", help="Print FetchCord Version."

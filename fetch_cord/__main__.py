@@ -7,6 +7,7 @@ import sys
 from signal import SIGINT, SIGTERM, signal
 from threading import Event
 
+import psutil
 from pypresence import exceptions
 
 from fetch_cord.args import parse_args
@@ -14,8 +15,8 @@ from fetch_cord.autostart import handle as handle_autostart
 from fetch_cord.config import Config
 from fetch_cord.constants import (
     CUSTOM_TIME_MESSAGE,
+    DEFAULT_CYCLE_TIME_SECONDS,
     MIN_CYCLE_TIME_SECONDS,
-    RESULT_NOT_FOUND,
 )
 from fetch_cord.cycle import Cycle
 from fetch_cord.fetch import (
@@ -23,10 +24,10 @@ from fetch_cord.fetch import (
     FastfetchProvider,
     Fetch,
     NativeProvider,
-    get_component_id,
     get_infos,
 )
-from fetch_cord.presence import parse_buttons
+from fetch_cord.presence import ResolvedCycle, parse_buttons, resolve_cycle
+from fetch_cord.processes import PauseWatcher
 from fetch_cord.resources import systemd_service
 from fetch_cord.update import update
 
@@ -80,6 +81,36 @@ def handle_args(args: argparse.Namespace) -> None:
         print(CUSTOM_TIME_MESSAGE.format(time=args.time))
 
 
+def _resolve(
+    cycle: Cycle,
+    snapshot: dict[str, str],
+    fetchcord_ids: dict[str, dict[str, list[str]]],
+) -> ResolvedCycle:
+    """Adapt a configured Cycle to the shared resolver.
+
+    The None checks in the caller have already run, so the field names are
+    known to be set by the time we get here.
+    """
+    assert cycle.app_id and cycle.top_line and cycle.bottom_line and cycle.small_icon
+    return resolve_cycle(
+        snapshot,
+        fetchcord_ids,
+        name=cycle.name,
+        app_id=cycle.app_id,
+        top_line=cycle.top_line,
+        bottom_line=cycle.bottom_line,
+        small_icon=cycle.small_icon,
+    )
+
+
+def print_dry_run(resolved: list[ResolvedCycle], start: int) -> None:
+    """Print each cycle's Discord app and payload without connecting."""
+    for cycle in resolved:
+        print(f"\ncycle: {cycle.name}  client_id={cycle.client_id}")
+        for key, value in cycle.activity(start).items():
+            print(f"  {key:<12} {value!r}")
+
+
 def main(
     args: argparse.Namespace | None = None, *, stop_event: Event | None = None
 ) -> None:
@@ -129,6 +160,11 @@ def main(
             # handle_args has already validated this parses as a float.
             cycle.time = int(float(args.time))
 
+    # CLI wins over the config file so this is usable without editing the
+    # packaged config.
+    pause_when = getattr(args, "pause_when", None) or config.get("pause_when") or []
+    pause = PauseWatcher(pause_when)
+
     os_type = platform.system()
     # Only the commands defined for this OS are run. The structured fastfetch
     # provider fills the common fields first; command/native providers only
@@ -142,6 +178,18 @@ def main(
 
     fetch = Fetch([FastfetchProvider(), CommandProvider(command_map), NativeProvider()])
 
+    if getattr(args, "dry_run", False):
+        snapshot = fetch.snapshot()
+        print("=== Detected ===")
+        for field in sorted(snapshot):
+            print(f"  {field:<12} {snapshot[field]!r}")
+        print("\n=== Would send ===")
+        print_dry_run(
+            [_resolve(cycle, snapshot, fetchcord_ids) for cycle in cycles],
+            int(psutil.boot_time()),
+        )
+        return
+
     def signal_handler(signum: int, frame: object) -> None:
         stop_event.set()
         for cycle in cycles:
@@ -153,6 +201,21 @@ def main(
     # Main loop
     current_client_id = None
     while not stop_event.is_set():
+        if pause.check():
+            # Leave the profile alone so whatever else is running keeps the
+            # status it would have had - and skip the snapshot entirely,
+            # since a rotation we are not going to send is not worth a dozen
+            # PowerShell processes.
+            for other in cycles:
+                if other.rpc:
+                    other.close_connection()
+            current_client_id = None
+            if cycles:
+                cycles[0].wait(cycles[0].time or DEFAULT_CYCLE_TIME_SECONDS)
+            else:
+                stop_event.wait(DEFAULT_CYCLE_TIME_SECONDS)
+            continue
+
         # Collect every field once per rotation rather than once per cycle.
         # Each cycle reads different fields out of the same snapshot, and on
         # Windows a snapshot is a dozen PowerShell processes.
@@ -175,20 +238,14 @@ def main(
             ):
                 continue
 
-            app = snapshot.get(app_id, RESULT_NOT_FOUND)
-            bottom = snapshot.get(bottom_line, RESULT_NOT_FOUND)
-            top = snapshot.get(top_line, RESULT_NOT_FOUND)
-            icon = snapshot.get(small_icon, RESULT_NOT_FOUND)
-
-            client_id = get_component_id(app.lower(), fetchcord_ids[app_id])
-
-            icon_id = get_component_id(icon, fetchcord_ids[small_icon])
-
-            # For Apple M chips, use the chip name as the large image
-            large_image = "big"
-            if icon and "apple m" in icon.lower():
-                # Convert "Apple M4 Pro" to "apple-m4-pro"
-                large_image = icon.lower().replace(" ", "-")
+            resolved = _resolve(cycle, snapshot, fetchcord_ids)
+            app = resolved.app
+            bottom = resolved.bottom
+            top = resolved.top
+            icon = resolved.icon
+            client_id = resolved.client_id
+            icon_id = resolved.icon_id
+            large_image = resolved.large_image
 
             if args.debug:
                 print(

@@ -1,4 +1,13 @@
 ---
+# Programs that should keep their own Discord status while they run.
+# FetchCord clears its presence until they exit. The .exe suffix is
+# optional, so one entry works on every platform.
+#
+# pause_when:
+#   - steam
+#   - spotify
+pause_when: []
+
 # Up to two links shown under the presence on your profile. Discord only
 # accepts https urls, and labels are limited to 32 characters.
 #
