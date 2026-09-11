@@ -1,6 +1,11 @@
-"""Motherboard manufacturer, matching Win32_BaseBoard.Manufacturer.
+"""Motherboard vendor and product, matching the Windows PowerShell command.
 
-e.g. "ASUSTeK COMPUTER INC."
+Joins BaseBoardManufacturer and BaseBoardProduct the same way Linux reports
+board_vendor + board_name, so the host cycle's app_id/top_line can match
+board-specific entries in motherboards.json (e.g. TUF) rather than only the
+generic vendor.
+
+e.g. "ASUSTeK COMPUTER INC. PRIME B760-PLUS D4"
 """
 
 from fetch_cord.native.Windows import registry
@@ -31,4 +36,7 @@ def usable(value: str | None) -> str | None:
 
 
 def fetch() -> str | None:
-    return usable(registry.read(registry.BIOS, "BaseBoardManufacturer"))
+    manufacturer = usable(registry.read(registry.BIOS, "BaseBoardManufacturer"))
+    product = usable(registry.read(registry.BIOS, "BaseBoardProduct"))
+    parts = [part for part in (manufacturer, product) if part]
+    return " ".join(parts) or None

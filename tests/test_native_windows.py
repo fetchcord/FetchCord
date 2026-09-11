@@ -80,8 +80,20 @@ class TestWindowsFetchers(unittest.TestCase):
         from fetch_cord.native.Windows import host, motherboard
 
         with fake_registry():
-            self.assertEqual(motherboard.fetch(), "ASUSTeK COMPUTER INC.")
+            # Matches #243's PowerShell: vendor + product for id matching.
+            self.assertEqual(
+                motherboard.fetch(), "ASUSTeK COMPUTER INC. PRIME B760-PLUS D4"
+            )
             self.assertEqual(host.fetch(), "PRIME B760-PLUS D4")
+
+    def test_motherboard_falls_back_to_vendor_when_product_missing(self) -> None:
+        from fetch_cord.native.Windows import motherboard
+
+        values = dict(REGISTRY)
+        del values[(BIOS, "BaseBoardProduct")]
+
+        with fake_registry(values):
+            self.assertEqual(motherboard.fetch(), "ASUSTeK COMPUTER INC.")
 
     def test_oem_placeholders_are_not_reported(self) -> None:
         """Firmware boilerplate should let another provider supply the value."""
@@ -89,6 +101,7 @@ class TestWindowsFetchers(unittest.TestCase):
 
         values = dict(REGISTRY)
         values[(BIOS, "BaseBoardManufacturer")] = "To Be Filled By O.E.M."
+        values[(BIOS, "BaseBoardProduct")] = "To Be Filled By O.E.M."
 
         with fake_registry(values):
             self.assertIsNone(motherboard.fetch())
