@@ -7,7 +7,7 @@ from importlib.resources import files
 from typing import Protocol
 
 from fetch_cord import resources
-from fetch_cord.constants import RESULT_NOT_FOUND
+from fetch_cord.constants import RESULT_NOT_FOUND, UNKNOWN_COMPONENT_ID
 from fetch_cord.info import FASTFETCH_MODULES, parse_fastfetch_json
 from fetch_cord.native import native as native_module
 from fetch_cord.tools import BashError, exec_bash, exec_ps1, run_command
@@ -36,7 +36,7 @@ def get_component_id(search: str, id_list: dict[str, list[str]]) -> str:
         if isinstance(patterns, list) and "unknown" in patterns:
             return id
 
-    return "unknown"
+    return UNKNOWN_COMPONENT_ID
 
 
 def _looks_like_python_process(value: str) -> bool:
