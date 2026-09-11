@@ -24,6 +24,11 @@ def get_infos(name: str) -> dict[str, list[str]]:
     return data
 
 
+# Hardware doesn't change between cycles, so an unmatched component would
+# otherwise reprint the same warning every rotation, forever.
+_WARNED_UNKNOWN: set[str] = set()
+
+
 def get_component_id(search: str, id_list: dict[str, list[str]]) -> str:
     for id, patterns in id_list.items():
         if not isinstance(patterns, list):
@@ -31,7 +36,9 @@ def get_component_id(search: str, id_list: dict[str, list[str]]) -> str:
         if any(re.search(pattern, search) for pattern in patterns):
             return id
 
-    print(f"Warning: No match found for '{search}'")
+    if search not in _WARNED_UNKNOWN:
+        _WARNED_UNKNOWN.add(search)
+        print(f"Warning: No match found for '{search}'")
     for id, patterns in id_list.items():
         if isinstance(patterns, list) and "unknown" in patterns:
             return id
