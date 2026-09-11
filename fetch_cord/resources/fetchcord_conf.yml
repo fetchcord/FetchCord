@@ -8,6 +8,14 @@
 #   - spotify
 pause_when: []
 
+# Up to two links shown under the presence on your profile. Discord only
+# accepts https urls, and labels are limited to 32 characters.
+#
+# buttons:
+#   - label: My dotfiles
+#     url: https://github.com/me/dotfiles
+buttons: []
+
 cycle_time: &cycle_time 30
 cycles:
   - name: os

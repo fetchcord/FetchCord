@@ -27,7 +27,7 @@ from fetch_cord.fetch import (
     NativeProvider,
     get_infos,
 )
-from fetch_cord.presence import ResolvedCycle, resolve_cycle
+from fetch_cord.presence import ResolvedCycle, parse_buttons, resolve_cycle
 from fetch_cord.processes import PauseWatcher
 from fetch_cord.resources import systemd_service
 from fetch_cord.update import update
@@ -153,8 +153,10 @@ def main(
         "host": args.nohost,
     }
     cycles = [c for c in cycles if not hide.get(c.name, False)]
+    buttons = parse_buttons(config.get("buttons"))
     for cycle in cycles:
         cycle.debug = args.debug
+        cycle.buttons = buttons
         if args.time:
             # handle_args has already validated this parses as a float.
             cycle.time = int(float(args.time))

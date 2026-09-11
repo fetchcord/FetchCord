@@ -28,6 +28,7 @@ class Cycle:
     debug: bool = False
     rpc: Presence | None = None
     connected: bool = False
+    buttons: list[dict[str, str]] | None = None
 
     stop: Event
 
@@ -97,6 +98,7 @@ class Cycle:
                     small_image=icon_id,
                     small_text=icon,
                     start=int(psutil.boot_time()),
+                    buttons=self.buttons,
                 )
             )
 

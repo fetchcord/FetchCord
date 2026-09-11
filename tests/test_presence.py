@@ -8,7 +8,13 @@ import unittest
 from threading import Event
 from unittest.mock import MagicMock, patch
 
-from fetch_cord.presence import ResolvedCycle, build_presence_activity, resolve_cycle
+from fetch_cord.constants import UNKNOWN_COMPONENT_ID
+from fetch_cord.presence import (
+    ResolvedCycle,
+    build_presence_activity,
+    parse_buttons,
+    resolve_cycle,
+)
 
 
 class TestBuildPresenceActivity(unittest.TestCase):
@@ -110,6 +116,118 @@ class TestBuildPresenceActivity(unittest.TestCase):
         self.assertEqual(a, b)
         a["details"] = "changed"
         self.assertNotEqual(a, b)
+
+
+class TestParseButtons(unittest.TestCase):
+    """A typo in the config must cost a button, never the whole presence."""
+
+    GOOD = {"label": "Dotfiles", "url": "https://github.com/me/dotfiles"}
+
+    def test_accepts_a_valid_button(self) -> None:
+        self.assertEqual(parse_buttons([self.GOOD]), [self.GOOD])
+
+    def test_nothing_configured_is_an_empty_list(self) -> None:
+        self.assertEqual(parse_buttons(None), [])
+        self.assertEqual(parse_buttons([]), [])
+
+    def test_strips_surrounding_whitespace(self) -> None:
+        parsed = parse_buttons(
+            [{"label": "  Dotfiles  ", "url": "  https://example.com  "}]
+        )
+
+        self.assertEqual(parsed, [{"label": "Dotfiles", "url": "https://example.com"}])
+
+    @patch("builtins.print")
+    def test_rejects_http_urls(self, mock_print: MagicMock) -> None:
+        """Discord only accepts https on presence buttons."""
+        self.assertEqual(
+            parse_buttons([{"label": "Site", "url": "http://example.com"}]), []
+        )
+
+    @patch("builtins.print")
+    def test_rejects_a_half_filled_button(self, mock_print: MagicMock) -> None:
+        self.assertEqual(parse_buttons([{"label": "Site"}]), [])
+        self.assertEqual(parse_buttons([{"url": "https://example.com"}]), [])
+
+    @patch("builtins.print")
+    def test_rejects_an_over_long_label(self, mock_print: MagicMock) -> None:
+        self.assertEqual(
+            parse_buttons([{"label": "x" * 33, "url": "https://example.com"}]), []
+        )
+        self.assertEqual(
+            len(parse_buttons([{"label": "x" * 32, "url": "https://example.com"}])), 1
+        )
+
+    @patch("builtins.print")
+    def test_keeps_the_good_button_when_another_is_bad(
+        self, mock_print: MagicMock
+    ) -> None:
+        parsed = parse_buttons([{"label": "Bad", "url": "ftp://nope"}, self.GOOD])
+
+        self.assertEqual(parsed, [self.GOOD])
+
+    @patch("builtins.print")
+    def test_caps_at_the_discord_limit(self, mock_print: MagicMock) -> None:
+        parsed = parse_buttons(
+            [{"label": f"b{n}", "url": "https://example.com"} for n in range(5)]
+        )
+
+        self.assertEqual(len(parsed), 2)
+
+    @patch("builtins.print")
+    def test_survives_a_malformed_config(self, mock_print: MagicMock) -> None:
+        self.assertEqual(parse_buttons("not a list"), [])
+        self.assertEqual(parse_buttons(["not a mapping"]), [])
+        self.assertEqual(parse_buttons([None]), [])
+
+
+class TestButtonsInThePayload(unittest.TestCase):
+    def test_buttons_are_omitted_when_not_configured(self) -> None:
+        """pypresence rejects an empty buttons list, so don't send the key."""
+        payload = build_presence_activity(
+            details="d",
+            state="s",
+            large_image="big",
+            large_text="l",
+            small_image="i",
+            small_text="t",
+            start=1,
+        )
+
+        self.assertNotIn("buttons", payload)
+
+    def test_buttons_are_included_when_configured(self) -> None:
+        buttons = [{"label": "Dotfiles", "url": "https://example.com"}]
+        payload = build_presence_activity(
+            details="d",
+            state="s",
+            large_image="big",
+            large_text="l",
+            small_image="i",
+            small_text="t",
+            start=1,
+            buttons=buttons,
+        )
+
+        self.assertEqual(payload["buttons"], buttons)
+
+    def test_buttons_survive_an_unresolved_small_icon(self) -> None:
+        """Dropping the icon pair must not take the buttons with it."""
+        buttons = [{"label": "Dotfiles", "url": "https://example.com"}]
+        payload = build_presence_activity(
+            details="d",
+            state="s",
+            large_image="big",
+            large_text="l",
+            small_image=UNKNOWN_COMPONENT_ID,
+            small_text="t",
+            start=1,
+            buttons=buttons,
+        )
+
+        self.assertIsNone(payload["small_image"])
+        self.assertIsNone(payload["small_text"])
+        self.assertEqual(payload["buttons"], buttons)
 
 
 class TestResolveCycle(unittest.TestCase):
