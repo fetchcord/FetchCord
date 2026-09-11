@@ -24,16 +24,14 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from fetch_cord.config import Config
-from fetch_cord.constants import RESULT_NOT_FOUND
 from fetch_cord.fetch import (
     CommandProvider,
     FastfetchProvider,
     Fetch,
-    get_component_id,
     get_infos,
 )
 from fetch_cord.info import FASTFETCH_MODULES
-from fetch_cord.presence import build_presence_activity
+from fetch_cord.presence import resolve_cycle
 
 CORE_FIELDS = ("os", "kernel", "cpu", "memory")
 
@@ -52,28 +50,17 @@ def build_cycle_payload(
     cycle: dict[str, Any],
     fetchcord_ids: dict[str, dict[str, list[str]]],
 ) -> tuple[str, dict[str, Any]]:
-    app = snapshot.get(cycle["app_id"], RESULT_NOT_FOUND)
-    bottom = snapshot.get(cycle["bottom_line"], RESULT_NOT_FOUND)
-    top = snapshot.get(cycle["top_line"], RESULT_NOT_FOUND)
-    icon = snapshot.get(cycle["small_icon"], RESULT_NOT_FOUND)
-
-    client_id = get_component_id(app.lower(), fetchcord_ids[cycle["app_id"]])
-    icon_id = get_component_id(icon, fetchcord_ids[cycle["small_icon"]])
-
-    large_image = "big"
-    if icon and "apple m" in icon.lower():
-        large_image = icon.lower().replace(" ", "-")
-
-    payload = build_presence_activity(
-        details=top,
-        state=bottom,
-        large_image=large_image,
-        large_text=app,
-        small_image=icon_id,
-        small_text=icon,
-        start=int(time.time()),
+    """Thin wrapper over the resolver the presence loop itself uses."""
+    resolved = resolve_cycle(
+        snapshot,
+        fetchcord_ids,
+        name=cycle.get("name", "?"),
+        app_id=cycle["app_id"],
+        top_line=cycle["top_line"],
+        bottom_line=cycle["bottom_line"],
+        small_icon=cycle["small_icon"],
     )
-    return client_id, payload
+    return resolved.client_id, resolved.activity(int(time.time()))
 
 
 def main() -> int:

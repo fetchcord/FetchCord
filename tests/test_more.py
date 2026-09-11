@@ -367,7 +367,7 @@ class TestMain(unittest.TestCase):
         mock_install.assert_not_called()
 
     @patch("fetch_cord.__main__.Fetch")
-    @patch("fetch_cord.__main__.get_component_id", return_value="client-1")
+    @patch("fetch_cord.presence.get_component_id", return_value="client-1")
     @patch("fetch_cord.__main__.get_infos", return_value={})
     @patch("fetch_cord.cycle.Cycle.try_connect")
     @patch("fetch_cord.cycle.Cycle.update")
@@ -411,6 +411,100 @@ class TestMain(unittest.TestCase):
             timer.cancel()
 
         fake_fetch.snapshot.assert_called()
+
+
+class TestDryRun(unittest.TestCase):
+    def _ns(self, **kwargs: object) -> argparse.Namespace:
+        defaults: dict[str, object] = {
+            "update": False,
+            "testing": False,
+            "install": False,
+            "uninstall": False,
+            "enable": False,
+            "disable": False,
+            "start": False,
+            "stop": False,
+            "status": False,
+            "version": False,
+            "time": None,
+            "debug": False,
+            "dry_run": True,
+            "nodistro": False,
+            "nohardware": False,
+            "noshell": False,
+            "nohost": False,
+        }
+        defaults.update(kwargs)
+        return argparse.Namespace(**defaults)
+
+    @patch("fetch_cord.cycle.Presence")
+    @patch("fetch_cord.__main__.psutil.boot_time", return_value=1700000000)
+    @patch("fetch_cord.__main__.Fetch")
+    @patch("fetch_cord.__main__.print")
+    def test_dry_run_prints_and_never_touches_discord(
+        self,
+        mock_print: MagicMock,
+        mock_fetch_class: MagicMock,
+        mock_boot: MagicMock,
+        mock_presence: MagicMock,
+    ) -> None:
+        """The whole point is that it is safe to run with Discord closed."""
+        from threading import Event
+
+        from fetch_cord.__main__ import main
+
+        fake_fetch = MagicMock()
+        fake_fetch.snapshot.return_value = {
+            "os": "Debian GNU/Linux",
+            "kernel": "6.8",
+            "packages": "100",
+            "system_type": "desktop",
+            "cpu": "AMD",
+            "gpu": "NVIDIA",
+            "mem": "1 GB",
+            "terminal": "xterm",
+            "shell": "bash",
+            "motherboard": "MB",
+            "resolution": "1920x1080",
+            "font": "f",
+        }
+        mock_fetch_class.return_value = fake_fetch
+
+        main(self._ns(), stop_event=Event())
+
+        mock_presence.assert_not_called()
+        printed = "\n".join(str(call) for call in mock_print.call_args_list)
+        self.assertIn("Would send", printed)
+        self.assertIn("client_id", printed)
+
+    @patch("fetch_cord.__main__.psutil.boot_time", return_value=1700000000)
+    @patch("fetch_cord.__main__.print")
+    def test_print_dry_run_renders_every_cycle(
+        self, mock_print: MagicMock, mock_boot: MagicMock
+    ) -> None:
+        from fetch_cord.__main__ import print_dry_run
+        from fetch_cord.presence import ResolvedCycle
+
+        print_dry_run(
+            [
+                ResolvedCycle(
+                    name="os",
+                    client_id="123",
+                    app="Debian",
+                    top="6.8",
+                    bottom="100 packages",
+                    icon="Desktop",
+                    icon_id="desktop",
+                    large_image="big",
+                )
+            ],
+            1700000000,
+        )
+
+        printed = "\n".join(str(call) for call in mock_print.call_args_list)
+        self.assertIn("cycle: os", printed)
+        self.assertIn("123", printed)
+        self.assertIn("Debian", printed)
 
 
 class TestCycleExtras(unittest.TestCase):
