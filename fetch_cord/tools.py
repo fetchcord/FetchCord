@@ -5,27 +5,45 @@ import subprocess
 from importlib import resources
 from pathlib import Path
 
+# A backstop against a wedged helper taking the presence loop down with it,
+# not a latency budget - so it is deliberately generous. powershell.exe cold
+# start alone can take well over 15s on a slow or virtualised host (it does on
+# the Windows CI runners), and WMI queries are slower still the first time.
+COMMAND_TIMEOUT_SECONDS = 60
+
 
 def run_command(command: list[str], shell: bool = False) -> str:
-    return subprocess.run(
-        command,
-        encoding="utf-8",
-        stdout=subprocess.PIPE,
-        # trunk-ignore(bandit/B602)
-        shell=shell,
-    ).stdout
+    try:
+        result = subprocess.run(
+            command,
+            encoding="utf-8",
+            errors="replace",
+            stdout=subprocess.PIPE,
+            # Otherwise a helper's warnings get printed over our own output.
+            stderr=subprocess.DEVNULL,
+            timeout=COMMAND_TIMEOUT_SECONDS,
+            # trunk-ignore(bandit/B602)
+            shell=shell,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise BashError(f"Command timed out after {exc.timeout}s: {command}") from exc
+    return result.stdout
 
 
 def exec_bash(command: str) -> str:
-    result = subprocess.run(
-        command,
-        encoding="utf-8",
-        # Captured separately: what a command writes to stderr is
-        # diagnostics, never a field value.
-        capture_output=True,
-        # trunk-ignore(bandit/B602)
-        shell=True,
-    )
+    try:
+        result = subprocess.run(
+            command,
+            encoding="utf-8",
+            # Captured separately: what a command writes to stderr is
+            # diagnostics, never a field value.
+            capture_output=True,
+            timeout=COMMAND_TIMEOUT_SECONDS,
+            # trunk-ignore(bandit/B602)
+            shell=True,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise BashError(f"Command timed out after {exc.timeout}s: {command}") from exc
     if result.returncode != 0:
         raise BashError(
             f"Command failed (exit {result.returncode}): {command}\n"
@@ -44,20 +62,26 @@ PS1_PREAMBLE = "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; "
 def exec_ps1(command: str) -> str:
     # trunk-ignore(bandit/B603)
     # trunk-ignore(bandit/B607)
-    result = subprocess.run(
-        [
-            "powershell",
-            "-NoProfile",
-            "-NonInteractive",
-            "-Command",
-            PS1_PREAMBLE + command,
-        ],
-        encoding="utf-8",
-        # Belt and braces: a stray undecodable byte must never take down the
-        # presence loop, since CommandProvider only expects BashError.
-        errors="replace",
-        capture_output=True,
-    )
+    try:
+        result = subprocess.run(
+            [
+                "powershell",
+                "-NoProfile",
+                "-NonInteractive",
+                "-Command",
+                PS1_PREAMBLE + command,
+            ],
+            encoding="utf-8",
+            # Belt and braces: a stray undecodable byte must never take down the
+            # presence loop, since CommandProvider only expects BashError.
+            errors="replace",
+            capture_output=True,
+            timeout=COMMAND_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise BashError(
+            f"PowerShell command timed out after {exc.timeout}s: {command}"
+        ) from exc
     stderr = (result.stderr or "").strip()
     if result.returncode != 0:
         raise BashError(

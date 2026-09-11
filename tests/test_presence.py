@@ -8,7 +8,7 @@ import unittest
 from threading import Event
 from unittest.mock import MagicMock, patch
 
-from fetch_cord.presence import build_presence_activity
+from fetch_cord.presence import ResolvedCycle, build_presence_activity, resolve_cycle
 
 
 class TestBuildPresenceActivity(unittest.TestCase):
@@ -110,6 +110,82 @@ class TestBuildPresenceActivity(unittest.TestCase):
         self.assertEqual(a, b)
         a["details"] = "changed"
         self.assertNotEqual(a, b)
+
+
+class TestResolveCycle(unittest.TestCase):
+    """One resolver feeds the presence loop, --dry-run and validate.py."""
+
+    IDS = {
+        "os": {"os-id": ["(?i)debian"]},
+        "system_type": {"desktop": ["(?i)desktop"]},
+        "cpu": {"apple-id": ["(?i)apple"]},
+    }
+
+    SNAPSHOT = {
+        "os": "Debian GNU/Linux",
+        "kernel": "6.8.0",
+        "packages": "432 packages",
+        "system_type": "Desktop",
+    }
+
+    def _resolve(self, **overrides: str) -> ResolvedCycle:
+        kwargs: dict[str, str] = {
+            "name": "os",
+            "app_id": "os",
+            "top_line": "kernel",
+            "bottom_line": "packages",
+            "small_icon": "system_type",
+        }
+        kwargs.update(overrides)
+        return resolve_cycle(self.SNAPSHOT, self.IDS, **kwargs)
+
+    def test_maps_snapshot_fields_onto_the_cycle(self) -> None:
+        resolved = self._resolve()
+
+        self.assertEqual(resolved.name, "os")
+        self.assertEqual(resolved.client_id, "os-id")
+        self.assertEqual(resolved.app, "Debian GNU/Linux")
+        self.assertEqual(resolved.top, "6.8.0")
+        self.assertEqual(resolved.bottom, "432 packages")
+        self.assertEqual(resolved.icon, "Desktop")
+        self.assertEqual(resolved.icon_id, "desktop")
+        self.assertEqual(resolved.large_image, "big")
+
+    @patch("builtins.print")
+    def test_missing_fields_become_the_sentinel(self, _print: MagicMock) -> None:
+        resolved = self._resolve(top_line="nope", bottom_line="also-nope")
+
+        self.assertEqual(resolved.top, "Not Found")
+        self.assertEqual(resolved.bottom, "Not Found")
+
+    def test_apple_silicon_gets_a_per_chip_large_image(self) -> None:
+        resolved = resolve_cycle(
+            {"cpu": "Apple M4 Pro"},
+            {"cpu": {"apple-id": ["(?i)apple"]}},
+            name="hardware",
+            app_id="cpu",
+            top_line="cpu",
+            bottom_line="cpu",
+            small_icon="cpu",
+        )
+
+        self.assertEqual(resolved.large_image, "apple-m4-pro")
+
+    def test_activity_matches_the_payload_builder(self) -> None:
+        resolved = self._resolve()
+
+        self.assertEqual(
+            resolved.activity(1700000000),
+            build_presence_activity(
+                details="6.8.0",
+                state="432 packages",
+                large_image="big",
+                large_text="Debian GNU/Linux",
+                small_image="desktop",
+                small_text="Desktop",
+                start=1700000000,
+            ),
+        )
 
 
 class TestCycleUpdatePayload(unittest.TestCase):
