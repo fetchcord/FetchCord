@@ -29,21 +29,35 @@ def get_infos(name: str) -> dict[str, list[str]]:
 _WARNED_UNKNOWN: set[str] = set()
 
 
-def get_component_id(search: str, id_list: dict[str, list[str]]) -> str:
+def resolve_component_id(
+    search: str, id_list: dict[str, list[str]]
+) -> tuple[str, bool]:
+    """Look up a component id, and say whether it actually matched.
+
+    Split out from :func:`get_component_id` so callers that want to report on
+    a miss - rather than warn about it - can tell a real match from the
+    fallback without parsing stdout. Deliberately silent: the warning, and
+    the once-only bookkeeping that goes with it, belong to get_component_id.
+    """
     for id, patterns in id_list.items():
         if not isinstance(patterns, list):
             continue
         if any(re.search(pattern, search) for pattern in patterns):
-            return id
+            return id, True
 
-    if search not in _WARNED_UNKNOWN:
-        _WARNED_UNKNOWN.add(search)
-        print(f"Warning: No match found for '{search}'")
     for id, patterns in id_list.items():
         if isinstance(patterns, list) and "unknown" in patterns:
-            return id
+            return id, False
 
-    return UNKNOWN_COMPONENT_ID
+    return UNKNOWN_COMPONENT_ID, False
+
+
+def get_component_id(search: str, id_list: dict[str, list[str]]) -> str:
+    component_id, matched = resolve_component_id(search, id_list)
+    if not matched and search not in _WARNED_UNKNOWN:
+        _WARNED_UNKNOWN.add(search)
+        print(f"Warning: No match found for '{search}'")
+    return component_id
 
 
 def _looks_like_python_process(value: str) -> bool:

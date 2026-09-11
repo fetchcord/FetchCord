@@ -29,6 +29,7 @@ from fetch_cord.fetch import (
 )
 from fetch_cord.presence import ResolvedCycle, parse_buttons, resolve_cycle
 from fetch_cord.processes import PauseWatcher
+from fetch_cord.report import report
 from fetch_cord.resources import systemd_service
 from fetch_cord.update import update
 
@@ -190,6 +191,9 @@ def main(
     ]
 
     fetch = Fetch(providers)
+
+    if getattr(args, "report_hardware", False):
+        sys.exit(report(fetch.snapshot(), fetchcord_ids))
 
     if getattr(args, "dry_run", False):
         snapshot = fetch.snapshot()
