@@ -628,6 +628,57 @@ class TestFetchExtras(unittest.TestCase):
         self.assertEqual(FastfetchProvider().fetch(), {})
 
 
+class TestBoardIdentification(unittest.TestCase):
+    """The Windows board string has to carry the model, not just the vendor."""
+
+    def test_windows_motherboard_command_reports_vendor_and_product(self) -> None:
+        from fetch_cord.config import Config
+
+        windows = Config("fetchcord_cmds.yml")["commands"]["motherboard"]["Windows"]
+
+        self.assertIn("Manufacturer", windows)
+        self.assertIn("Product", windows)
+
+    def test_all_platforms_report_a_board_model(self) -> None:
+        """Linux already returned board_vendor + board_name; match it."""
+        from fetch_cord.config import Config
+
+        commands = Config("fetchcord_cmds.yml")["commands"]["motherboard"]
+
+        self.assertIn("board_name", commands["Linux"])
+        self.assertIn("Product", commands["Windows"])
+
+    @patch("builtins.print")
+    def test_board_model_can_reach_a_more_specific_id(self, _print: MagicMock) -> None:
+        """A vendor-only string can only ever match the vendor's own entry.
+
+        With the board model present, boards that have their own Discord app
+        (TUF here) resolve to it instead of the generic vendor one.
+        """
+        from fetch_cord.fetch import get_component_id, get_infos
+
+        ids = get_infos("motherboards")
+
+        vendor_only = get_component_id("asustek computer inc.", ids)
+        with_board = get_component_id("asustek computer inc. tuf gaming b550m", ids)
+
+        self.assertNotEqual(vendor_only, with_board)
+
+    @patch("builtins.print")
+    def test_vendor_still_matches_when_the_model_is_unknown(
+        self, _print: MagicMock
+    ) -> None:
+        """Adding the model must not cost us the vendor fallback."""
+        from fetch_cord.fetch import get_component_id, get_infos
+
+        ids = get_infos("motherboards")
+
+        self.assertEqual(
+            get_component_id("asustek computer inc.", ids),
+            get_component_id("asustek computer inc. prime b760-plus d4", ids),
+        )
+
+
 class TestUnknownComponentWarning(unittest.TestCase):
     def setUp(self) -> None:
         from fetch_cord import fetch as fetch_module
