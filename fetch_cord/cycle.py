@@ -27,6 +27,7 @@ class Cycle:
 
     debug: bool = False
     rpc: Presence | None = None
+    connected: bool = False
 
     stop: Event
 
@@ -40,9 +41,10 @@ class Cycle:
 
     def setup(self, client_id: str) -> None:
         self.rpc = Presence(int(client_id))
+        self.connected = False
 
     def try_connect(self) -> None:
-        if self.rpc is None:
+        if self.rpc is None or self.connected:
             return
 
         while not self.stop.is_set():
@@ -50,6 +52,7 @@ class Cycle:
                 if self.debug:
                     print(f'try_connect(name="{self.name}")')
                 self.rpc.connect()
+                self.connected = True
                 break
             except (ConnectionRefusedError, exceptions.DiscordNotFound):
                 print(RPC_CONNECTION_REFUSED_MSG)
@@ -69,6 +72,7 @@ class Cycle:
                 if self.debug:
                     print(f"close_connection: close() failed: {e}")
             self.rpc = None
+            self.connected = False
             time.sleep(0.1)
 
     def update(
