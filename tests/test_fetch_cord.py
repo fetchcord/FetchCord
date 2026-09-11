@@ -10,7 +10,6 @@ Tests cover:
 
 import json
 import os
-import subprocess
 import sys
 import unittest
 from threading import Event
@@ -620,8 +619,7 @@ class TestTools(unittest.TestCase):
         mock_run.assert_called_once_with(
             "echo hello",
             encoding="utf-8",
-            stdout=-1,
-            stderr=subprocess.STDOUT,
+            capture_output=True,
             shell=True,
         )
         self.assertEqual(result, "bash output")
@@ -663,8 +661,7 @@ class TestTools(unittest.TestCase):
             ],
             encoding="utf-8",
             errors="replace",
-            stdout=-1,
-            stderr=subprocess.STDOUT,
+            capture_output=True,
         )
         self.assertEqual(result, "powershell output")
 
@@ -680,6 +677,51 @@ class TestTools(unittest.TestCase):
         from fetch_cord.tools import exec_ps1
 
         self.assertEqual(exec_ps1("Write-Output 'Ünïcödé — ok'"), "Ünïcödé — ok")
+
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_exec_ps1_treats_error_only_output_as_failure(self, mock_run):
+        """A non-terminating PowerShell error must not become a field value.
+
+        PowerShell exits 0 after a non-terminating error, and stderr used to
+        be merged into stdout - so a command whose only output was an error
+        message had that message returned as the value, and it went straight
+        onto the user's Discord profile.
+        """
+        mock_process = MagicMock()
+        mock_process.stdout = ""
+        mock_process.stderr = "You cannot call a method on a null-valued expression."
+        mock_process.returncode = 0
+        mock_run.return_value = mock_process
+
+        from fetch_cord.tools import BashError, exec_ps1
+
+        with self.assertRaises(BashError):
+            exec_ps1("$null.ToString()")
+
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_exec_ps1_keeps_stderr_out_of_the_value(self, mock_run):
+        """Output plus a warning still yields just the output."""
+        mock_process = MagicMock()
+        mock_process.stdout = "2560x1440\n"
+        mock_process.stderr = "WARNING: something noisy"
+        mock_process.returncode = 0
+        mock_run.return_value = mock_process
+
+        from fetch_cord.tools import exec_ps1
+
+        self.assertEqual(exec_ps1("Get-Resolution"), "2560x1440")
+
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_exec_bash_keeps_stderr_out_of_the_value(self, mock_run):
+        mock_process = MagicMock()
+        mock_process.stdout = "1920x1080\n"
+        mock_process.stderr = "xdpyinfo: warning"
+        mock_process.returncode = 0
+        mock_run.return_value = mock_process
+
+        from fetch_cord.tools import exec_bash
+
+        self.assertEqual(exec_bash("xdpyinfo"), "1920x1080")
 
     @patch("fetch_cord.tools.resources.path")
     def test_get_resource_path(self, mock_resources_path):
