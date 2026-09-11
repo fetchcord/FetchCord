@@ -24,19 +24,33 @@ def get_infos(name: str) -> dict[str, list[str]]:
     return data
 
 
-def get_component_id(search: str, id_list: dict[str, list[str]]) -> str:
+def resolve_component_id(
+    search: str, id_list: dict[str, list[str]]
+) -> tuple[str, bool]:
+    """Look up a component id, and say whether it actually matched.
+
+    Split out from :func:`get_component_id` so callers that want to report on
+    a miss - rather than warn about it - can tell a real match from the
+    fallback without parsing stdout.
+    """
     for id, patterns in id_list.items():
         if not isinstance(patterns, list):
             continue
         if any(re.search(pattern, search) for pattern in patterns):
-            return id
+            return id, True
 
-    print(f"Warning: No match found for '{search}'")
     for id, patterns in id_list.items():
         if isinstance(patterns, list) and "unknown" in patterns:
-            return id
+            return id, False
 
-    return "unknown"
+    return "unknown", False
+
+
+def get_component_id(search: str, id_list: dict[str, list[str]]) -> str:
+    component_id, matched = resolve_component_id(search, id_list)
+    if not matched:
+        print(f"Warning: No match found for '{search}'")
+    return component_id
 
 
 def _looks_like_python_process(value: str) -> bool:

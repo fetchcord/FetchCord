@@ -25,6 +25,7 @@ from fetch_cord.fetch import (
     get_component_id,
     get_infos,
 )
+from fetch_cord.report import report
 from fetch_cord.resources import systemd_service
 from fetch_cord.update import update
 
@@ -122,6 +123,9 @@ def main(
     }
 
     fetch = Fetch([FastfetchProvider(), CommandProvider(command_map), NativeProvider()])
+
+    if getattr(args, "report_hardware", False):
+        sys.exit(report(fetch.snapshot(), fetchcord_ids))
 
     def signal_handler(signum: int, frame: object) -> None:
         stop_event.set()
