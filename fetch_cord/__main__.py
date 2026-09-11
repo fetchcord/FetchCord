@@ -7,6 +7,7 @@ import sys
 from signal import SIGINT, SIGTERM, signal
 from threading import Event
 
+import psutil
 from pypresence import exceptions
 
 from fetch_cord.args import parse_args
@@ -15,7 +16,6 @@ from fetch_cord.config import Config
 from fetch_cord.constants import (
     CUSTOM_TIME_MESSAGE,
     MIN_CYCLE_TIME_SECONDS,
-    RESULT_NOT_FOUND,
 )
 from fetch_cord.cycle import Cycle
 from fetch_cord.fetch import (
@@ -23,9 +23,9 @@ from fetch_cord.fetch import (
     FastfetchProvider,
     Fetch,
     NativeProvider,
-    get_component_id,
     get_infos,
 )
+from fetch_cord.presence import ResolvedCycle, resolve_cycle
 from fetch_cord.resources import systemd_service
 from fetch_cord.update import update
 
@@ -77,6 +77,36 @@ def handle_args(args: argparse.Namespace) -> None:
             )
             sys.exit(1)
         print(CUSTOM_TIME_MESSAGE.format(time=args.time))
+
+
+def _resolve(
+    cycle: Cycle,
+    snapshot: dict[str, str],
+    fetchcord_ids: dict[str, dict[str, list[str]]],
+) -> ResolvedCycle:
+    """Adapt a configured Cycle to the shared resolver.
+
+    The None checks in the caller have already run, so the field names are
+    known to be set by the time we get here.
+    """
+    assert cycle.app_id and cycle.top_line and cycle.bottom_line and cycle.small_icon
+    return resolve_cycle(
+        snapshot,
+        fetchcord_ids,
+        name=cycle.name,
+        app_id=cycle.app_id,
+        top_line=cycle.top_line,
+        bottom_line=cycle.bottom_line,
+        small_icon=cycle.small_icon,
+    )
+
+
+def print_dry_run(resolved: list[ResolvedCycle], start: int) -> None:
+    """Print each cycle's Discord app and payload without connecting."""
+    for cycle in resolved:
+        print(f"\ncycle: {cycle.name}  client_id={cycle.client_id}")
+        for key, value in cycle.activity(start).items():
+            print(f"  {key:<12} {value!r}")
 
 
 def main(
@@ -139,6 +169,18 @@ def main(
 
     fetch = Fetch([FastfetchProvider(), CommandProvider(command_map), NativeProvider()])
 
+    if getattr(args, "dry_run", False):
+        snapshot = fetch.snapshot()
+        print("=== Detected ===")
+        for field in sorted(snapshot):
+            print(f"  {field:<12} {snapshot[field]!r}")
+        print("\n=== Would send ===")
+        print_dry_run(
+            [_resolve(cycle, snapshot, fetchcord_ids) for cycle in cycles],
+            int(psutil.boot_time()),
+        )
+        return
+
     def signal_handler(signum: int, frame: object) -> None:
         stop_event.set()
         for cycle in cycles:
@@ -172,20 +214,14 @@ def main(
             ):
                 continue
 
-            app = snapshot.get(app_id, RESULT_NOT_FOUND)
-            bottom = snapshot.get(bottom_line, RESULT_NOT_FOUND)
-            top = snapshot.get(top_line, RESULT_NOT_FOUND)
-            icon = snapshot.get(small_icon, RESULT_NOT_FOUND)
-
-            client_id = get_component_id(app.lower(), fetchcord_ids[app_id])
-
-            icon_id = get_component_id(icon, fetchcord_ids[small_icon])
-
-            # For Apple M chips, use the chip name as the large image
-            large_image = "big"
-            if icon and "apple m" in icon.lower():
-                # Convert "Apple M4 Pro" to "apple-m4-pro"
-                large_image = icon.lower().replace(" ", "-")
+            resolved = _resolve(cycle, snapshot, fetchcord_ids)
+            app = resolved.app
+            bottom = resolved.bottom
+            top = resolved.top
+            icon = resolved.icon
+            client_id = resolved.client_id
+            icon_id = resolved.icon_id
+            large_image = resolved.large_image
 
             if args.debug:
                 print(
