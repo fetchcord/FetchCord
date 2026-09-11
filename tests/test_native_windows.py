@@ -6,6 +6,8 @@ keeps them useful on the Linux CI runner.
 
 import subprocess
 import unittest
+from collections.abc import Iterator
+from contextlib import contextmanager
 from unittest.mock import MagicMock, patch
 
 from fetch_cord.fetch import NativeProvider
@@ -28,14 +30,20 @@ REGISTRY = {
 }
 
 
-def fake_registry(values: dict[tuple[str, str], str] | None = None) -> MagicMock:
+@contextmanager
+def fake_registry(
+    values: dict[tuple[str, str], str] | None = None,
+) -> Iterator[MagicMock]:
     """Patch the registry helper with a fixed set of values."""
     table = REGISTRY if values is None else values
 
     def read(path: str, name: str) -> str | None:
         return table.get((path, name))
 
-    return patch("fetch_cord.native.Windows.registry.read", side_effect=read)
+    with patch(
+        "fetch_cord.native.Windows.registry.read", side_effect=read
+    ) as mock_read:
+        yield mock_read
 
 
 class TestWindowsFetchers(unittest.TestCase):
