@@ -117,12 +117,14 @@ class Cycle:
             raise
 
     def wait(self, n: float, interval_duration: float = WAIT_INTERVAL_SECONDS) -> None:
-        """Wait for n seconds or until interrupted."""
+        """Wait for n seconds, returning early if we've been told to stop.
 
-        intervals = int(n / interval_duration)
-        for _ in range(intervals):
-            if self.stop.wait(interval_duration):
-                break
+        ``interval_duration`` is kept for backwards compatibility and ignored:
+        Event.wait already returns the moment the event is set, so polling it
+        in short slices only costs wakeups.
+        """
+        del interval_duration
+        self.stop.wait(n)
 
     def __repr__(self) -> str:
         return f"""
