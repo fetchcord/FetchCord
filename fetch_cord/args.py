@@ -67,6 +67,24 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Get files from testing branch instead of master.",
     )
+    parser.add_argument(
+        "--install-startup",
+        action="store_true",
+        help=(
+            "Start FetchCord when you sign in (Run key on Windows, LaunchAgent "
+            "on macOS, systemd user service on Linux). No admin rights needed."
+        ),
+    )
+    parser.add_argument(
+        "--uninstall-startup",
+        action="store_true",
+        help="Stop FetchCord starting when you sign in.",
+    )
+    parser.add_argument(
+        "--startup-status",
+        action="store_true",
+        help="Say whether FetchCord is set to start when you sign in.",
+    )
     parser.add_argument("--debug", "-d", action="store_true", help="Enable debugging.")
     parser.add_argument(
         "--version", "-v", action="store_true", help="Print FetchCord Version."

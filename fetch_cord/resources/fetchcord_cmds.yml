@@ -120,8 +120,12 @@ commands:
 
       echo "${model_name} ${model_identifier}" | xargs
   resolution:
+    # Win32_DesktopMonitor's ScreenWidth/ScreenHeight are null on any
+    # modern driver, so calling .ToString() on them errored and (because
+    # PowerShell still exits 0) the error text became the field value.
+    # Win32_VideoController reports the active mode instead.
     Windows: |
-      Get-CimInstance -ClassName Win32_DesktopMonitor | Select-Object ScreenWidth, ScreenHeight | ForEach-Object { $_.ScreenWidth.ToString() + 'x' + $_.ScreenHeight.ToString() }
+      Get-CimInstance -ClassName Win32_VideoController | Where-Object { $_.CurrentHorizontalResolution } | Select-Object -First 1 | ForEach-Object { "$($_.CurrentHorizontalResolution)x$($_.CurrentVerticalResolution)" }
     Linux: &resolution_sh |
       xdpyinfo | awk '/dimensions/ {print $2}'
     Darwin: |

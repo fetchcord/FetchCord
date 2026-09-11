@@ -114,7 +114,10 @@ strict = true
 
 # winreg is Windows-only; mypy has no usable stubs for it on Linux.
 [[tool.mypy.overrides]]
-module = "fetch_cord.native.Windows.packages"
+module = [
+    "fetch_cord.native.Windows.packages",
+    "fetch_cord.autostart",
+]
 disable_error_code = ["attr-defined"]
 
 # pypresence ships py.typed but with incomplete annotations; the calls in
