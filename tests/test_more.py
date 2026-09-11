@@ -580,6 +580,7 @@ class TestPauseWhenInTheLoop(unittest.TestCase):
 
         self.assertGreaterEqual(len(updates), 2)
 
+
 class TestDryRun(unittest.TestCase):
     def _ns(self, **kwargs: object) -> argparse.Namespace:
         defaults: dict[str, object] = {
@@ -673,7 +674,6 @@ class TestDryRun(unittest.TestCase):
         self.assertIn("cycle: os", printed)
         self.assertIn("123", printed)
         self.assertIn("Debian", printed)
-
 
 
 class TestCycleExtras(unittest.TestCase):
