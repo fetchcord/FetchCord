@@ -25,9 +25,10 @@ COMPONENTS: tuple[tuple[str, str], ...] = (
     ("System type", "system_type"),
 )
 
-# Fields the main loop lowercases before looking up; match it so the report
-# can never disagree with what the presence actually did.
-LOWERCASED = ("os", "cpu")
+# Fields used as cycle app_id values are lowercased before lookup in
+# resolve_cycle; match that so the report can never disagree with what the
+# presence actually did. Icon lookups (gpu/shell/system_type) stay as-is.
+LOWERCASED = ("os", "cpu", "motherboard", "terminal")
 
 MATCHED = "ok"
 GENERIC = "**no match - needs an entry**"
