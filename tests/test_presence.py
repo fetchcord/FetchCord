@@ -35,6 +35,45 @@ class TestBuildPresenceActivity(unittest.TestCase):
             },
         )
 
+    def test_drops_small_pair_when_icon_is_unresolved(self) -> None:
+        """No icon means no tooltip - Discord has nothing to attach it to.
+
+        get_component_id falls back to the literal "unknown" when a component
+        isn't in the id table, and that isn't an uploaded asset. system_types
+        and desktop have no "unknown" entry at all, so any machine whose
+        system_type doesn't resolve (a desktop with no battery, say) hit this
+        on both the os and host cycles.
+        """
+        for placeholder in ("unknown", "Not Found", ""):
+            with self.subTest(small_image=placeholder):
+                payload = build_presence_activity(
+                    details="6.8.0",
+                    state="432 packages",
+                    large_image="big",
+                    large_text="Debian GNU/Linux",
+                    small_image=placeholder,
+                    small_text="Not Found",
+                    start=1700000000,
+                )
+                self.assertIsNone(payload["small_image"])
+                self.assertIsNone(payload["small_text"])
+                # The rest of the payload is untouched.
+                self.assertEqual(payload["details"], "6.8.0")
+                self.assertEqual(payload["large_text"], "Debian GNU/Linux")
+
+    def test_keeps_icon_but_drops_placeholder_tooltip(self) -> None:
+        payload = build_presence_activity(
+            details="6.8.0",
+            state="432 packages",
+            large_image="big",
+            large_text="Debian GNU/Linux",
+            small_image="desktop",
+            small_text="Not Found",
+            start=1700000000,
+        )
+        self.assertEqual(payload["small_image"], "desktop")
+        self.assertIsNone(payload["small_text"])
+
     def test_accepts_not_found_sentinel(self) -> None:
         payload = build_presence_activity(
             details="Not Found",

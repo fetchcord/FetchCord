@@ -11,6 +11,7 @@ import psutil
 from pypresence import exceptions
 
 from fetch_cord.args import parse_args
+from fetch_cord.autostart import handle as handle_autostart
 from fetch_cord.config import Config
 from fetch_cord.constants import (
     CUSTOM_TIME_MESSAGE,
@@ -36,6 +37,15 @@ def handle_args(args: argparse.Namespace) -> None:
 
     if args.update:
         update(testing=args.testing)
+    # Autostart works the same way on every platform, so it is handled before
+    # the systemd-only block below rather than inside it.
+    for flag, action in (
+        ("install_startup", "install"),
+        ("uninstall_startup", "uninstall"),
+        ("startup_status", "status"),
+    ):
+        if getattr(args, flag, False):
+            sys.exit(handle_autostart(action))
     if os.name != "nt" and sys.platform != "darwin":
         if args.install:
             systemd_service.install(testing=args.testing)
@@ -55,7 +65,12 @@ def handle_args(args: argparse.Namespace) -> None:
         print("FetchCord version:", VERSION)
         sys.exit(0)
     if args.time:
-        if float(args.time) < MIN_CYCLE_TIME_SECONDS:
+        try:
+            seconds = float(args.time)
+        except ValueError:
+            print(f"ERROR: --time must be a number, got {args.time!r}.")
+            sys.exit(1)
+        if seconds < MIN_CYCLE_TIME_SECONDS:
             print(
                 f"ERROR: Invalid time set, must be > {MIN_CYCLE_TIME_SECONDS} "
                 "seconds, cannot continue."
@@ -138,7 +153,8 @@ def main(
     for cycle in cycles:
         cycle.debug = args.debug
         if args.time:
-            cycle.time = int(args.time)
+            # handle_args has already validated this parses as a float.
+            cycle.time = int(float(args.time))
 
     os_type = platform.system()
     # Only the commands defined for this OS are run. The structured fastfetch
@@ -176,6 +192,11 @@ def main(
     # Main loop
     current_client_id = None
     while not stop_event.is_set():
+        # Collect every field once per rotation rather than once per cycle.
+        # Each cycle reads different fields out of the same snapshot, and on
+        # Windows a snapshot is a dozen PowerShell processes.
+        snapshot = fetch.snapshot()
+
         # Loop through the cycles defined in the config
         for cycle in cycles:
             if stop_event.is_set():
@@ -193,8 +214,6 @@ def main(
             ):
                 continue
 
-            # Collect every field once per cycle, then read from the snapshot.
-            snapshot = fetch.snapshot()
             resolved = _resolve(cycle, snapshot, fetchcord_ids)
             app = resolved.app
             bottom = resolved.bottom
