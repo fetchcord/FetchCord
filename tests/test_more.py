@@ -317,6 +317,25 @@ class TestMain(unittest.TestCase):
         handle_args(self._ns(time="30"))
         mock_print.assert_called_once_with("setting custom time 30 seconds")
 
+    @patch("fetch_cord.__main__.print")
+    def test_handle_args_fractional_time(self, mock_print: MagicMock) -> None:
+        """--time 30.5 used to pass validation then ValueError in main()."""
+        from fetch_cord.__main__ import handle_args
+
+        handle_args(self._ns(time="30.5"))
+        mock_print.assert_called_once_with("setting custom time 30.5 seconds")
+
+    @patch("fetch_cord.__main__.sys.exit", side_effect=SystemExit)
+    @patch("fetch_cord.__main__.print")
+    def test_handle_args_non_numeric_time(
+        self, mock_print: MagicMock, mock_exit: MagicMock
+    ) -> None:
+        from fetch_cord.__main__ import handle_args
+
+        with self.assertRaises(SystemExit):
+            handle_args(self._ns(time="soon"))
+        mock_exit.assert_called_once_with(1)
+
     @patch("fetch_cord.__main__.update")
     def test_handle_args_update(self, mock_update: MagicMock) -> None:
         from fetch_cord.__main__ import handle_args
