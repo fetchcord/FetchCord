@@ -134,6 +134,11 @@ def main(
     # Main loop
     current_client_id = None
     while not stop_event.is_set():
+        # Collect every field once per rotation rather than once per cycle.
+        # Each cycle reads different fields out of the same snapshot, and on
+        # Windows a snapshot is a dozen PowerShell processes.
+        snapshot = fetch.snapshot()
+
         # Loop through the cycles defined in the config
         for cycle in cycles:
             if stop_event.is_set():
@@ -151,8 +156,6 @@ def main(
             ):
                 continue
 
-            # Collect every field once per cycle, then read from the snapshot.
-            snapshot = fetch.snapshot()
             app = snapshot.get(app_id, RESULT_NOT_FOUND)
             bottom = snapshot.get(bottom_line, RESULT_NOT_FOUND)
             top = snapshot.get(top_line, RESULT_NOT_FOUND)
