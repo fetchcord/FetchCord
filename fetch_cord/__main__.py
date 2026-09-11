@@ -23,6 +23,7 @@ from fetch_cord.fetch import (
     CommandProvider,
     FastfetchProvider,
     Fetch,
+    FieldProvider,
     NativeProvider,
     get_infos,
 )
@@ -164,17 +165,29 @@ def main(
     pause = PauseWatcher(pause_when)
 
     os_type = platform.system()
-    # Only the commands defined for this OS are run. The structured fastfetch
-    # provider fills the common fields first; command/native providers only
-    # fill the gaps (e.g. motherboard/resolution/system_type, or everything on
-    # Windows where fastfetch may not be installed).
+    # Only the commands defined for this OS are run.
     command_map = {
         component_type: value[os_type]
         for component_type, value in config["commands"].items()
         if os_type in value
     }
 
-    fetch = Fetch([FastfetchProvider(), CommandProvider(command_map), NativeProvider()])
+    # Native fetchers first: they need no tool installed and cost a few
+    # milliseconds. fastfetch then covers everything native does not implement
+    # yet, and the commands cover what neither reaches.
+    #
+    # This is only safe because a native fetcher returns None when it is not
+    # confident rather than guessing - an unreadable registry key, or firmware
+    # boilerplate like "To Be Filled By O.E.M." - so Fetch.snapshot hands the
+    # field straight to fastfetch. Native coverage can grow one field at a
+    # time without any platform ever losing detail it has today.
+    providers: list[FieldProvider] = [
+        NativeProvider(),
+        FastfetchProvider(),
+        CommandProvider(command_map),
+    ]
+
+    fetch = Fetch(providers)
 
     if getattr(args, "dry_run", False):
         snapshot = fetch.snapshot()

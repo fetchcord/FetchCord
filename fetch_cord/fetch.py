@@ -126,11 +126,20 @@ class CommandProvider:
 
 
 class NativeProvider:
-    """Uses the bundled native (Windows) fetchers for fields not otherwise
-    covered, e.g. the installed-packages count on Windows."""
+    """Uses the bundled native (Windows) fetchers, which read the registry and
+    Win32 directly. Adds no tool dependency and no subprocess, and returns {}
+    for anything it cannot read so another provider fills the gap."""
 
     name = "native"
-    NATIVE_COMPONENTS = ("packages",)
+    NATIVE_COMPONENTS = (
+        "cpu",
+        "host",
+        "kernel",
+        "mem",
+        "motherboard",
+        "os",
+        "packages",
+    )
 
     def __init__(self) -> None:
         self._native = native_module
