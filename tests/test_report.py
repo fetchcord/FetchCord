@@ -48,6 +48,31 @@ class TestBuild(unittest.TestCase):
         self.assertIn("needs an entry", text)
         self.assertIn("1 component(s) found no match", text)
 
+    @patch("builtins.print")
+    def test_a_miss_neither_warns_nor_silences_the_loop(
+        self, mock_print: MagicMock
+    ) -> None:
+        """The report reports; warning is get_component_id's job.
+
+        get_component_id warns once per unmatched component and remembers it.
+        If the report resolved ids through that, a --report-hardware run would
+        print warnings through the middle of the table and leave the presence
+        loop silent about the very component the report just flagged.
+        """
+        from fetch_cord import fetch as fetch_module
+
+        fetch_module._WARNED_UNKNOWN.clear()
+        self.addCleanup(fetch_module._WARNED_UNKNOWN.clear)
+
+        snapshot = {**SNAPSHOT, "motherboard": "Some Unlisted Board Co."}
+        build(snapshot, IDS)
+
+        warnings = [
+            call for call in mock_print.call_args_list if "No match found" in str(call)
+        ]
+        self.assertEqual(warnings, [])
+        self.assertEqual(fetch_module._WARNED_UNKNOWN, set())
+
     def test_the_raw_detected_string_is_in_the_table(self) -> None:
         """That string is the whole point - it's what a pattern must match."""
         snapshot = {**SNAPSHOT, "motherboard": "Micro-Star International Co., Ltd."}

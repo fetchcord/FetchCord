@@ -11,6 +11,9 @@ TESTING_BRANCH = "testing"
 
 # Error / status messages
 RESULT_NOT_FOUND = "Not Found"
+# Last-resort return from get_component_id when nothing in the id table
+# matched. It is a placeholder, not a Discord asset key.
+UNKNOWN_COMPONENT_ID = "unknown"
 CUSTOM_TIME_MESSAGE = "setting custom time {time} seconds"
 
 # RPC connection

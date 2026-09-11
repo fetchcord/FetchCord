@@ -7,7 +7,7 @@ from importlib.resources import files
 from typing import Protocol
 
 from fetch_cord import resources
-from fetch_cord.constants import RESULT_NOT_FOUND
+from fetch_cord.constants import RESULT_NOT_FOUND, UNKNOWN_COMPONENT_ID
 from fetch_cord.info import FASTFETCH_MODULES, parse_fastfetch_json
 from fetch_cord.native import native as native_module
 from fetch_cord.tools import BashError, exec_bash, exec_ps1, run_command
@@ -24,6 +24,11 @@ def get_infos(name: str) -> dict[str, list[str]]:
     return data
 
 
+# Hardware doesn't change between cycles, so an unmatched component would
+# otherwise reprint the same warning every rotation, forever.
+_WARNED_UNKNOWN: set[str] = set()
+
+
 def resolve_component_id(
     search: str, id_list: dict[str, list[str]]
 ) -> tuple[str, bool]:
@@ -31,7 +36,8 @@ def resolve_component_id(
 
     Split out from :func:`get_component_id` so callers that want to report on
     a miss - rather than warn about it - can tell a real match from the
-    fallback without parsing stdout.
+    fallback without parsing stdout. Deliberately silent: the warning, and
+    the once-only bookkeeping that goes with it, belong to get_component_id.
     """
     for id, patterns in id_list.items():
         if not isinstance(patterns, list):
@@ -43,12 +49,13 @@ def resolve_component_id(
         if isinstance(patterns, list) and "unknown" in patterns:
             return id, False
 
-    return "unknown", False
+    return UNKNOWN_COMPONENT_ID, False
 
 
 def get_component_id(search: str, id_list: dict[str, list[str]]) -> str:
     component_id, matched = resolve_component_id(search, id_list)
-    if not matched:
+    if not matched and search not in _WARNED_UNKNOWN:
+        _WARNED_UNKNOWN.add(search)
         print(f"Warning: No match found for '{search}'")
     return component_id
 
