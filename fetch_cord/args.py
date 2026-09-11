@@ -67,6 +67,16 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Get files from testing branch instead of master.",
     )
+    parser.add_argument(
+        "--pause-when",
+        metavar="NAME",
+        nargs="+",
+        help=(
+            "Process names that should hold the presence back while they run "
+            "(e.g. --pause-when steam spotify). Overrides pause_when in the "
+            "config. The .exe suffix is optional."
+        ),
+    )
     parser.add_argument("--debug", "-d", action="store_true", help="Enable debugging.")
     parser.add_argument(
         "--version", "-v", action="store_true", help="Print FetchCord Version."

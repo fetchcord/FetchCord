@@ -13,6 +13,7 @@ from fetch_cord.args import parse_args
 from fetch_cord.config import Config
 from fetch_cord.constants import (
     CUSTOM_TIME_MESSAGE,
+    DEFAULT_CYCLE_TIME_SECONDS,
     MIN_CYCLE_TIME_SECONDS,
     RESULT_NOT_FOUND,
 )
@@ -25,6 +26,7 @@ from fetch_cord.fetch import (
     get_component_id,
     get_infos,
 )
+from fetch_cord.processes import PauseWatcher
 from fetch_cord.resources import systemd_service
 from fetch_cord.update import update
 
@@ -110,6 +112,11 @@ def main(
         if args.time:
             cycle.time = int(args.time)
 
+    # CLI wins over the config file so this is usable without editing the
+    # packaged config.
+    pause_when = getattr(args, "pause_when", None) or config.get("pause_when") or []
+    pause = PauseWatcher(pause_when)
+
     os_type = platform.system()
     # Only the commands defined for this OS are run. The structured fastfetch
     # provider fills the common fields first; command/native providers only
@@ -149,6 +156,16 @@ def main(
                 or bottom_line is None
                 or small_icon is None
             ):
+                continue
+
+            if pause.check():
+                # Leave the profile alone so whatever else is running keeps
+                # the status it would have had.
+                for other in cycles:
+                    if other.rpc:
+                        other.close_connection()
+                current_client_id = None
+                cycle.wait(cycle.time or DEFAULT_CYCLE_TIME_SECONDS)
                 continue
 
             # Collect every field once per cycle, then read from the snapshot.
