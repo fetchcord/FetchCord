@@ -10,6 +10,7 @@ from threading import Event
 from pypresence import exceptions
 
 from fetch_cord.args import parse_args
+from fetch_cord.autostart import handle as handle_autostart
 from fetch_cord.config import Config
 from fetch_cord.constants import (
     CUSTOM_TIME_MESSAGE,
@@ -36,6 +37,15 @@ def handle_args(args: argparse.Namespace) -> None:
 
     if args.update:
         update(testing=args.testing)
+    # Autostart works the same way on every platform, so it is handled before
+    # the systemd-only block below rather than inside it.
+    for flag, action in (
+        ("install_startup", "install"),
+        ("uninstall_startup", "uninstall"),
+        ("startup_status", "status"),
+    ):
+        if getattr(args, flag, False):
+            sys.exit(handle_autostart(action))
     if os.name != "nt" and sys.platform != "darwin":
         if args.install:
             systemd_service.install(testing=args.testing)
