@@ -1,4 +1,13 @@
 ---
+# Programs that should keep their own Discord status while they run.
+# FetchCord clears its presence until they exit. The .exe suffix is
+# optional, so one entry works on every platform.
+#
+# pause_when:
+#   - steam
+#   - spotify
+pause_when: []
+
 cycle_time: &cycle_time 30
 cycles:
   - name: os

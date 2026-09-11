@@ -15,6 +15,7 @@ from fetch_cord.autostart import handle as handle_autostart
 from fetch_cord.config import Config
 from fetch_cord.constants import (
     CUSTOM_TIME_MESSAGE,
+    DEFAULT_CYCLE_TIME_SECONDS,
     MIN_CYCLE_TIME_SECONDS,
 )
 from fetch_cord.cycle import Cycle
@@ -26,6 +27,7 @@ from fetch_cord.fetch import (
     get_infos,
 )
 from fetch_cord.presence import ResolvedCycle, resolve_cycle
+from fetch_cord.processes import PauseWatcher
 from fetch_cord.resources import systemd_service
 from fetch_cord.update import update
 
@@ -156,6 +158,11 @@ def main(
             # handle_args has already validated this parses as a float.
             cycle.time = int(float(args.time))
 
+    # CLI wins over the config file so this is usable without editing the
+    # packaged config.
+    pause_when = getattr(args, "pause_when", None) or config.get("pause_when") or []
+    pause = PauseWatcher(pause_when)
+
     os_type = platform.system()
     # Only the commands defined for this OS are run. The structured fastfetch
     # provider fills the common fields first; command/native providers only
@@ -192,6 +199,21 @@ def main(
     # Main loop
     current_client_id = None
     while not stop_event.is_set():
+        if pause.check():
+            # Leave the profile alone so whatever else is running keeps the
+            # status it would have had - and skip the snapshot entirely,
+            # since a rotation we are not going to send is not worth a dozen
+            # PowerShell processes.
+            for other in cycles:
+                if other.rpc:
+                    other.close_connection()
+            current_client_id = None
+            if cycles:
+                cycles[0].wait(cycles[0].time or DEFAULT_CYCLE_TIME_SECONDS)
+            else:
+                stop_event.wait(DEFAULT_CYCLE_TIME_SECONDS)
+            continue
+
         # Collect every field once per rotation rather than once per cycle.
         # Each cycle reads different fields out of the same snapshot, and on
         # Windows a snapshot is a dozen PowerShell processes.

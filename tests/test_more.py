@@ -282,6 +282,8 @@ class TestMain(unittest.TestCase):
             "version": False,
             "time": None,
             "debug": False,
+            "dry_run": False,
+            "pause_when": None,
             "nodistro": False,
             "nohardware": False,
             "noshell": False,
@@ -473,6 +475,111 @@ class TestMain(unittest.TestCase):
         self.assertEqual(fake_fetch.snapshot.call_count, 1)
 
 
+class TestPauseWhenInTheLoop(unittest.TestCase):
+    def _ns(self, **kwargs: object) -> argparse.Namespace:
+        defaults: dict[str, object] = {
+            "update": False,
+            "testing": False,
+            "install": False,
+            "uninstall": False,
+            "enable": False,
+            "disable": False,
+            "start": False,
+            "stop": False,
+            "status": False,
+            "version": False,
+            "time": None,
+            "debug": False,
+            "pause_when": ["steam"],
+            "dry_run": False,
+            "nodistro": False,
+            "nohardware": False,
+            "noshell": False,
+            "nohost": False,
+        }
+        defaults.update(kwargs)
+        return argparse.Namespace(**defaults)
+
+    @patch("fetch_cord.processes.running_names", return_value=["steam.exe"])
+    @patch("fetch_cord.__main__.Fetch")
+    @patch("fetch_cord.__main__.get_infos", return_value={})
+    @patch("fetch_cord.cycle.Cycle.close_connection")
+    @patch("fetch_cord.cycle.Cycle.update")
+    @patch("fetch_cord.cycle.Cycle.setup")
+    def test_a_paused_program_stops_us_updating(
+        self,
+        mock_setup: MagicMock,
+        mock_update: MagicMock,
+        mock_close: MagicMock,
+        mock_get_infos: MagicMock,
+        mock_fetch_class: MagicMock,
+        mock_names: MagicMock,
+    ) -> None:
+        """The whole point: leave the profile to whatever else is running."""
+        from threading import Event
+
+        from fetch_cord.__main__ import main
+
+        fake_fetch = MagicMock()
+        fake_fetch.snapshot.return_value = {}
+        mock_fetch_class.return_value = fake_fetch
+
+        stop = Event()
+        waits: list[object] = []
+
+        def record_wait(*args: object, **kwargs: object) -> None:
+            waits.append(args)
+            if len(waits) >= 4:
+                stop.set()
+
+        with patch("fetch_cord.cycle.Cycle.wait", side_effect=record_wait):
+            main(self._ns(), stop_event=stop)
+
+        mock_update.assert_not_called()
+        mock_setup.assert_not_called()
+        # Nothing to send means nothing to collect: a snapshot is a dozen
+        # PowerShell processes on Windows, and pausing is meant to get out
+        # of the way, not just stay quiet.
+        fake_fetch.snapshot.assert_not_called()
+        # It still paces itself rather than spinning.
+        self.assertGreaterEqual(len(waits), 4)
+
+    @patch("fetch_cord.processes.running_names", return_value=["firefox"])
+    @patch("fetch_cord.__main__.Fetch")
+    @patch("fetch_cord.presence.get_component_id", return_value="client-1")
+    @patch("fetch_cord.__main__.get_infos", return_value={})
+    @patch("fetch_cord.cycle.Cycle.try_connect")
+    @patch("fetch_cord.cycle.Cycle.setup")
+    def test_nothing_matching_leaves_the_loop_alone(
+        self,
+        mock_setup: MagicMock,
+        mock_try_connect: MagicMock,
+        mock_get_infos: MagicMock,
+        mock_get_component_id: MagicMock,
+        mock_fetch_class: MagicMock,
+        mock_names: MagicMock,
+    ) -> None:
+        from threading import Event
+
+        from fetch_cord.__main__ import main
+
+        fake_fetch = MagicMock()
+        fake_fetch.snapshot.return_value = {}
+        mock_fetch_class.return_value = fake_fetch
+
+        stop = Event()
+        updates: list[object] = []
+
+        def record_update(*args: object, **kwargs: object) -> None:
+            updates.append(args)
+            if len(updates) >= 2:
+                stop.set()
+
+        with patch("fetch_cord.cycle.Cycle.update", side_effect=record_update):
+            main(self._ns(), stop_event=stop)
+
+        self.assertGreaterEqual(len(updates), 2)
+
 class TestDryRun(unittest.TestCase):
     def _ns(self, **kwargs: object) -> argparse.Namespace:
         defaults: dict[str, object] = {
@@ -489,6 +596,7 @@ class TestDryRun(unittest.TestCase):
             "time": None,
             "debug": False,
             "dry_run": True,
+            "pause_when": None,
             "nodistro": False,
             "nohardware": False,
             "noshell": False,
@@ -565,6 +673,7 @@ class TestDryRun(unittest.TestCase):
         self.assertIn("cycle: os", printed)
         self.assertIn("123", printed)
         self.assertIn("Debian", printed)
+
 
 
 class TestCycleExtras(unittest.TestCase):
