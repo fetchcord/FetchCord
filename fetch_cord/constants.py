@@ -9,6 +9,10 @@ WAIT_INTERVAL_SECONDS = 0.05
 DEFAULT_BRANCH = "master"
 TESTING_BRANCH = "testing"
 
+# Discord's limits on Rich Presence buttons.
+MAX_BUTTONS = 2
+MAX_BUTTON_LABEL = 32
+
 # Error / status messages
 RESULT_NOT_FOUND = "Not Found"
 CUSTOM_TIME_MESSAGE = "setting custom time {time} seconds"

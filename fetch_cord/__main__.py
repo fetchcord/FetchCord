@@ -25,6 +25,7 @@ from fetch_cord.fetch import (
     get_component_id,
     get_infos,
 )
+from fetch_cord.presence import parse_buttons
 from fetch_cord.resources import systemd_service
 from fetch_cord.update import update
 
@@ -105,8 +106,10 @@ def main(
         "host": args.nohost,
     }
     cycles = [c for c in cycles if not hide.get(c.name, False)]
+    buttons = parse_buttons(config.get("buttons"))
     for cycle in cycles:
         cycle.debug = args.debug
+        cycle.buttons = buttons
         if args.time:
             cycle.time = int(args.time)
 
