@@ -105,8 +105,13 @@ commands:
     Darwin: |
       sysctl -n hw.model
   motherboard:
+    # Manufacturer on its own is just a vendor ("ASUSTeK COMPUTER INC."),
+    # which is all the host cycle had to show and all the id table had to
+    # match on. Linux already reports board_vendor + board_name; do the
+    # same here. Product is dropped when empty so the value never gains a
+    # trailing space.
     Windows: |
-      Get-CimInstance -ClassName Win32_BaseBoard | Select-Object Manufacturer | ForEach-Object {$_.Manufacturer}
+      Get-CimInstance -ClassName Win32_BaseBoard | ForEach-Object { ($_.Manufacturer, $_.Product | Where-Object { $_ }) -join ' ' }
     Linux: &motherboard_sh |
       cat /sys/devices/virtual/dmi/id/board_vendor /sys/devices/virtual/dmi/id/board_name | xargs
     Darwin: |
