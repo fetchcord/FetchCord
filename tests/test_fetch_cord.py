@@ -248,6 +248,29 @@ class TestCycle(unittest.TestCase):
         timer.join()
 
     @patch("fetch_cord.cycle.Presence")
+    def test_cycle_wait_returns_promptly_when_stopped(self, mock_presence_class):
+        """A 30s cycle must not keep the process alive for 30s after Ctrl+C."""
+        import time as _time
+
+        from fetch_cord.cycle import Cycle
+
+        stop_event = Event()
+        cycle = Cycle(self.config, stop_event)
+
+        import threading
+
+        timer = threading.Timer(0.05, stop_event.set)
+        timer.start()
+        try:
+            started = _time.perf_counter()
+            cycle.wait(30)
+            elapsed = _time.perf_counter() - started
+        finally:
+            timer.cancel()
+
+        self.assertLess(elapsed, 5)
+
+    @patch("fetch_cord.cycle.Presence")
     def test_cycle_repr(self, mock_presence_class):
         """Test Cycle __repr__ method."""
         from fetch_cord.cycle import Cycle
@@ -628,8 +651,7 @@ class TestTools(unittest.TestCase):
         mock_run.assert_called_once_with(
             "echo hello",
             encoding="utf-8",
-            stdout=-1,
-            stderr=subprocess.STDOUT,
+            capture_output=True,
             timeout=COMMAND_TIMEOUT_SECONDS,
             shell=True,
         )
@@ -672,8 +694,7 @@ class TestTools(unittest.TestCase):
             ],
             encoding="utf-8",
             errors="replace",
-            stdout=-1,
-            stderr=subprocess.STDOUT,
+            capture_output=True,
             timeout=COMMAND_TIMEOUT_SECONDS,
         )
         self.assertEqual(result, "powershell output")
@@ -690,6 +711,51 @@ class TestTools(unittest.TestCase):
         from fetch_cord.tools import exec_ps1
 
         self.assertEqual(exec_ps1("Write-Output 'Ünïcödé — ok'"), "Ünïcödé — ok")
+
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_exec_ps1_treats_error_only_output_as_failure(self, mock_run):
+        """A non-terminating PowerShell error must not become a field value.
+
+        PowerShell exits 0 after a non-terminating error, and stderr used to
+        be merged into stdout - so a command whose only output was an error
+        message had that message returned as the value, and it went straight
+        onto the user's Discord profile.
+        """
+        mock_process = MagicMock()
+        mock_process.stdout = ""
+        mock_process.stderr = "You cannot call a method on a null-valued expression."
+        mock_process.returncode = 0
+        mock_run.return_value = mock_process
+
+        from fetch_cord.tools import BashError, exec_ps1
+
+        with self.assertRaises(BashError):
+            exec_ps1("$null.ToString()")
+
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_exec_ps1_keeps_stderr_out_of_the_value(self, mock_run):
+        """Output plus a warning still yields just the output."""
+        mock_process = MagicMock()
+        mock_process.stdout = "2560x1440\n"
+        mock_process.stderr = "WARNING: something noisy"
+        mock_process.returncode = 0
+        mock_run.return_value = mock_process
+
+        from fetch_cord.tools import exec_ps1
+
+        self.assertEqual(exec_ps1("Get-Resolution"), "2560x1440")
+
+    @patch("fetch_cord.tools.subprocess.run")
+    def test_exec_bash_keeps_stderr_out_of_the_value(self, mock_run):
+        mock_process = MagicMock()
+        mock_process.stdout = "1920x1080\n"
+        mock_process.stderr = "xdpyinfo: warning"
+        mock_process.returncode = 0
+        mock_run.return_value = mock_process
+
+        from fetch_cord.tools import exec_bash
+
+        self.assertEqual(exec_bash("xdpyinfo"), "1920x1080")
 
     @patch("fetch_cord.tools.subprocess.run")
     def test_exec_bash_timeout_raises_bash_error(self, mock_run):

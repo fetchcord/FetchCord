@@ -35,8 +35,9 @@ def exec_bash(command: str) -> str:
         result = subprocess.run(
             command,
             encoding="utf-8",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
+            # Captured separately: what a command writes to stderr is
+            # diagnostics, never a field value.
+            capture_output=True,
             timeout=COMMAND_TIMEOUT_SECONDS,
             # trunk-ignore(bandit/B602)
             shell=True,
@@ -44,7 +45,10 @@ def exec_bash(command: str) -> str:
     except subprocess.TimeoutExpired as exc:
         raise BashError(f"Command timed out after {exc.timeout}s: {command}") from exc
     if result.returncode != 0:
-        raise BashError(f"Command failed (exit {result.returncode}): {command}")
+        raise BashError(
+            f"Command failed (exit {result.returncode}): {command}\n"
+            f"{(result.stderr or '').strip()}"
+        )
     return result.stdout.strip()
 
 
@@ -68,22 +72,28 @@ def exec_ps1(command: str) -> str:
                 PS1_PREAMBLE + command,
             ],
             encoding="utf-8",
-            # Belt and braces: a stray undecodable byte must never take down
-            # the presence loop, since CommandProvider only expects BashError.
+            # Belt and braces: a stray undecodable byte must never take down the
+            # presence loop, since CommandProvider only expects BashError.
             errors="replace",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
+            capture_output=True,
             timeout=COMMAND_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired as exc:
         raise BashError(
             f"PowerShell command timed out after {exc.timeout}s: {command}"
         ) from exc
+    stderr = (result.stderr or "").strip()
     if result.returncode != 0:
         raise BashError(
-            f"PowerShell command failed (exit {result.returncode}): {command}"
+            f"PowerShell command failed (exit {result.returncode}): {command}\n{stderr}"
         )
-    return result.stdout.strip()
+    # PowerShell exits 0 after a non-terminating error, so the return code
+    # alone doesn't tell us the command worked. If it printed nothing but did
+    # complain, that's a failed field, not a value.
+    stdout = result.stdout.strip()
+    if not stdout and stderr:
+        raise BashError(f"PowerShell command errored: {command}\n{stderr}")
+    return stdout
 
 
 def get_resource_path(package: str, resource: str) -> Path:
