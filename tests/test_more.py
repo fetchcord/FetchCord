@@ -317,6 +317,25 @@ class TestMain(unittest.TestCase):
         handle_args(self._ns(time="30"))
         mock_print.assert_called_once_with("setting custom time 30 seconds")
 
+    @patch("fetch_cord.__main__.print")
+    def test_handle_args_fractional_time(self, mock_print: MagicMock) -> None:
+        """--time 30.5 used to pass validation then ValueError in main()."""
+        from fetch_cord.__main__ import handle_args
+
+        handle_args(self._ns(time="30.5"))
+        mock_print.assert_called_once_with("setting custom time 30.5 seconds")
+
+    @patch("fetch_cord.__main__.sys.exit", side_effect=SystemExit)
+    @patch("fetch_cord.__main__.print")
+    def test_handle_args_non_numeric_time(
+        self, mock_print: MagicMock, mock_exit: MagicMock
+    ) -> None:
+        from fetch_cord.__main__ import handle_args
+
+        with self.assertRaises(SystemExit):
+            handle_args(self._ns(time="soon"))
+        mock_exit.assert_called_once_with(1)
+
     @patch("fetch_cord.__main__.update")
     def test_handle_args_update(self, mock_update: MagicMock) -> None:
         from fetch_cord.__main__ import handle_args
@@ -412,6 +431,47 @@ class TestMain(unittest.TestCase):
 
         fake_fetch.snapshot.assert_called()
 
+    @patch("fetch_cord.__main__.Fetch")
+    @patch("fetch_cord.__main__.get_component_id", return_value="client-1")
+    @patch("fetch_cord.__main__.get_infos", return_value={})
+    @patch("fetch_cord.cycle.Cycle.try_connect")
+    @patch("fetch_cord.cycle.Cycle.setup")
+    def test_main_loop_snapshots_once_per_rotation(
+        self,
+        mock_setup: MagicMock,
+        mock_try_connect: MagicMock,
+        mock_get_infos: MagicMock,
+        mock_get_component_id: MagicMock,
+        mock_fetch_class: MagicMock,
+    ) -> None:
+        """One collection per rotation, not one per cycle.
+
+        Collecting per cycle meant a dozen PowerShell processes four times a
+        rotation on Windows, for four reads out of the same data.
+        """
+        from threading import Event
+
+        from fetch_cord.__main__ import main
+
+        fake_fetch = MagicMock()
+        fake_fetch.snapshot.return_value = {}
+        mock_fetch_class.return_value = fake_fetch
+
+        stop = Event()
+        updates = []
+
+        def record_update(*args: object, **kwargs: object) -> None:
+            updates.append(args)
+            # Stop once we have been round every cycle exactly once.
+            if len(updates) >= 4:
+                stop.set()
+
+        with patch("fetch_cord.cycle.Cycle.update", side_effect=record_update):
+            main(self._ns(), stop_event=stop)
+
+        self.assertEqual(len(updates), 4)
+        self.assertEqual(fake_fetch.snapshot.call_count, 1)
+
 
 class TestPauseWhenInTheLoop(unittest.TestCase):
     def _ns(self, **kwargs: object) -> argparse.Namespace:
@@ -474,6 +534,10 @@ class TestPauseWhenInTheLoop(unittest.TestCase):
 
         mock_update.assert_not_called()
         mock_setup.assert_not_called()
+        # Nothing to send means nothing to collect: a snapshot is a dozen
+        # PowerShell processes on Windows, and pausing is meant to get out
+        # of the way, not just stay quiet.
+        fake_fetch.snapshot.assert_not_called()
         # It still paces itself rather than spinning.
         self.assertGreaterEqual(len(waits), 4)
 
@@ -551,6 +615,46 @@ class TestCycleExtras(unittest.TestCase):
         self.assertEqual(mock_presence.connect.call_count, 2)
         cycle.wait.assert_called_once()
 
+    @patch("fetch_cord.cycle.Presence")
+    def test_try_connect_is_a_no_op_once_connected(
+        self, mock_presence_class: MagicMock
+    ) -> None:
+        """The main loop calls try_connect every pass; only the first connects.
+
+        Reconnecting an already-connected pipe every pass is what makes a
+        single-cycle setup blink.
+        """
+        mock_presence = MagicMock()
+        mock_presence_class.return_value = mock_presence
+
+        cycle = self._cycle()
+        cycle.setup("123")
+
+        cycle.try_connect()
+        cycle.try_connect()
+        cycle.try_connect()
+
+        mock_presence.connect.assert_called_once()
+
+    @patch("fetch_cord.cycle.Presence")
+    def test_close_connection_allows_reconnecting(
+        self, mock_presence_class: MagicMock
+    ) -> None:
+        mock_presence = MagicMock()
+        mock_presence_class.return_value = mock_presence
+
+        cycle = self._cycle()
+        cycle.setup("123")
+        cycle.try_connect()
+        cycle.close_connection()
+
+        self.assertFalse(cycle.connected)
+
+        cycle.setup("456")
+        cycle.try_connect()
+
+        self.assertEqual(mock_presence.connect.call_count, 2)
+
     @patch("fetch_cord.cycle.psutil")
     @patch("fetch_cord.cycle.Presence")
     def test_update_connection_reset(
@@ -627,6 +731,39 @@ class TestFetchExtras(unittest.TestCase):
         from fetch_cord.fetch import FastfetchProvider
 
         self.assertEqual(FastfetchProvider().fetch(), {})
+
+
+class TestUnknownComponentWarning(unittest.TestCase):
+    def setUp(self) -> None:
+        from fetch_cord import fetch as fetch_module
+
+        self._warned = fetch_module._WARNED_UNKNOWN
+        self._warned.clear()
+        self.addCleanup(self._warned.clear)
+
+    @patch("builtins.print")
+    def test_unknown_component_warns_only_once(self, mock_print: MagicMock) -> None:
+        from fetch_cord.fetch import get_component_id
+
+        for _ in range(5):
+            get_component_id("some unlisted gpu", {"known": ["nvidia"]})
+
+        warnings = [
+            call for call in mock_print.call_args_list if "No match found" in str(call)
+        ]
+        self.assertEqual(len(warnings), 1)
+
+    @patch("builtins.print")
+    def test_each_distinct_component_still_warns(self, mock_print: MagicMock) -> None:
+        from fetch_cord.fetch import get_component_id
+
+        get_component_id("unlisted gpu", {"known": ["nvidia"]})
+        get_component_id("unlisted mobo", {"known": ["nvidia"]})
+
+        warnings = [
+            call for call in mock_print.call_args_list if "No match found" in str(call)
+        ]
+        self.assertEqual(len(warnings), 2)
 
 
 class TestInfoExtras(unittest.TestCase):
