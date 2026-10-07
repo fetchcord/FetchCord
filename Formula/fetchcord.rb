@@ -3,15 +3,6 @@
 
 # Homebrew formula for FetchCord.
 #
-# Recommended until the v3.0.0 tag exists:
-#
-#   brew install --HEAD fetchcord/fetchcord/fetchcord
-#
-# After the 3.0.0 release (url/sha256 filled by the tap updater):
-#
-#   brew tap fetchcord/fetchcord
-#   brew install fetchcord
-#
 # To test locally from this repo:
 #
 #   brew install --HEAD --build-from-source ./Formula/fetchcord.rb
@@ -21,8 +12,6 @@ class Fetchcord < Formula
 
   desc "Display system information as Discord Rich Presence"
   homepage "https://github.com/fetchcord/FetchCord"
-  url "https://github.com/fetchcord/FetchCord/archive/refs/tags/v3.0.0.tar.gz"
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
   license "MIT"
   head "https://github.com/fetchcord/FetchCord.git", branch: "testing"
 
