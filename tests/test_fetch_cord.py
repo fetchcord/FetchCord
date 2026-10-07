@@ -229,25 +229,6 @@ class TestCycle(unittest.TestCase):
         cycle.wait(0.1)
 
     @patch("fetch_cord.cycle.Presence")
-    def test_cycle_wait_with_interval(self, mock_presence_class):
-        """Test Cycle wait method with interval checking."""
-        from fetch_cord.cycle import Cycle
-
-        stop_event = Event()
-        cycle = Cycle(self.config, stop_event)
-
-        def set_stop():
-            stop_event.set()
-
-        import threading
-
-        timer = threading.Timer(0.05, set_stop)
-        timer.start()
-
-        cycle.wait(1.0, interval_duration=0.01)
-        timer.join()
-
-    @patch("fetch_cord.cycle.Presence")
     def test_cycle_wait_returns_promptly_when_stopped(self, mock_presence_class):
         """A 30s cycle must not keep the process alive for 30s after Ctrl+C."""
         import time as _time
@@ -527,14 +508,10 @@ class TestFetchClass(unittest.TestCase):
         from fetch_cord.fetch import Fetch
 
         class ProviderOne:
-            name = "one"
-
             def fetch(self, skip=None):
                 return {"a": "1", "b": "1"}
 
         class ProviderTwo:
-            name = "two"
-
             def fetch(self, skip=None):
                 # Only fills gaps; must not overwrite existing fields.
                 return {"b": "2", "c": "2"}
@@ -543,29 +520,11 @@ class TestFetchClass(unittest.TestCase):
         snap = fetch.snapshot()
 
         self.assertEqual(snap, {"a": "1", "b": "1", "c": "2"})
-        self.assertEqual(fetch.fetch("a"), "1")
-        self.assertEqual(fetch.fetch("b"), "1")
-        self.assertEqual(fetch.fetch("c"), "2")
-
-    def test_fetch_missing_field_returns_not_found(self):
-        from fetch_cord.fetch import Fetch
-
-        class EmptyProvider:
-            name = "empty"
-
-            def fetch(self, skip=None):
-                return {}
-
-        fetch = Fetch([EmptyProvider()])
-        self.assertEqual(fetch.fetch("nonexistent"), "Not Found")
-        self.assertEqual(fetch.fetch(None), "Not Found")
 
     def test_snapshot_aliases_memory_to_mem(self):
         from fetch_cord.fetch import Fetch
 
         class MemProvider:
-            name = "mem"
-
             def fetch(self, skip=None):
                 return {"memory": "2.00 GB / 4.00 GB"}
 
@@ -611,30 +570,8 @@ class TestTools(unittest.TestCase):
             stdout=-1,
             stderr=subprocess.DEVNULL,
             timeout=COMMAND_TIMEOUT_SECONDS,
-            shell=False,
         )
         self.assertEqual(result, "command output")
-
-    @patch("fetch_cord.tools.subprocess.run")
-    def test_run_command_with_shell(self, mock_run):
-        """Test run_command with shell=True."""
-        mock_process = MagicMock()
-        mock_process.stdout = "shell output"
-        mock_run.return_value = mock_process
-
-        from fetch_cord.tools import run_command
-
-        run_command(["echo", "hello"], shell=True)
-
-        mock_run.assert_called_once_with(
-            ["echo", "hello"],
-            encoding="utf-8",
-            errors="replace",
-            stdout=-1,
-            stderr=subprocess.DEVNULL,
-            timeout=COMMAND_TIMEOUT_SECONDS,
-            shell=True,
-        )
 
     @patch("fetch_cord.tools.subprocess.run")
     def test_exec_bash(self, mock_run):
@@ -826,14 +763,10 @@ class TestIntegration(unittest.TestCase):
         from fetch_cord.fetch import Fetch
 
         class FastfetchFake:
-            name = "fastfetch"
-
             def fetch(self, skip=None):
                 return {"os": "Debian GNU/Linux", "kernel": "6.8.0"}
 
         class CommandFake:
-            name = "commands"
-
             def fetch(self, skip=None):
                 return {"system_type": "Desktop"}
 

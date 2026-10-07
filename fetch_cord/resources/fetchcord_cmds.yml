@@ -97,13 +97,6 @@ commands:
       if [ -f /etc/os-release ]; then . /etc/os-release; echo "$PRETTY_NAME"; else uname -s; fi
     Darwin: |
       echo "$(sw_vers -productName) $(sw_vers -productVersion)"
-  host:
-    Windows: |
-      Get-WmiObject Win32_BaseBoard | Select-Object Product | ForEach-Object {$_.Product}
-    Linux: |
-      cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null
-    Darwin: |
-      sysctl -n hw.model
   motherboard:
     # Manufacturer on its own is just a vendor ("ASUSTeK COMPUTER INC."),
     # which is all the host cycle had to show and all the id table had to
@@ -158,8 +151,6 @@ commands:
       }
     Linux: |
       fc-match monospace 2>/dev/null | sed 's/:.*//' || true
-    Darwin: |
-      true
   terminal:
     Windows: |
       $host.Name

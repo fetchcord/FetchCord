@@ -7,7 +7,7 @@ from importlib.resources import files
 from typing import Protocol
 
 from fetch_cord import resources
-from fetch_cord.constants import RESULT_NOT_FOUND, UNKNOWN_COMPONENT_ID
+from fetch_cord.constants import UNKNOWN_COMPONENT_ID
 from fetch_cord.info import FASTFETCH_MODULES, parse_fastfetch_json
 from fetch_cord.native import native as native_module
 from fetch_cord.tools import BashError, exec_bash, exec_ps1, run_command
@@ -70,8 +70,6 @@ class FieldProvider(Protocol):
     """A source of system-info fields. Later providers only fill gaps left by
     earlier ones, so adding a provider (e.g. for GPU/LLM) is additive."""
 
-    name: str
-
     def fetch(self, skip: set[str] | None = None) -> dict[str, str]: ...
 
 
@@ -79,8 +77,6 @@ class FastfetchProvider:
     """Runs fastfetch once with structured JSON output and maps its modules to
     fields. Returns {} if fastfetch is not installed, so the command provider
     below can take over (e.g. on Windows)."""
-
-    name = "fastfetch"
 
     def __init__(self, binary: str = "fastfetch") -> None:
         self.binary = binary
@@ -115,8 +111,6 @@ class CommandProvider:
     """Runs per-OS shell commands for fields fastfetch doesn't cover (e.g.
     motherboard, resolution, system_type) or when fastfetch is unavailable."""
 
-    name = "commands"
-
     def __init__(self, commands: dict[str, str]) -> None:
         # commands: {field: shell_command}, already filtered for this OS.
         self.commands = commands
@@ -144,7 +138,6 @@ class NativeProvider:
     Win32 directly. Adds no tool dependency and no subprocess, and returns {}
     for anything it cannot read so another provider fills the gap."""
 
-    name = "native"
     NATIVE_COMPONENTS = (
         "cpu",
         "host",
@@ -170,15 +163,13 @@ class NativeProvider:
 
 
 class Fetch:
-    """Collects system info from a chain of providers and caches the result.
+    """Collects system info from a chain of providers.
 
-    Call `snapshot()` once per refresh to collect every field, then read
-    individual values with `fetch(field)` from the cached snapshot.
+    Call `snapshot()` once per refresh to collect every field.
     """
 
     def __init__(self, providers: list[FieldProvider]) -> None:
         self.providers = providers
-        self._cache: dict[str, str] = {}
 
     def snapshot(self) -> dict[str, str]:
         data: dict[str, str] = {}
@@ -188,12 +179,4 @@ class Fetch:
         # Hardware cycle reads `mem`; fastfetch emits `memory`.
         if "memory" in data and "mem" not in data:
             data["mem"] = data["memory"]
-        self._cache = data
         return data
-
-    def fetch(self, field: str | None) -> str:
-        if field is None:
-            return RESULT_NOT_FOUND
-        if field not in self._cache:
-            self.snapshot()
-        return self._cache.get(field, RESULT_NOT_FOUND)

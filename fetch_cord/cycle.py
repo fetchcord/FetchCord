@@ -12,7 +12,6 @@ from pypresence.presence import Presence
 from fetch_cord.constants import (
     DEFAULT_CYCLE_TIME_SECONDS,
     RPC_CONNECTION_REFUSED_MSG,
-    WAIT_INTERVAL_SECONDS,
 )
 from fetch_cord.presence import build_presence_activity
 
@@ -118,14 +117,8 @@ class Cycle:
             self.close_connection()
             raise
 
-    def wait(self, n: float, interval_duration: float = WAIT_INTERVAL_SECONDS) -> None:
-        """Wait for n seconds, returning early if we've been told to stop.
-
-        ``interval_duration`` is kept for backwards compatibility and ignored:
-        Event.wait already returns the moment the event is set, so polling it
-        in short slices only costs wakeups.
-        """
-        del interval_duration
+    def wait(self, n: float) -> None:
+        """Wait for n seconds, returning early if we've been told to stop."""
         self.stop.wait(n)
 
     def __repr__(self) -> str:

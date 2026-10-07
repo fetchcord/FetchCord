@@ -12,7 +12,7 @@ from pathlib import Path
 COMMAND_TIMEOUT_SECONDS = 60
 
 
-def run_command(command: list[str], shell: bool = False) -> str:
+def run_command(command: list[str]) -> str:
     try:
         result = subprocess.run(
             command,
@@ -22,8 +22,6 @@ def run_command(command: list[str], shell: bool = False) -> str:
             # Otherwise a helper's warnings get printed over our own output.
             stderr=subprocess.DEVNULL,
             timeout=COMMAND_TIMEOUT_SECONDS,
-            # trunk-ignore(bandit/B602)
-            shell=shell,
         )
     except subprocess.TimeoutExpired as exc:
         raise BashError(f"Command timed out after {exc.timeout}s: {command}") from exc
