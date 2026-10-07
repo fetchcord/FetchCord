@@ -7,7 +7,7 @@ Used by the GitHub "release" workflow to produce a Windows .exe
 """
 from PyInstaller.utils.hooks import collect_data_files
 
-# Bundle every non-code resource (the *.yml / *.json / *.conf config files and
+# Bundle every non-code resource (the *.yml / *.json config files and
 # the Windows native package) so importlib.resources finds them in the exe.
 datas = collect_data_files("fetch_cord", include_py_files=True)
 

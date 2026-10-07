@@ -1,1 +1,0 @@
-recursive-include fetch_cord/resources *.yml *.json
