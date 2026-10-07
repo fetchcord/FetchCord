@@ -63,9 +63,6 @@ def _format_module(module_type: str, result: dict[str, Any]) -> str:
     if module_type == "CPU":
         return result.get("cpu") or result.get("name") or _first_text(result)
 
-    if module_type == "GPU":
-        return _format_gpu(result)
-
     if module_type == "Memory":
         used = int(result.get("used") or 0)
         total = int(result.get("total") or 0)

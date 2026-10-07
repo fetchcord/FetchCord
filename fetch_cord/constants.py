@@ -3,7 +3,6 @@
 # Timing constants (in seconds)
 MIN_CYCLE_TIME_SECONDS = 15
 DEFAULT_CYCLE_TIME_SECONDS = 30
-WAIT_INTERVAL_SECONDS = 0.05
 
 # Git branches
 DEFAULT_BRANCH = "master"
