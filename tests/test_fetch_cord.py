@@ -21,13 +21,10 @@ from fetch_cord.tools import COMMAND_TIMEOUT_SECONDS
 
 
 class TestConfig(unittest.TestCase):
-    """Test cases for Config class."""
-
     @patch("fetch_cord.config.get_resource_path", return_value="/fake/path/config.yml")
     @patch("fetch_cord.config.yaml.safe_load")
     @patch("builtins.open", new_callable=mock_open, read_data="key: value")
     def test_config_loads_yaml(self, mock_file, mock_yaml_load, mock_resources_path):
-        """Test that Config loads YAML configuration correctly."""
         mock_resources_path.return_value = "/fake/path/config.yml"
         mock_yaml_load.return_value = {"key": "value", "nested": {"data": 123}}
 
@@ -44,7 +41,6 @@ class TestConfig(unittest.TestCase):
     def test_config_acts_like_dict(
         self, mock_file, mock_yaml_load, mock_resources_path
     ):
-        """Test that Config behaves like a dictionary."""
         mock_resources_path.return_value = "/fake/path/config.yml"
         mock_yaml_load.return_value = {"key": "value", "number": 42}
 
@@ -62,7 +58,6 @@ class TestConfig(unittest.TestCase):
     def test_config_default_config_name(
         self, mock_file, mock_yaml_load, mock_resources_path
     ):
-        """Test that Config uses default config name when not specified."""
         mock_resources_path.return_value = "/fake/path/config.yml"
         mock_yaml_load.return_value = {"test": "data"}
 
@@ -80,7 +75,6 @@ class TestConfig(unittest.TestCase):
     def test_config_yaml_error_handling(
         self, mock_file, mock_print, mock_resources_path
     ):
-        """Test that Config handles YAML errors gracefully."""
         import yaml
 
         mock_resources_path.return_value = "/fake/path/config.yml"
@@ -95,10 +89,7 @@ class TestConfig(unittest.TestCase):
 
 
 class TestCycle(unittest.TestCase):
-    """Test cases for Cycle class."""
-
     def setUp(self):
-        """Set up test fixtures."""
         self.config = {
             "name": "test_cycle",
             "app_id": "123456789",
@@ -111,7 +102,6 @@ class TestCycle(unittest.TestCase):
 
     @patch("fetch_cord.cycle.Presence")
     def test_cycle_initialization(self, mock_presence_class):
-        """Test Cycle initialization with config."""
         from fetch_cord.cycle import Cycle
 
         stop_event = Event()
@@ -128,7 +118,6 @@ class TestCycle(unittest.TestCase):
 
     @patch("fetch_cord.cycle.Presence")
     def test_cycle_default_stop_event(self, mock_presence_class):
-        """Test Cycle creates default stop event if none provided."""
         from fetch_cord.cycle import Cycle
 
         cycle = Cycle(self.config)
@@ -138,7 +127,6 @@ class TestCycle(unittest.TestCase):
 
     @patch("fetch_cord.cycle.Presence")
     def test_cycle_setup(self, mock_presence_class):
-        """Test Cycle setup method."""
         mock_presence = MagicMock()
         mock_presence_class.return_value = mock_presence
 
@@ -152,7 +140,6 @@ class TestCycle(unittest.TestCase):
 
     @patch("fetch_cord.cycle.Presence")
     def test_cycle_try_connect_success(self, mock_presence_class):
-        """Test Cycle try_connect succeeds immediately."""
         mock_presence = MagicMock()
         mock_presence.connect = MagicMock()
         mock_presence_class.return_value = mock_presence
@@ -168,7 +155,6 @@ class TestCycle(unittest.TestCase):
     @patch("fetch_cord.cycle.Presence")
     @patch("fetch_cord.cycle.print")
     def test_cycle_try_connect_refused(self, mock_print, mock_presence_class):
-        """Test Cycle try_connect handles ConnectionRefusedError."""
         mock_presence = MagicMock()
         mock_presence.connect.side_effect = [
             ConnectionRefusedError(),
@@ -190,7 +176,6 @@ class TestCycle(unittest.TestCase):
     @patch("fetch_cord.cycle.psutil")
     @patch("fetch_cord.cycle.Presence")
     def test_cycle_update(self, mock_presence_class, mock_psutil):
-        """Test Cycle update method."""
         mock_presence = MagicMock()
         mock_presence.update = MagicMock()
         mock_presence.close = MagicMock()
@@ -219,7 +204,6 @@ class TestCycle(unittest.TestCase):
 
     @patch("fetch_cord.cycle.Presence")
     def test_cycle_wait(self, mock_presence_class):
-        """Test Cycle wait method."""
         from fetch_cord.cycle import Cycle
 
         stop_event = Event()
@@ -272,7 +256,6 @@ class TestCycle(unittest.TestCase):
 
     @patch("fetch_cord.cycle.Presence")
     def test_cycle_repr(self, mock_presence_class):
-        """Test Cycle __repr__ method."""
         from fetch_cord.cycle import Cycle
 
         cycle = Cycle(self.config)
@@ -307,7 +290,6 @@ class TestFetchFunctions(unittest.TestCase):
     """Test cases for Fetch module functions (standalone, no module imports)."""
 
     def test_get_component_id_exact_match(self):
-        """Test get_component_id with exact pattern match."""
         id_list = {
             "intel_cpu": ["Intel.*i7", "Intel.*i5"],
             "amd_cpu": ["AMD.*Ryzen", "AMD.*FX"],
@@ -317,7 +299,6 @@ class TestFetchFunctions(unittest.TestCase):
         self.assertEqual(result, "intel_cpu")
 
     def test_get_component_id_no_match_with_unknown(self):
-        """Test get_component_id returns unknown when no match."""
         id_list = {
             "intel_cpu": ["Intel.*i7"],
             "amd_cpu": ["AMD.*Ryzen"],
@@ -328,7 +309,6 @@ class TestFetchFunctions(unittest.TestCase):
         self.assertEqual(result, "unknown")
 
     def test_get_component_id_no_match_no_unknown(self):
-        """Test get_component_id returns 'unknown' string when no match and no unknown pattern."""
         id_list = {
             "intel_cpu": ["Intel.*i7"],
         }
@@ -337,7 +317,6 @@ class TestFetchFunctions(unittest.TestCase):
         self.assertEqual(result, "unknown")
 
     def test_get_component_id_case_sensitive(self):
-        """Test get_component_id with case sensitivity."""
         id_list = {
             "intel_cpu": ["Intel"],
         }
@@ -591,11 +570,8 @@ class TestFetchClass(unittest.TestCase):
 
 
 class TestTools(unittest.TestCase):
-    """Test cases for Tools module."""
-
     @patch("fetch_cord.tools.subprocess.run")
     def test_run_command(self, mock_run):
-        """Test run_command function."""
         mock_process = MagicMock()
         mock_process.stdout = "command output"
         mock_run.return_value = mock_process
@@ -638,7 +614,6 @@ class TestTools(unittest.TestCase):
 
     @patch("fetch_cord.tools.subprocess.run")
     def test_exec_bash(self, mock_run):
-        """Test exec_bash function."""
         mock_process = MagicMock()
         mock_process.stdout = "  bash output  \n"
         mock_process.returncode = 0
@@ -672,7 +647,6 @@ class TestTools(unittest.TestCase):
 
     @patch("fetch_cord.tools.subprocess.run")
     def test_exec_ps1(self, mock_run):
-        """Test exec_ps1 function."""
         mock_process = MagicMock()
         mock_process.stdout = "  powershell output  \n"
         mock_process.returncode = 0
@@ -793,7 +767,6 @@ class TestTools(unittest.TestCase):
 
     @patch("fetch_cord.tools.resources.path")
     def test_get_resource_path(self, mock_resources_path):
-        """Test get_resource_path function."""
         mock_path = MagicMock()
         mock_path.__enter__ = MagicMock(return_value="/fake/path")
         mock_path.__exit__ = MagicMock(return_value=False)
@@ -807,7 +780,6 @@ class TestTools(unittest.TestCase):
         self.assertEqual(result, "/fake/path")
 
     def test_bash_error_exception(self):
-        """Test BashError exception can be raised."""
         from fetch_cord.tools import BashError
 
         with self.assertRaises(BashError):

@@ -5,8 +5,7 @@ grade: devel
 description: |
   FetchCord grabs your OS info and displays it as Discord Rich Presence.
 
-  The Snap package is unmaintained for 3.0 (classic confinement + core18
-  cannot ship Python 3.12). Prefer pip or Homebrew. This file is kept so
+  Prefer pip or Homebrew. This file is kept so
   existing snap listings do not break the repo layout.
 base: core24
 confinement: classic
