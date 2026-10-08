@@ -16,58 +16,41 @@ commands:
       system_profiler SPDisplaysDataType | grep 'Chipset Model' | xargs| cut -d " " -f3- | sed -e 's/" "/\t/g' -e 's/\"//g' | cut -f1-
   mem:
     Windows: |
-      # Get total physical memory (in bytes)
       $TotalMemory = (Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory
 
-      # Get available physical memory (in bytes)
       $AvailableMemory = (Get-CimInstance -ClassName Win32_PerfFormattedData_PerfOS_Memory).AvailableBytes
 
-      # Convert values to GB
       $TotalMemory = [int64]$TotalMemory/1024/1024/1024
       $AvailableMemory = [int64]$AvailableMemory/1024/1024/1024
 
-      # Calculate used memory
       $UsedMemory = $TotalMemory - $AvailableMemory
 
-      # Output used and total memory in GB
       Write-Output ("{0:N2} GB / {1:N2} GB" -f $UsedMemory, $TotalMemory)
     Linux: &mem_sh |
-      # Get total physical memory (in bytes)
       TotalMemory=$(cat /proc/meminfo | grep MemTotal | awk '{print $2}')
 
-      # Get available physical memory (in bytes)
       AvailableMemory=$(cat /proc/meminfo | grep MemAvailable | awk '{print $2}')
 
-      # Convert values to GB
       TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024}")
       AvailableMemory=$(awk "BEGIN {printf \"%.2f\", $AvailableMemory / 1024 / 1024}")
 
-      # Calculate used memory
       UsedMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory - $AvailableMemory}")
 
-      # Output used and total memory in GB
       echo "$UsedMemory GB / $TotalMemory GB"
     Darwin: |
-      # Get total physical memory (in bytes)
       TotalMemory=$(sysctl -n hw.memsize)
 
-      # Get free memory in pages
       FreePages=$(vm_stat | grep 'Pages free:' | awk '{print $3}' | sed 's/\.//')
 
-      # Get the page size in bytes (usually 4096)
       PageSize=$(vm_stat | grep 'page size of' | awk '{print $8}')
 
-      # Calculate free memory in bytes
       AvailableMemory=$(($FreePages * $PageSize))
 
-      # Convert values to GB
       TotalMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory / 1024 / 1024 / 1024}")
       AvailableMemory=$(awk "BEGIN {printf \"%.2f\", $AvailableMemory / 1024 / 1024 / 1024}")
 
-      # Calculate used memory
       UsedMemory=$(awk "BEGIN {printf \"%.2f\", $TotalMemory - $AvailableMemory}")
 
-      # Output used and total memory in GB
       echo "$UsedMemory GB / $TotalMemory GB"
   kernel:
     Windows: |

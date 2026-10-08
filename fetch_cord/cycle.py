@@ -60,7 +60,6 @@ class Cycle:
                 self.wait(DEFAULT_CYCLE_TIME_SECONDS)
 
     def close_connection(self) -> None:
-        """Fully close the RPC connection and ensure cleanup."""
         if self.rpc is not None:
             try:
                 self.rpc.clear()
@@ -107,14 +106,12 @@ class Cycle:
         except ConnectionResetError as e:
             if self.debug:
                 print(f'update: ConnectionResetError for "{self.name}": {e}')
-            # Connection was reset - need to reconnect
             self.close_connection()
             raise
 
         except exceptions.InvalidID as e:
             if self.debug:
                 print(f'update: InvalidID for "{self.name}": {e}')
-            # Invalid client_id - need to re-setup with new client_id
             self.close_connection()
             raise
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-# trunk-ignore(bandit/B404)
 import subprocess
 from importlib import resources
 from pathlib import Path
@@ -39,7 +38,6 @@ def exec_bash(command: str) -> str:
             # diagnostics, never a field value.
             capture_output=True,
             timeout=COMMAND_TIMEOUT_SECONDS,
-            # trunk-ignore(bandit/B602)
             shell=True,
         )
     except subprocess.TimeoutExpired as exc:
@@ -60,8 +58,6 @@ PS1_PREAMBLE = "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; "
 
 
 def exec_ps1(command: str) -> str:
-    # trunk-ignore(bandit/B603)
-    # trunk-ignore(bandit/B607)
     try:
         result = subprocess.run(
             [

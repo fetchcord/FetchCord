@@ -125,7 +125,6 @@ def main(
         args = parse_args()
     handle_args(args)
 
-    # Get the ids for the components
     fetchcord_ids = {
         "cpu": get_infos("cpus"),
         "gpu": get_infos("gpus"),
@@ -136,14 +135,11 @@ def main(
         "system_type": get_infos("system_types"),
     }
 
-    # Stop event for the loop (injectable for tests)
     if stop_event is None:
         stop_event = Event()
 
-    # Load config
     config = Config()
     config["commands"] = Config("fetchcord_cmds.yml")["commands"]
-    # Load cycles
     cycles = [Cycle(cycle, stop_event) for cycle in config["cycles"]]
 
     # Apply CLI overrides: honor --debug / --time and drop disabled cycles.
@@ -215,7 +211,6 @@ def main(
     signal(SIGINT, signal_handler)
     signal(SIGTERM, signal_handler)
 
-    # Main loop
     current_client_id = None
     while not stop_event.is_set():
         if pause.check():
@@ -238,7 +233,6 @@ def main(
         # Windows a snapshot is a dozen PowerShell processes.
         snapshot = fetch.snapshot()
 
-        # Loop through the cycles defined in the config
         for cycle in cycles:
             if stop_event.is_set():
                 break
@@ -275,7 +269,6 @@ icon_id: {icon_id} \
 large_image: {large_image}"""
                 )
 
-            # Reconnect if client_id changed
             if client_id != current_client_id:
                 # Close ALL cycles' connections since Discord only allows one RP at a time
                 for c in cycles:
