@@ -21,7 +21,6 @@ from fetch_cord.tools import COMMAND_TIMEOUT_SECONDS
 
 
 class TestConfig(unittest.TestCase):
-
     @patch("fetch_cord.config.get_resource_path", return_value="/fake/path/config.yml")
     @patch("fetch_cord.config.yaml.safe_load")
     @patch("builtins.open", new_callable=mock_open, read_data="key: value")
@@ -90,7 +89,6 @@ class TestConfig(unittest.TestCase):
 
 
 class TestCycle(unittest.TestCase):
-
     def setUp(self):
         self.config = {
             "name": "test_cycle",
@@ -572,7 +570,6 @@ class TestFetchClass(unittest.TestCase):
 
 
 class TestTools(unittest.TestCase):
-
     @patch("fetch_cord.tools.subprocess.run")
     def test_run_command(self, mock_run):
         mock_process = MagicMock()
